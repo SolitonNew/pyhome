@@ -1,0 +1,1 @@
+The system of "smart home" created in Python.

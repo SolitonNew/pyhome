@@ -2,7 +2,7 @@ import mysql.connector
 import time
 from datetime import datetime
 
-class DBConnnector(object):
+class DBConnector(object):
     MYSQL_DB_NAME = "smarthome"
     MYSQL_USER = "smarthome"
     MYSQL_PASS = "smarthomepass"
@@ -15,7 +15,8 @@ class DBConnnector(object):
         
         self.query("SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED")
         
-        self.lastQueueId = self.load_last_queue_id()                
+        self.lastVarChangeID = self._last_var_change_id()
+        self.lastCommID = self._last_comm_id()
         self.load_controllers()
 
     def query(self, sql, vars = []):
@@ -35,25 +36,68 @@ class DBConnnector(object):
             row = q.fetchone()
         q.close()
         
-    def load_last_queue_id(self):
-        q = self.query("select MAX(ID) from core_queue")
+    def _last_var_change_id(self):
+        q = self.query("select MAX(ID) from core_variable_changes")
         row = q.fetchone()
         q.close()
         return row[0]
 
-    def load_queue(self):
-        queue = []
-        q = self.query("select ID, CONTROLLER_ID, TYP "
-                       "  from core_queue "
-                       " where ID > %s "
-                       "order by ID", [self.lastQueueId])
+    def variable_changes(self):
+        q = self.query(("select ID, VARIABLE_ID, VALUE"
+                        "  from core_variable_changes "
+                        " where ID > %s "
+                        "order by ID"), [self.lastVarChangeID])
         row = q.fetchone()
+        res = []
         while row is not None:
-            queue += [[row[1], row[2]]]
-            self.lastQueueId = row[0]
+            res += [[row[1], row[2]]]
+            self.lastVarChangeID = row[0]
             row = q.fetchone()
         q.close()
-        return queue
+        return res
+
+    def set_variable_value(self, var_id, var_value, dev_id):
+        if dev_id == False:
+            dev_id = "null"
+
+        var_v = float(var_value)
+            
+        try:
+            q = self.query("insert into core_variable_changes "
+                           " (VARIABLE_ID, VALUE, FROM_ID)"
+                           "values"
+                           " (%s, %s, %s)" % (var_id, var_v, dev_id))
+            q.close()
+
+            q = self.query("update core_variables"
+                           "   set VALUE=%s"
+                           " where ID = %s" % (var_v, var_id))
+            q.close();
+
+            self.commit()
+        except:
+            print("Ошибка записи переменной в БД. ID: %s   VALUE: %s   FROM_ID: %s" % (var_id, var_v, dev_id))
+
+
+    def _last_comm_id(self):
+        q = self.query("select MAX(ID) from core_commands")
+        row = q.fetchone()
+        q.close()
+        return row[0]
+
+    def commands(self):
+        q = self.query(("select ID, CONTROLLER_ID, COMMAND"
+                        "  from core_commands "
+                        " where ID > %s "
+                        "order by ID"), [self.lastCommID])
+        row = q.fetchone()
+        res = []
+        while row is not None:
+            res += [[row[1], row[2]]]
+            self.lastCommID = row[0]
+            row = q.fetchone()
+        q.close()
+        return res
 
     def append_scan_rom(self, dev_id, rom):
         data = [dev_id] + rom

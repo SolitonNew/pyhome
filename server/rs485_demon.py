@@ -4,6 +4,7 @@ from db_connector import DBConnector
 import serial
 import time
 import json
+from config_utils import generate_config_file
 
 class Main():
     SERIAL_PORT = "/dev/ttyUSB0"
@@ -44,10 +45,15 @@ class Main():
 
     def _sync_variables(self):
         # Зачитываем изменения в БД
-        pack_data = self.db.variable_changes()
+        var_data = self.db.variable_changes()
 
         # Рассылаем изменения в БД и паралельно читаем обновления
         for dev in self.db.controllers:
+            pack_data = []
+            for var in var_data:
+                if var[2] != dev[0]:
+                    pack_data += [[var[0], var[1]]]
+            
             print("ЗАПРОС: Синхронизация контроллера '%s'." % (dev[0]))
             self.send_pack(dev[0], self.PACK_SYNC, pack_data)
             res_pack = self.check_lan()
@@ -57,48 +63,84 @@ class Main():
             else:
                 print("Контроллер '%s' не ответил." % dev[0])
 
+    def _command_info(self, text):
+        print(text)
+        text = text.replace("'", "`")
+        s = self.db.get_property('RS485_COMMAND_INFO')
+        self.db.set_property('RS485_COMMAND_INFO', s + '<p>' + text + '</p>')
+
     def _send_commands(self):
-        for command in self.db.commands():
-            print(command)
-            pack_data = ""
-            comm = command[1]
-            if comm == "SCAN_ONE_WIRE":
-                pass
-            elif comm == "LOAD_ONE_WIRE_ROMS":
-                pass
-            elif comm == "SET_CONFIG_FILE":
-                pack_data = "The config file!!!"
-            elif comm == "REBOOT_CONTROLLER":
-                pass
-            
-            self.send_pack(command[0], self.PACK_COMMAND, [command[1], pack_data])
-            res_pack = self.check_lan()
-            if res_pack == False:
-                print("Контроллер '%s' не ответил." % command[0])
-                comm = ""
+        command = self.db.get_property('RS485_COMMAND')
 
-            if comm == "SCAN_ONE_WIRE":
-                print("Послана комманда опроса OneWire сети. Пауза 3с...")
-                time.sleep(3)
-            elif comm == "LOAD_ONE_WIRE_ROMS":
-                count = 0
-                allCount = len(res_pack[2][1])
-                print(res_pack[2][1])
-                for rom in res_pack[2][1]:
-                    if self.db.append_scan_rom(command[0], rom):
-                        count += 1
-                print("Получен список OneWire устройств. Всего устройств %sшт. Добавлено новых %sшт." % (allCount, count))
-            
-            elif comm == "SET_CONFIG_FILE":
-                pass
-            elif comm == "REBOOT_CONTROLLER":
-                pass
+        if command == "":
+            return
 
+        self.db.set_property('RS485_COMMAND_INFO', '')
+        
+        for dev in self.db.controllers:            
+            error_text = "Контроллер '%s' не ответил." % dev[0]
+
+            if command == "SCAN_OW":
+                self._command_info("Запрос поиска OneWire устройств для контроллера '%s'..." % dev[0])
+                self.send_pack(dev[0], self.PACK_COMMAND, ["SCAN_ONE_WIRE", ""])
+                res_pack = self.check_lan()
+                if res_pack:
+                    self._command_info("Пауза 3с...")
+                    time.sleep(3)
+                    self._command_info("Запрос списка найденых на шине OneWire устройств для контроллера '%s'" % dev[0])
+                    self.send_pack(dev[0], self.PACK_COMMAND, ["LOAD_ONE_WIRE_ROMS", ""])
+                    res_pack = self.check_lan()
+                    if res_pack:
+                        count = 0
+                        allCount = len(res_pack[2][1])                        
+                        for rom in res_pack[2][1]:
+                            self._command_info(str(rom))
+                            if self.db.append_scan_rom(dev[0], rom):
+                                count += 1
+                        self._command_info("Всего найдено устройств: %s. Новых: %s" % (allCount, count))
+                    else:
+                        self._command_info(error_text)
+                else:
+                    self._command_info(error_text)
+            elif command == "CONFIG_UPDATE":
+                self._command_info("Запрос обновдения конфигурационного файла контроллера '%s'..." % dev[0])
+                pack_data = generate_config_file(self.db)
+                self.send_pack(dev[0], self.PACK_COMMAND, ["SET_CONFIG_FILE", pack_data])
+                if self.check_lan():
+                    self._command_info("OK")
+                else:
+                    self._command_info(error_text)
+            elif command == "REBOOT_CONTROLLERS":
+                self._command_info("Запрос перезагрузки контроллера '%s'..." % dev[0])
+                self.send_pack(dev[0], self.PACK_COMMAND, ["REBOOT_CONTROLLER", ""])
+                if self.check_lan():
+                    self._command_info("OK")
+                else:
+                    self._command_info(error_text)
+                
+        self.db.set_property('RS485_COMMAND', '')
+        self._command_info("Готово.")
+        time.sleep(2)
+        self._command_info("TERMINAL EXIT")
+
+    SYNC_STATE = ""
+            
     def run(self):
         serialPort = self.serialPort        
         while True:
             # Синхронизируем переменные между сервером и контроллерами
-            self._sync_variables()
+            SYNC_STATE = self.db.get_property('SYNC_STATE')
+
+            stateChange = SYNC_STATE != self.SYNC_STATE
+            if SYNC_STATE == "RUN":
+                if stateChange:
+                    print("Синхронизация запущена")
+                self._sync_variables()
+            else:
+                if stateChange:
+                    print("Синхронизация остановлена")
+
+            self.SYNC_STATE = SYNC_STATE
 
             # Рассылаем системные комманды, если требуется
             self._send_commands()

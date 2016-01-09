@@ -18,10 +18,10 @@ def get_ow_roms(db):
     return lst
 
 
-def generate_config(db):
+def generate_variable_list(db):
     roms = get_ow_roms(db)
     
-    templ = "%s = Variable(%d, %d, %d, %s, '%s')"
+    templ = "%s = Variable(%d, %d, %d, '%s', '%s')"
     q = db.query("select NAME, ID, CONTROLLER_ID, DIRECTION, ROM, CHANNEL, OW_ID from core_variables order by ID")
     row = q.fetchone()    
     while row is not None:
@@ -34,12 +34,24 @@ def generate_config(db):
         channel = ''
         if row[5]:
             channel = row[5].decode("utf-8")
+        if name == '':
+            name = "VAR_%s" % (row[1])
           
         s = templ % (name, row[1], row[2], row[3], rom, channel)
         print(s)
         row = q.fetchone()
     q.close()
 
+def generate_script_list(db):
+    pass
 
+def generate_config_file(db):
+    return "Config file"
+
+
+"""
 db = DBConnector()
-generate_config(db)
+print("from variables import Variable")
+print("")
+generate_variable_list(db)
+"""

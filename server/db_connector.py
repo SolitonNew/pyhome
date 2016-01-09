@@ -16,7 +16,6 @@ class DBConnector(object):
         self.query("SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED")
         
         self.lastVarChangeID = self._last_var_change_id()
-        self.lastCommID = self._last_comm_id()
         self.load_controllers()
 
     def query(self, sql, vars = []):
@@ -26,6 +25,34 @@ class DBConnector(object):
 
     def commit(self):
         self.mysqlConn.commit()
+
+    def select(self, sql, vars = []):
+        res = []        
+        q = self.query(sql, vars)
+        try:
+            row = q.fetchone()
+            while row:
+                res += [row]
+                row = q.fetchone()
+        except:
+            pass
+        q.close()
+        return res
+
+    def IUD(self, sql, vars = []):
+        q = self.query(sql, vars)
+        q.close()        
+
+    def get_property(self, name):        
+        data = self.select("select VALUE from core_propertys where NAME='%s'" % name)
+        if data:
+            return str(data[0][0], "utf-8")
+        else:
+            return ''
+
+    def set_property(self, name, value):
+        self.IUD("update core_propertys set VALUE = '%s' where NAME = '%s'" % (value, name))
+        self.commit()        
 
     def load_controllers(self):
         self.controllers = []
@@ -43,14 +70,14 @@ class DBConnector(object):
         return row[0]
 
     def variable_changes(self):
-        q = self.query(("select ID, VARIABLE_ID, VALUE"
+        q = self.query(("select ID, VARIABLE_ID, VALUE, FROM_ID"
                         "  from core_variable_changes "
                         " where ID > %s "
                         "order by ID"), [self.lastVarChangeID])
         row = q.fetchone()
         res = []
         while row is not None:
-            res += [[row[1], row[2]]]
+            res += [[row[1], row[2], row[3]]]
             self.lastVarChangeID = row[0]
             row = q.fetchone()
         q.close()
@@ -77,27 +104,6 @@ class DBConnector(object):
             self.commit()
         except:
             print("Ошибка записи переменной в БД. ID: %s   VALUE: %s   FROM_ID: %s" % (var_id, var_v, dev_id))
-
-
-    def _last_comm_id(self):
-        q = self.query("select MAX(ID) from core_commands")
-        row = q.fetchone()
-        q.close()
-        return row[0]
-
-    def commands(self):
-        q = self.query(("select ID, CONTROLLER_ID, COMMAND"
-                        "  from core_commands "
-                        " where ID > %s "
-                        "order by ID"), [self.lastCommID])
-        row = q.fetchone()
-        res = []
-        while row is not None:
-            res += [[row[1], row[2]]]
-            self.lastCommID = row[0]
-            row = q.fetchone()
-        q.close()
-        return res
 
     def append_scan_rom(self, dev_id, rom):
         data = [dev_id] + rom

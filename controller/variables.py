@@ -9,6 +9,7 @@ def set_variable_drivers(ow, dev_id):
     """
     global driverList
     for var in variableList:
+        var.curr_dev_id = dev_id
         if var.dev_id == dev_id:
             driver = False
             if var.rom:
@@ -90,6 +91,7 @@ class Variable(object):
     def __init__(self, id, dev_id, direction, rom, channel):
         global variableList
         variableList += [self] # Регистрация переменной в глобальном списке
+        self.curr_dev_id = False
         self.id = id
         self.rom = rom
         if type(self.rom) == list:
@@ -109,18 +111,23 @@ class Variable(object):
 
     def silent_value(self, val):
         self.val = val
-        self.driver.value(val, self.channel)
+        try:
+            self.driver.value(val, self.channel)
+        except:
+            pass
 
     def value(self, val = None):
         if val == None:
             return self.val
         else:
-            if self.val != val:
-                self.val = val
-                self.driver.value(val, self.channel)
-                self.isChange = True
-                if self.changeScript:                    
-                    self.changeScript()
+            # Убеждаемся, что переменная принадлежит текущему контроллеру.
+            if self.dev_id == self.curr_dev_id:            
+                if self.val != val:
+                    self.val = val
+                    self.driver.value(val, self.channel)
+                    self.isChange = True
+                    if self.changeScript:                    
+                        self.changeScript()
 
     def load_value(self):
         b = self.isChange

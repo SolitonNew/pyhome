@@ -1,3 +1,4 @@
+import pyb
 from pyb import delay
 from pyb import Timer
 from rs485 import RS485
@@ -5,6 +6,8 @@ from onewire import OneWire
 from ds18b20 import DS18B20
 import config
 import variables
+
+IS_START = True
 
 PACK_SYNC = 1
 PACK_COMMAND = 2
@@ -72,9 +75,13 @@ while True:
     for pack in rs485.check_lan():
         if pack:
             if pack[1] == PACK_SYNC:
-                variables.set_sync_change_variables(pack[2])
-                pack_data = variables.get_sync_change_variables()
-                rs485.send_pack(PACK_SYNC, pack_data)
+                if IS_START:
+                    rs485.send_pack(PACK_SYNC, "RESET")
+                    IS_START = False;
+                else:
+                    variables.set_sync_change_variables(pack[2])
+                    pack_data = variables.get_sync_change_variables()
+                    rs485.send_pack(PACK_SYNC, pack_data)
             elif pack[1] == PACK_COMMAND:
                 comm_data = pack[2]
                 if comm_data[0] == "SCAN_ONE_WIRE":
@@ -89,9 +96,13 @@ while True:
                         roms += [rr]
                     rs485.send_pack(PACK_COMMAND, [comm_data[0], roms])
                 elif comm_data[0] == "SET_CONFIG_FILE":
+                    f = open("config.py", "w")
+                    f.write(comm_data[1])
+                    f.close()
                     rs485.send_pack(PACK_COMMAND, [comm_data[0], False])
                 elif comm_data[0] == "REBOOT_CONTROLLER":
                     rs485.send_pack(PACK_COMMAND, [comm_data[0], False])
+                    pyb.hard_reset()
 
     onewire_alarms()
     onewire_termometrs()

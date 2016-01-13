@@ -57,8 +57,11 @@ def check_driver_value(rom):
     if driver:
         value = driver.value()
         for var in variableList:
-            if var.driver == driver:
-                var._set_driver_value(value)
+            try:
+                if var.driver == driver:
+                    var._set_driver_value(value)
+            except:
+                pass
 
 def get_sync_change_variables():
     """

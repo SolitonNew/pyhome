@@ -11,7 +11,7 @@ class Grid(object):
 
     def _gen_header(self):
         res = []
-        res += "<TABLE class=\"grid\" cellpadding=\"0\" cellspacing=\"0\">"
+        res += "<TABLE id=\"grid_head_scroll\" class=\"grid\" height=\"100%\" cellpadding=\"0\" cellspacing=\"0\">"
         res += "<TR class=\"header\">"
         for col in self.columns:            
             res += "<TD style=\"width:%spx;\">" % col[1]
@@ -26,7 +26,7 @@ class Grid(object):
     def _gen_data(self):
         columns = self.columns
         res = []
-        res += "<TABLE class=\"grid\" style=\"top:-1px;\" cellpadding=\"0\" cellspacing=\"0\">"
+        res += "<TABLE id=\"grid_data_scroll\" class=\"grid\" style=\"top:-1px;\" cellpadding=\"0\" cellspacing=\"0\">"
         for row in self.data:
             res += "<TR>"
             i = 0
@@ -50,12 +50,16 @@ class Grid(object):
             return self._gen_data()
 
         res = []
-        res += "<TABLE width=\"100%\" height=\"100%\" cellpadding=\"0\" cellspacing=\"0\">"
-        res += "<TR><TD bgcolor=\"#eee\">"
+        res += "<TABLE style=\"position:relative;width:100%;height:100%;\" cellpadding=\"0\" cellspacing=\"0\">"
+        res += "<TR><TD height=\"50\" style=\"position:relative;\" bgcolor=\"#eee\">"
+        res += "<div style=\"position:absolute;width:100%;height:100%;top:0px;left:0px;overflow-x:hidden;\">"                
         res += self._gen_header()
-        res += "</TD></TR><TR><TD height=\"100%\" valign=\"top\">"
-        res += "<div id=\"grid_data\" style=\"position:relative;overflow:hidden;overflow-y:auto;width:100%;height:100%;\">"        
+        res += "</div>"
+        res += "</TD></TR><TR><TD style=\"position:relative;\" height=\"100%\" valign=\"top\">"
+        res += "<div style=\"position:absolute;width:100%;height:100%;overflow:hidden;\">"        
+        res += "<div id=\"grid_data\" style=\"position:relative;overflow:auto;width:100%;height:100%;\" onScroll=\"$('#grid_head_scroll').css('left', $('#grid_data_scroll').position().left + 'px');\">"
         res += self._gen_data()
+        res += "</div>"
         res += "</div>"        
         res += "</TD></TR>"
         res += "</TABLE>"

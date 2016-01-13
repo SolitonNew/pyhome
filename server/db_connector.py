@@ -56,10 +56,15 @@ class DBConnector(object):
 
     def load_controllers(self):
         self.controllers = []
-        q = self.query("select * from core_controllers order by ID")
+        q = self.query("select ID, NAME from core_controllers order by ID")
         row = q.fetchone()
         while row is not None:
-            self.controllers += [row]
+            nr = []
+            for r in row:
+                if type(r) == bytearray:
+                    r = str(r, "utf-8")
+                nr += [r]
+            self.controllers += [nr]
             row = q.fetchone()
         q.close()
         
@@ -82,6 +87,18 @@ class DBConnector(object):
             row = q.fetchone()
         q.close()
         return res
+
+    def all_variables(self):
+        q = self.query(("select ID, VALUE"
+                        "  from core_variables "
+                        "order by ID"))
+        row = q.fetchone()
+        res = []
+        while row is not None:
+            res += [[row[0], row[1]]]
+            row = q.fetchone()
+        q.close()
+        return res    
 
     def set_variable_value(self, var_id, var_value, dev_id):
         if dev_id == False:

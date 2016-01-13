@@ -15,7 +15,10 @@ class Main():
 
     def __init__(self):
         # Connect to serial port
-        self.serialPort = serial.Serial(self.SERIAL_PORT, self.SERIAL_SPEED, parity='O', timeout=0.5)
+        try:
+            self.serialPort = serial.Serial(self.SERIAL_PORT, self.SERIAL_SPEED, parity='O', timeout=0.5)
+        except:
+            print("Ошибка подключения к '%s'" % self.SERIAL_PORT)
 
         self.db = DBConnector()
         self.db.load_controllers()
@@ -34,13 +37,12 @@ class Main():
         for var in pack_data:
             self.db.set_variable_value(var[0], var[1], dev_id)
 
-    def check_lan(self):        
-        resp = self.serialPort.readline().decode("utf-8")        
+    def check_lan(self):
         try:
+            resp = self.serialPort.readline().decode("utf-8")
             for pack in resp.split(chr(0x0)):
                 return json.loads(pack)
         except:
-            print("ОШИБКА: ", resp)
             return False
 
     def _sync_variables(self):
@@ -54,14 +56,25 @@ class Main():
                 if var[2] != dev[0]:
                     pack_data += [[var[0], var[1]]]
             
-            print("ЗАПРОС: Синхронизация контроллера '%s'." % (dev[0]))
+            print("Запрос синхронизации контроллера '%s'." % (dev[1]))
             self.send_pack(dev[0], self.PACK_SYNC, pack_data)
             res_pack = self.check_lan()
             if res_pack:
-                self._store_variable_to_db(res_pack[0], res_pack[2])
-                print("Синхронизация прошла успешно.")
+                if res_pack[2] == "RESET":
+                    print("Получен запрос сброса переменных контроллера '%s'.\n" % dev[1])
+                    self.send_pack(dev[0], self.PACK_SYNC, self._reset_pack())
+                    if self.check_lan():
+                        print("OK.\n")
+                    else:
+                        print("Контроллер '%s' не ответил.\n" % dev[1])
+                else:
+                    self._store_variable_to_db(res_pack[0], res_pack[2])
+                    print("OK.\n")
             else:
-                print("Контроллер '%s' не ответил." % dev[0])
+                print("Контроллер '%s' не ответил.\n" % dev[1])
+
+    def _reset_pack(self):
+        return self.db.all_variables();
 
     def _command_info(self, text):
         print(text)
@@ -78,16 +91,16 @@ class Main():
         self.db.set_property('RS485_COMMAND_INFO', '')
         
         for dev in self.db.controllers:            
-            error_text = "Контроллер '%s' не ответил." % dev[0]
+            error_text = "Контроллер '%s' не ответил." % dev[1]
 
             if command == "SCAN_OW":
-                self._command_info("Запрос поиска OneWire устройств для контроллера '%s'..." % dev[0])
+                self._command_info("Запрос поиска OneWire устройств для контроллера '%s'..." % dev[1])
                 self.send_pack(dev[0], self.PACK_COMMAND, ["SCAN_ONE_WIRE", ""])
                 res_pack = self.check_lan()
                 if res_pack:
                     self._command_info("Пауза 3с...")
                     time.sleep(3)
-                    self._command_info("Запрос списка найденых на шине OneWire устройств для контроллера '%s'" % dev[0])
+                    self._command_info("Запрос списка найденых на шине OneWire устройств для контроллера '%s'" % dev[1])
                     self.send_pack(dev[0], self.PACK_COMMAND, ["LOAD_ONE_WIRE_ROMS", ""])
                     res_pack = self.check_lan()
                     if res_pack:
@@ -103,15 +116,16 @@ class Main():
                 else:
                     self._command_info(error_text)
             elif command == "CONFIG_UPDATE":
-                self._command_info("Запрос обновдения конфигурационного файла контроллера '%s'..." % dev[0])
+                self._command_info("Запрос обновдения конфигурационного файла контроллера '%s'..." % dev[1])
                 pack_data = generate_config_file(self.db)
+                self._command_info(str(len(pack_data)) + ' байт.')
                 self.send_pack(dev[0], self.PACK_COMMAND, ["SET_CONFIG_FILE", pack_data])
                 if self.check_lan():
                     self._command_info("OK")
                 else:
                     self._command_info(error_text)
             elif command == "REBOOT_CONTROLLERS":
-                self._command_info("Запрос перезагрузки контроллера '%s'..." % dev[0])
+                self._command_info("Запрос перезагрузки контроллера '%s'..." % dev[1])
                 self.send_pack(dev[0], self.PACK_COMMAND, ["REBOOT_CONTROLLER", ""])
                 if self.check_lan():
                     self._command_info("OK")

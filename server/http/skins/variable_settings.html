@@ -12,12 +12,15 @@
     }
 
     function reload_ow() {
+        $('#refresh_list').prop("disabled", true);
+        
         var v = $('#VAR_OW').val();
         $.ajax({url:'variable_settings?refresh_ow=1&key=' + v, success:reload_ow_handler});
     }
 
     function reload_ow_handler(data) {
         $('#VAR_OW').html(data);
+        $('#refresh_list').prop("disabled", false);
     }
 
     $(document).ready(function() {
@@ -65,7 +68,7 @@
                 @OW_LIST@
             </select>            
             <p style="padding:0px;margin:3px;width:100%;text-align:right;">
-                <button type="button" onClick="reload_ow();">Обновить список</button>
+                <button id="refresh_list" type="button" onClick="reload_ow();">Обновить список</button>
             </p>
         </TD>
     </TR>
@@ -83,7 +86,9 @@
     </TR>
     <TR>
         <TD valign="top">Описание:</TD>
-        <TD><textarea id="VAR_COMM" name="VAR_COMM" style="width:250px;height:50px;">@COMM@</textarea></TD>
+        <TD>
+            <textarea id="VAR_COMM" name="VAR_COMM" style="width:100%;height:60px;">@COMM@</textarea>
+        </TD>
     </TR>
     <TR id="value_row">
         <TD>Значение:</TD>

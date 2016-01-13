@@ -1,4 +1,16 @@
 import time
+from grid import Grid
+
+def decode_variable_value(typ, val):
+    if typ == 'ow':
+        return str(val)
+    elif typ == 'pyb':
+        if val:
+            return "ВКЛ."
+        else:
+            return "ВЫКЛ."
+    elif typ == 'variable':
+        return str(val)
 
 class BaseForm(object):
     def __init__(self, db, params):
@@ -192,7 +204,7 @@ class SystemUtilites(BaseForm):
             buf = self.db.get_property("RS485_COMMAND_INFO")
             return buf.encode("utf-8")
         except:
-            pass
+            pass        
         
         try:            
             a = self.params['query']            
@@ -225,3 +237,141 @@ class SystemUtilites(BaseForm):
                 return "START_TERMINAL".encode("utf-8")
         except:
             return "ERROR".encode("utf-8")
+
+class PageVariables(BaseForm):
+    ACTION = "/page_variables"
+
+    def get(self):
+        try:            
+            a = self.params['form']
+            return self._process()
+        except:
+            return self._view()
+
+    def _view(self):
+        buf = self.load_view(self.ACTION)
+        buf = buf.replace("@VARIABLE_LIST@", self._get_variable_list())
+        buf = buf.replace("@STATISTICS@", "")
+        return buf.encode("utf-8")    
+
+    def _process(self):
+        try:
+            if self.get_param("form") == "variable_list":
+                return self._get_variable_list(True).encode("utf-8")
+            elif self.get_param("form") == "variable_set":
+                self.db.IUD("call CORE_SET_VARIABLE(%s, %s, null)" % (self.get_param('id'), self.get_param('val')))
+                self.db.commit()            
+            return "START_TERMINAL".encode("utf-8")
+        except:
+            return "ERROR".encode("utf-8")
+
+    def _get_variable_list(self, forRefresh = False):
+        ls = ["<option value=\"-1\">Все контроллеры</option>"]
+        for dev in self.db.select("select ID, NAME from core_controllers order by ID"):
+            ls += "<option value=\"%s\">%s</option>" % (dev[0], str(dev[1], "utf-8"))
+        
+        grid = Grid()
+        grid.add_column("ID", 50)
+        grid.add_column("<select id=\"filter_controller\" onChange=\"refresh_variables();\">%s</select>" % "".join(ls), 150)
+        grid.add_column("Тип", 70)
+        grid.add_column("Только чтение", 60)
+        grid.add_column("Идентификатор", 200)
+        grid.add_column("Описание", 200)
+        grid.add_column("Значение", 100)
+        grid.add_column("Канал", 100)
+        grid.add_column("", 100)
+        
+        data = []
+
+        f = self.get_param("filter")
+
+        if not f or f == "-1":            
+            q = self.db.query("select v.ID, c.NAME C_NAME, v.ROM, v.DIRECTION, v.NAME, v.COMM, v.VALUE, v.CHANNEL "
+                              "  from core_variables v, core_controllers c "
+                              " where c.ID = v.CONTROLLER_ID "
+                              "order by v.ID")
+        else:
+            q = self.db.query(("select v.ID, c.NAME C_NAME, v.ROM, v.DIRECTION, v.NAME, v.COMM, v.VALUE, v.CHANNEL "
+                               "  from core_variables v, core_controllers c "
+                               " where c.ID = v.CONTROLLER_ID "
+                               "   and c.ID = '%s' "
+                               "order by v.ID") % (f))
+            
+        row = q.fetchone()
+        while row:
+            data_row = []
+            data_row += [str(row[0])]
+            data_row += [str(row[1], "utf_8")]
+            
+            data_row += [str(row[2], "utf-8")]
+            if row[3] == 0:
+                data_row += ["ДА"]
+            else:
+                data_row += ["НЕТ"]
+
+            data_row += [str(row[4], "utf-8")]
+            data_row += [str(row[5], "utf-8")]
+                        
+            rom = str(row[2], "utf-8")
+            val_label = decode_variable_value(rom, row[6])
+            if rom == "pyb":
+                if row[6]:
+                    new_val = 0
+                else:
+                    new_val = 1                
+                data_row += ["<button onMouseDown=\"set_variable_value(%s, %s);\">%s</button>" % (row[0], new_val, val_label)]
+            else:
+                data_row += [val_label]
+
+            data_row += [str(row[7], "utf-8")]
+            data_row += ["<button onMouseDown='variable_settings(%s)'>Свойства...</button> " % row[0]]
+
+            data += [data_row]
+            
+            row = q.fetchone()
+        q.close()
+        grid.set_data(data)
+        
+        return grid.html(forRefresh)
+    
+
+class PageScripts(BaseForm):
+    ACTION = "/page_scripts"
+
+    def get(self):
+        try:            
+            a = self.params['form']            
+            return self._process()
+        except:
+            return self._view()
+
+    def _view(self):
+        buf = self.load_view(self.ACTION)
+        return buf.encode("utf-8")    
+
+    def _process(self):
+        try:
+            if self.get_param("form") == "script_list":
+                return self._script_list().encode("utf-8")
+            elif self.get_param("form") == "script_text":
+                return self._script_text()
+            return "START_TERMINAL".encode("utf-8")
+        except:
+            return "ERROR 1".encode("utf-8")
+
+    def _script_list(self):
+        res = []
+        for row in self.db.select("select ID, COMM from core_scripts order by COMM"):
+            if self.get_param('key') == str(row[0]):
+                css = '"list_row_sel"'
+            else:
+                css = '"list_row"'
+            res += "<div class=", css, " onMousedown=\"sel_script_list(", str(row[0]), ")\">", str(row[1], "utf-8"), "</div>"
+        return "".join(res)
+
+    def _script_text(self):
+        res = self.db.select("select DATA from core_scripts where ID = %s" % self.get_param('key'))
+        return res[0][0]
+
+
+forms = [VariableSettings, SystemUtilites, PageVariables, PageScripts]

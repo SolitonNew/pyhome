@@ -15,6 +15,7 @@
             background-color:#cccccc;
             border-spacing: 1px;
             position:relative;
+            cursor:default;
         }
 
         table.grid td {
@@ -58,6 +59,28 @@
             cursor:s-resize;
         }
 
+        div.page_tab {
+            position:relative;
+            background-color:#fff;
+            padding:7px 10px;
+            display:inline-block;
+            cursor:default;
+            border: 1px solid #ccc;
+            border-bottom: 0;
+        }
+
+        div.toolbar {
+            position:relative;
+            width:100%;
+            padding:0px;
+            background-color:#ddd;
+        }
+
+        div.toolbar button {
+            margin:10px 7px;
+            margin-right:0px;
+        }
+
     </style>
 </HEAD>
 
@@ -71,31 +94,48 @@
             <TD height="50">
                 <span style="padding-left:20px;font-size:20px;"><b>WISE HOUSE v1.0</b></span>
             </TD>
-            <TD align="right" style="padding-right:20px;">
-                <button onClick="controllers_dialog()">Контроллеры...</button>
-                <button onClick="variable_settings(-1);">Создать переменную...</button>
+            <TD align="right" style="padding-right:20px;">                
                 <button onClick="utilites_dialog()">Системные утилиты</button>
             </TD>
         </TR>
         <TR>
-            <TD valign="top" align="left" colspan="2" height="100%"
-                style="padding:5px;position:relative;">
-                @VARIABLE_LIST@
+            <TD valign="top" align="left" colspan="2"
+                style="padding:5px;position:relative;width:100%;height:100%;">
+                <table width="100%" height="100%" cellpadding="0" cellspacing="0">
+                <tr>
+                    <td>
+                        <div style="position:relative;width:100%;">
+                            <div id="tab_1" class="page_tab" onClick="show_page(1)">Переменные </div>
+                            <div id="tab_2" class="page_tab" onClick="show_page(2)">Скрипты</div>
+                            <div id="tab_3" class="page_tab" onClick="show_page(3)">Детальный план</div>
+                            <div id="tab_4" class="page_tab" onClick="show_page(4)">Удаленное управление</div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td height="100%">
+                        <div style="position:relative;width:100%;height:100%;display:block;">
+                            <div id="page_1" url="page_variables" style="position:absolute;width:100%;height:100%;"></div>
+                            
+                            <div id="page_2" url="page_scripts" style="position:absolute;width:100%;height:100%;"></div>
+
+                            <div id="page_3" url="page_plans" style="position:absolute;width:100%;height:100%;">
+                                <div style="position:absolute;width:100%;height:100%;overflow:auto;text-align:center;background-color:#ccc;">
+                                    <img src="plan.png">
+                                </div>
+                            </div>
+
+                            <div id="page_4" url="page_controls" style="position:absolute;width:100%;height:100%;"></div>                            
+                        </div>
+                    </td>
+                </tr>
+                </table>
             </TD>
         </TR>
-        <TR>
-            <TD bgcolor="#777" colspan="2" valign="top" style="position:relative;">
-                <div class="splitter_bottom" style="height:150px;">
-                    <div style="cursor:default;position:absolute;top:0px;overflow:hidden;width:100%;height:100%;background-color:#fff;">
-                    @STATISTICS@
-                    </div>
-                </div>
-            </TD>
-        </TD>
         </TABLE>
         </TD>
         <TD style="position:relative;">
-            <div class="splitter_right" style="width:400px;">
+            <div class="splitter_right" style="width:350px;">
                 <div id="log_container" style="cursor:default;position:absolute;top:0px;overflow:hidden;overflow-y:auto;width:100%;height:100%;background-color:#000;color:#ffffff;">
                 </div>
             </div>

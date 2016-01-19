@@ -1,0 +1,142 @@
+<style type="text/css">
+    div.group {
+        position:relative;
+        padding:5px;
+        margin-left:-5px;
+        width:100%;
+        border: 1px solid #ccc;
+    }
+
+    div.group p {
+        margin:0px;
+        padding:5px 0;
+        color:#777;
+    }
+
+    #terminal_log p {
+        padding:2px 6px;
+        margin:0px;
+    }
+    
+</style>
+
+<script type="text/javascript">
+    var status_view_id = '';
+
+    function send_query(query_data, view_id) {        
+        status_view_id = view_id;
+        $('#' + status_view_id).html('');
+        $.ajax({url:'system_utilites?query=' + query_data, success:send_query_handler});     
+    }
+
+    function send_query_handler(data) {
+        if (data == 'START_TERMINAL') {
+            $('#terminal_bg').fadeIn(300);
+            load_terminal_log();
+        } else {        
+            $('#' + status_view_id).html(data);
+        }
+    }
+
+    function load_terminal_log() {
+        $.ajax({url:'system_utilites?terminal=1', success:load_terminal_log_handler});
+    }
+
+    function load_terminal_log_handler(data) {
+        if (data.indexOf("TERMINAL EXIT") > 0) {
+            $('#terminal_bg').fadeOut(5000);
+        } else {
+            $('#terminal_log').html(data);
+            setTimeout(load_terminal_log, 500);
+        }
+    }
+
+</script>
+
+
+<div style="position:relative;width:500px;background-color:#fff;border: 10px solid #fff;">
+    <div style="position:relative;padding:10px;background-color:#eee;">
+        Системные утилиты
+    </div>
+    <table cellpadding="0" cellspacing="10" width="100%">
+    <TR>
+        <TD></TD>
+    </TR>    
+    <TR>
+        <TD>
+            <div class="group">
+                <div>
+                    <button onClick="send_query('SYNC_TOGGLE', 'SYNC_STATUS')">Остановить/Запустить синхронизацию</button>
+                    &nbsp;&nbsp;&nbsp;&nbsp;Текущий статус: <B><span id="SYNC_STATUS">@SYNC_STATUS@</span></B>
+                </div>
+                <p>
+                Если выполнена полная остановка синхронизации данных между
+                контроллерами и сервером, то контроллеры, не имея доступа к
+                данным других устройств будут работать в автономном режиме
+                обслуживая только подключенные к ним устройства.
+                </p>
+            </div>
+        </TD>
+    </TR>
+    <TR>
+        <TD>
+            <div class="group">
+                <div>
+                    <button onClick="send_query('SCAN_OW', 'OW_STATUS')">Сканировать OneWire устройства</button>
+                </div>
+                <p>
+                При добавлении новых OneWire подчиненных устройств перед их
+                использованием необходимо выполнить сканирование сетей.
+                После выполнения этой операции все новые устройства будут
+                занесены в единую базу и станут доступными для использования
+                в сети.<BR>
+                <b>Примечание:</b> Эта функция также доступна в окне свойств
+                переменной.
+                </p>
+            </div>
+        </TD>
+    </TR>
+    <TR>
+        <TD>
+            <div class="group">
+                <div>
+                    <button onClick="send_query('CONFIG_UPDATE', 'CONFIG_STATUS')">Загрузить файл конфигурации</button>
+                </div>
+                <p>
+                После предварительной настройки системы необходимо выполнить
+                загрузку конфигурационного файла. Иначе никакие изменения не
+                будут применены.<BR>
+                <b>Примечание:</b> Запущеная синхронизация переменных без
+                предварительной передачи конфигурационных файлов может
+                негативно сказаться на поведении системы.
+                </p>
+            </div>
+        </TD>
+    </TR>
+    <TR>
+        <TD>
+            <div class="group">
+                <div>
+                    <button onClick="send_query('REBOOT_CONTROLLERS', 'REBOOT_STATUS')">Принудительная перезагрузка контроллеров</button>
+                </div>
+                <p>
+                После выполнения всех необходимых настроечных действий
+                необходимо выполнить полную перезагрузку компонентов системы.
+                </p>
+            </div>
+        </TD>
+    </TR>        
+    <TR>
+        <TD align="right" valign="bottom" height="60">
+            <button onClick="hide_window()">Закрыть</button>
+        </TD>
+    </TR>
+    </table>
+
+    <div id="terminal_bg" style="position:absolute;left:0px;top:0px;width:100%;height:100%;background-color:#fff;display:none;">
+        <div style="position:absolute;width:100%;height:100%;background-color:#fff;opacity:0.4;">
+        </div>
+        <div id="terminal_log" style="position:relative;width:100%;height:100%;background-color:#000;color:#fff;overflow:none;overflow-y:auto;text-align:left;">
+        </div>                    
+    </div>
+</div>

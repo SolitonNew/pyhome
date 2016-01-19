@@ -1,3 +1,47 @@
+from variables import Variable 
+
+# Variables
+TERM_1 = Variable()
+TERM_2 = Variable()
+SWITCH_1_LEFT = Variable()
+SWITCH_1_RIGHT = Variable()
+LIGHT_1_FIRST = Variable()
+LIGHT_1_SECOND = Variable()
+WARMING_1 = Variable()
+WARMING_2 = Variable()
+TEMP_ROOM_1 = Variable()
+TEMP_ROOM_2 = Variable()
+TERMOSTAT_DELTA = Variable()
+VAR_12 = Variable()
+VAR_13 = Variable()
+VAR_14 = Variable()
+VAR_15 = Variable()
+VAR_16 = Variable()
+VAR_17 = Variable()
+VAR_18 = Variable()
+VAR_19 = Variable()
+VAR_20 = Variable()
+VAR_21 = Variable()
+VAR_22 = Variable()
+VAR_23 = Variable()
+VAR_24 = Variable()
+VAR_25 = Variable()
+VAR_26 = Variable()
+VAR_27 = Variable()
+VAR_28 = Variable()
+VAR_29 = Variable()
+VAR_30 = Variable()
+VAR_31 = Variable()
+VAR_32 = Variable()
+VAR_33 = Variable()
+VAR_34 = Variable()
+VAR_35 = Variable()
+VAR_36 = Variable()
+VAR_37 = Variable()
+VAR_38 = Variable()
+VAR_39 = Variable()
+VAR_40 = Variable()
+
 #!/usr/bin/python3
 
 from http.server import BaseHTTPRequestHandler, HTTPServer
@@ -117,7 +161,3 @@ print(
 "=============================================================================\n"
 % (HTTP_HOST, HTTP_PORT)
 )
-
-if __name__ == "__main__":
-    serv = HTTPServer((HTTP_HOST, HTTP_PORT), HttpProcessor)    
-    serv.serve_forever()

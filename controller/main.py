@@ -70,6 +70,7 @@ def onewire_termometrs():
             curr_termometr_index = 0
         variables.check_driver_value(termometrs[curr_termometr_index].rom)
 
+switch = pyb.Switch().callback(lambda: pyb.LED(4).off())
 
 while True:
     for pack in rs485.check_lan():
@@ -85,6 +86,7 @@ while True:
             elif pack[1] == PACK_COMMAND:
                 comm_data = pack[2]
                 if comm_data[0] == "SCAN_ONE_WIRE":
+                    pyb.LED(3).on()
                     rs485.send_pack(PACK_COMMAND, [comm_data[0], False])
                     ow.search()
                 elif comm_data[0] == "LOAD_ONE_WIRE_ROMS":
@@ -95,6 +97,7 @@ while True:
                             rr += [r]
                         roms += [rr]
                     rs485.send_pack(PACK_COMMAND, [comm_data[0], roms])
+                    pyb.LED(3).off()
                 elif comm_data[0] == "SET_CONFIG_FILE":
                     f = open("config.py", "w")
                     f.write(comm_data[1])

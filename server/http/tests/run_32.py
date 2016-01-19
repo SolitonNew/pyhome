@@ -5,8 +5,8 @@ from variables import printInput
 from variables import printChanges 
 
 # Variables
-TERM_1 = Variable('TERM_1', 21.5)
-TERM_2 = Variable('TERM_2', 21.3125)
+TERM_1 = Variable('TERM_1', 22.25)
+TERM_2 = Variable('TERM_2', 22.1875)
 SWITCH_1_LEFT = Variable('SWITCH_1_LEFT', 0.0)
 SWITCH_1_RIGHT = Variable('SWITCH_1_RIGHT', 0.0)
 LIGHT_1_FIRST = Variable('LIGHT_1_FIRST', 1.0)
@@ -46,7 +46,6 @@ VAR_38 = Variable('VAR_38', 0)
 VAR_39 = Variable('VAR_39', 0)
 VAR_40 = Variable('VAR_40', 0)
 
-for i in range(10):
-    print(i)
+0
 printInput()
 printChanges()

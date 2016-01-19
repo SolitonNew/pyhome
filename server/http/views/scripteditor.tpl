@@ -5,7 +5,6 @@
         height:100%;
         background-color:#000000;
         color:#00ff00;
-        editable=false;
     }
 </style>
 
@@ -94,23 +93,30 @@
     function script_save_to_db_@ID@() {
         $('#script_FORM_QUERY_@ID@').val('save');
         $('#script_form_@ID@').submit();
+        SCRIPT_LIST_refresh();
+        SCRIPT_VIEW_TABS_rename($('#script_NAME_@ID@').val(), 'scripteditor?key=@ID@');
     }
 
     function script_execute_@ID@() {
         $('#script_result_@ID@').val('');
         $('#script_FORM_QUERY_@ID@').val('execute');
         $('#script_form_@ID@').submit();
-    }    
+    }
+
+    function script_delete_@ID@() {
+        SCRIPT_VIEW_TABS_close(SCRIPT_VIEW_TABS_num('scripteditor?key=@ID@'));
+    }
 
     $(document).ready(function() {
         use_scrollers();
         
         $("#script_form_@ID@").ajaxForm(function(data) {
             if ($('#script_FORM_QUERY_@ID@').val() == 'save') {
-                if (data == "OK")
+                if (data == "OK") {
                     $('#script_save_@ID@').prop('disabled', true);
-                else
+                } else {
                     alert(data);
+                }
             } else
             if ($('#script_FORM_QUERY_@ID@').val() == 'execute') {
                 $('#script_result_@ID@').val(data);
@@ -128,8 +134,22 @@
     <tr>
         <td style="position:relative;">
             <div class="toolbar">
-                <button id="script_save_@ID@" type="button" onClick="script_save_to_db_@ID@();">Сохранить</button>
-                <button id="script_test_@ID@" type="button" onClick="script_execute_@ID@();">Тест</button>
+                <table style="position:relative;width:100%;" cellpadding="0" cellspacing="0">
+                <tr>
+                    <td width="10"></td>
+                    <td>
+                        <input id="script_NAME_@ID@" type="text" name="NAME" style="width:120px;"
+                               value="@NAME@" onInput="calc_nums_@ID@();">
+                        <button id="script_save_@ID@" type="button" onClick="script_save_to_db_@ID@();">Сохранить</button>
+                        <button id="script_test_@ID@" type="button" onClick="script_execute_@ID@();">Тест</button>
+                        <button id="script_events_@ID@" type="button" onClick="show_window('attach_event_dialog?key=@ID@');">Назначить как событие...</button>
+                    </td>
+                    <td align="right">
+                        <button type="button" onClick="script_delete_@ID@();">Удалить</button>
+                    </td>
+                    <td width="10"></td>
+                </tr>
+                </table>
             </div>
         </td>
     </tr>
@@ -156,7 +176,10 @@
             <tr>
                 <td colspan="3" style="position:relative;">
                     <div class="splitter_bottom" style="height:200px;">
-                        <textarea id="script_result_@ID@" class="script_log" onKeydown="return false;"></textarea>
+                        <textarea id="script_result_@ID@"
+                                  class="script_log"
+                                  onKeydown="return false;"
+                                  readonly></textarea>
                     </div>
                 </td>
             </tr>

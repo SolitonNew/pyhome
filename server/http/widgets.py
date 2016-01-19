@@ -28,8 +28,15 @@ class ListField(WidgetBase):
             if type(s) == bytearray:
                 s = str(s, "utf-8")
             sel = ""
-            if row[self.keyIndex] == self.selectedKey:
-                sel = " selected"
+            if type(self.selectedKey) == list:
+                try:
+                    self.selectedKey.index(row[self.keyIndex])
+                    sel = " selected"
+                except:
+                    pass
+            else:    
+                if row[self.keyIndex] == self.selectedKey:
+                    sel = " selected"
             res += ["<option value=\"%s\"%s>%s</option>" % (row[self.keyIndex], sel, s)]
         return "".join(res)
         return res    
@@ -40,7 +47,7 @@ class TabControl(WidgetBase):
         super().__init__(id)
         self.tabClosed = tabClosed
         self.tabs = []
-        self.btnCloseTpl = "<button type=\"button\" onMousedown=\"close_@ID@_tab(@NUM@);stop_mouse_events(event);return false;\">X</button>"
+        self.btnCloseTpl = "<button type=\"button\" onMousedown=\"@ID@_close(@NUM@);stop_mouse_events(event);return false;\">X</button>"
 
     def add_tab(self, label, url):
         self.tabs += [{'label':label,
@@ -55,7 +62,7 @@ class TabControl(WidgetBase):
         if self.tabClosed:
             btnClose = self.btnCloseTpl
         for tab in self.tabs:
-            res += ["<div id=\"%s_tab_%s\" class=\"page_tab\" onClick=\"select_%s_tab(%s)\">" % (self.id, i, self.id, i)]
+            res += ["<div id=\"%s_tab_%s\" class=\"page_tab\" onClick=\"%s_select(%s)\">" % (self.id, i, self.id, i)]
             res += [tab['label']]
             res += [btnClose.replace("@NUM@", str(i))]
             res += ["</div>"]
@@ -80,7 +87,7 @@ class TabControl(WidgetBase):
               ""
               "var @ID@_btn_close_tpl = '@CLOSE_TPL@';"
               ""
-              "function select_@ID@_tab(num) {"              
+              "function @ID@_select(num) {"              
               "   if ($('#@ID@_tab_' + num).hasClass('page_tab_sel'))"
               "      return ;"
               "   "
@@ -98,34 +105,43 @@ class TabControl(WidgetBase):
               "      })"
               "}"
               ""
-              "function append_@ID@_tab(label, url) {"
+              "function @ID@_append(label, url) {"
               "   var i = @ID@_tabs.indexOf(url);"
               "   if (i > 0) {"
-              "      select_@ID@_tab(i);"
+              "      @ID@_select(i);"
               "      return;"
               "   }"
               "   i = @ID@_tabs.length;"
               "   @ID@_tabs[i] = url;"
               "   var btn = @ID@_btn_close_tpl.replace('@NUM@', i);"
-              "   $('#@ID@_tab_list').append('<div id=\"@ID@_tab_' + i + '\" class=\"page_tab\" onClick=\"select_@ID@_tab(' + i + ')\">' + label + btn + '</div>');"
+              "   $('#@ID@_tab_list').append('<div id=\"@ID@_tab_' + i + '\" class=\"page_tab\" onClick=\"@ID@_select(' + i + ')\"><span id=\"@ID@_tab_title_' + i + '\">' + label + '</span>' + btn + '</div>');"
               "   $('#@ID@_page_list').append('<div id=\"@ID@_page_' + i + '\" class=\"page_data\"></div>');"
               "   "
-              "   select_@ID@_tab(i);"
+              "   @ID@_select(i);"
               "}"
               ""
-              "function close_@ID@_tab(num) {"              
+              "function @ID@_rename(label, url) {"
+              "   var i = @ID@_tabs.indexOf(url);"
+              "   $('#@ID@_tab_title_' + i).html(label);"
+              "}"
+              ""
+              "function @ID@_num(url) {"
+              "   return @ID@_tabs.indexOf(url);"
+              "}"
+              ""              
+              "function @ID@_close(num) {"              
               "   @ID@_tabs[num] = '';"
               "   if ($('#@ID@_tab_' + num).hasClass('page_tab_sel')) {"
               "      var i;"
               "      for (i = num; i > 0; i--) {"
               "         if (@ID@_tabs[i] != '') {"
-              "            select_@ID@_tab(i);"
+              "            @ID@_select(i);"
               "            break;"
               "         }"
               "      }"
               "      for (i = num; i < @ID@_tabs.length; i++) {"
               "         if (@ID@_tabs[i] != '') {"
-              "            select_@ID@_tab(i);"
+              "            @ID@_select(i);"
               "            break;"
               "         }"
               "      }"
@@ -135,7 +151,7 @@ class TabControl(WidgetBase):
               "}"
               ""
               "$(document).ready(function () {"
-              "   select_@ID@_tab(1);"
+              "   @ID@_select(1);"
               "})"
               "</script>")
 

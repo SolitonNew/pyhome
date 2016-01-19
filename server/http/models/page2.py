@@ -18,7 +18,14 @@ class Page2(BaseForm):
     def row_handler(self, row):
         label = str(row[1], "utf-8")
         id = str(row[0])
-        res = ["<div style=\"width:100%;\" onMousedown=\"append_SCRIPT_VIEW_TABS_tab('" + label + "', 'scripteditor?key=" + id + "')\">"]
+        res = ["<div style=\"width:100%;\" onMousedown=\"SCRIPT_VIEW_TABS_append('" + label + "', 'scripteditor?key=" + id + "')\">"]
         res += [label]
         res += ["</div>"]
         return "".join(res)
+
+    def query(self, query_type):
+        if query_type == "create_script":
+            label = "Новый скрипт"
+            self.db.IUD("insert into core_scripts (COMM) values ('%s')" % (label))
+            self.db.commit()
+            return "%s;%s;" % (label, self.db.lastID())

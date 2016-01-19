@@ -6,7 +6,7 @@ from variables import printChanges
 
 # Variables
 TERM_1 = Variable('TERM_1', 22.8125)
-TERM_2 = Variable('TERM_2', 22.75)
+TERM_2 = Variable('TERM_2', 22.5)
 SWITCH_1_LEFT = Variable('SWITCH_1_LEFT', 0.0)
 SWITCH_1_RIGHT = Variable('SWITCH_1_RIGHT', 0.0)
 LIGHT_1_FIRST = Variable('LIGHT_1_FIRST', 1.0)
@@ -46,12 +46,6 @@ var_27 = Variable('var_27', 0)
 var_28 = Variable('var_28', 0)
 var_29 = Variable('var_29', 0)
 
-print("TERM_1: ", TERM_1.value())
-if WARMING_1.value():
-    if TERM_1.value() > TEMP_ROOM_1.value():
-        WARMING_1.value(False)
-else:
-    if TERM_1.value() < (TEMP_ROOM_1.value() - TERMOSTAT_DELTA.value()):
-        WARMING_1.value(True)
+0
 printInput()
 printChanges()

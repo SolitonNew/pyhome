@@ -7,7 +7,8 @@ from models.page4 import Page4
 from models.var_edit_dialog import VarEditDialog
 from models.system_dialog import SystemDialog
 from models.scripteditor import ScriptEditor
+from models.attach_event_dialog import AttachEventDialog
 
 FORMS = (Index, EventList, Page1, Page2, Page3, Page4, VarEditDialog,
-         SystemDialog, ScriptEditor)
+         SystemDialog, ScriptEditor, AttachEventDialog)
     

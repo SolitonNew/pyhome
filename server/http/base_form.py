@@ -25,6 +25,19 @@ class BaseForm(object):
         except:
             return False
 
+    def param_list(self, name):
+        try:
+            p = parse.parse_qs(self.url_data.query)
+            res = []
+            for v in p[name]:
+                if type(res) == bytearray:
+                    res += [str(v, "utf-8")]
+                else:
+                    res += [str(v)]
+            return res
+        except:
+            return False
+        
     def param_str(self, name):
         v = self.param(name)
         if v:

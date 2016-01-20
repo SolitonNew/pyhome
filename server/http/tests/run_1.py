@@ -5,14 +5,14 @@ from variables import printInput
 from variables import printChanges 
 
 # Variables
-TERM_1 = Variable('TERM_1', 22.8125)
-TERM_2 = Variable('TERM_2', 22.75)
+TERM_1 = Variable('TERM_1', 19.5625)
+TERM_2 = Variable('TERM_2', 19.375)
 SWITCH_1_LEFT = Variable('SWITCH_1_LEFT', 0.0)
 SWITCH_1_RIGHT = Variable('SWITCH_1_RIGHT', 0.0)
 LIGHT_1_FIRST = Variable('LIGHT_1_FIRST', 1.0)
 LIGHT_1_SECOND = Variable('LIGHT_1_SECOND', 1.0)
-WARMING_1 = Variable('WARMING_1', 0.0)
-WARMING_2 = Variable('WARMING_2', 1.0)
+WARMING_1 = Variable('WARMING_1', 1.0)
+WARMING_2 = Variable('WARMING_2', 0.0)
 TEMP_ROOM_1 = Variable('TEMP_ROOM_1', 20.0)
 TEMP_ROOM_2 = Variable('TEMP_ROOM_2', 20.0)
 TERMOSTAT_DELTA = Variable('TERMOSTAT_DELTA', 0.5)

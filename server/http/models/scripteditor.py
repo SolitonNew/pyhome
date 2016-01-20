@@ -32,6 +32,14 @@ class ScriptEditor(BaseForm):
                 return "%s" % (e.args)
         elif query_type == "execute":
             return self._execute()
+        elif query_type == "delete":
+            try:
+                self.db.IUD("delete from core_variable_events where SCRIPT_ID=%s" % self.param('key'))
+                self.db.IUD("delete from core_scripts where ID=%s" % self.param('key'))
+                self.db.commit()
+                return "OK"
+            except Exception as e:
+                return "%s" % (e.args)
         return "OK"
 
     def _execute(self):

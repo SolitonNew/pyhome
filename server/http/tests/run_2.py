@@ -5,7 +5,7 @@ from variables import printInput
 from variables import printChanges 
 
 # Variables
-TERM_1 = Variable('TERM_1', 22.6875)
+TERM_1 = Variable('TERM_1', 22.625)
 TERM_2 = Variable('TERM_2', 22.5)
 SWITCH_1_LEFT = Variable('SWITCH_1_LEFT', 0.0)
 SWITCH_1_RIGHT = Variable('SWITCH_1_RIGHT', 0.0)

@@ -104,7 +104,13 @@
     }
 
     function script_delete_@ID@() {
-        SCRIPT_VIEW_TABS_close(SCRIPT_VIEW_TABS_num('scripteditor?key=@ID@'));
+        var s = $('#script_NAME_@ID@').val();
+        alert('Удалить скрипт "' + s + '"?', ',yes,no,', function (res) {
+            if (res == 'yes') {
+                $('#script_FORM_QUERY_@ID@').val('delete');
+                $('#script_form_@ID@').submit();
+            }
+        });
     }
 
     $(document).ready(function() {
@@ -120,6 +126,14 @@
             } else
             if ($('#script_FORM_QUERY_@ID@').val() == 'execute') {
                 $('#script_result_@ID@').val(data);
+            } else
+            if ($('#script_FORM_QUERY_@ID@').val() == 'delete') {
+                if (data == "OK") {
+                    SCRIPT_VIEW_TABS_close(SCRIPT_VIEW_TABS_num('scripteditor?key=@ID@'));
+                    SCRIPT_LIST_refresh();
+                } else {
+                    alert(data);
+                }
             }
         });
     });

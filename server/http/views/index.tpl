@@ -223,6 +223,21 @@
             height:100%;
             overflow:auto;
         }
+
+        div.chart_control {
+            position:relative;
+            background-color:#ffffff;
+            width:100%;
+            height:100%;
+        }
+
+        div.chart_control div {
+            position: absolute;
+            width:3px;
+            height:3px;
+            background-color:#ff0000;
+        }
+        
     </style>    
 </HEAD>
 

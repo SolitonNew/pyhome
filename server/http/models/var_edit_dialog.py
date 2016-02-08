@@ -14,7 +14,7 @@ class VarEditDialog(BaseForm):
                              "  from core_variables where ID = %s" % KEY)        
         if row:
             row = row[0]            
-            CONTROLLER_ID = str(row[1])
+            CONTROLLER_ID = row[1]
             ROM = str(row[2], "utf-8")
             DIRECTION = row[3]
             NAME = str(row[4], "utf-8")

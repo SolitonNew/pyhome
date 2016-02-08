@@ -4,7 +4,10 @@ from pyb import Timer
 from rs485 import RS485
 from onewire import OneWire
 from ds18b20 import DS18B20
-import config
+try:
+    import config
+except:
+    pyb.LED(4).on()
 import variables
 
 IS_START = True

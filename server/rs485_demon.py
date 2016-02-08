@@ -116,14 +116,19 @@ class Main():
                 else:
                     self._command_info(error_text)
             elif command == "CONFIG_UPDATE":
-                self._command_info("Запрос обновдения конфигурационного файла контроллера '%s'..." % dev[1])
-                pack_data = generate_config_file(self.db)
-                self._command_info(str(len(pack_data)) + ' байт.')
-                self.send_pack(dev[0], self.PACK_COMMAND, ["SET_CONFIG_FILE", pack_data])
-                if self.check_lan():
-                    self._command_info("OK")
-                else:
-                    self._command_info(error_text)
+                self.serialPort.timeout = 5
+                try:
+                    self._command_info("Запрос обновления конфигурационного файла контроллера '%s'..." % dev[1])
+                    pack_data = generate_config_file(self.db)
+                    self._command_info(str(len(pack_data)) + ' байт.')
+                    self.send_pack(dev[0], self.PACK_COMMAND, ["SET_CONFIG_FILE", pack_data])
+                    if self.check_lan():
+                        self._command_info("OK")
+                    else:
+                        self._command_info(error_text)
+                except:
+                    pass
+                self.serialPort.timeout = 0.5
             elif command == "REBOOT_CONTROLLERS":
                 self._command_info("Запрос перезагрузки контроллера '%s'..." % dev[1])
                 self.send_pack(dev[0], self.PACK_COMMAND, ["REBOOT_CONTROLLER", ""])

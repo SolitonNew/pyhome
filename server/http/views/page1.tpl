@@ -14,6 +14,7 @@
     <td>
         <div class="toolbar">
             <button onClick="variable_settings(-1);">Создать новую переменну...</button>
+            <button onClick="STATISTICS_refresh();">Обновить чарт</button>
         </div>
     </td>
 </tr>

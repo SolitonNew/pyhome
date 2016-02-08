@@ -38,6 +38,24 @@ class HttpProcessor(BaseHTTPRequestHandler):
                     pass
             except:
                 pass
+
+        if is_empty:
+            try:
+                self.media_ext.index(ext)
+                is_empty = False
+                ext = ext[1:]
+                try:
+                    f = open(path, 'rb')
+                    self.send_response(200)                    
+                    self.send_header('content-type','image/%s' % ext)
+                    self.send_header('charset','UTF8')
+                    self.end_headers()                    
+                    self.wfile.write(f.read())
+                    f.close;
+                except:
+                    pass
+            except:
+                pass            
         
         if is_empty:
             try:

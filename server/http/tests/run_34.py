@@ -48,7 +48,7 @@ SHOWER_2_R = Variable('SHOWER_2_R', 0)
 BEDROOM_3_WC_R = Variable('BEDROOM_3_WC_R', 0)
 HALL_2_R = Variable('HALL_2_R', 0)
 
-if BEDROOM_3_WC_S.value():
-    BEDROOM_3_WC_R.value(not BEDROOM_WC_3_R.value())
+if DINING_S.value():
+    DINING_R.value(not DINING_R.value())
 printInput()
 printChanges()

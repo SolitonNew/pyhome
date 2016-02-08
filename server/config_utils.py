@@ -33,6 +33,7 @@ def generate_variable_list(db):
         name = row[0].decode("utf-8")
         rom = row[4].decode("utf-8")
         if rom == "ow":
+            rom = "''";
             for rrr in roms:
                 if rrr[0] == row[6]:
                     rom = rrr[1]

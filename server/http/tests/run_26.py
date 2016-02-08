@@ -5,7 +5,7 @@ from variables import printInput
 from variables import printChanges 
 
 # Variables
-TERM_1 = Variable('TERM_1', 18.4375)
+TERM_1 = Variable('TERM_1', 18.5)
 TERM_2 = Variable('TERM_2', 17.9375)
 LIVING_S = Variable('LIVING_S', 0.0)
 WINTER_GARDEN_S = Variable('WINTER_GARDEN_S', 0.0)
@@ -48,7 +48,7 @@ SHOWER_2_R = Variable('SHOWER_2_R', 0)
 BEDROOM_3_WC_R = Variable('BEDROOM_3_WC_R', 0)
 HALL_2_R = Variable('HALL_2_R', 0)
 
-if BEDROOM_3_WC_S.value():
-    BEDROOM_3_WC_R.value(not BEDROOM_WC_3_R.value())
+if BEDROOM_3_SECOND_S.value():
+    BEDROOM_3_SECOND_R.value(not BEDROOM_3_SECOND_R.value())
 printInput()
 printChanges()

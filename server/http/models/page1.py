@@ -1,6 +1,7 @@
 from base_form import BaseForm
 from widgets import TextField
 from widgets import Grid
+from widgets import Chart
 
 class Page1(BaseForm):
     ACTION = "page1"
@@ -10,27 +11,29 @@ class Page1(BaseForm):
         super().__init__()
 
     def create_widgets(self):
-        statist = TextField("STATISTICS", "Квадратик")
-        self.add_widget(statist)
-
         variableSql = ("select v.ID, c.NAME C_NAME, v.ROM, v.DIRECTION, v.NAME, v.COMM, v.VALUE, v.CHANNEL, '' F1"
                        "  from core_variables v, core_controllers c "
-                       " where c.ID = v.CONTROLLER_ID "
-                       "order by v.ID")
+                       " where c.ID = v.CONTROLLER_ID ")
 
         grid = Grid("VARIABLE_LIST", variableSql)
 
         grid.add_column("ID", "ID", 50)
-        grid.add_column("Контроллер", "C_NAME", 150)
-        grid.add_column("Тип", "ROM", 70)
-        grid.add_column("Только чтение", "DIRECTION", 60, func=self.column_ro_func)
-        grid.add_column("Идентификатор", "NAME", 200)
-        grid.add_column("Описание", "COMM", 200)
-        grid.add_column("Значение", "VALUE", 100, func=self.column_val_func)
-        grid.add_column("Канал", "CHANNEL", 100)
-        grid.add_column("", "F1", 95, func=self.column_prop_func)
-        
+        grid.add_column("Контроллер", "C_NAME", 150, sort="asc")
+        grid.add_column("Тип", "ROM", 70, sort="on")
+        grid.add_column("Только чтение", "DIRECTION", 60, sort="on", func=self.column_ro_func)
+        grid.add_column("Идентификатор", "NAME", 200, sort="on")
+        grid.add_column("Описание", "COMM", 200, sort="on")
+        grid.add_column("Значение", "VALUE", 100, sort="on", func=self.column_val_func)
+        grid.add_column("Канал", "CHANNEL", 100, sort="on")
+        grid.add_column("", "F1", 95, func=self.column_prop_func)        
         self.add_widget(grid)
+
+        chart = Chart("STATISTICS", "D", "VALUE",
+                      ("select UNIX_TIMESTAMP(CHANGE_DATE) D, VALUE from core_variable_changes "
+                       " where VARIABLE_ID = 1 "
+                       "   and CHANGE_DATE >= INTERVAL -3 day + CURRENT_TIMESTAMP "
+                       "order by CHANGE_DATE "))
+        self.add_widget(chart)
 
     def column_ro_func(self, index, row):
         return ["ДА", "НЕТ"][row[3]]

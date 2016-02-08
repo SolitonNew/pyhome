@@ -1,3 +1,5 @@
+import json
+
 class WidgetBase(object):
     def __init__(self, id):
         self.id = id
@@ -197,34 +199,95 @@ class Grid(WidgetBase):
 
     def _gen_js(self):
         js = ("<script type=\"text/javascript\">"
+              ""
+              "var @ID@_sorts = [@SORTS@];"
+              ""              
               "function @ID@_refresh() {"
-              "   $.ajax({url:'@PAGE@?WIDGET_@ID@=true'}).done(function (data) {"
+              "   sorts = @ID@_sorts.join(',');"
+              "   $.ajax({url:'@PAGE@?WIDGET_@ID@=true&sorts=' + sorts}).done(function (data) {"
               "      $('#@ID@_data').html(data);"
               "   });"
-              "};"
+              "}"
               ""
+              "function @ID@_sort(num) {"
+              "   var col_sort = @ID@_sorts[num];"
+              "   if (col_sort) {"              
+              "      col_sort++;"
+              "      if (col_sort > 2) {"
+              "         col_sort = 0;"
+              "      }"
+              "   } else {"
+              "      col_sort = 1;"
+              "   }"
+              "   @ID@_sorts[num] = col_sort;"
+              "   "
+              "   if (col_sort == 2) {"
+              "      $('#@ID@_' + num + '_up').css('display', 'block');"
+              "   } else {"
+              "      $('#@ID@_' + num + '_up').css('display', 'none');"
+              "   }"
+              "   "
+              "   if (col_sort == 1) {"
+              "      $('#@ID@_' + num + '_down').css('display', 'block');"
+              "   } else {"
+              "      $('#@ID@_' + num + '_down').css('display', 'none');"
+              "   }"
+              "   "
+              "   @ID@_refresh();"
+              "}"
+              ""              
               "$(document).ready(function () {"
-              "   $('#@ID@_header_top').height($('#@ID@_header_table').height());"              
+              "   $('#@ID@_header_top').height($('#@ID@_header_table').height());"
               "   @ID@_refresh();"              
               "});"
               "</script>")
 
         js = js.replace("@ID@", str(self.id))
         js = js.replace("@PAGE@", self.parentForm.ACTION)
+
+        sorts = []
+        for col in self.columns:
+            if col['sort'] == "asc":
+                sorts += ["1,"]
+            elif col['sort'] == "desc":
+                sorts += ["2,"]
+            else:
+                sorts += [","]
+        js = js.replace("@SORTS@", "".join(sorts))
         
         return js
 
-    def add_column(self, title, field, width, visible=True, func=None):
+    def add_column(self, title, field, width, visible=True, sort = "off", func=None):
         self.columns += [{'title': title,
                           'field': field,
-                          'width': width,
+                          'width': width,                          
                           'visible': visible,
+                          'sort': sort,
                           'func': func}]
 
-    def _gen_cell(self, data, width):
-        res = ["<td width=\"%s\">" % width]
+    def _gen_cell_header(self, data, width, index):
+        if self.columns[index]["sort"] != "off":
+            res = ["<td width=\"%s\" onClick=\"%s_sort(%s);\">" % (width, self.id, index)]
+        else:
+            res = ["<td width=\"%s\">" % width]
         res += ["<div style=\"width:%spx;\">" % (width)]
+        res += ["<table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\">"]
+        res += ["<tr>"]
+        res += ["<td width=\"100%\" style=\"border: none;\">"]
         res += [data]
+        res += ["</td>"]
+        res += ["<td style=\"border: none;\">"]
+        style_up = "none";
+        style_down = "none";
+        if self.columns[index]["sort"] == "desc":
+            style_up = "block";
+        if self.columns[index]["sort"] == "asc":
+            style_down = "block";
+        res += ["<img id=\"%s_%s_up\" src=\"widget_resources/sort_up.png\" style=\"display:%s;\">" % (self.id, index, style_up)]
+        res += ["<img id=\"%s_%s_down\" src=\"widget_resources/sort_down.png\" style=\"display:%s;\">" % (self.id, index, style_down)]
+        res += ["</td>"]
+        res += ["</tr>"]
+        res += ["</table>"]
         res += ["</div>"]
         res += ["</td>"]
 
@@ -233,16 +296,40 @@ class Grid(WidgetBase):
     def _gen_header(self):
         res = ["<table id=\"%s_header_table\" class=\"grid_header\" cellpadding=\"0\" cellspacing=\"0\">" % self.id]
         res += "<tr>"
+        i = 0
         for col in self.columns:
             if col['visible']:
-                res += [self._gen_cell(col['title'], col['width'])]
+                res += [self._gen_cell_header(col['title'], col['width'], i)]
+            i += 1
         res += "</tr>"
         res += "</table>"
         return "".join(res)
 
-    def _gen_data(self):
+    def _gen_cell_data(self, data, width):
+        res = ["<td width=\"%s\">" % width]
+        res += ["<div style=\"width:%spx;\">" % (width)]
+        res += [data]
+        res += ["</div>"]
+        res += ["</td>"]
+
+        return "".join(res)    
+
+    def _gen_data(self, sorts = ""):
         res = ["<table class=\"grid_data\" cellpadding=\"0\" cellspacing=\"0\">"]
-        q = self.parentForm.db.query(self.sql)
+        orders = []
+        if sorts:
+            i = 1
+            for sort in sorts.split(","):
+                if sort == '1':
+                    orders += ["%s asc, " % i]
+                elif sort == '2':
+                    orders += ["%s desc, " % i]
+                i += 1
+        orders = "".join(orders)
+        if orders:
+            orders = "order by " + orders[:-2]            
+            
+        q = self.parentForm.db.query(self.sql + orders)
         data = q.fetchall()
         fields = q.column_names
         q.close()
@@ -259,7 +346,7 @@ class Grid(WidgetBase):
                             v = str(row[field], "utf-8")
                         else:
                             v = str(row[field])
-                    res += [self._gen_cell(v, self.columns[i]['width'])]
+                    res += [self._gen_cell_data(v, self.columns[i]['width'])]
             res += "</tr>"
         res += "</table>"
         return "".join(res)
@@ -267,7 +354,7 @@ class Grid(WidgetBase):
     def query(self):        
         q = self.parentForm.param("WIDGET_%s" % self.id)
         if q:
-            return self._gen_data()
+            return self._gen_data(self.parentForm.param("sorts"))
     
     def html(self):
         try:
@@ -372,5 +459,114 @@ class List(WidgetBase):
             res = res.replace("@ID@", self.id)
         except Exception as e:
             return "Ошибка в виджете List: %s" % e.args
+
+        return self._gen_js() + res
+
+
+class Chart(WidgetBase):
+    def __init__(self, id, fieldX, fieldY, sql):
+        super().__init__(id)
+        self.fieldX = fieldX
+        self.fieldY = fieldY
+        self.sql = sql
+
+    def _gen_js(self):
+        js = ("<script type=\"text/javascript\">"
+              "var @ID@_values = false; "
+              ""
+              "function @ID@_refresh() {"
+              "   /*$('#@ID@_view').html('');*/"
+              "   $.ajax({url:'@PAGE@?WIDGET_@ID@=true'}).done(function (data) {"
+              "      @ID@_values = JSON.parse(data);"
+              "      @ID@_build();"
+              "   });"
+              "}"
+              ""
+              "function @ID@_calc_bounds() {"              
+              "   var vals = @ID@_values;"
+              "   var s = [999999999999, 999999999999, -999999999999, -999999999999];"
+              "   for (var i = 0; i < vals.length; i++) {"
+              "      if (vals[i][0] < s[0]) s[0] = vals[i][0];"
+              "      if (vals[i][1] < s[1]) s[1] = vals[i][1];"
+              "      if (vals[i][0] > s[2]) s[2] = vals[i][0];"
+              "      if (vals[i][1] > s[3]) s[3] = vals[i][1];"
+              "   }"
+              "   return s;"
+              "}"
+              ""
+              "function @ID@_build() {"              
+              "   var vals = @ID@_values;"
+              "   var view = $('#@ID@_view');"
+              "   view.html('');"
+              "   var h = view.height() - 5;"
+              "   var s = @ID@_calc_bounds();"
+              "   var minX = s[0];"
+              "   var minY = s[1];"
+              "   var maxX = s[2];"
+              "   var maxY = s[3];"
+              "   var kX = view.width() / (maxX - minX);"
+              "   var kY = (view.height() - 10) / (maxY - minY);"
+              "   for (var i = 0; i < vals.length; i++) {"
+              "      var o = $('<div/>');"
+              "      view.append(o);"
+              "      var x = Math.round((vals[i][0] - minX) * kX);"
+              "      var y = h - Math.round((vals[i][1] - minY) * kY);"
+              "      o.css('left', x + 'px');"
+              "      o.css('top', y + 'px');"
+              "   }"
+              "}"
+              ""
+              "var @ID@_size = [0, 0];"
+              ""
+              "function @ID@_view_timer() {"
+              "   var view = $('#@ID@_view');"
+              "   if ((@ID@_size[0] != view.width()) || (@ID@_size[1] != view.height())) {"
+              "      @ID@_size[0] = view.width();"
+              "      @ID@_size[1] = view.height();"
+              "      @ID@_build();"
+              "   }"
+              "   setTimeout(@ID@_view_timer, 500);"
+              "}"
+              ""
+              "$(document).ready(function () {"
+              "   @ID@_view_timer();"
+              "   @ID@_refresh();"              
+              "});"
+              "</script>")
+        
+        js = js.replace("@ID@", str(self.id))
+        js = js.replace("@PAGE@", self.parentForm.ACTION)
+        
+        return js
+
+    def _gen_data(self):
+        try:
+            q = self.parentForm.db.query(self.sql)
+            data = q.fetchall()
+            fields = q.column_names
+            q.close()        
+            fieldX = fields.index(self.fieldX)
+            fieldY = fields.index(self.fieldY)
+            res = []
+            for row in data:
+                if row[fieldY] < 80:
+                    res += [[row[fieldX], row[fieldY]]]
+            return json.dumps(res)
+        except Exception as e:
+            return "%s" % (e.args,)
+
+    def query(self):
+        q = self.parentForm.param("WIDGET_%s" % self.id)
+        if q:
+            return self._gen_data()
+
+    def html(self):
+        try:
+            res = ("<div id=\"@ID@_view\" class=\"chart_control\">"
+                   "</div>")
+
+            res = res.replace("@ID@", self.id)
+        except Exception as e:
+            return "Ошибка в виджете Chart: %s" % e.args
 
         return self._gen_js() + res

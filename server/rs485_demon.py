@@ -107,7 +107,16 @@ class Main():
                         count = 0
                         allCount = len(res_pack[2][1])                        
                         for rom in res_pack[2][1]:
-                            self._command_info(str(rom))
+                            rom_s = []
+                            for r in rom:
+                                ss = hex(r).upper()
+                                if len(ss) == 3:
+                                    ss = ss.replace("0X", "0x0")
+                                else:
+                                    ss = ss.replace("0X", "0x")
+                                rom_s += [ss]
+                                rom_s += [", "]
+                            self._command_info("".join(rom_s[:-1]))
                             if self.db.append_scan_rom(dev[0], rom):
                                 count += 1
                         self._command_info("Всего найдено устройств: %s. Новых: %s" % (allCount, count))

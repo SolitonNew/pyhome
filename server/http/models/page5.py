@@ -43,6 +43,7 @@ class Page5(BaseForm):
         self.db.commit()        
         
         color_x_line = (0.7, 0.7, 0.7)
+        color_x_line_2 = (0.9, 0.9, 0.9)
         color_y_line = (0.7, 0.7, 0.7)
         color_border = (0.5, 0.5, 0.5)
         
@@ -94,6 +95,10 @@ class Page5(BaseForm):
         # Определяем цвета
         colors = [(1, 0, 0), (0, 0.65, 0.31), (0, 0, 1), (1, 1, 0)]
 
+        off_y = (max_y - min_y) / 10
+        min_y -= off_y
+        max_y += off_y        
+
         try:
             kx = ((max_x - min_x) / (width - left - right))
             ky = ((max_y - min_y) / (height - bottom))
@@ -131,13 +136,34 @@ class Page5(BaseForm):
                     sc = space_count
                 sc -= 1                    
 
-            # Метки на оси Х            
+            # Метки на оси Х
+
+            x_step = 3600
+            if (interval == "-12 hour" or
+                interval == "-1 day"):
+                # Дополнительно метки часов
+                x_step = 3600
+                for i in range(math.ceil(min_x / x_step), math.ceil(max_x / x_step)):
+                    x = (i * x_step - min_x) / kx + left
+                    ctx.set_source_rgb(*(color_x_line_2))
+                    ctx.move_to(x, 0)
+                    ctx.line_to(x, height - bottom)
+                    ctx.stroke()
+                    num = datetime.datetime.fromtimestamp(i * x_step).strftime('%H')
+                    tw, th = ctx.text_extents(num)[2:4]
+                    ctx.move_to(x + 2, height - bottom - 3)
+                    ctx.set_source_rgb(*(color_x_line))
+                    ctx.show_text(num)
+            
             x_step = 3600 * 24
 
             space_count = 1
             count = math.ceil(max_x / x_step) - math.ceil(min_x / x_step)
-            if (width / count) < b_w:
-                space_count = 2
+            try:
+                if (width / count) < b_w:
+                    space_count = 2
+            except:
+                pass
 
             sc = 0
             tz = 3600 * 2
@@ -155,8 +181,9 @@ class Page5(BaseForm):
                     ctx.show_text(num)
                     sc = space_count
                 sc -= 1
-        except:
+        except Exception as e:
             pass
+            #print("ERROR %s" % (e.args))
 
         # Рисуем верхний и правый бордер
 

@@ -28,6 +28,7 @@
                 <option selected value="-1 day">1 день</option>
                 <option value="-3 day">3 дня</option>
                 <option value="-7 day">1 неделя</option>
+                <option value="-14 day">2 недели</option>
                 <option value="-30 day">1 месяц</option>
             </select>
             <button onClick="stat_panel_@ID@_refresh();">Обновить</button>

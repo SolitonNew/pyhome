@@ -257,10 +257,11 @@
             <tr>
                 <td style="position:relative;background-color:#cccccc;">
                     <div style="margin:10px;font-size:25px;">
-                        <b>WISE HOUSE v0.2</b>
+                        <b>WISE HOUSE v0.4</b>
                     </div>                    
                 </td>
                 <td style="position:relative;background-color:#cccccc;" align="right" valign="middle">
+                    <button onClick="show_window('ow_manager')">Менеджер OneWire...</button>
                     <button style="margin-right:20px;" onClick="show_window('system_dialog')">Системные утилиты...</button>
                 </td>                
             </tr>

@@ -17,7 +17,7 @@ class Page1(BaseForm):
 
         grid = Grid("VARIABLE_LIST", variableSql)
 
-        grid.add_column("ID", "ID", 50)
+        grid.add_column("ID", "ID", 50, visible=False)
         grid.add_column("Контроллер", "C_NAME", 150, sort="asc")
         grid.add_column("Тип", "ROM", 70, sort="on")
         grid.add_column("Только чтение", "DIRECTION", 60, sort="on", func=self.column_ro_func)
@@ -25,7 +25,7 @@ class Page1(BaseForm):
         grid.add_column("Описание", "COMM", 200, sort="on")
         grid.add_column("Значение", "VALUE", 100, sort="on", func=self.column_val_func)
         grid.add_column("Канал", "CHANNEL", 100, sort="on")
-        grid.add_column("", "F1", 95, func=self.column_prop_func)        
+        grid.add_column("", "F1", 95, func=self.column_prop_func)
         self.add_widget(grid)
 
     def column_ro_func(self, index, row):

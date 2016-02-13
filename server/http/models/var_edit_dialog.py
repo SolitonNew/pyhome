@@ -37,7 +37,7 @@ class VarEditDialog(BaseForm):
 
     def _load_ow_devs(self):
         data = self.db.select("select ID, ROM_1, ROM_2, ROM_3, ROM_4, ROM_5, ROM_6, ROM_7, ROM_8 from core_ow_devs order by ID")
-        ow_list = []
+        ow_list = [[-1, "-- нет --"]]
         for row in data:
             u = self.db.select("select count(*) c from core_variables where OW_ID = %s" % row[0])
             rom = []
@@ -45,7 +45,11 @@ class VarEditDialog(BaseForm):
             rom += ["[%s]  " % u[0]]
             
             for i in range(1, 9):
-                s = hex(row[i])
+                s = hex(row[i]).upper()
+                if len(s) == 3:
+                    s = s.replace("0X", "0x0")
+                else:
+                    s = s.replace("0X", "0x")
                 rom += s, " "
             del rom[len(rom) - 1]
                 
@@ -53,24 +57,7 @@ class VarEditDialog(BaseForm):
         return ow_list
 
     def query(self, query_type):
-        if query_type == "reload_ow":
-            key = self.param('key')
-            try:
-                key = int(key)
-            except:
-                key = -1
-            self.db.set_property("RS485_COMMAND_INFO", "")
-            self.db.set_property("RS485_COMMAND", "SCAN_OW")
-            for i in range(20):
-                s = self.db.get_property("RS485_COMMAND_INFO")
-                try:
-                    s.index("TERMINAL EXIT")
-                    break
-                except:
-                    pass
-                time.sleep(1)            
-            return ListField("OW_LIST", 0, 1, key, self._load_ow_devs()).html()
-        elif query_type == "update":
+        if query_type == "update":
             OW_ID = self.param('VAR_OW')
             if OW_ID == "" or self.param('VAR_TYPE') != "ow":
                 OW_ID = "null"
@@ -118,5 +105,12 @@ class VarEditDialog(BaseForm):
             except Exception as e:
                 return "ERROR: %s" % e.args
         elif query_type == "delete":
-            pass
-            
+            try:
+                key = self.param("VAR_KEY")
+                self.db.IUD("delete from core_variable_changes where VARIABLE_ID = %s" % (key))
+                self.db.IUD("delete from core_variable_events where VARIABLE_ID = %s" % (key))
+                self.db.IUD("delete from core_variables where ID = %s" % (key))
+                self.db.commit()
+                return "OK"
+            except Exception as e:
+                return "ERROR: %s" % e.args

@@ -1,6 +1,6 @@
 <script type="text/javascript">
 
-    $('#popup_window_border').width(400);
+    $('#popup_window_border').width(450);
     $('#popup_window_title').html("Свойства переменной");
 
     function variable_settings_change() {
@@ -15,19 +15,19 @@
             $('#ow_row').css('display', 'none');        
     }
 
-    function reload_ow() {
-        $('#refresh_list').prop("disabled", true);
-        $('#VAR_OW').prop("disabled", true);
-        
-        var v = $('#VAR_OW').val();
-        $.ajax({url:'var_edit_dialog?FORM_QUERY=reload_ow&key=' + v}).done(function (data) {
-            $('#VAR_OW').html(data);
-            $('#VAR_OW').prop("disabled", false);
-            $('#refresh_list').prop("disabled", false);
+    function del_var() {
+        alert('CONFIRM: Удалить переменную и всю историю по ней?', 'yes,no', function (res) {
+            if (res == 'yes') {
+                $('#FORM_QUERY').val('delete');
+                $('#VARIABLE_SETTINGS').submit();
+            }
         });
     }
 
     $(document).ready(function() {
+        if ($('#VAR_KEY').val() == '-1')
+            $('#del_button').css('display', 'none');
+        
         variable_settings_change();
 
         $("#VARIABLE_SETTINGS").ajaxForm(function(data) {
@@ -65,12 +65,9 @@
     <TR id="ow_row">
         <TD valign="top">OW устройство:</TD>
         <TD>
-            <select id="VAR_OW" name="VAR_OW" multiple style="width:100%;height:100px;">
+            <select id="VAR_OW" name="VAR_OW" style="width:100%;">
                 @OW_LIST@
-            </select>            
-            <p style="padding:0px;margin:3px;width:100%;text-align:right;">
-                <button id="refresh_list" type="button" onClick="reload_ow();">Обновить список</button>
-            </p>
+            </select>
         </TD>
     </TR>
     <TR>
@@ -83,7 +80,7 @@
     </TR>
     <TR>
         <TD>Название:</TD>
-        <TD><input id="VAR_NAME" name="VAR_NAME" type="text" value="@NAME@" onChange="variable_settings_change()"/></TD>
+        <TD><input id="VAR_NAME" name="VAR_NAME" type="text" value="@NAME@" onChange="variable_settings_change()" style="width:90%;"/></TD>
     </TR>
     <TR>
         <TD valign="top">Описание:</TD>
@@ -101,7 +98,7 @@
     </TR>
     <TR>
         <TD align="left" valign="bottom" height="60">
-            
+            <button id="del_button" type="button" onClick="del_var();">Удалить</button>
         </TD>    
         <TD align="right" valign="bottom" height="60">
             <button type="submit">Готово</button>

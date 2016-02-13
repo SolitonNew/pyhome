@@ -81,7 +81,7 @@ function alert_click(key) {
 
 // -------------------------------------------------
 
-var splitterObj = False;
+var splitterObj = false;
 var splitterP = 0;
 var splitterSize = 0;
 

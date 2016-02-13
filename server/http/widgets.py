@@ -239,11 +239,21 @@ class Grid(WidgetBase):
               "   "
               "   @ID@_refresh();"
               "}"
+              ""
+              "function @ID@_recalc_header() {"
+              "   var h = $('#@ID@_header_table').height();"
+              "   if (h == 0) {"
+              "      setTimeout(@ID@_recalc_header, 100);"
+              "   } else {"              
+              "      $('#@ID@_header_top').height(h);"
+              "   }"
+              "}"
               ""              
-              "$(document).ready(function () {"
-              "   $('#@ID@_header_top').height($('#@ID@_header_table').height());"
-              "   @ID@_refresh();"              
+              "$(document).ready(function () {"              
+              "   @ID@_recalc_header();"
+              "   @ID@_refresh();"
               "});"
+              ""
               "</script>")
 
         js = js.replace("@ID@", str(self.id))
@@ -331,7 +341,7 @@ class Grid(WidgetBase):
                 i += 1
         orders = "".join(orders)
         if orders:
-            orders = "order by " + orders[:-2]            
+            orders = " order by " + orders[:-2]            
             
         q = self.parentForm.db.query(self.sql + orders)
         data = q.fetchall()

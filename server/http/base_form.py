@@ -59,8 +59,8 @@ class BaseForm(object):
                 try:
                     s = w.query()
                     if s: return s
-                except:
-                    pass
+                except Exception as e:
+                    print("ERROR %s " % (e.args,))
             
             f = open(self.data_path + self.VIEW, 'r')
             res = f.read()

@@ -1,6 +1,6 @@
 <script type="text/javascript">
     $(document).ready(function () {
-        use_scrollers();
+        use_splitters();
     });
 
     function variable_settings(key) {
@@ -14,22 +14,12 @@
     <td>
         <div class="toolbar">
             <button onClick="variable_settings(-1);">Создать новую переменну...</button>
-            <button onClick="STATISTICS_refresh();">Обновить чарт</button>
         </div>
     </td>
 </tr>
 <tr>
     <td height="100%" valign="top">
         @VARIABLE_LIST@
-    </td>
-</tr>
-<tr>
-    <td>
-        <div class="splitter_bottom" style="height:150px;">
-            <div style="cursor:default;position:absolute;top:0px;overflow:hidden;width:100%;height:100%;background-color:#fff;">
-            @STATISTICS@
-            </div>
-        </div>
     </td>
 </tr>
 </table>

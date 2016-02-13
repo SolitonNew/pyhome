@@ -114,7 +114,7 @@
     }
 
     $(document).ready(function() {
-        use_scrollers();
+        use_splitters();
         
         $("#script_form_@ID@").ajaxForm(function(data) {
             if ($('#script_FORM_QUERY_@ID@').val() == 'save') {

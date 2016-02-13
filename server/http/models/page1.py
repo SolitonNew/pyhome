@@ -28,13 +28,6 @@ class Page1(BaseForm):
         grid.add_column("", "F1", 95, func=self.column_prop_func)        
         self.add_widget(grid)
 
-        chart = Chart("STATISTICS", "D", "VALUE",
-                      ("select UNIX_TIMESTAMP(CHANGE_DATE) D, VALUE from core_variable_changes "
-                       " where VARIABLE_ID = 1 "
-                       "   and CHANGE_DATE >= INTERVAL -3 day + CURRENT_TIMESTAMP "
-                       "order by CHANGE_DATE "))
-        self.add_widget(chart)
-
     def column_ro_func(self, index, row):
         return ["ДА", "НЕТ"][row[3]]
 

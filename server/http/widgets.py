@@ -201,11 +201,15 @@ class Grid(WidgetBase):
         js = ("<script type=\"text/javascript\">"
               ""
               "var @ID@_sorts = [@SORTS@];"
+              "var @ID@_prev_data = '';"
               ""              
               "function @ID@_refresh() {"
               "   sorts = @ID@_sorts.join(',');"
               "   $.ajax({url:'@PAGE@?WIDGET_@ID@=true&sorts=' + sorts}).done(function (data) {"
-              "      $('#@ID@_data').html(data);"
+              "      if (@ID@_prev_data != data) { "
+              "         @ID@_prev_data = data; "
+              "         $('#@ID@_data').html(data);"
+              "      }"
               "   });"
               "}"
               ""
@@ -388,9 +392,10 @@ class Grid(WidgetBase):
 
 
 class List(WidgetBase):
-    def __init__(self, id, field, sql, func=None):
+    def __init__(self, id, keyField, labelField, sql, func=None):
         super().__init__(id)
-        self.field = field
+        self.keyField = keyField
+        self.labelField = labelField
         self.sql = sql
         self.func = func
 
@@ -401,6 +406,10 @@ class List(WidgetBase):
               "      $('#@ID@_data').html(data);"
               "   });"
               "};"
+              ""              
+              "function @ID@_del(key) {"
+              "   $('#@ID@_row_' + key).remove();"
+              "};"              
               ""
               "$(document).ready(function () {"
               "   $('#@ID@_header_top').height($('#@ID@_header_table').height());"              
@@ -430,17 +439,18 @@ class List(WidgetBase):
         data = q.fetchall()
         fields = q.column_names
         q.close()
-        field = fields.index(self.field)
+        keyField = fields.index(self.keyField)
+        labelField = fields.index(self.labelField)
         
         for row in data:
-            res += "<tr>"
+            res += "<tr id=\"%s_row_%s\">" % (self.id, row[keyField])
             if self.func:
                 v = self.func(row)
             else:
-                if type(row[field]) == bytearray:
-                    v = str(row[field], "utf-8")
+                if type(row[labelField]) == bytearray:
+                    v = str(row[labelField], "utf-8")
                 else:
-                    v = str(row[field])
+                    v = str(row[labelField])
             res += [self._gen_cell(v, self.func)]
             res += "</tr>"
         res += "</table>"

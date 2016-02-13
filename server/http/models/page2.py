@@ -7,10 +7,7 @@ class Page2(BaseForm):
     VIEW = "page2.tpl"
 
     def create_widgets(self):
-        ls = List("SCRIPT_LIST", "COMM", "select ID, COMM from core_scripts order by COMM", self.row_handler)
-        self.add_widget(ls)
-
-        ls = List("TEMPLATE_LIST", "COMM", "select ID, COMM from core_scripts order by COMM")
+        ls = List("SCRIPT_LIST", "ID", "COMM", "select ID, COMM from core_scripts order by COMM", self.row_handler)
         self.add_widget(ls)
 
         self.add_widget(TabControl("SCRIPT_VIEW_TABS", True))

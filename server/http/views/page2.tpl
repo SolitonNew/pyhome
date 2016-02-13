@@ -1,6 +1,6 @@
 <script type="text/javascript">
     $(document).ready(function () {
-        use_scrollers();
+        use_splitters();
     });
 
     function create_script() {
@@ -17,7 +17,7 @@
 <tr style="position:relative;">
     <td colspan="2" style="position:relative;">
         <div class="toolbar">
-            <button onClick="create_script();">Новый скрипт...</button>
+            <button onClick="create_script();">Создать новый скрипт...</button>
         </div>
     </td>
 </tr>

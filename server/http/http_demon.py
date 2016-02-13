@@ -110,13 +110,17 @@ class HttpProcessor(BaseHTTPRequestHandler):
                         f.create_widgets()
                         res = f.run()
                         self.send_response(200)
-                        self.send_header('content-type', 'text/html')
+                        self.send_header('content-type', f.content_type)
                         self.send_header('charset', 'UTF8')
                         self.end_headers()
-                        self.wfile.write(res.encode("utf-8"))
-                        is_empty = True
+                            
+                        if f.content_type == "text/html":
+                            self.wfile.write(res.encode("utf-8"))
+                        else:
+                            self.wfile.write(res)
+                        is_empty = False
                         break;
-                if not is_empty:
+                if is_empty:
                     self.wfile.write(("Форма %s не найдена..." % path).encode("utf-8"))
             except Exception as e:
                 s = "Форма %s ругнулась... %s" % (path, e.args)

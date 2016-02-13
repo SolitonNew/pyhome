@@ -5,6 +5,7 @@ class BaseForm(object):
     VIEW = "index.tpl"
     
     def __init__(self):
+        self.content_type = "text/html"
         self._widgets = []        
         self.data_path = False
         self.url_data = False

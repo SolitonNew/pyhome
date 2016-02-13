@@ -160,15 +160,19 @@
         }
 
         div.list_control table {
+            position:relative;
             width:100%;
         }
 
         div.list_control td {
+            position:relative;
             padding:3px;
+            padding-right:5px;            
             width:100%;
         }
 
         div.list_control td div {
+            position:relative;
             padding:5px;
             width:100%;
         }        
@@ -207,11 +211,15 @@
             background-color: #ffffff;
         }
 
+        table.grid_data tr:hover {
+            background-color:#eeeeee;
+        }        
+
         table.grid_data td {
             text-align:center;
             border-right:1px solid #dddddd;
             border-bottom:1px solid #dddddd;
-        }        
+        }
 
         table.grid_data td div {
             padding:5px;

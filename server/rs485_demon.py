@@ -145,6 +145,8 @@ class Main():
                     self._command_info("OK")
                 else:
                     self._command_info(error_text)
+            elif command == "GET_OW_VALUES":
+                pass
                 
         self.db.set_property('RS485_COMMAND', '')
         self._command_info("Готово.")

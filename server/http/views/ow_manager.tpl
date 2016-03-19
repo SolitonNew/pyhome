@@ -56,32 +56,33 @@
         });
     }
 
-    var sysdialog_canclose = false;
-
     function load_terminal_log() {
         $.ajax({url:'system_dialog?FORM_QUERY=load_terminal'}).done(function (data) {
             if (data.indexOf("TERMINAL EXIT") > 0) {
                 OW_MANAGER_GRID_refresh();
-                sysdialog_canclose = true;
-                setTimeout(function () {$('#terminal_bg').fadeOut(3000)}, 2000);
+                var btn = '<button style="margin:20px;" onClick="$(\'#terminal_bg\').fadeOut(300);">Закрыть терминал</button>';
+                $('#terminal_log').append(btn);
             } else {
                 $('#terminal_log').html(data);
                 setTimeout(load_terminal_log, 500);
             }
         });
     }
-
-    function sysdialog_close() {
-        if (sysdialog_canclose) {
-            $('#terminal_bg').fadeOut(300)            
-        }
-    }    
 </script>
 
 <div style="position:relative;">
     <table cellpadding="0" cellspacing="10" width="100%">
     <TR>
         <TD colspan="2"></TD>
+    </TR>
+    <TR>
+        <TD colspan="2">
+            <div class="toolbar">
+                <button onClick="send_query('SCAN_OW', 'OW_STATUS')">Просканировать OW сети...</button>
+                <button onClick="create_vars_for_free();">Создать переменные для свободных OW устройств</button>
+                <button onClick="send_query('GET_OW_VALUES', 'OW_STATUS')">Обновить значения OW устройств</button>
+            </div>
+        </TD>
     </TR>    
     <TR>
         <TD colspan="2">
@@ -91,11 +92,7 @@
         </TD>
     </TR>
     <TR>
-        <TD valign="top">
-            <button onClick="send_query('SCAN_OW', 'OW_STATUS')">Просканировать OW сети...</button>
-            <button onClick="create_vars_for_free();">Создать переменные для свободных OW устройств</button>
-        </TD>
-        <TD align="right" valign="bottom" height="60">
+        <TD colspan="2" align="right" valign="bottom" height="60">
             <button onClick="hide_window()">Закрыть</button>
         </TD>
     </TR>
@@ -104,7 +101,7 @@
     <div id="terminal_bg" style="position:absolute;left:0px;top:0px;width:100%;height:100%;background-color:#fff;display:none;">
         <div style="position:absolute;width:100%;height:100%;background-color:#fff;opacity:0.4;">
         </div>
-        <div id="terminal_log" style="position:absolute;width:100%;height:100%;background-color:#000;color:#fff;overflow:none;overflow-y:auto;text-align:left;" onClick="sysdialog_close();">
+        <div id="terminal_log" style="position:absolute;width:100%;height:100%;background-color:#000;color:#fff;overflow:none;overflow-y:auto;text-align:left;">
         </div>
     </div>
 </div>

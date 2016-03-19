@@ -23,20 +23,24 @@ class VarEditDialog(BaseForm):
             CHANNEL = str(row[7], "utf-8")
             OW_ID = row[8]
         else:
-            CONTROLLER_ID, ROM, DIRECTION, NAME, COMM, VALUE, CHANNEL, OW_ID = ("", "", "", "", "", "", "", "")
+            CONTROLLER_ID, ROM, DIRECTION, NAME, COMM, VALUE, CHANNEL, OW_ID = (1, "", "", "", "", "", "", "-1")
             
         self.add_widget(TextField("KEY", KEY))
+        self.add_widget(TextField("VAR_OW_KEY", str(OW_ID)))
         self.add_widget(ListField("VAR_CONTROLLER", 0, 1, CONTROLLER_ID, self.db.select("select ID, NAME from core_controllers order by NAME")))
         self.add_widget(ListField("TYPE_LIST", 0, 0, ROM, [["ow"], ["pyb"], ["variable"]]))
-        self.add_widget(ListField("OW_LIST", 0, 1, OW_ID, self._load_ow_devs()))
+        self.add_widget(ListField("OW_LIST", 0, 1, OW_ID, self._load_ow_devs(CONTROLLER_ID)))
         self.add_widget(ListField("READ_ONLY_LIST", 0, 1, DIRECTION, [(0, "ДА"), (1, "НЕТ")]))
         self.add_widget(TextField("NAME", NAME))
         self.add_widget(TextField("COMM", COMM))
         self.add_widget(TextField("VALUE", VALUE))
         self.add_widget(TextField("CHANNEL", CHANNEL))
 
-    def _load_ow_devs(self):
-        data = self.db.select("select ID, ROM_1, ROM_2, ROM_3, ROM_4, ROM_5, ROM_6, ROM_7, ROM_8 from core_ow_devs order by ID")
+    def _load_ow_devs(self, controller_id):
+        data = self.db.select("select ID, ROM_1, ROM_2, ROM_3, ROM_4, ROM_5, ROM_6, ROM_7, ROM_8 "
+                              "  from core_ow_devs "
+                              " where CONTROLLER_ID = %s "
+                              "order by ID" % controller_id)
         ow_list = [[-1, "-- нет --"]]
         for row in data:
             u = self.db.select("select count(*) c from core_variables where OW_ID = %s" % row[0])
@@ -114,3 +118,6 @@ class VarEditDialog(BaseForm):
                 return "OK"
             except Exception as e:
                 return "ERROR: %s" % e.args
+        elif query_type == "reload_ow_devs":
+            lf = ListField("OW_LIST", 0, 1, int(self.param("ow_key")), self._load_ow_devs(self.param("controller")))            
+            return lf.html()

@@ -24,6 +24,18 @@
         });
     }
 
+    function reload_ow_devs() {
+        var contr = $('#VAR_CONTROLLER').val();
+        var ow_key = $('#VAR_OW_KEY').val();
+        $.ajax({url:'var_edit_dialog?FORM_QUERY=reload_ow_devs&ow_key=' + ow_key + '&controller=' + contr}).done(function (data) {
+            $('#VAR_OW').html(data);
+        });
+    }
+
+    function save_ow_key() {        
+        $('#VAR_OW_KEY').val($('#VAR_OW').val());
+    }
+
     $(document).ready(function() {
         if ($('#VAR_KEY').val() == '-1')
             $('#del_button').css('display', 'none');
@@ -49,7 +61,7 @@
     <TR>
         <TD>Контроллер:</TD>
         <TD>
-            <select id="VAR_CONTROLLER" name="VAR_CONTROLLER" onChange="variable_settings_change()">
+            <select id="VAR_CONTROLLER" name="VAR_CONTROLLER" onChange="reload_ow_devs(); variable_settings_change()">
                 @VAR_CONTROLLER@
             </select>
         </TD>
@@ -65,7 +77,8 @@
     <TR id="ow_row">
         <TD valign="top">OW устройство:</TD>
         <TD>
-            <select id="VAR_OW" name="VAR_OW" style="width:100%;">
+            <input id="VAR_OW_KEY" name="VAR_OW_KEY" type="hidden" value="@VAR_OW_KEY@">
+            <select id="VAR_OW" name="VAR_OW" style="width:100%;" onChange="save_ow_key();">
                 @OW_LIST@
             </select>
         </TD>

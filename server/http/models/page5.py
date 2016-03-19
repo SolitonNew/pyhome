@@ -69,22 +69,34 @@ class Page5(BaseForm):
 
         interval = self.param('range')
 
-        max_x = 1
-        min_x = 1
+        delta_x = 1
+        if interval == "-12 hour":
+            delta_x = 12 * 3600
+        elif interval == "-1 day":
+            delta_x = 24 * 3600
+        elif interval == "-3 day":
+            delta_x = 3 * 24 * 3600
+        elif interval == "-7 day":
+            delta_x = 7 * 24 * 3600
+        elif interval == "-14 day":
+            delta_x = 14 * 24 * 3600            
+        else:
+            delta_x = 30 * 24 * 3600
+            
+
+        max_x = datetime.datetime.now().timestamp()
+        min_x = max_x - delta_x
         max_y = 1
         min_y = 1
         # Собираем статистику по графикам
-        for row in self.db.select("select UNIX_TIMESTAMP(max(CHANGE_DATE)) d_max, "
-                                  "       UNIX_TIMESTAMP(min(CHANGE_DATE)) d_min, "
-                                  "       max(VALUE) v_max, "
+        for row in self.db.select("select max(VALUE) v_max, "
                                   "       min(VALUE) v_min "
                                   "  from core_variable_changes "
                                   " where VARIABLE_ID in (" + var_ids + ") "
-                                  "   and CHANGE_DATE >= INTERVAL " + interval + " + CURRENT_TIMESTAMP"):
-            max_x = row[0]
-            min_x = row[1]
-            max_y = row[2]
-            min_y = row[3]
+                                  "   and UNIX_TIMESTAMP(CHANGE_DATE) >= %s"
+                                  "   and UNIX_TIMESTAMP(CHANGE_DATE) <= %s" % (min_x, max_x)):
+            max_y = row[0]
+            min_y = row[1]
 
         if typ == 2:
             if min_y < 0 and max_y < 0:
@@ -102,6 +114,8 @@ class Page5(BaseForm):
         try:
             kx = ((max_x - min_x) / (width - left - right))
             ky = ((max_y - min_y) / (height - bottom))
+            if ky == 0:
+                ky = 1
         except:
             kx, ky = 1, 1
 
@@ -201,8 +215,9 @@ class Page5(BaseForm):
 
         chart_data = self.db.select("select UNIX_TIMESTAMP(CHANGE_DATE) D, VALUE, VARIABLE_ID from core_variable_changes "
                                     " where VARIABLE_ID in (" + var_ids + ") "
-                                    "   and CHANGE_DATE >= INTERVAL " + interval + " + CURRENT_TIMESTAMP "
-                                    "order by VARIABLE_ID, CHANGE_DATE ")
+                                    "   and UNIX_TIMESTAMP(CHANGE_DATE) >= %s"
+                                    "   and UNIX_TIMESTAMP(CHANGE_DATE) <= %s"
+                                    "order by VARIABLE_ID, CHANGE_DATE " % (min_x, max_x))
 
         if typ == 0: # Линейная
             for row in chart_data:

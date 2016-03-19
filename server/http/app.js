@@ -11,7 +11,14 @@ function use_splitters() {
 
 // -------------------------------------------------
 
-function show_window(url) {
+var prev_window_url = '';
+var can_back = false;
+
+function show_window(url, back) {
+    if (!back)
+        prev_window_url = url;
+    can_back = back;
+    
     $('#popup_window_content').html('');
     $.ajax({url:url}).done(function (data) {
         $('#popup_window_content').html(data);
@@ -20,7 +27,10 @@ function show_window(url) {
 }
 
 function hide_window() {
-    $('#popup_window').fadeOut(400);
+    if (can_back)
+        show_window(prev_window_url);
+    else
+        $('#popup_window').fadeOut(400);
 }
 
 // -------------------------------------------------

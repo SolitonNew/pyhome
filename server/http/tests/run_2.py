@@ -5,8 +5,8 @@ from variables import printInput
 from variables import printChanges 
 
 # Variables
-TERM_1 = Variable('TERM_1', 21.3125)
-TERM_2 = Variable('TERM_2', 20.875)
+TERM_1 = Variable('TERM_1', 21.5)
+TERM_2 = Variable('TERM_2', 21.125)
 LIVING_S = Variable('LIVING_S', 0.0)
 WINTER_GARDEN_S = Variable('WINTER_GARDEN_S', 0.0)
 BOILER_S = Variable('BOILER_S', 0.0)

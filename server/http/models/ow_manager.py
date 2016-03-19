@@ -7,7 +7,7 @@ class OWManager(BaseForm):
     VIEW = "ow_manager.tpl"
 
     def create_widgets(self):
-        variableSql = ("select w.ID, c.NAME, w.ROM_1, w.ROM_2, w.ROM_3, w.ROM_4, w.ROM_5, w.ROM_6, w.ROM_7, w.ROM_8, t.CHANNELS, '' F1, '' F2 "
+        variableSql = ("select w.ID, c.NAME, w.ROM_1, w.ROM_2, w.ROM_3, w.ROM_4, w.ROM_5, w.ROM_6, w.ROM_7, w.ROM_8, t.CHANNELS, w.VALUE, '' F1, '' F2, '' F3 "
                        "  from core_ow_devs w, core_controllers c, core_ow_types t "
                        " where c.ID = w.CONTROLLER_ID"
                        "   and t.CODE = w.ROM_1")
@@ -15,21 +15,21 @@ class OWManager(BaseForm):
         grid = Grid("OW_MANAGER_GRID", variableSql)
         grid.add_column("ID", "ID", 50, visible=False)
         grid.add_column("Контроллер", "NAME", 150, sort="asc")
-        grid.add_column("rom[0]", "ROM_1", 40, sort="on", func=self._to_hex)
-        grid.add_column("rom[1]", "ROM_2", 40, sort="on", func=self._to_hex)
-        grid.add_column("rom[2]", "ROM_3", 40, sort="on", func=self._to_hex)
-        grid.add_column("rom[3]", "ROM_4", 40, sort="on", func=self._to_hex)
-        grid.add_column("rom[4]", "ROM_5", 40, sort="on", func=self._to_hex)
-        grid.add_column("rom[5]", "ROM_6", 40, sort="on", func=self._to_hex)
-        grid.add_column("rom[6]", "ROM_7", 40, sort="on", func=self._to_hex)
-        grid.add_column("rom[7]", "ROM_8", 40, sort="on", func=self._to_hex)
+        grid.add_column("ROM", "F3", 290, sort="asc", func=self._rom_to_hex)        
         grid.add_column("Каналы", "CHANNELS", 100, sort="on")
-        grid.add_column("Связанные переменные", "F1", 170, func=self._vars)
+        grid.add_column("Связанные переменные", "F1", 190, func=self._vars)        
+        grid.add_column("Текущее значение", "VALUE", 70, sort="on")
         grid.add_column("", "F2", 70, func=self._delete_column)
         self.add_widget(grid)
 
-    def _to_hex(self, index, row):
-        val = row[index]
+    def _rom_to_hex(self, index, row):
+        res = []
+        for r in row[2:10]:
+            res += [self._to_hex(r)]
+            res += [", "]
+        return "".join(res[:-1])
+
+    def _to_hex(self, val):
         val = hex(int(val)).upper()
         if len(val) == 3:
             val = val.replace("0X", "0x0")
@@ -42,7 +42,7 @@ class OWManager(BaseForm):
         for r in self.db.select("select ID, NAME "
                                 "  from core_variables "
                                 " where OW_ID=%s" % row[0]):
-            res += ["<div style=\"padding:2px;\"><a class=\"ow_variable\" href=\"\" onClick=\"show_window('var_edit_dialog?key=", str(r[0]), "');return false;\">", str(r[1], "utf-8"), "</a></div>"]
+            res += ["<div style=\"padding:2px;\"><a class=\"ow_variable\" href=\"\" onClick=\"show_window('var_edit_dialog?key=", str(r[0]), "', true);return false;\">", str(r[1], "utf-8"), "</a></div>"]
 
         return "".join(res)
 

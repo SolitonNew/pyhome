@@ -4,6 +4,9 @@ class WidgetBase(object):
     def __init__(self, id):
         self.id = id
 
+    def query(self):
+        return False
+
     def html(self):
         return "WidgetBase"
 

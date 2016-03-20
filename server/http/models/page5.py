@@ -82,7 +82,6 @@ class Page5(BaseForm):
             delta_x = 14 * 24 * 3600            
         else:
             delta_x = 30 * 24 * 3600
-            
 
         max_x = datetime.datetime.now().timestamp()
         min_x = max_x - delta_x
@@ -98,16 +97,22 @@ class Page5(BaseForm):
             max_y = row[0]
             min_y = row[1]
 
+        if min_y is None or max_y is None:
+            max_y = 1
+            min_y = 1
+
         if typ == 2:
             if min_y < 0 and max_y < 0:
                 max_y = 0
             elif min_y > 0 and max_y > 0:
-                min_y = 0
+                min_y = 0        
 
         # Определяем цвета
-        colors = [(1, 0, 0), (0, 0.65, 0.31), (0, 0, 1), (1, 1, 0)]
+        colors = [(1, 0, 0), (0, 0.65, 0.31), (0, 0, 1), (1, 1, 0)]        
 
-        off_y = (max_y - min_y) / 10
+        print(str(min_y) + ' ' + str(max_y))
+        
+        off_y = (max_y - min_y) / 10        
         min_y -= off_y
         max_y += off_y        
 
@@ -125,7 +130,7 @@ class Page5(BaseForm):
         width -= right
         ctx.set_line_width(1)
 
-        # Рисуем сетку
+        # Рисуем сетку        
 
         ctx.set_font_size(12)
         try:
@@ -301,7 +306,7 @@ class Page5(BaseForm):
         ctx.line_to(width, height - bottom)
         ctx.stroke()
         
-        # ---------------------------
+        # ---------------------------        
         
         del ctx
         img.write_to_png("chart.png")

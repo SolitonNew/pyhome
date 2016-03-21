@@ -56,7 +56,7 @@ class DBConnector(object):
 
     def load_controllers(self):
         self.controllers = []
-        q = self.query("select ID, NAME from core_controllers order by ID")
+        q = self.query("select ID, NAME from core_controllers where ID < 100 order by ID")
         row = q.fetchone()
         while row is not None:
             nr = []

@@ -52,6 +52,7 @@ class Main():
         # Рассылаем изменения в БД и паралельно читаем обновления
         for dev in self.db.controllers:
             pack_data = []
+            pack_data += [[-100, round(time.time())]] #Передаем системное время в контроллеры
             for var in var_data:
                 if var[2] != dev[0]:
                     pack_data += [[var[0], var[1]]]

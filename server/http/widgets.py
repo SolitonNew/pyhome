@@ -446,12 +446,15 @@ class List(WidgetBase):
 
         return "".join(res)
 
+    def _fetch_data(self):
+        q = self.parentForm.db.query(self.sql)
+        data, fields = q.fetchall(), q.column_names
+        q.close()
+        return (data, fields)
+
     def _gen_data(self):
         res = ["<table class=\"list_data\" cellpadding=\"0\" cellspacing=\"0\">"]
-        q = self.parentForm.db.query(self.sql)
-        data = q.fetchall()
-        fields = q.column_names
-        q.close()
+        data, fields = self._fetch_data()
         keyField = fields.index(self.keyField)
         labelField = fields.index(self.labelField)
         
@@ -485,6 +488,58 @@ class List(WidgetBase):
 
         return self._gen_js() + res
 
+class Tree(List):
+    def __init__(self, id, keyField, parentField, labelField, sql, func=None):
+        super().__init__(id, keyField, labelField, sql, func)
+        self.parentField = parentField
+
+    def _recursive_search(self, data, tab, parent, keyIndex, parentIndex, labelIndex):
+        res = []
+        tabs = []
+        level = [row for row in data if row[parentIndex] == parent]
+        for row in level:
+            tabs += [tab]
+            res += [row]
+            childs, child_tabs = self._recursive_search(data, tab + 1, row[keyIndex], keyIndex, parentIndex, labelIndex)
+            res += childs;
+            tabs += child_tabs
+            
+        return res, tabs
+
+    def _fetch_data(self):
+        q = self.parentForm.db.query(self.sql)
+        data, fields = q.fetchall(), q.column_names
+        q.close()
+
+        keyIndex = fields.index(self.keyField)
+        parentIndex = fields.index(self.parentField)
+        labelIndex = fields.index(self.labelField)
+        tree, self.child_tabs = self._recursive_search(data, 0, None, keyIndex, parentIndex, labelIndex)
+        
+        return (tree, fields)
+
+    def _gen_data(self):
+        res = ["<table class=\"list_data\" cellpadding=\"0\" cellspacing=\"0\">"]
+        data, fields = self._fetch_data()
+        keyField = fields.index(self.keyField)
+        labelField = fields.index(self.labelField)
+
+        i = 0
+        for row in data:
+            res += "<tr id=\"%s_row_%s\">" % (self.id, row[keyField])
+            if self.func:
+                v = self.func(row)
+            else:
+                if type(row[labelField]) == bytearray:
+                    v = str(row[labelField], "utf-8")
+                else:
+                    v = str(row[labelField])
+            v = "&nbsp;" * 6 * self.child_tabs[i] + v
+            i += 1
+            res += [self._gen_cell(v, self.func)]
+            res += "</tr>"
+        res += "</table>"
+        return "".join(res)
 
 class Chart(WidgetBase):
     def __init__(self, id, fieldX, fieldY, sql):

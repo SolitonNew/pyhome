@@ -5,6 +5,7 @@ from variables import printInput
 from variables import printChanges 
 
 # Variables
+DATE_TIME = Variable('DATE_TIME', 1458550000.0)
 TERM_1 = Variable('TERM_1', 23.75)
 TERM_2 = Variable('TERM_2', 23.5)
 LIVING_S = Variable('LIVING_S', 0.0)

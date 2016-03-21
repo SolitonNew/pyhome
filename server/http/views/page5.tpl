@@ -6,11 +6,15 @@
     var stat_panels = [];
 
     function append_stat_panel() {
-        $.ajax({url:'page5?FORM_QUERY=append_panel'}).done(function (data) {
-            var p = $(data);
+        $.ajax({url:'page5?FORM_QUERY=append_panel'}).done(function (data) {            
+            var i1 = data.indexOf('stat_panel_');
+            var i2 = data.indexOf('_refresh()');
+            var refresh_str = data.substr(i1, i2 - i1 + 10);
+            data = data.replace(refresh_str + ';/*drop if append*/', '');
+            var p = $(data);            
             p.css('display', 'none');
             $('#stat_panels').append(p);
-            p.show();
+            p.show(300, function () {eval(refresh_str)});
             use_splitters();            
         });
     }

@@ -5,6 +5,7 @@
         var p_h = $('#stat_panel_@ID@').height();
         var r = $('#stat_panel_@ID@_range').prop('value');
         $('#stat_panel_@ID@_img').attr({src:'page5?FORM_QUERY=panel_img&width=' + w + '&height=' + h + '&range=' + r + '&panel_h=' + p_h + '&key=@ID@&rnd=' + Math.random()});
+        $('#stat_panel_@ID@_img').css('display', 'block');
     }
 
     function stat_panel_@ID@_dialog() {
@@ -12,7 +13,7 @@
     }
 
     $(document).ready(function () {
-        stat_panel_@ID@_refresh();
+        stat_panel_@ID@_refresh();/*drop if append*/
     });
 </script>
 
@@ -39,7 +40,7 @@
     <tr>
         <td style="position:relative;" colspan="2" height="100%">
             <div style="position:absolute;left:0px;top:0px;width:100%;height:100%;overflow:hidden;">
-                <img id="stat_panel_@ID@_img" style="position:absolute;width:100%;height:100%;">
+                <img id="stat_panel_@ID@_img" style="position:absolute;width:100%;height:100%;display:none;">
             </div>
         </td>
     <tr>

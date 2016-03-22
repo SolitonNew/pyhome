@@ -1,7 +1,21 @@
 <script type="text/JavaScript">
-    function stat_panel_@ID@_refresh() {
+    var stat_panel_@ID@_width = 0;
+    var stat_panel_@ID@_height = 0;
+
+    function stat_panel_@ID@_resize() {        
+        if (document.getElementById('stat_panel_@ID@').clientWidth == 0) return;
+        
         var w = $('#stat_panel_@ID@_img').width();
         var h = $('#stat_panel_@ID@_img').height();
+        if ((stat_panel_@ID@_width != w) || (stat_panel_@ID@_height != h))
+            stat_panel_@ID@_refresh();
+    }
+
+    function stat_panel_@ID@_refresh() {
+        var w = $('#stat_panel_@ID@_img').width();           
+        var h = $('#stat_panel_@ID@_img').height();
+        stat_panel_@ID@_width = w;
+        stat_panel_@ID@_height = h;        
         var p_h = $('#stat_panel_@ID@').height();
         var r = $('#stat_panel_@ID@_range').prop('value');
         $('#stat_panel_@ID@_img').attr({src:'page5?FORM_QUERY=panel_img&width=' + w + '&height=' + h + '&range=' + r + '&panel_h=' + p_h + '&key=@ID@&rnd=' + Math.random()});
@@ -14,10 +28,13 @@
 
     $(document).ready(function () {
         stat_panel_@ID@_refresh();/*drop if append*/
+        window.addEventListener('layoutResize', function (event) {
+            stat_panel_@ID@_resize();
+        });
     });
 </script>
 
-<div id="stat_panel_@ID@" class="splitter_top" style="height:@HEIGHT@px;" onAfterDrag="stat_panel_@ID@_refresh()">
+<div id="stat_panel_@ID@" class="splitter_top" style="height:@HEIGHT@px;">
     <table width="100%" height="100%" cellpadding="5" cellspacing="0" style="cursor:default;">
     <tr>
         <td id="stat_panel_@ID@_label">

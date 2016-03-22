@@ -40,7 +40,7 @@
             position:relative;
             padding:0px;
             margin:0px;
-            border:1px solid #cccccc;            
+            border:1px solid #cccccc;
         }
 
         textarea {
@@ -178,7 +178,7 @@
         }        
 
         div.list_control td:hover {
-            background-color:#dddddd;
+            background-color:#f3f3f3;
         }
         
 
@@ -213,7 +213,7 @@
         }
 
         table.grid_data tr:hover {
-            background-color:#eeeeee;
+            background-color:#f3f3f3;
         }        
 
         table.grid_data td {

@@ -8,8 +8,8 @@
     function append_stat_panel() {
         $.ajax({url:'page5?FORM_QUERY=append_panel'}).done(function (data) {            
             var i1 = data.indexOf('stat_panel_');
-            var i2 = data.indexOf('_refresh()');
-            var refresh_str = data.substr(i1, i2 - i1 + 10);
+            var i2 = data.indexOf('_', i1 + 11);
+            var refresh_str = data.substr(i1, i2 - i1) + '_refresh()';
             data = data.replace(refresh_str + ';/*drop if append*/', '');
             var p = $(data);            
             p.css('display', 'none');
@@ -23,7 +23,7 @@
         $.ajax({url:'page5?FORM_QUERY=del_panel&key=' + key}).done(function (data) {
             if (data == 'OK') {
                 var p = $('#stat_panel_' + key);
-                p.hide(300).done(function () {p.remove()});
+                p.hide(300, function () {p.remove()});
             } else
                 alert(data);
         });

@@ -1,5 +1,8 @@
 $(document).ready(function () {
     use_splitters();
+    window.addEventListener('resize', function (event) {
+        window.dispatchEvent(new Event('layoutResize'));
+    });
 });
 
 function use_splitters() {
@@ -173,8 +176,10 @@ function move_splitter_drag(e) {
 function stop_splitter_drag(sender) {
     var onAfterDrag = $(splitterObj).attr('onAfterDrag');
     $('#splitter_bg').css('display', 'none');
-    if (onAfterDrag)
-        eval(onAfterDrag);
+    if (onAfterDrag) {
+        eval(onAfterDrag);        
+    }
+    window.dispatchEvent(new Event('layoutResize'));
         
     //stop_mouse_events(e);
     return false;

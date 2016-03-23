@@ -68,8 +68,8 @@ class TabControl(WidgetBase):
             btnClose = self.btnCloseTpl
         for tab in self.tabs:
             res += ["<div id=\"%s_tab_%s\" class=\"page_tab\" onClick=\"%s_select(%s)\">" % (self.id, i, self.id, i)]
-            res += [tab['label']]
-            res += [btnClose.replace("@NUM@", str(i))]
+            res += [tab['label']]            
+            res += ["&nbsp;", btnClose.replace("@NUM@", str(i))]
             res += ["</div>"]
             i += 1
 
@@ -161,7 +161,8 @@ class TabControl(WidgetBase):
               "            break;"
               "         }"
               "      }"
-              "   }"              
+              "   }"
+              "   "
               "   $('#@ID@_tab_' + num).remove();"
               "   $('#@ID@_page_' + num).remove();"
               "   "

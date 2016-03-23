@@ -48,8 +48,7 @@
                     event.preventDefault();
                     script_save_to_db_@ID@();
                 }
-                break;
-            
+                break;            
             //default:
             //   alert(event.keyCode + '');
         }

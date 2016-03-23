@@ -12,6 +12,9 @@ class Page2(BaseForm):
 
         self.add_widget(TabControl("SCRIPT_VIEW_TABS", True))
 
+        ls = List("VARIABLE_HELP_LIST", "ID", "NAME", "select ID, NAME from core_variables order by NAME")
+        self.add_widget(ls)
+
     def query(self, query_type):
         if query_type == "create_script":
             label = "Новый скрипт"

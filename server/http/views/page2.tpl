@@ -3,8 +3,21 @@
         use_splitters();
         window.addEventListener('SCRIPT_LIST_selected', function (event) {
             var key = _SCRIPT_LIST_selected_key;
-            var label = SCRIPT_LIST_get_label(key);
-            SCRIPT_VIEW_TABS_append(label, 'scripteditor?key=' + key);
+            if (key) {
+                var label = SCRIPT_LIST_get_label(key);
+                SCRIPT_VIEW_TABS_append(label, 'scripteditor?key=' + key);
+            }
+        });
+
+        window.addEventListener('SCRIPT_VIEW_TABS_selected', function (event) {
+            var url = SCRIPT_VIEW_TABS_selected_url;
+            if (url) {
+                var i = url.indexOf('=');
+                var key = url.substr(i + 1, url.length);
+                SCRIPT_LIST_selected(key);
+            } else {
+                SCRIPT_LIST_selected(false);
+            }
         });
     });
 

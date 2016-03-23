@@ -7,18 +7,10 @@ class Page2(BaseForm):
     VIEW = "page2.tpl"
 
     def create_widgets(self):
-        ls = List("SCRIPT_LIST", "ID", "COMM", "select ID, COMM from core_scripts order by COMM", self.row_handler)
+        ls = List("SCRIPT_LIST", "ID", "COMM", "select ID, COMM from core_scripts order by COMM")
         self.add_widget(ls)
 
         self.add_widget(TabControl("SCRIPT_VIEW_TABS", True))
-
-    def row_handler(self, row):
-        label = str(row[1], "utf-8")
-        id = str(row[0])
-        res = ["<div style=\"width:100%;\" onMousedown=\"SCRIPT_VIEW_TABS_append('" + label + "', 'scripteditor?key=" + id + "')\">"]
-        res += [label]
-        res += ["</div>"]
-        return "".join(res)
 
     def query(self, query_type):
         if query_type == "create_script":

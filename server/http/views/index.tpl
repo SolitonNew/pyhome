@@ -180,6 +180,10 @@
         div.list_control td:hover {
             background-color:#f3f3f3;
         }
+
+        tr.list_control_selected {
+            background-color:#f3f3f3;
+        }        
         
 
         table.grid_control {

@@ -7,8 +7,7 @@
 <table style="position:relative;width:100%;height:100%;border:none;" cellpadding="0" cellspacing="0">
 <tr style="position:relative;">
     <td colspan="2" style="position:relative;">
-        <div class="toolbar">
-            <button onClick="create_script();">Создать новый скрипт...</button>
+        <div class="toolbar">            
         </div>
     </td>
 </tr>

@@ -416,15 +416,32 @@ class List(WidgetBase):
 
     def _gen_js(self):
         js = ("<script type=\"text/javascript\">"
+              ""
+              "var _@ID@_selected_key = false;"
+              ""
+              "function @ID@_selected(key) {"
+              "   var prev_key = _@ID@_selected_key;"
+              "   if (prev_key)"
+              "      $('#@ID@_row_' + prev_key).removeClass('list_control_selected');"
+              "   $('#@ID@_row_' + key).addClass('list_control_selected');"
+              "   _@ID@_selected_key = key;"
+              "   window.dispatchEvent(new Event('@ID@_selected'));"
+              "}"
+              ""
               "function @ID@_refresh() {"
               "   $.ajax({url:'@PAGE@?WIDGET_@ID@=true'}).done(function (data) {"
               "      $('#@ID@_data').html(data);"
+              "      @ID@_selected(_@ID@_selected_key);"
               "   });"
               "};"
               ""              
               "function @ID@_del(key) {"
               "   $('#@ID@_row_' + key).remove();"
-              "};"              
+              "};"
+              ""
+              "function @ID@_get_label(key) {"
+              "   return $('#@ID@_row_' + key + '_label').html();"
+              "};"                            
               ""
               "$(document).ready(function () {"
               "   $('#@ID@_header_top').height($('#@ID@_header_table').height());"              
@@ -437,13 +454,11 @@ class List(WidgetBase):
         
         return js
 
-    def _gen_cell(self, data, is_func):
+    def _gen_cell(self, data, key):
         res = ["<td width=\"100%\">"]
-        if not is_func:
-            res += ["<div style=\"width:100%;\">"]
+        res += ["<div id=\"", self.id, "_row_", "%s" % key, "_label\" style=\"width:100%;\" onClick=\"", self.id, "_selected('", ("%s" % key),"');\">"]
         res += [data]
-        if not is_func:
-            res += ["</div>"]
+        res += ["</div>"]
         res += ["</td>"]
 
         return "".join(res)
@@ -455,21 +470,18 @@ class List(WidgetBase):
         return (data, fields)
 
     def _gen_data(self):
-        res = ["<table class=\"list_data\" cellpadding=\"0\" cellspacing=\"0\">"]
+        res = ["<table id=\"%s_list_data\" class=\"list_data\" cellpadding=\"0\" cellspacing=\"0\">" % (self.id)]
         data, fields = self._fetch_data()
         keyField = fields.index(self.keyField)
         labelField = fields.index(self.labelField)
         
         for row in data:
             res += "<tr id=\"%s_row_%s\">" % (self.id, row[keyField])
-            if self.func:
-                v = self.func(row)
+            if type(row[labelField]) == bytearray:
+                v = str(row[labelField], "utf-8")
             else:
-                if type(row[labelField]) == bytearray:
-                    v = str(row[labelField], "utf-8")
-                else:
-                    v = str(row[labelField])
-            res += [self._gen_cell(v, self.func)]
+                v = str(row[labelField])
+            res += [self._gen_cell(v, row[keyField])]
             res += "</tr>"
         res += "</table>"
         return "".join(res)
@@ -529,16 +541,13 @@ class Tree(List):
         i = 0
         for row in data:
             res += "<tr id=\"%s_row_%s\">" % (self.id, row[keyField])
-            if self.func:
-                v = self.func(row)
+            if type(row[labelField]) == bytearray:
+                v = str(row[labelField], "utf-8")
             else:
-                if type(row[labelField]) == bytearray:
-                    v = str(row[labelField], "utf-8")
-                else:
-                    v = str(row[labelField])
+                v = str(row[labelField])
             v = "&nbsp;" * 6 * self.child_tabs[i] + v
             i += 1
-            res += [self._gen_cell(v, self.func)]
+            res += [self._gen_cell(v, row[keyField])]
             res += "</tr>"
         res += "</table>"
         return "".join(res)

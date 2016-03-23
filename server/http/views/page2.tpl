@@ -1,6 +1,11 @@
 <script type="text/javascript">
     $(document).ready(function () {
         use_splitters();
+        window.addEventListener('SCRIPT_LIST_selected', function (event) {
+            var key = _SCRIPT_LIST_selected_key;
+            var label = SCRIPT_LIST_get_label(key);
+            SCRIPT_VIEW_TABS_append(label, 'scripteditor?key=' + key);
+        });
     });
 
     function create_script() {

@@ -2,6 +2,7 @@ from base_form import BaseForm
 import time
 from widgets import TextField
 from widgets import ListField
+from widgets import TreeField
 
 class VarEditDialog(BaseForm):
     ACTION = "var_edit_dialog"
@@ -10,7 +11,7 @@ class VarEditDialog(BaseForm):
     def create_widgets(self):
         KEY = self.param("key")
         
-        row = self.db.select("select ID, CONTROLLER_ID, ROM, DIRECTION, NAME, COMM, VALUE, CHANNEL, OW_ID "
+        row = self.db.select("select ID, CONTROLLER_ID, ROM, DIRECTION, NAME, COMM, VALUE, CHANNEL, OW_ID, GROUP_ID "
                              "  from core_variables where ID = %s" % KEY)        
         if row:
             row = row[0]            
@@ -22,8 +23,9 @@ class VarEditDialog(BaseForm):
             VALUE = str(row[6])
             CHANNEL = str(row[7], "utf-8")
             OW_ID = row[8]
+            GROUP_ID = row[9]
         else:
-            CONTROLLER_ID, ROM, DIRECTION, NAME, COMM, VALUE, CHANNEL, OW_ID = (1, "", "", "", "", "", "", "-1")
+            CONTROLLER_ID, ROM, DIRECTION, NAME, COMM, VALUE, CHANNEL, OW_ID, GROUP_ID = (1, "", "", "", "", "", "", "-1", "-1")
             
         self.add_widget(TextField("KEY", KEY))
         self.add_widget(TextField("VAR_OW_KEY", str(OW_ID)))
@@ -35,6 +37,7 @@ class VarEditDialog(BaseForm):
         self.add_widget(TextField("COMM", COMM))
         self.add_widget(TextField("VALUE", VALUE))
         self.add_widget(TextField("CHANNEL", CHANNEL))
+        self.add_widget(TreeField("VAR_GROUP_TREE", 0, 1, 2, GROUP_ID, self.db.select("select ID, PARENT_ID, NAME from plan_parts order by ORDER_NUM")))
 
     def _load_ow_devs(self, controller_id):
         data = self.db.select("select ID, ROM_1, ROM_2, ROM_3, ROM_4, ROM_5, ROM_6, ROM_7, ROM_8 "
@@ -58,7 +61,7 @@ class VarEditDialog(BaseForm):
             del rom[len(rom) - 1]
                 
             ow_list += [[row[0], "".join(rom)]]
-        return ow_list
+        return ow_list    
 
     def query(self, query_type):
         if query_type == "update":
@@ -68,17 +71,18 @@ class VarEditDialog(BaseForm):
             sql = ""
             if self.param('VAR_KEY') == '-1':
                 sql = ("insert into core_variables "
-                       "   (CONTROLLER_ID, ROM, DIRECTION, NAME, COMM, CHANNEL, OW_ID) "
+                       "   (CONTROLLER_ID, ROM, DIRECTION, NAME, COMM, CHANNEL, OW_ID, GROUP_ID) "
                        "values "
-                       "   (%s, '%s', %s, '%s', '%s', '%s', %s)")
+                       "   (%s, '%s', %s, '%s', '%s', '%s', %s, %s)")
 
                 sql = sql % (self.param_str('VAR_CONTROLLER'),
                              self.param_str('VAR_TYPE'),
                              self.param_str('VAR_READ_ONLY'),
                              self.param_str('VAR_NAME'),
                              self.param_str('VAR_COMM'),
-                             self.param_str('VAR_CHANNEL'),
-                             OW_ID)
+                             self.param_str('VAR_CHANNEL'),                             
+                             OW_ID,
+                             self.param_str('VAR_GROUP'))
             else:
                 sql = ("update core_variables "
                        "   set CONTROLLER_ID = '%s',"
@@ -87,7 +91,8 @@ class VarEditDialog(BaseForm):
                        "       NAME = '%s',"
                        "       COMM = '%s',"
                        "       CHANNEL = '%s',"
-                       "       OW_ID = %s"
+                       "       OW_ID = %s,"
+                       "       GROUP_ID = %s"
                        " where ID = %s")
             
                 sql = sql % (self.param_str('VAR_CONTROLLER'),
@@ -97,6 +102,7 @@ class VarEditDialog(BaseForm):
                              self.param_str('VAR_COMM'),
                              self.param_str('VAR_CHANNEL'),
                              OW_ID,
+                             self.param_str('VAR_GROUP'),
                              self.param_str('VAR_KEY'))
 
             try:

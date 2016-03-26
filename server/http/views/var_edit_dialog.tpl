@@ -110,6 +110,14 @@
         <TD><input id="VAR_CHANNEL" name="VAR_CHANNEL" type="text" value="@CHANNEL@"/></TD>
     </TR>
     <TR>
+        <TD>Группа:</TD>
+        <TD>
+            <select id="VAR_GROUP" name="VAR_GROUP" style="width:100%">
+                @VAR_GROUP_TREE@
+            </select>
+        </TD>
+    </TR>    
+    <TR>
         <TD align="left" valign="bottom" height="60">
             <button id="del_button" type="button" onClick="del_var();">Удалить</button>
         </TD>    

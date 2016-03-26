@@ -1,7 +1,7 @@
 from base_form import BaseForm
 from widgets import TextField
 from widgets import Grid
-from widgets import Chart
+from widgets import Tree
 
 class Page1(BaseForm):
     ACTION = "page1"
@@ -11,6 +11,9 @@ class Page1(BaseForm):
         super().__init__()
 
     def create_widgets(self):
+        ls = Tree("VARIABLE_GROUPS", "ID", "PARENT_ID", "NAME", "select ID, PARENT_ID, NAME from plan_parts order by ORDER_NUM")
+        self.add_widget(ls)
+        
         variableSql = ("select v.ID, c.NAME C_NAME, v.ROM, v.DIRECTION, v.NAME, v.COMM, v.VALUE, v.CHANNEL, '' F1"
                        "  from core_variables v, core_controllers c "
                        " where c.ID = v.CONTROLLER_ID ")

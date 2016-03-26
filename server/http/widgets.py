@@ -44,8 +44,36 @@ class ListField(WidgetBase):
                     sel = " selected"
             res += ["<option value=\"%s\"%s>%s</option>" % (row[self.keyIndex], sel, s)]
         return "".join(res)
-        return res    
 
+class TreeField(ListField):
+    def __init__(self, id, keyIndex, parentIndex, labelIndex, selectedKey, data):
+        super().__init__(id, keyIndex, labelIndex, selectedKey, data)
+        self.parentIndex = parentIndex
+        self.data, self.child_tabs = self._recursive_search(data, 0, None, keyIndex, parentIndex, labelIndex)
+
+        for i in range(len(self.data)):
+            row = list(self.data[i])
+            s = row[self.labelIndex]
+            if type(s) == bytearray:
+                s = str(s, "utf-8")
+
+            s = "&nbsp;" * self.child_tabs[i] * 4 + "%s" % s            
+            row[self.labelIndex] = s
+            self.data[i] = row
+            i += 1
+
+    def _recursive_search(self, data, tab, parent, keyIndex, parentIndex, labelIndex):
+        res = []
+        tabs = []
+        level = [row for row in data if row[parentIndex] == parent]
+        for row in level:
+            tabs += [tab]
+            res += [row]
+            childs, child_tabs = self._recursive_search(data, tab + 1, row[keyIndex], keyIndex, parentIndex, labelIndex)
+            res += childs;
+            tabs += child_tabs
+            
+        return res, tabs    
 
 class TabControl(WidgetBase):
     def __init__(self, id, tabClosed = False):
@@ -219,14 +247,16 @@ class Grid(WidgetBase):
     def _gen_js(self):
         js = ("<script type=\"text/javascript\">"
               ""
+              "var @ID@_filter = '';"
               "var @ID@_sorts = [@SORTS@];"
               "var @ID@_prev_data = '';"
               ""              
               "function @ID@_refresh() {"
               "   sorts = @ID@_sorts.join(',');"
-              "   $.ajax({url:'@PAGE@?WIDGET_@ID@=true&sorts=' + sorts}).done(function (data) {"
-              "      if (@ID@_prev_data != data) { "
-              "         @ID@_prev_data = data; "
+              "   filter = @ID@_filter;"
+              "   $.ajax({url:'@PAGE@?WIDGET_@ID@=true&sorts=' + sorts + '&filter=' + filter}).done(function (data) {"
+              "      if (@ID@_prev_data != data) {"
+              "         @ID@_prev_data = data;"
               "         $('#@ID@_data').html(data);"
               "      }"
               "   });"
@@ -347,7 +377,7 @@ class Grid(WidgetBase):
 
         return "".join(res)    
 
-    def _gen_data(self, sorts = ""):
+    def _gen_data(self, sorts = "", filt = ""):
         res = ["<table class=\"grid_data\" cellpadding=\"0\" cellspacing=\"0\">"]
         orders = []
         if sorts:
@@ -360,9 +390,13 @@ class Grid(WidgetBase):
                 i += 1
         orders = "".join(orders)
         if orders:
-            orders = " order by " + orders[:-2]            
+            orders = " order by " + orders[:-2]
+
+        filter_data = ''
+        if filt:
+            filter_data = " and %s" % filt
             
-        q = self.parentForm.db.query(self.sql + orders)
+        q = self.parentForm.db.query(self.sql + filter_data + orders)
         data = q.fetchall()
         fields = q.column_names
         q.close()
@@ -387,7 +421,7 @@ class Grid(WidgetBase):
     def query(self):        
         q = self.parentForm.param("WIDGET_%s" % self.id)
         if q:
-            return self._gen_data(self.parentForm.param("sorts"))
+            return self._gen_data(self.parentForm.param("sorts"), self.parentForm.param("filter"))
     
     def html(self):
         try:
@@ -413,7 +447,6 @@ class Grid(WidgetBase):
 
             res = res.replace("@ID@", self.id)
             res = res.replace("@HEADER@", self._gen_header())
-            #res = res.replace("@DATA@", self._gen_data())
         except Exception as e:
             return "Ошибка в виджете Grid: %s" % e.args
 

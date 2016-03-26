@@ -1,6 +1,15 @@
 <script type="text/javascript">
     $(document).ready(function () {
         use_splitters();
+
+        window.addEventListener("VARIABLE_GROUPS_selected", function (event) {
+            if (_VARIABLE_GROUPS_selected_key && _VARIABLE_GROUPS_selected_key != 1) {
+                VARIABLE_LIST_filter = 'GROUP_ID = ' + _VARIABLE_GROUPS_selected_key;
+            } else {
+                VARIABLE_LIST_filter = '';
+            }
+            VARIABLE_LIST_refresh();
+        });
     });
 
     function variable_settings(key) {
@@ -11,14 +20,19 @@
 
 <table width="100%" height="100%" cellpadding="0" cellspacing="0">
 <tr>
-    <td>
+    <td colspan="2">
         <div class="toolbar">
             <button onClick="variable_settings(-1);">Создать новую переменну...</button>
         </div>
     </td>
 </tr>
 <tr>
-    <td height="100%" valign="top">
+    <td>
+        <div class="splitter_left" style="width:300px;">
+            @VARIABLE_GROUPS@
+        </div>
+    </td>
+    <td width="100%" height="100%" valign="top">
         @VARIABLE_LIST@
     </td>
 </tr>

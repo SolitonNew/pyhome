@@ -4,7 +4,7 @@
 
         window.addEventListener("VARIABLE_GROUPS_selected", function (event) {
             if (_VARIABLE_GROUPS_selected_key && _VARIABLE_GROUPS_selected_key != 1) {
-                VARIABLE_LIST_filter = 'GROUP_ID = ' + _VARIABLE_GROUPS_selected_key;
+                VARIABLE_LIST_filter = 'GROUP_ID in (' + _VARIABLE_GROUPS_selected_key + ')';
             } else {
                 VARIABLE_LIST_filter = '';
             }

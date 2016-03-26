@@ -505,8 +505,8 @@ class List(WidgetBase):
         return js
 
     def _gen_cell(self, data, key):
-        res = ["<td width=\"100%\">"]
-        res += ["<div id=\"", self.id, "_row_", "%s" % key, "_label\" style=\"width:100%;\" onClick=\"", self.id, "_selected('", ("%s" % key),"');\">"]
+        res = ["<td width=\"100%\" onClick=\"", self.id, "_selected('", ("%s" % key),"');\">"]
+        res += ["<div id=\"", self.id, "_row_", "%s" % key, "_label\" style=\"width:100%;\">"]
         res += [data]
         res += ["</div>"]
         res += ["</td>"]

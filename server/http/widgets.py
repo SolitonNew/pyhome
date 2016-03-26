@@ -394,7 +394,10 @@ class Grid(WidgetBase):
 
         filter_data = ''
         if filt:
-            filter_data = " and %s" % filt
+            if self.sql.index("where "):
+                filter_data = " and %s" % filt
+            else:
+                filter_data = " where %s" % filt
             
         q = self.parentForm.db.query(self.sql + filter_data + orders)
         data = q.fetchall()

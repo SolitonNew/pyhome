@@ -13,7 +13,7 @@
 </tr>
 <tr style="position:relative;">
     <td style="position:relative;height:100%;">
-        <div class="splitter_left" style="width:300px;">
+        <div class="splitter_left" style="width:200px;">
             @PLAN_LIST@
         </div>
     </td>

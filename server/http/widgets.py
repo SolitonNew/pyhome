@@ -457,20 +457,22 @@ class Grid(WidgetBase):
 
 
 class List(WidgetBase):
-    def __init__(self, id, keyField, labelField, sql, func=None):
+    def __init__(self, id, keyField, labelField, sql, addAttrFunc=None):
         super().__init__(id)
         self.keyField = keyField
         self.labelField = labelField
         self.sql = sql
-        self.func = func
+        self.addAttrFunc = addAttrFunc
 
     def _gen_js(self):
         js = ("<script type=\"text/javascript\">"
               ""
               "var _@ID@_selected_key = false;"
+              "var _@ID@_selected_addAttr = false;"
               ""
-              "function @ID@_selected(key) {"
+              "function @ID@_selected(key, addAttr) {"              
               "   var prev_key = _@ID@_selected_key;"
+              "   _@ID@_selected_addAttr = addAttr;"
               "   if (prev_key)"
               "      $('#@ID@_row_' + prev_key).removeClass('list_control_selected');"
               "   $('#@ID@_row_' + key).addClass('list_control_selected');"
@@ -505,7 +507,10 @@ class List(WidgetBase):
         return js
 
     def _gen_cell(self, data, key):
-        res = ["<td width=\"100%\" onClick=\"", self.id, "_selected('", ("%s" % key),"');\">"]
+        add_attr = ''
+        if self.addAttrFunc:
+            add_attr = self.addAttrFunc(self, key)
+        res = ["<td width=\"100%\" onClick=\"", self.id, "_selected('", ("%s" % key), "','", add_attr, "');\">"]
         res += ["<div id=\"", self.id, "_row_", "%s" % key, "_label\" style=\"width:100%;\">"]
         res += [data]
         res += ["</div>"]
@@ -552,19 +557,29 @@ class List(WidgetBase):
 
         return self._gen_js() + res
 
-class Tree(List):
-    def __init__(self, id, keyField, parentField, labelField, sql, func=None):
-        super().__init__(id, keyField, labelField, sql, func)
-        self.parentField = parentField
+class TreeNode:
+    def __init__(self, id):
+        self.id = id
+        self.childs = []
 
-    def _recursive_search(self, data, tab, parent, keyIndex, parentIndex, labelIndex):
+class Tree(List):
+    def __init__(self, id, keyField, parentField, labelField, sql, addAttrFunc=None):
+        super().__init__(id, keyField, labelField, sql, addAttrFunc)
+        self.parentField = parentField
+        self.nodes = TreeNode(None)
+        self.treeNodes = []
+
+    def _recursive_search(self, data, tab, parent, keyIndex, parentIndex, labelIndex, parentNode):
         res = []
         tabs = []
         level = [row for row in data if row[parentIndex] == parent]
         for row in level:
+            node = TreeNode(row[keyIndex])
+            parentNode.childs += [node]
+            self.treeNodes += [node]
             tabs += [tab]
             res += [row]
-            childs, child_tabs = self._recursive_search(data, tab + 1, row[keyIndex], keyIndex, parentIndex, labelIndex)
+            childs, child_tabs = self._recursive_search(data, tab + 1, row[keyIndex], keyIndex, parentIndex, labelIndex, node)
             res += childs;
             tabs += child_tabs
             
@@ -578,7 +593,7 @@ class Tree(List):
         keyIndex = fields.index(self.keyField)
         parentIndex = fields.index(self.parentField)
         labelIndex = fields.index(self.labelField)
-        tree, self.child_tabs = self._recursive_search(data, 0, None, keyIndex, parentIndex, labelIndex)
+        tree, self.child_tabs = self._recursive_search(data, 0, None, keyIndex, parentIndex, labelIndex, self.nodes)
         
         return (tree, fields)
 

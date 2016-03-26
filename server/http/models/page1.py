@@ -11,7 +11,7 @@ class Page1(BaseForm):
         super().__init__()
 
     def create_widgets(self):
-        ls = Tree("VARIABLE_GROUPS", "ID", "PARENT_ID", "NAME", "select ID, PARENT_ID, NAME from plan_parts order by ORDER_NUM")
+        ls = Tree("VARIABLE_GROUPS", "ID", "PARENT_ID", "NAME", "select ID, PARENT_ID, NAME from plan_parts order by ORDER_NUM", self.varGroupAddAttr)
         self.add_widget(ls)
         
         variableSql = ("select v.ID, c.NAME C_NAME, v.ROM, v.DIRECTION, v.NAME, v.COMM, v.VALUE, v.CHANNEL, '' F1"
@@ -50,6 +50,18 @@ class Page1(BaseForm):
 
     def column_prop_func(self, index, row):
         return "<button onMousedown=\"variable_settings(%s); return false;\">Изменить...</button>" % row[0]
+
+    def _treeRecursive(self, parentNode):
+        res = str(parentNode.id) + ','
+        for node in parentNode.childs:
+            res += self._treeRecursive(node)
+        return res
+
+    def varGroupAddAttr(self, tree, key):
+        for node in tree.treeNodes:
+            if node.id == key:
+                return self._treeRecursive(node) + "0"
+        return '0'
 
     def query(self, query_type):
         if query_type == "set_value":

@@ -18,7 +18,7 @@ class Page1(BaseForm):
                        "  from core_variables v, core_controllers c "
                        " where c.ID = v.CONTROLLER_ID ")
 
-        grid = Grid("VARIABLE_LIST", variableSql)
+        grid = Grid("VARIABLE_LIST", "ID", variableSql)
 
         grid.add_column("ID", "ID", 50, visible=False)
         grid.add_column("Контроллер", "C_NAME", 150, sort="asc")

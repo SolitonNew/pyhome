@@ -12,7 +12,7 @@ class OWManager(BaseForm):
                        " where c.ID = w.CONTROLLER_ID"
                        "   and t.CODE = w.ROM_1")
 
-        grid = Grid("OW_MANAGER_GRID", variableSql)
+        grid = Grid("OW_MANAGER_GRID", "ID", variableSql)
         grid.add_column("ID", "ID", 50, visible=False)
         grid.add_column("Контроллер", "NAME", 150, sort="asc")
         grid.add_column("ROM", "F3", 290, sort="asc", func=self._rom_to_hex)        

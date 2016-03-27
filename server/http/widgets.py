@@ -239,10 +239,11 @@ class TabControl(WidgetBase):
 
 
 class Grid(WidgetBase):
-    def __init__(self, id, sql):
+    def __init__(self, id, keyField, sql):
         super().__init__(id)
         self.columns = []
         self.sql = sql
+        self.keyField = keyField
 
     def _gen_js(self):
         js = ("<script type=\"text/javascript\">"
@@ -250,6 +251,16 @@ class Grid(WidgetBase):
               "var @ID@_filter = '';"
               "var @ID@_sorts = [@SORTS@];"
               "var @ID@_prev_data = '';"
+              "var _@ID@_selected_key = false;"
+              ""
+              "function @ID@_selected(key) {"
+              "   var prev_key = _@ID@_selected_key;"
+              "   if (prev_key)"
+              "      $('#@ID@_row_' + prev_key).removeClass('grid_data_selected');"              
+              "   $('#@ID@_row_' + key).addClass('grid_data_selected');"
+              "   _@ID@_selected_key = key;"
+              "   window.dispatchEvent(new Event('@ID@_selected'));"
+              "}"
               ""              
               "function @ID@_refresh() {"
               "   sorts = @ID@_sorts.join(',');"
@@ -258,6 +269,9 @@ class Grid(WidgetBase):
               "      if (@ID@_prev_data != data) {"
               "         @ID@_prev_data = data;"
               "         $('#@ID@_data').html(data);"
+              "         var key = _@ID@_selected_key;"
+              "         if (key)"
+              "            $('#@ID@_row_' + key).addClass('grid_data_selected');"
               "      }"
               "   });"
               "}"
@@ -402,9 +416,10 @@ class Grid(WidgetBase):
         q = self.parentForm.db.query(self.sql + filter_data + orders)
         data = q.fetchall()
         fields = q.column_names
+        keyIndex = fields.index(self.keyField)
         q.close()
         for row in data:
-            res += "<tr>"
+            res += "<tr id=\"%s_row_%s\" onClick=\"%s_selected('%s')\">" % (self.id, row[keyIndex], self.id, row[keyIndex])
             for i in range(len(self.columns)):
                 if self.columns[i]['visible']:                    
                     f = self.columns[i]['func']
@@ -541,7 +556,7 @@ class List(WidgetBase):
         res += "</table>"
         return "".join(res)
 
-    def query(self):        
+    def query(self):
         q = self.parentForm.param("WIDGET_%s" % self.id)
         if q:
             return self._gen_data()

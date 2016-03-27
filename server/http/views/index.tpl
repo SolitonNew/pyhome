@@ -218,7 +218,11 @@
 
         table.grid_data tr:hover {
             background-color:#f3f3f3;
-        }        
+        }
+
+        tr.grid_data_selected {
+            background-color:#f3f3f3;
+        }                
 
         table.grid_data td {
             text-align:center;

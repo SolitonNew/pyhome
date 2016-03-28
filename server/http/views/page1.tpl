@@ -23,6 +23,7 @@
     <td colspan="2">
         <div class="toolbar">
             <button onClick="variable_settings(-1);">Создать новую переменну...</button>
+            <button onClick="if (_VARIABLE_LIST_selected_key) variable_settings(_VARIABLE_LIST_selected_key);">Свойства выбраной переменной...</button>
         </div>
     </td>
 </tr>

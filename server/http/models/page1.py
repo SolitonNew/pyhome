@@ -14,7 +14,7 @@ class Page1(BaseForm):
         ls = Tree("VARIABLE_GROUPS", "ID", "PARENT_ID", "NAME", "select ID, PARENT_ID, NAME from plan_parts order by ORDER_NUM", self.varGroupAddAttr)
         self.add_widget(ls)
         
-        variableSql = ("select v.ID, c.NAME C_NAME, v.ROM, v.DIRECTION, v.NAME, v.COMM, v.VALUE, v.CHANNEL, '' F1"
+        variableSql = ("select v.ID, c.NAME C_NAME, v.ROM, v.DIRECTION, v.NAME, v.COMM, v.VALUE, v.CHANNEL"
                        "  from core_variables v, core_controllers c "
                        " where c.ID = v.CONTROLLER_ID ")
 
@@ -28,7 +28,6 @@ class Page1(BaseForm):
         grid.add_column("Описание", "COMM", 200, sort="on")
         grid.add_column("Значение", "VALUE", 100, sort="on", func=self.column_val_func)
         grid.add_column("Канал", "CHANNEL", 100, sort="on")
-        grid.add_column("", "F1", 95, func=self.column_prop_func)
         self.add_widget(grid)
 
     def column_ro_func(self, index, row):
@@ -46,10 +45,7 @@ class Page1(BaseForm):
             click = "$.ajax({url:'page1?FORM_QUERY=set_value&key=%s&value=%s'})" % (row[0], v)
             return "<button onMousedown=\"%s\">%s</button>" % (click, lab)
         else:
-            return str(row[index])
-
-    def column_prop_func(self, index, row):
-        return "<button onMousedown=\"variable_settings(%s); return false;\">Изменить...</button>" % row[0]
+            return "<div style=\"padding:3px;\">%s</div>" % (row[index])
 
     def _treeRecursive(self, parentNode):
         res = str(parentNode.id) + ','

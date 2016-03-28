@@ -295,11 +295,11 @@
         <table width="100%" height="80%" style="position:relative;left:0px;top:0px;">
         <tr>
             <td align="center" valign="middle">
-                <div id="popup_window_border" style="width:300px; border:5px solid #F5FCFE; background-color: #F5FCFE;">
+                <div id="popup_window_border" style="width:300px; border:5px solid #f7f7f7; background-color: #f7f7f7;">
                     <table width="100%" height="100%" cellpadding="0" cellspacing="0">
                     <tr>
-                        <td bgcolor="#C7EDFC">
-                            <div id="popup_window_title" style="padding:5px;"></div>
+                        <td bgcolor="#999999">
+                            <div id="popup_window_title" style="padding:5px;color:#ffffff;"></div>
                         </td>
                     </tr>
                     <tr>
@@ -317,11 +317,11 @@
         <table width="100%" height="80%" style="position:relative;left:0px;top:0px;">
         <tr>
             <td align="center" valign="middle">
-                <div style="width:400px; border:5px solid #F5FCFE; background-color: #F5FCFE;">
+                <div style="width:400px; border:5px solid #f7f7f7; background-color: #f7f7f7;">
                     <table width="100%" height="100%" cellpadding="0" cellspacing="0">
                     <tr>
-                        <td bgcolor="#C7EDFC">
-                            <div id="popup_alert_title" style="padding:5px;"></div>
+                        <td bgcolor="#999999">
+                            <div id="popup_alert_title" style="padding:5px;color:#ffffff;"></div>
                         </td>
                     </tr>
                     <tr>

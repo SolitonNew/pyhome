@@ -11,8 +11,10 @@ from models.scripteditor import ScriptEditor
 from models.attach_event_dialog import AttachEventDialog
 from models.stat_panel_dialog import StatPanelDialog
 from models.ow_manager import OWManager
+from models.console_edit_dialog import ConsoleEditDialog
+from models.comp_edit_dialog import CompEditDialog
 
 FORMS = (Index, EventList, Page1, Page2, Page3, Page4, Page5, VarEditDialog,
          SystemDialog, ScriptEditor, AttachEventDialog, StatPanelDialog,
-         OWManager)
+         OWManager, ConsoleEditDialog, CompEditDialog)
     

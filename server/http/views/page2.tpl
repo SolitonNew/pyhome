@@ -24,6 +24,16 @@
         window.addEventListener('SCRIPT_VIEW_TABS_selected', function (event) {
             var url = SCRIPT_VIEW_TABS_selected_url;
             SCRIPT_LIST_selected(calcSelTabKey());
+            
+            if (url) {
+                setTimeout(function () {
+                    $('#VAR_LIST_HELP_PANEL').show(200);
+                }, 300);
+            } else {
+                setTimeout(function () {
+                    $('#VAR_LIST_HELP_PANEL').hide(200);
+                }, 60);
+            }
         });
 
         window.addEventListener('VARIABLE_HELP_LIST_selected', function (event) {
@@ -48,7 +58,7 @@
 
 <style type="text/css">
     #VARIABLE_HELP_LIST_data {
-        background-color:#eeeeee;
+        background-color:#ffffff;
     }
 </style>
 
@@ -66,11 +76,11 @@
             @SCRIPT_LIST@
         </div>
     </td>
-    <td style="position:relative;width:100%;height:100%;">
+    <td style="position:relative;width:100%;height:100%;">        
         @SCRIPT_VIEW_TABS@
     </td>
     <td>
-        <div class="splitter_right" style="width:250px;">
+        <div id="VAR_LIST_HELP_PANEL" class="splitter_right" style="width:200px;display:none;">
             @VARIABLE_HELP_LIST@
         </div>
     </td>

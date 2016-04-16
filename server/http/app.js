@@ -186,3 +186,15 @@ function stop_splitter_drag(sender) {
 }
 
 // -------------------------------------------------
+
+function showToolTip(event, text) {
+    var o = $('#tool_tip_container');    
+    o.html(text);
+    o.css('left', event.clientX + 'px');
+    o.css('top', (event.clientY + 20) + 'px');
+    o.show();
+}
+
+function hideToolTip() {
+    $('#tool_tip_container').hide();
+}

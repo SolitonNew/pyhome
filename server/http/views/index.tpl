@@ -266,7 +266,7 @@
             <tr>
                 <td style="position:relative;background-color:#cccccc;">
                     <div style="margin:10px;font-size:25px;">
-                        <b>WISE HOUSE v0.4</b>
+                        <b>WISE HOUSE v@VERSION@</b>
                     </div>                    
                 </td>
                 <td style="position:relative;background-color:#cccccc;" align="right" valign="middle">
@@ -348,6 +348,9 @@
             </td>
         </tr>
         </table>
+    </div>
+
+    <div id="tool_tip_container" style="position:absolute;background-color:#FFFFB9;border: 1px solid #aaaaaa;padding:5px 8px;display:none;">
     </div>
 
     <div id="splitter_bg" style="position:absolute;background-color:#000000;left:0px;top:0px;width:100%;height:100%;display:none;opacity:0;">

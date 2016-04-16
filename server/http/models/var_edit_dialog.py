@@ -113,7 +113,9 @@ class VarEditDialog(BaseForm):
                 self.db.commit()
                 return "OK"
             except Exception as e:
-                return "ERROR: %s" % e.args
+                self.db.rollback()
+                return "ERROR: {}".format(e.args)
+            
         elif query_type == "delete":
             try:
                 key = self.param("VAR_KEY")
@@ -123,7 +125,9 @@ class VarEditDialog(BaseForm):
                 self.db.commit()
                 return "OK"
             except Exception as e:
-                return "ERROR: %s" % e.args
+                self.db.rollback()
+                return "ERROR: {}".format(e.args)
+            
         elif query_type == "reload_ow_devs":
             lf = ListField("OW_LIST", 0, 1, int(self.param("ow_key")), self._load_ow_devs(self.param("controller")))            
             return lf.html()

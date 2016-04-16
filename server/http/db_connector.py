@@ -1,9 +1,9 @@
 import mysql.connector
 
 class DBConnector(object):
-    MYSQL_DB_NAME = "smarthome"
-    MYSQL_USER = "smarthome"
-    MYSQL_PASS = "smarthomepass"
+    MYSQL_DB_NAME = "wisehouse"
+    MYSQL_USER = "wisehouse"
+    MYSQL_PASS = "wisehousepass"
     
     def __init__(self):
         self._lastID = -1
@@ -21,6 +21,9 @@ class DBConnector(object):
 
     def commit(self):
         self.mysqlConn.commit()
+
+    def rollback(self):
+        self.mysqlConn.rollback()
 
     def select(self, sql, vars = []):
         res = []        

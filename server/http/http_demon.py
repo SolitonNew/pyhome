@@ -121,9 +121,9 @@ class HttpProcessor(BaseHTTPRequestHandler):
                         is_empty = False
                         break;
                 if is_empty:
-                    self.wfile.write(("Форма %s не найдена..." % path).encode("utf-8"))
+                    self.wfile.write(("Форма '%s' не найдена" % path).encode("utf-8"))
             except Exception as e:
-                s = "Форма %s ругнулась... %s" % (path, e.args)
+                s = "Форма '%s' ругнулась:<br><b>%s</b>" % (path, e.args)
                 self.wfile.write(s.encode("utf-8"))
 
             

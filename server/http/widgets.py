@@ -224,7 +224,9 @@ class TabControl(WidgetBase):
     def html(self):        
         res = ("<table class=\"tab_control\" cellpadding=\"0\" cellspacing=\"0\">"
                "<tr>"
-                   "<td id=\"@ID@_tab_list\">@TABS@</td>"
+                   "<td id=\"@ID@_tab_list\" style=\"position:relative;width:100%;\">"
+                       "@TABS@"
+                   "</td>"
                "</tr>"
                "<tr>"
                    "<td id=\"@ID@_page_list\" height=\"100%\">@PAGES@</td>"
@@ -472,12 +474,13 @@ class Grid(WidgetBase):
 
 
 class List(WidgetBase):
-    def __init__(self, id, keyField, labelField, sql, addAttrFunc=None):
+    def __init__(self, id, keyField, labelField, sql, addAttrFunc=None, toolTipField=""):
         super().__init__(id)
         self.keyField = keyField
         self.labelField = labelField
         self.sql = sql
         self.addAttrFunc = addAttrFunc
+        self.toolTipField = toolTipField
 
     def _gen_js(self):
         js = ("<script type=\"text/javascript\">"
@@ -544,9 +547,24 @@ class List(WidgetBase):
         data, fields = self._fetch_data()
         keyField = fields.index(self.keyField)
         labelField = fields.index(self.labelField)
+        toolTipField = False
+        if self.toolTipField:
+            toolTipField = fields.index(self.toolTipField)
+    
+        toolTip = ""
+        if toolTipField:
+            toolTip = "onMouseMove=\"showToolTip(event, '%s');\" onMouseOut=\"hideToolTip();\""
         
         for row in data:
-            res += "<tr id=\"%s_row_%s\">" % (self.id, row[keyField])
+            v = ""
+            if toolTipField:
+                if type(row[toolTipField]) == bytearray:
+                    v = str(row[toolTipField], "utf-8")
+                else:
+                    v = str(row[toolTipField])
+                v = toolTip % (v)
+            
+            res += "<tr id=\"%s_row_%s\" %s>" % (self.id, row[keyField], v)
             if type(row[labelField]) == bytearray:
                 v = str(row[labelField], "utf-8")
             else:
@@ -578,8 +596,8 @@ class TreeNode:
         self.childs = []
 
 class Tree(List):
-    def __init__(self, id, keyField, parentField, labelField, sql, addAttrFunc=None):
-        super().__init__(id, keyField, labelField, sql, addAttrFunc)
+    def __init__(self, id, keyField, parentField, labelField, sql, addAttrFunc=None, toolTipField=""):
+        super().__init__(id, keyField, labelField, sql, addAttrFunc, toolTipField)
         self.parentField = parentField
         self.nodes = TreeNode(None)
         self.treeNodes = []

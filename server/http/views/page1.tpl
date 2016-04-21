@@ -13,7 +13,11 @@
     });
 
     function variable_settings(key) {
-        show_window('var_edit_dialog?key=' + key);
+        if (key == -1) {
+            show_window('var_edit_dialog?key=-1&default_group=' + _VARIABLE_GROUPS_selected_key);
+        } else {
+            show_window('var_edit_dialog?key=' + key);
+        }
     }
 
 </script>

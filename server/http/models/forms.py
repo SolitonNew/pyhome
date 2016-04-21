@@ -13,8 +13,10 @@ from models.stat_panel_dialog import StatPanelDialog
 from models.ow_manager import OWManager
 from models.console_edit_dialog import ConsoleEditDialog
 from models.comp_edit_dialog import CompEditDialog
+from models.app import App
+from models.app_login import AppLogin
 
 FORMS = (Index, EventList, Page1, Page2, Page3, Page4, Page5, VarEditDialog,
          SystemDialog, ScriptEditor, AttachEventDialog, StatPanelDialog,
-         OWManager, ConsoleEditDialog, CompEditDialog)
+         OWManager, ConsoleEditDialog, CompEditDialog, App, AppLogin)
     

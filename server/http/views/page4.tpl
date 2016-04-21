@@ -129,15 +129,15 @@
         comp_mouse_y = event.clientY;
     }
 
-    function comp_mouse_move(event, key, label) {
+    function comp_mouse_move(obj, event, key, label) {
         if (!comp_mouse_x || !comp_mouse_y) return false;
         
         if (Math.abs(comp_mouse_x - event.clientX) > 10 ||
             Math.abs(comp_mouse_y - event.clientY) > 10) {
             is_move_comp = true;
-            var l = $(event.target).html();
-            var w = $(event.target).width();            
-            var h = $(event.target).height();
+            var l = $(obj).html();
+            var w = $(obj).width();            
+            var h = $(obj).height();
             start_comp_drag(event, key, l, w, h);
         }
     }
@@ -157,21 +157,27 @@
         opacity:0.5;
         text-align: center;
         color:#ffffff;
-        border-radius:5px;
     }
 
-    div.CONSOLE_PALETTE_row {
-        padding:10px;
-        border-bottom:1px solid #cccccc;
-        background-color:#ffffff;
+    div.CONSOLE_PALETTE_cell {
+        width:80px;
+        height:80px;
+        background-color:#eeeeee;
+        display:inline-block;
+        margin-left:1px;
+        margin-top:1px;
+        text-align:center;
+        padding: 0px;
+        overflow: hidden;
+        line-height:0.9;
+        float:left;
     }
 
     div.comp_item {
         position:absolute;
-        background-color:#00aa00;
+        background-color:#999999;
         text-align:center;
         color:#ffffff;
-        border-radius:5px;
     }
 
     div.comp_hover {
@@ -182,7 +188,6 @@
         width:80px;
         height:80px;
         background-color: #dddddd;
-        border-radius:5px;
     }
 </style>
 
@@ -206,7 +211,7 @@
         </div>
     </td>
     <td>
-        <div id="CONSOLE_PALETTE" class="splitter_right" style="width:250px;">
+        <div id="CONSOLE_PALETTE" class="splitter_right" style="width:260px;">            
             @CONSOLE_PALETTE@
         </div>
     </td>

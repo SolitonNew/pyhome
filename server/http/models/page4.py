@@ -71,30 +71,31 @@ class Page4(BaseForm):
                 self.db.rollback()
                 return "ERROR: {}".format(e.args)
         elif query_type == "1":
-            return self._comp_list("select ID, COMM "
+            return self._comp_list("select ID, COMM, APP_CONTROL "
                                    "  from core_variables "
-                                   " where ROM = 'pyb'"
+                                   " where APP_CONTROL in (1, 3, 5)"
                                    " order by COMM")
         elif query_type == "2":
-            return self._comp_list("select v.ID, v.COMM "
-                                   "  from core_variables v, core_ow_devs d"
-                                   " where v.OW_ID = d.ID"
-                                   "   and d.ROM_1 = 40"
-                                   " order by v.COMM")
+            return self._comp_list("select ID, COMM, APP_CONTROL "
+                                   "  from core_variables "
+                                   " where APP_CONTROL in (4, 6)"
+                                   " order by COMM")
         else:
             return "DUMY"
         
     def _comp_list(self, sql):
-        res = []
-        for row in self.db.select(sql):
-            res += ["<div class=\"CONSOLE_PALETTE_row\" onMouseDown=\"start_comp_drag(event, %s, '%s');return false;\">" % (row[0], str(row[1], "utf-8"))]
+        res = ["<div style=\"position:absolute;left:0px;top:0px;width:100%;height:100%;overflow:auto;cursor:default;line-height:0;\">"]
+        for row in self.db.select(sql):           
+            res += ["<div class=\"CONSOLE_PALETTE_cell\" onMouseDown=\"start_comp_drag(event, %s, $(this).html());return false;\">" % (row[0])]
+            res += ["<img src=\"views/images/control_%s.png\" style=\"padding-top:10px;\"><br>" % (row[2])]
             res += [str(row[1], "utf-8"), "<br>"]
             res += ["</div>"]
+        res += ["</div>"]
         return "".join(res)
 
     def _gen_design_table(self, orientation, cols, rows, consol):
         res = ["<div style=\"position:relative;\">"]
-        res += ["<table class=\"design_table\" cellspace=\"1\" cellpadding=\"0\">"]
+        res += ["<table class=\"design_table\" cellspacing=\"1\" cellpadding=\"0\">"]
         for r in range(rows):
             res += ["<tr>"]
             for c in range(cols):
@@ -102,29 +103,26 @@ class Page4(BaseForm):
             res += ["</tr>"]
         res += ["</table>"]
 
-        comp_size = 82;
+        comp_size = 81;
         res += ["<div style=\"position:absolute;left:0px;top:0px;width:100%;height:100%;\">"]
-        for rec in self.db.select(("select p.ID, p.X, p.Y, p.W, p.H, v.COMM "
+        for rec in self.db.select(("select p.ID, p.X, p.Y, p.W, p.H, v.COMM, v.APP_CONTROL "
                                    "  from app_console_parts p, core_variables v "
                                    " where p.VARIABLE_ID = v.ID"
                                    "   and p.CONSOLE_ID = %s"
                                    "   and p.ORIENTATION = %s") % (consol, orientation)):
-            x = rec[1] * comp_size + 2
-            y = rec[2] * comp_size + 2
-            w = rec[3] * comp_size - 2
-            h = rec[4] * comp_size - 2
+            x = rec[1] * comp_size + 1
+            y = rec[2] * comp_size + 1
+            w = rec[3] * comp_size - 1
+            h = rec[4] * comp_size - 1
             
             label = str(rec[5], "utf-8")
-            try:
-                label.index("СВЕТ")
-                label = label.replace(" СВЕТ", "")
-                label = "<img src=\"views/images/bulb_on.png\" style=\"padding-top:10px;\"><br>" + label
-            except:
-                pass
+
+            if rec[6] > 0:
+                label = "<img src=\"views/images/control_%s.png\" style=\"padding-top:10px;\"><br>%s" % (rec[6], label)
             
             res += ["<div class=\"comp_item\" style=\"left:%spx;top:%spx;width:%spx;height:%spx;\"" % (x, y, w, h)]
             res += [" onMouseDown=\"comp_mouse_down(event, %s);return false;\" " % (rec[0])]
-            res += [" onMouseMove=\"comp_mouse_move(event, %s, '%s');return false;\" " % (rec[0], str(rec[5], "utf-8"))]
+            res += [" onMouseMove=\"comp_mouse_move(this, event, %s, '%s');return false;\" " % (rec[0], str(rec[5], "utf-8"))]
             res += [" onMouseUp=\"comp_mouse_up(event, %s);return false;\" " % (rec[0])]
             res += [">%s</div>" % (label)]
         res += ["</div>"]

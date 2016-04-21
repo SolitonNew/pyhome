@@ -59,7 +59,7 @@
         <TD colspan="2"></TD>
     </TR>    
     <TR>
-        <TD>Контроллер:</TD>
+        <TD width="100">Контроллер:</TD>
         <TD>
             <select id="VAR_CONTROLLER" name="VAR_CONTROLLER" onChange="reload_ow_devs(); variable_settings_change()">
                 @VAR_CONTROLLER@
@@ -114,6 +114,14 @@
         <TD>
             <select id="VAR_GROUP" name="VAR_GROUP" style="width:100%">
                 @VAR_GROUP_TREE@
+            </select>
+        </TD>
+    </TR>
+    <TR>
+        <TD>Устройство:</TD>
+        <TD>
+            <select id="VAR_CONTROL" name="VAR_CONTROL">
+                @VAR_CONTROL@
             </select>
         </TD>
     </TR>    

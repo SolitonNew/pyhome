@@ -14,7 +14,7 @@ class Page1(BaseForm):
         ls = Tree("VARIABLE_GROUPS", "ID", "PARENT_ID", "NAME", "select ID, PARENT_ID, NAME from plan_parts order by ORDER_NUM", self.varGroupAddAttr)
         self.add_widget(ls)
         
-        variableSql = ("select v.ID, c.NAME C_NAME, v.ROM, v.DIRECTION, v.NAME, v.COMM, v.VALUE, v.CHANNEL"
+        variableSql = ("select v.ID, c.NAME C_NAME, v.ROM, v.DIRECTION, v.NAME, v.COMM, v.APP_CONTROL, v.VALUE, v.CHANNEL "
                        "  from core_variables v, core_controllers c "
                        " where c.ID = v.CONTROLLER_ID ")
 
@@ -26,6 +26,7 @@ class Page1(BaseForm):
         grid.add_column("Только чтение", "DIRECTION", 60, sort="on", func=self.column_ro_func)
         grid.add_column("Идентификатор", "NAME", 200, sort="on")
         grid.add_column("Описание", "COMM", 200, sort="on")
+        grid.add_column("Устройство", "APP_CONTROL", 100, sort="on", func=self.column_control_func)
         grid.add_column("Значение", "VALUE", 100, sort="on", func=self.column_val_func)
         grid.add_column("Канал", "CHANNEL", 100, sort="on")
         self.add_widget(grid)
@@ -33,7 +34,14 @@ class Page1(BaseForm):
     def column_ro_func(self, index, row):
         return ["ДА", "НЕТ"][row[3]]
 
-    def column_val_func(self, index, row):
+    def column_control_func(self, index, row):
+        ls = ("--//--", "Лампочка", "Выключатель", "Розетка", "Термометр", "Термостат", "Камера")
+        try:
+            return "<div style=\"padding:3px;\">%s</div>" % (ls[row[index]])
+        except:
+            return "<div style=\"padding:3px;\">%s</div>" % (row[index])        
+
+    def column_val_func(self, index, row):        
         if str(row[2], "utf-8") == "pyb" and row[3] == 1:
             if row[index]:
                 lab = "ВКЛ."

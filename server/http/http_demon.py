@@ -1,18 +1,51 @@
 #!/usr/bin/python3
 
+import random
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from urllib import parse
 
-class HttpProcessor(BaseHTTPRequestHandler):
+class HttpProcessor(BaseHTTPRequestHandler):    
     DATA_PATH = "views/"
     sys_libs = ("app.js",)
     media_ext = (".png", ".jpg")
     resources_ext = (".html", ".js", ".css")
+    session_cookie_name = "SESSION"
+    SESSIONS = []
+
+    def create_session(self, value):
+        sess = [str(random.random()), True, value]
+        self.SESSIONS += [sess]
+        self.out_cookie += [(self.session_cookie_name, sess[0])]
+
+    def isAndroid(self):
+        try:
+            self.headers['User-Agent'].index("Android")
+            return True
+        except:
+            return False
 
     def do_GET(self):
         self._execute_query(parse.urlsplit(self.path))
 
     def _execute_query(self, url_data):
+        # Зачитываем куки
+        self.out_cookie = []
+        cookies = []
+        if "Cookie" in self.headers:
+            for c in self.headers["Cookie"].split('; '):
+                cookies += [c.split("=")]
+
+        # Определяем текущую сессию
+        current_session = False
+        self.SESSION_VALUE = False
+        for cook in cookies:            
+            if cook[0] == self.session_cookie_name:
+                for sess in self.SESSIONS:
+                    if sess[0] == cook[1]:
+                        current_session = True
+                        self.SESSION_VALUE = sess[2]
+
+        # Работаем по стандартному сценарию
         path = url_data.path[1:]
         ext = path.lower()
         try:
@@ -95,21 +128,39 @@ class HttpProcessor(BaseHTTPRequestHandler):
 
         if is_empty:
             if path == "":
+                path = "app"
+                    
+            elif path == "admin":
                 path = "index"
 
+            # Перенаправление если сессия неавалидна
+
+            if path == "app" and not current_session:
+                path = "app_login"
+                print(self.isAndroid())
+
+            # --------------------------------------
+
             from db_connector import DBConnector                
-            import models.forms            
+            import models.forms
 
             try:
                 for form in models.forms.FORMS:
                     if form.ACTION == path:
                         f = form()
+                        f.owner = self
                         f.data_path = self.DATA_PATH
                         f.url_data = url_data
                         f.db = DBConnector()
                         f.create_widgets()
                         res = f.run()
                         self.send_response(200)
+
+                        # Вставка для сессионного механизма
+                        for cook in self.out_cookie:
+                            self.send_header("Set-cookie", "%s=%s" % (cook))
+                        # ---------------------------------
+                        
                         self.send_header('content-type', f.content_type)
                         self.send_header('charset', 'UTF8')
                         self.end_headers()
@@ -125,7 +176,7 @@ class HttpProcessor(BaseHTTPRequestHandler):
             except Exception as e:
                 s = "Форма '%s' ругнулась:<br><b>%s</b>" % (path, e.args)
                 self.wfile.write(s.encode("utf-8"))
-
+    
             
 HTTP_HOST = "0.0.0.0"
 HTTP_PORT = 8082

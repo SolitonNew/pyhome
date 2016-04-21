@@ -468,7 +468,7 @@ class Grid(WidgetBase):
             res = res.replace("@ID@", self.id)
             res = res.replace("@HEADER@", self._gen_header())
         except Exception as e:
-            return "Ошибка в виджете Grid: %s" % e.args
+            return "Ошибка в виджете Grid: {}".format(e.args)
 
         return self._gen_js() + res
 
@@ -603,9 +603,14 @@ class Tree(List):
         self.treeNodes = []
 
     def _recursive_search(self, data, tab, parent, keyIndex, parentIndex, labelIndex, parentNode):
+        if parentIndex == -1 and tab > 0:
+            return [], []
         res = []
         tabs = []
-        level = [row for row in data if row[parentIndex] == parent]
+        if parentIndex == -1:
+            level = data
+        else:
+            level = [row for row in data if row[parentIndex] == parent]
         for row in level:
             node = TreeNode(row[keyIndex])
             parentNode.childs += [node]
@@ -615,7 +620,8 @@ class Tree(List):
             childs, child_tabs = self._recursive_search(data, tab + 1, row[keyIndex], keyIndex, parentIndex, labelIndex, node)
             res += childs;
             tabs += child_tabs
-            
+
+        print(self.id + str(parent))
         return res, tabs
 
     def _fetch_data(self):
@@ -624,7 +630,11 @@ class Tree(List):
         q.close()
 
         keyIndex = fields.index(self.keyField)
-        parentIndex = fields.index(self.parentField)
+        try:
+            parentIndex = fields.index(self.parentField)
+        except:
+            parentIndex = -1
+            
         labelIndex = fields.index(self.labelField)
         tree, self.child_tabs = self._recursive_search(data, 0, None, keyIndex, parentIndex, labelIndex, self.nodes)
         

@@ -9,12 +9,14 @@
 
     <script type="text/javascript">
         function load_event_list() {
-            $.ajax({url:'eventlist'}).done(function (data) {
+            var q = $.ajax({url:'eventlist'});
+            q.done(function (data) {
                 if ($('#event_list').html() != data) {
                     $('#event_list').html(data);
                 };
+                setTimeout(load_event_list, 1000);
             });
-            setTimeout(load_event_list, 1000);
+            q.fail(function () {setTimeout(load_event_list, 500)});
         }
         load_event_list();
         

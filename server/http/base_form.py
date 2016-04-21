@@ -5,11 +5,12 @@ class BaseForm(object):
     VIEW = "index.tpl"
     
     def __init__(self):
+        self.owner = False
         self.content_type = "text/html"
         self._widgets = []        
         self.data_path = False
         self.url_data = False
-        self.db = False        
+        self.db = False
 
     def create_widgets(self):
         pass
@@ -79,5 +80,4 @@ class BaseForm(object):
         if q:
             return self.query(q)
         else:
-            return self.get_view()
-        
+            return self.get_view()        

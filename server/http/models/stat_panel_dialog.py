@@ -23,7 +23,7 @@ class StatPanelDialog(BaseForm):
         else:
             NAME, TYP, SERIES_1, SERIES_2, SERIES_3, SERIES_4 = ("", 0, -1, -1, -1, -1)
 
-        var_list = self.db.select("select ID, NAME from core_variables order by NAME")
+        var_list = self.db.select("select ID, CONCAT(COMM, ' [', NAME, ']') from core_variables order by 2")
 
         var_list = [[-1, "-- нет --"]] + var_list
 

@@ -85,17 +85,36 @@ class Page5(BaseForm):
 
         max_x = datetime.datetime.now().timestamp()
         min_x = max_x - delta_x
-        max_y = 1
-        min_y = 1
-        # Собираем статистику по графикам
+        max_y = -9999
+        min_y = 9999
+
+        # Делаем полную выборку данных. Выкидываем подозрительные точки и
+        # собираем статистику.
+        prev_val = -9999
+        chart_data = []
+        for row in self.db.select("select UNIX_TIMESTAMP(CHANGE_DATE) D, VALUE, VARIABLE_ID from core_variable_changes "
+                                  " where VARIABLE_ID in (" + var_ids + ") "
+                                  "   and UNIX_TIMESTAMP(CHANGE_DATE) >= %s"
+                                  "   and UNIX_TIMESTAMP(CHANGE_DATE) <= %s"
+                                  "order by VARIABLE_ID, CHANGE_DATE " % (min_x, max_x)):
+            if abs(prev_val - row[1]) < 10 or prev_val == -9999:
+                chart_data += [row]
+                max_y = max(max_y, row[1])
+                min_y = min(min_y, row[1])
+            prev_val = row[1]
+        
+        """
         for row in self.db.select("select max(VALUE) v_max, "
                                   "       min(VALUE) v_min "
                                   "  from core_variable_changes "
                                   " where VARIABLE_ID in (" + var_ids + ") "
                                   "   and UNIX_TIMESTAMP(CHANGE_DATE) >= %s"
-                                  "   and UNIX_TIMESTAMP(CHANGE_DATE) <= %s" % (min_x, max_x)):
+                                  "   and UNIX_TIMESTAMP(CHANGE_DATE) <= %s"
+                                  "   and VALUE < 85"
+                                  "   and VALUE > -1"% (min_x, max_x)):
             max_y = row[0]
             min_y = row[1]
+        """
 
         if min_y is None or max_y is None:
             max_y = 1
@@ -218,11 +237,13 @@ class Page5(BaseForm):
         currVarID = -1
         prevX = -1;
 
+        """
         chart_data = self.db.select("select UNIX_TIMESTAMP(CHANGE_DATE) D, VALUE, VARIABLE_ID from core_variable_changes "
                                     " where VARIABLE_ID in (" + var_ids + ") "
                                     "   and UNIX_TIMESTAMP(CHANGE_DATE) >= %s"
                                     "   and UNIX_TIMESTAMP(CHANGE_DATE) <= %s"
                                     "order by VARIABLE_ID, CHANGE_DATE " % (min_x, max_x))
+        """
 
         if typ == 0: # Линейная
             for row in chart_data:
@@ -240,7 +261,7 @@ class Page5(BaseForm):
                     ctx.move_to(x, y)
                     is_first = False
                 else:
-                    if row[0] - prevX > 1000:
+                    if row[0] - prevX > 500:
                         ctx.move_to(x, y)
                     else:
                         ctx.line_to(x, y)

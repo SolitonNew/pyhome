@@ -20,6 +20,15 @@
         var r = $('#stat_panel_@ID@_range').prop('value');
         $('#stat_panel_@ID@_img').attr({src:'page5?FORM_QUERY=panel_img&width=' + w + '&height=' + h + '&range=' + r + '&panel_h=' + p_h + '&key=@ID@&rnd=' + Math.random()});
         $('#stat_panel_@ID@_img').css('display', 'block');
+
+        var label = $('#refresh_label_@ID@');
+
+        if (r == '-12 hour') {
+            label.html('Автообновление каждые 30 сек.');
+            setTimeout(stat_panel_@ID@_refresh, 30000);
+        } else {
+            label.html('');
+        }
     }
 
     function stat_panel_@ID@_dialog() {
@@ -41,6 +50,7 @@
            @LABEL@ 
         </td>
         <td align="right">
+            <span id="refresh_label_@ID@"></span>
             <select id="stat_panel_@ID@_range" onChange="stat_panel_@ID@_refresh()">
                 <option value="-12 hour">12 часов</option>
                 <option selected value="-1 day">1 день</option>

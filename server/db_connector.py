@@ -1,11 +1,12 @@
+
 import mysql.connector
 import time
 from datetime import datetime
 
 class DBConnector(object):
-    MYSQL_DB_NAME = "smarthome"
-    MYSQL_USER = "smarthome"
-    MYSQL_PASS = "smarthomepass"
+    MYSQL_DB_NAME = "wisehouse"
+    MYSQL_USER = "wisehouse"
+    MYSQL_PASS = "wisehousepass"
     
     def __init__(self):
         self.mysqlConn = mysql.connector.connect(host="localhost",

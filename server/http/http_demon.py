@@ -137,7 +137,6 @@ class HttpProcessor(BaseHTTPRequestHandler):
 
             if path == "app" and not current_session:
                 path = "app_login"
-                print(self.isAndroid())
 
             # --------------------------------------
 
@@ -183,7 +182,7 @@ HTTP_PORT = 8082
 
 print(
 "=============================================================================\n"
-"                       МОДУЛЬ HTTP ВЗАИМОДЕЙСТВИЯ v0.4\n"
+"                       МОДУЛЬ HTTP ВЗАИМОДЕЙСТВИЯ v0.5\n"
 "\n"
 " Хост: %s \n"
 " Порт: %s \n"

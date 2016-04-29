@@ -8,9 +8,9 @@ class OWManager(BaseForm):
 
     def create_widgets(self):
         variableSql = ("select w.ID, c.NAME, w.ROM_1, w.ROM_2, w.ROM_3, w.ROM_4, w.ROM_5, w.ROM_6, w.ROM_7, w.ROM_8, t.CHANNELS, w.VALUE, '' F1, '' F2, '' F3 "
-                       "  from core_ow_devs w, core_controllers c, core_ow_types t "
-                       " where c.ID = w.CONTROLLER_ID"
-                       "   and t.CODE = w.ROM_1")
+                       "  from core_controllers c, "
+                       "       core_ow_devs w LEFT JOIN core_ow_types t ON t.CODE = w.ROM_1 "
+                       " where c.ID = w.CONTROLLER_ID")
 
         grid = Grid("OW_MANAGER_GRID", "ID", variableSql)
         grid.add_column("ID", "ID", 50, visible=False)

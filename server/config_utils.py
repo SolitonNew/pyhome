@@ -86,4 +86,3 @@ def generate_config_file(db):
 
 
 #print(generate_config_file(DBConnector()))
-

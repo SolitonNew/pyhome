@@ -12,7 +12,11 @@ class DBConnector(object):
                                                  user=self.MYSQL_USER,
                                                  password=self.MYSQL_PASS)
         
-        self.query("SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED")
+        #self.query("SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED")
+
+    def disconnect(self):
+        if self.mysqlConn:
+            self.mysqlConn.disconnect()
         
     def query(self, sql, vars = []):
         q = self.mysqlConn.cursor()

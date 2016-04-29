@@ -65,7 +65,7 @@
                 <td width="100%">
                     <select name="SERIES_4" style="width:100%;">@SERIES_4@</select>
                 </td>
-                <td bgcolor="#ffff00">
+                <td bgcolor="#ff00ff">
                     <div style="width:30px;"></div>
                 </td>
             </tr>

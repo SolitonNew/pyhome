@@ -621,7 +621,6 @@ class Tree(List):
             res += childs;
             tabs += child_tabs
 
-        print(self.id + str(parent))
         return res, tabs
 
     def _fetch_data(self):

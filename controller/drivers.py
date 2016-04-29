@@ -5,13 +5,18 @@ from pyb import Pin
 class Termometr(DS18B20):
     def __init__(self, ow, rom):
         super().__init__(ow)
-        self.rom = rom        
+        self.rom = rom
+        self.ERRORS = 0
     
-    def value(self, val = None, channel = ''):
-        res = self.get_temp(self.rom)
+    def value(self, val = None, channel = ""):
+        res = False
+        try:
+            res = round(self.get_temp(self.rom), 1)
+        except:
+            self.ERRORS += 1
         self.start_measure(self.rom)
-        return res
-
+        return {'':res, 'ERRORS':self.ERRORS}
+            
 
 class Switch(HomeSensor):
     SENSOR_L = 8
@@ -26,7 +31,7 @@ class Switch(HomeSensor):
     def value(self, val = None, channel = ''):
         if val == None:
             resL = False
-            resR = False            
+            resR = False
             
             d = self.get_data(self.rom)
     

@@ -16,13 +16,16 @@ class Page5(BaseForm):
         tf = TextField("STATISTIC_PANELS", "".join(panels_data))
         self.add_widget(tf)
 
+        tf = TextField("START_TIME", str(round(datetime.datetime.now().timestamp() - 24 * 3600)))
+        self.add_widget(tf)
+
     def _create_panel(self, key, name, height):
         f = open("views/stat_panel.tpl", "r")
         tmpl = f.read()
         f.close()        
         tmpl = tmpl.replace("@ID@", key)
         tmpl = tmpl.replace("@LABEL@", name)
-        tmpl = tmpl.replace("@HEIGHT@", height)
+        tmpl = tmpl.replace("@HEIGHT@", height)        
         return tmpl
 
     def query(self, query_type):
@@ -83,8 +86,8 @@ class Page5(BaseForm):
         else:
             delta_x = 30 * 24 * 3600
 
-        max_x = datetime.datetime.now().timestamp()
-        min_x = max_x - delta_x
+        min_x = int(self.param('start'))
+        max_x = min_x + delta_x
         max_y = -9999
         min_y = 9999
 
@@ -92,30 +95,18 @@ class Page5(BaseForm):
         # собираем статистику.
         prev_val = -9999
         chart_data = []
-        for row in self.db.select("select UNIX_TIMESTAMP(CHANGE_DATE) D, VALUE, VARIABLE_ID from core_variable_changes "
+        for row in self.db.select("select UNIX_TIMESTAMP(CHANGE_DATE) D, VALUE, VARIABLE_ID, ID "
+                                  "  from core_variable_changes "
                                   " where VARIABLE_ID in (" + var_ids + ") "
-                                  "   and UNIX_TIMESTAMP(CHANGE_DATE) >= %s"
-                                  "   and UNIX_TIMESTAMP(CHANGE_DATE) <= %s"
+                                  "   and UNIX_TIMESTAMP(CHANGE_DATE) >= %s "
+                                  "   and UNIX_TIMESTAMP(CHANGE_DATE) <= %s "
                                   "order by VARIABLE_ID, CHANGE_DATE " % (min_x, max_x)):
-            if abs(prev_val - row[1]) < 10 or prev_val == -9999:
+            if abs(prev_val - row[1]) < 5 or (typ != 0 and prev_val == -9999):
                 chart_data += [row]
                 max_y = max(max_y, row[1])
                 min_y = min(min_y, row[1])
             prev_val = row[1]
         
-        """
-        for row in self.db.select("select max(VALUE) v_max, "
-                                  "       min(VALUE) v_min "
-                                  "  from core_variable_changes "
-                                  " where VARIABLE_ID in (" + var_ids + ") "
-                                  "   and UNIX_TIMESTAMP(CHANGE_DATE) >= %s"
-                                  "   and UNIX_TIMESTAMP(CHANGE_DATE) <= %s"
-                                  "   and VALUE < 85"
-                                  "   and VALUE > -1"% (min_x, max_x)):
-            max_y = row[0]
-            min_y = row[1]
-        """
-
         if min_y is None or max_y is None:
             max_y = 1
             min_y = 1
@@ -127,9 +118,7 @@ class Page5(BaseForm):
                 min_y = 0        
 
         # Определяем цвета
-        colors = [(1, 0, 0), (0, 0.65, 0.31), (0, 0, 1), (1, 1, 0)]        
-
-        print(str(min_y) + ' ' + str(max_y))
+        colors = [[1, 0, 0], [0, 0.65, 0.31], [0, 0, 1], [1, 0, 1]]
         
         off_y = (max_y - min_y) / 10        
         min_y -= off_y
@@ -205,13 +194,14 @@ class Page5(BaseForm):
 
             sc = 0
             tz = 3600 * 2
-            for i in range(math.ceil(min_x / x_step), math.ceil(max_x / x_step)):
+            for i in range(math.ceil(min_x / x_step), math.ceil(max_x / x_step) + 1):
                 if sc == 0:
                     x = (i * x_step - min_x - tz) / kx + left
-                    ctx.set_source_rgb(*(color_y_line))
-                    ctx.move_to(x, 0)
-                    ctx.line_to(x, height - bottom)
-                    ctx.stroke()
+                    if x >= left and x < width:
+                        ctx.set_source_rgb(*(color_y_line))
+                        ctx.move_to(x, 0)
+                        ctx.line_to(x, height - bottom)
+                        ctx.stroke()
                     ctx.set_source_rgb(0, 0, 0)
                     num = datetime.datetime.fromtimestamp(i * x_step).strftime('%d-%m-%Y')
                     tw, th = ctx.text_extents(num)[2:4]
@@ -221,7 +211,6 @@ class Page5(BaseForm):
                 sc -= 1
         except Exception as e:
             pass
-            #print("ERROR %s" % (e.args))
 
         # Рисуем верхний и правый бордер
 
@@ -236,14 +225,6 @@ class Page5(BaseForm):
         is_first = True
         currVarID = -1
         prevX = -1;
-
-        """
-        chart_data = self.db.select("select UNIX_TIMESTAMP(CHANGE_DATE) D, VALUE, VARIABLE_ID from core_variable_changes "
-                                    " where VARIABLE_ID in (" + var_ids + ") "
-                                    "   and UNIX_TIMESTAMP(CHANGE_DATE) >= %s"
-                                    "   and UNIX_TIMESTAMP(CHANGE_DATE) <= %s"
-                                    "order by VARIABLE_ID, CHANGE_DATE " % (min_x, max_x))
-        """
 
         if typ == 0: # Линейная
             for row in chart_data:
@@ -297,27 +278,60 @@ class Page5(BaseForm):
                 currVarID = row[2]
             ctx.fill()
         else: # Линейчастая
+            if len(chart_data) > 0:
+                chart_data += [list(chart_data[len(chart_data) - 1])]
+                chart_data[len(chart_data) - 1][2] = -1
+
+            ccc = datetime.datetime.now().timestamp()
+            curr_time_x = (ccc - min_x) / kx + left
+                
+            color = [1, 1, 1]
+            color_fill = [1, 1, 1, 1]
+            y0 = height - bottom - (-min_y) / ky
             for row in chart_data:
                 if currVarID != row[2]:
-                    ctx.stroke()
+                    # Заканчиваем график
+                    
+                    if currVarID != -1:
+                        x = curr_time_x
+                        if x > width:
+                            x = width
+                        ctx.set_source_rgb(*color)
+                        ctx.move_to(prevX, prevY)
+                        ctx.line_to(x, prevY)
+                        ctx.line_to(x, y)
+                        ctx.stroke()
+                        ctx.set_source_rgba(*color_fill)
+                        rx, ry, rw, rh = prevX, y0, x - prevX, prevY - y0 - 0.1
+                        ctx.rectangle(rx, ry, rw, rh)
+                        ctx.fill()
+                    # --------------------
+                    
                     for i in range(4):
                         if series[i] == row[2]:
-                            ctx.set_source_rgb(*colors[i])
+                            color = colors[i]
+                            color_fill = color.copy()
+                            color_fill += [0.3]
                     is_first = True
-
+                    
                 x = (row[0] - min_x) / kx + left
                 y = height - bottom - (row[1] - min_y) / ky
                 
-                if is_first:
-                    ctx.move_to(x, y)
+                if is_first:                    
                     is_first = False
                 else:
+                    ctx.set_source_rgb(*color)
+                    ctx.move_to(prevX, prevY)
                     ctx.line_to(x, prevY)
                     ctx.line_to(x, y)
+                    ctx.stroke()
+                    ctx.set_source_rgba(*color_fill)
+                    rx, ry, rw, rh = prevX, y0, x - prevX, prevY - y0 - 0.1
+                    ctx.rectangle(rx, ry, rw, rh)
+                    ctx.fill()
 
                 currVarID = row[2]
-                prevX, prevY = x, y
-            ctx.stroke()
+                prevX, prevY = x, y            
 
         # Рисуем оси
 

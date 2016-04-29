@@ -2,6 +2,7 @@
 
 from db_connector import DBConnector
 import serial
+import datetime
 import time
 import json
 from config_utils import generate_config_file
@@ -56,23 +57,24 @@ class Main():
             for var in var_data:
                 if var[2] != dev[0]:
                     pack_data += [[var[0], var[1]]]
-            
-            print("Запрос синхронизации контроллера '%s'." % (dev[1]))
+
+            date = datetime.datetime.now().strftime('%H:%M:%S')
+            print("[%s] Запрос синхронизации для '%s': " % (date, dev[1]), end="")
             self.send_pack(dev[0], self.PACK_SYNC, pack_data)
             res_pack = self.check_lan()
             if res_pack:
                 if res_pack[2] == "RESET":
-                    print("Получен запрос сброса переменных контроллера '%s'.\n" % dev[1])
+                    print("RESET ", end="")
                     self.send_pack(dev[0], self.PACK_SYNC, self._reset_pack())
                     if self.check_lan():
-                        print("OK.\n")
+                        print("OK")
                     else:
-                        print("Контроллер '%s' не ответил.\n" % dev[1])
+                        print("ERROR")
                 else:
                     self._store_variable_to_db(res_pack[0], res_pack[2])
-                    print("OK.\n")
+                    print("OK")
             else:
-                print("Контроллер '%s' не ответил.\n" % dev[1])
+                print("ERROR")
 
     def _reset_pack(self):
         return self.db.all_variables();

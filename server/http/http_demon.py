@@ -168,6 +168,8 @@ class HttpProcessor(BaseHTTPRequestHandler):
                             self.wfile.write(res.encode("utf-8"))
                         else:
                             self.wfile.write(res)
+                        f.db.disconnect()
+                        f.db = False
                         is_empty = False
                         break;
                 if is_empty:

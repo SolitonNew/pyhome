@@ -100,5 +100,32 @@
             </div>
         </td>
     <tr>
+    <tr>
+        <td colspan="2" align="center">
+            <table>
+            <tr>
+                <td style="background-color:#ff0000;width:20px;"></td>
+                <td id="stat_panel_@ID@_label_1">
+                    @LABEL_1@
+                </td>
+                <td width="20"></td>
+                <td style="background-color:#00A651;width:20px;"></td>
+                <td id="stat_panel_@ID@_label_2">
+                    @LABEL_2@
+                </td>
+                <td width="20"></td>
+                <td style="background-color:#0000ff;width:20px;"></td>
+                <td id="stat_panel_@ID@_label_3">
+                    @LABEL_3@
+                </td>
+                <td width="20"></td>
+                <td style="background-color:#ff00ff;width:20px;"></td>
+                <td id="stat_panel_@ID@_label_4">
+                    @LABEL_4@
+                </td>
+            </tr>
+            </table>
+        </td>
+    </tr>
     </table>
 </div>

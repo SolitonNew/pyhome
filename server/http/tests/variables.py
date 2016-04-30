@@ -9,6 +9,8 @@ class Variable(object):
         self.val = startValue
         self.isUse = False
         self.isChange = False
+        self.rom = ""
+        self.dev_id = 1
         
     def value(self, val = None):
         self.isUse = True

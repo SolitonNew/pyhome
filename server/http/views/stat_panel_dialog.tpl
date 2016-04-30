@@ -7,7 +7,11 @@
             if (data == "OK") {
                 hide_window();
                 stat_panel_@KEY@_refresh();
-                $('#stat_panel_@KEY@_label').html($('#stat_panel_name').prop('value'));
+                $('#stat_panel_@KEY@_label').html($('#stat_panel_name').prop('value'));                
+                $('#stat_panel_@KEY@_label_1').html($('#SERIES_1 option:selected').text());
+                $('#stat_panel_@KEY@_label_2').html($('#SERIES_2 option:selected').text());
+                $('#stat_panel_@KEY@_label_3').html($('#SERIES_3 option:selected').text());
+                $('#stat_panel_@KEY@_label_4').html($('#SERIES_4 option:selected').text());
             } else {
                 alert(data);
             }
@@ -39,7 +43,7 @@
             <table width="100%" cellpadding="0" cellspacing="10">
             <tr>
                 <td width="100%">
-                    <select name="SERIES_1" style="width:100%;">@SERIES_1@</select>
+                    <select id="SERIES_1" name="SERIES_1" style="width:100%;">@SERIES_1@</select>
                 </td>
                 <td bgcolor="#ff0000">
                     <div style="width:30px;"></div>
@@ -47,7 +51,7 @@
             </tr>
             <tr>
                 <td width="100%">
-                    <select name="SERIES_2" style="width:100%;">@SERIES_2@</select>
+                    <select id="SERIES_2" name="SERIES_2" style="width:100%;">@SERIES_2@</select>
                 </td>
                 <td bgcolor="#00A651">
                     <div style="width:30px;"></div>
@@ -55,7 +59,7 @@
             </tr>
             <tr>
                 <td width="100%">
-                    <select name="SERIES_3" style="width:100%;">@SERIES_3@</select>
+                    <select id="SERIES_3" name="SERIES_3" style="width:100%;">@SERIES_3@</select>
                 </td>
                 <td bgcolor="#0000ff">
                     <div style="width:30px;"></div>
@@ -63,7 +67,7 @@
             </tr>
             <tr>
                 <td width="100%">
-                    <select name="SERIES_4" style="width:100%;">@SERIES_4@</select>
+                    <select id="SERIES_4" name="SERIES_4" style="width:100%;">@SERIES_4@</select>
                 </td>
                 <td bgcolor="#ff00ff">
                     <div style="width:30px;"></div>

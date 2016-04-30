@@ -1,1 +1,1 @@
-The system of "smart home" created in Python.
+The system of "wise house" created in Python.

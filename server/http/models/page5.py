@@ -16,16 +16,39 @@ class Page5(BaseForm):
         tf = TextField("STATISTIC_PANELS", "".join(panels_data))
         self.add_widget(tf)
 
-        tf = TextField("START_TIME", str(round(datetime.datetime.now().timestamp() - 24 * 3600)))
+        tf = TextField("START_TIME", str(round(datetime.datetime.now().timestamp())))
         self.add_widget(tf)
 
     def _create_panel(self, key, name, height):
+        lb1, lb2, lb3, lb4 = ["-- нет --"] * 4
+        for row in self.db.select("select v.ID, CONCAT(v.COMM, ' [', v.NAME, ']'), p.SERIES_1, p.SERIES_2, p.SERIES_3, p.SERIES_4 "
+                                  "  from web_stat_panels p, core_variables v "
+                                  " where (p.SERIES_1 = v.ID "
+                                  "     or p.SERIES_2 = v.ID "
+                                  "     or p.SERIES_3 = v.ID "
+                                  "     or p.SERIES_4 = v.ID)"
+                                  "    and p.ID = %s" % (key)):
+            sers = row[2:6]
+            lab = str(row[1], "utf-8")
+            if row[0] == sers[0]:
+                lb1 = lab
+            elif row[0] == sers[1]:
+                lb2 = lab
+            elif row[0] == sers[2]:
+                lb3 = lab
+            elif row[0] == sers[3]:
+                lb4 = lab
+        
         f = open("views/stat_panel.tpl", "r")
         tmpl = f.read()
         f.close()        
         tmpl = tmpl.replace("@ID@", key)
         tmpl = tmpl.replace("@LABEL@", name)
-        tmpl = tmpl.replace("@HEIGHT@", height)        
+        tmpl = tmpl.replace("@HEIGHT@", height)
+        tmpl = tmpl.replace("@LABEL_1@", lb1)
+        tmpl = tmpl.replace("@LABEL_2@", lb2)
+        tmpl = tmpl.replace("@LABEL_3@", lb3)
+        tmpl = tmpl.replace("@LABEL_4@", lb4)
         return tmpl
 
     def query(self, query_type):
@@ -52,7 +75,7 @@ class Page5(BaseForm):
         
         left = 40
         right = 10;
-        bottom = 30
+        bottom = 15
 
         var_ids = "0";
         series = [0, 0, 0, 0]
@@ -86,7 +109,7 @@ class Page5(BaseForm):
         else:
             delta_x = 30 * 24 * 3600
 
-        min_x = int(self.param('start'))
+        min_x = int(self.param('start')) - delta_x // 2
         max_x = min_x + delta_x
         max_y = -9999
         min_y = 9999
@@ -94,6 +117,7 @@ class Page5(BaseForm):
         # Делаем полную выборку данных. Выкидываем подозрительные точки и
         # собираем статистику.
         prev_val = -9999
+        prev_var = -1
         chart_data = []
         for row in self.db.select("select UNIX_TIMESTAMP(CHANGE_DATE) D, VALUE, VARIABLE_ID, ID "
                                   "  from core_variable_changes "
@@ -101,11 +125,14 @@ class Page5(BaseForm):
                                   "   and UNIX_TIMESTAMP(CHANGE_DATE) >= %s "
                                   "   and UNIX_TIMESTAMP(CHANGE_DATE) <= %s "
                                   "order by VARIABLE_ID, CHANGE_DATE " % (min_x, max_x)):
-            if abs(prev_val - row[1]) < 5 or (typ != 0 and prev_val == -9999):
+            if prev_var != row[2]:
+                prev_val = -9999
+            if abs(prev_val - row[1]) < 10 or (typ != 0 and prev_val == -9999):
                 chart_data += [row]
                 max_y = max(max_y, row[1])
                 min_y = min(min_y, row[1])
             prev_val = row[1]
+            prev_var = row[2]
         
         if min_y is None or max_y is None:
             max_y = 1
@@ -242,7 +269,7 @@ class Page5(BaseForm):
                     ctx.move_to(x, y)
                     is_first = False
                 else:
-                    if row[0] - prevX > 500:
+                    if row[0] - prevX > 2000:
                         ctx.move_to(x, y)
                     else:
                         ctx.line_to(x, y)

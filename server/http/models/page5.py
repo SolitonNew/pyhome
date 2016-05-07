@@ -64,6 +64,56 @@ class Page5(BaseForm):
             self.content_type = "image/png"
             return self._paint_panel(self.param('key'), self.param('width'), self.param('height'), self.param('panel_h'))
 
+    """
+    def _get_one_val(self, is_prev, var_id, x):
+        if var_id > 0:
+            if is_prev:
+                for row in self.db.select("select UNIX_TIMESTAMP(CHANGE_DATE) D, VALUE, VARIABLE_ID, ID "
+                                          "  from core_variable_changes "
+                                          " where VARIABLE_ID = %s "
+                                          "   and UNIX_TIMESTAMP(CHANGE_DATE) < %s "
+                                          "order by CHANGE_DATE desc limit 1" % (var_id, x)):
+                    return row
+            else:
+                for row in self.db.select("select UNIX_TIMESTAMP(CHANGE_DATE) D, VALUE, VARIABLE_ID, ID "
+                                          "  from core_variable_changes "
+                                          " where VARIABLE_ID = %s "
+                                          "   and UNIX_TIMESTAMP(CHANGE_DATE) > %s "
+                                          "order by CHANGE_DATE limit 1" % (var_id, x)):
+                    return row
+        return False
+    """
+    
+    def _get_one_val(self, series, min_x, max_x):
+        res = [[], [], [], []]   
+        sql = []
+        for i in range(4):
+            if series[i] > 0:            
+                sql_prev = ("select a.* from ("
+                            "select UNIX_TIMESTAMP(CHANGE_DATE) D, VALUE, VARIABLE_ID, ID, 1 "
+                            "  from core_variable_changes "
+                            " where VARIABLE_ID = %s "
+                            "   and CHANGE_DATE < FROM_UNIXTIME(%s) "
+                            "order by CHANGE_DATE desc limit 1) a" % (series[i], min_x))
+
+                sql_next = ("select a.* from ("
+                            "select UNIX_TIMESTAMP(CHANGE_DATE) D, VALUE, VARIABLE_ID, ID, 2 "
+                            "  from core_variable_changes "
+                            " where VARIABLE_ID = %s "
+                            "   and CHANGE_DATE > FROM_UNIXTIME(%s) "
+                            "order by CHANGE_DATE limit 1) a" % (series[i], max_x))
+            if len(sql) > 0:
+                sql += [" union "]
+            sql += ["%s union %s" % (sql_prev, sql_next)]
+            
+        for row in self.db.select("".join(sql)):
+            try:
+                i = series.index(row[2])
+                res[i] += [row]
+            except:
+                pass
+        return res
+
     def _paint_panel(self, key, width, height, panel_h):
         self.db.IUD("update web_stat_panels set HEIGHT = %s where ID = %s" % (panel_h, key))
         self.db.commit()        
@@ -111,38 +161,45 @@ class Page5(BaseForm):
 
         min_x = int(self.param('start')) - delta_x // 2
         max_x = min_x + delta_x
+
+        min_x_q = min_x - delta_x // 20
+        max_x_q = max_x + delta_x // 20
+        
         max_y = -9999
         min_y = 9999
 
         # Делаем полную выборку данных. Выкидываем подозрительные точки и
         # собираем статистику.
-        prev_val = -9999
-        prev_var = -1
-        chart_data = []
+        prev_vals = [-9999] * 4
+        chart_data = [[], [], [], []]
         for row in self.db.select("select UNIX_TIMESTAMP(CHANGE_DATE) D, VALUE, VARIABLE_ID, ID "
                                   "  from core_variable_changes "
                                   " where VARIABLE_ID in (" + var_ids + ") "
-                                  "   and UNIX_TIMESTAMP(CHANGE_DATE) >= %s "
-                                  "   and UNIX_TIMESTAMP(CHANGE_DATE) <= %s "
-                                  "order by VARIABLE_ID, CHANGE_DATE " % (min_x, max_x)):
-            if prev_var != row[2]:
-                prev_val = -9999
-            if abs(prev_val - row[1]) < 10 or (typ != 0 and prev_val == -9999):
-                chart_data += [row]
-                max_y = max(max_y, row[1])
-                min_y = min(min_y, row[1])
-            prev_val = row[1]
-            prev_var = row[2]
+                                  "   and CHANGE_DATE >= FROM_UNIXTIME(%s) "
+                                  "   and CHANGE_DATE <= FROM_UNIXTIME(%s) "
+                                  "order by CHANGE_DATE " % (min_x_q, max_x_q)):
+            ind = series.index(row[2])
+            prev_vals[ind] = row[1]
+
+            if abs(prev_vals[ind] - row[1]) < 10:
+                chart_data[ind] += [row]
+                if row[0] > min_x and row[0] < max_x:
+                    max_y = max(max_y, row[1])
+                    min_y = min(min_y, row[1])
+            prev_vals[ind] = row[1]
         
-        if min_y is None or max_y is None:
+        if min_y is None or max_y is None or min_y == 9999 or max_y == -9999 or min_y == max_y:
             max_y = 1
-            min_y = 1
+            min_y = 0
+
+        min_y = math.floor(min_y)
+        max_y = math.ceil(max_y)
 
         if typ == 2:
             if min_y < 0 and max_y < 0:
                 max_y = 0
             elif min_y > 0 and max_y > 0:
-                min_y = 0        
+                min_y = 0
 
         # Определяем цвета
         colors = [[1, 0, 0], [0, 0.65, 0.31], [0, 0, 1], [1, 0, 1]]
@@ -248,118 +305,109 @@ class Page5(BaseForm):
         ctx.stroke()                        
 
         #Рисуем сами графики
+
+        ctx.rectangle(left, 0, width - left, height)
+        ctx.clip()        
         
         is_first = True
         currVarID = -1
         prevX = -1;
 
         if typ == 0: # Линейная
-            for row in chart_data:
-                if currVarID != row[2]:
-                    ctx.stroke()
-                    for i in range(4):
-                        if series[i] == row[2]:
-                            ctx.set_source_rgb(*colors[i])
-                    is_first = True
-
-                x = (row[0] - min_x) / kx + left
-                y = height - bottom - (row[1] - min_y) / ky
-                
-                if is_first:
-                    ctx.move_to(x, y)
-                    is_first = False
-                else:
-                    if row[0] - prevX > 2000:
+            for ind in range(4):
+                """
+                if len(chart_data[ind]) > 0:
+                    for i in range(len(chart_data[ind]) - 1):
+                        chart_data[ind][i] = list(chart_data[ind][i])
+                        r1 = chart_data[ind][i]
+                        r2 = chart_data[ind][i + 1]
+                        chart_data[ind][i][0] += (r2[0] - r1[0]) / 2
+                        chart_data[ind][i][1] += (r2[1] - r1[1]) / 2
+                """
+                ctx.set_source_rgb(*colors[ind])
+                is_first = True
+                for row in chart_data[ind]:
+                    x = (row[0] - min_x) / kx + left
+                    y = height - bottom - (row[1] - min_y) / ky
+                    
+                    if is_first:
                         ctx.move_to(x, y)
                     else:
-                        ctx.line_to(x, y)
+                        if row[0] - prevX > 3000:
+                            ctx.move_to(x, y)
+                        else:
+                            ctx.line_to(x, y)
 
-                currVarID = row[2]
-                prevX = row[0]
-            ctx.stroke()
+                    prevX = row[0]
+                    is_first = False
+                ctx.stroke()
+            
         elif typ == 1: # Точечная
-            for row in chart_data:
-                if currVarID != row[2]:
+            for ind in range(4):
+                if chart_data[ind]:
+                    ctx.set_source_rgb(*colors[ind])
+                    for row in chart_data[ind]:
+                        x = (row[0] - min_x) / kx + left
+                        y = height - bottom - (row[1] - min_y) / ky                
+                        ctx.rectangle(x - 3, y - 3, 6, 6)
                     ctx.fill()
-                    for i in range(4):
-                        if series[i] == row[2]:
-                            ctx.set_source_rgb(*colors[i])
-                x = (row[0] - min_x) / kx + left
-                y = height - bottom - (row[1] - min_y) / ky                
-                ctx.rectangle(x - 3, y - 3, 6, 6)
-
-                currVarID = row[2]
-            ctx.fill()
         elif typ == 2: # Столбчатая
             cy = height - bottom - (-min_y) / ky
-            for row in chart_data:
-                if currVarID != row[2]:
-                    ctx.fill()
-                    for i in range(4):
-                        if series[i] == row[2]:
-                            ctx.set_source_rgb(*colors[i])
-                x = (row[0] - min_x) / kx + left
-                y = height - bottom - (row[1] - min_y) / ky
-                ctx.rectangle(x - 5, y, 10, cy - y)
+            for ind in range(4):
+                for row in chart_data[ind]:
+                    if currVarID != row[2]:
+                        ctx.fill()
+                        for i in range(4):
+                            if series[i] == row[2]:
+                                ctx.set_source_rgb(*colors[i])
+                    x = (row[0] - min_x) / kx + left
+                    y = height - bottom - (row[1] - min_y) / ky
+                    ctx.rectangle(x - 5, y, 10, cy - y)
 
-                currVarID = row[2]
-            ctx.fill()
+                    currVarID = row[2]
+                ctx.fill()
         else: # Линейчастая
-            if len(chart_data) > 0:
-                chart_data += [list(chart_data[len(chart_data) - 1])]
-                chart_data[len(chart_data) - 1][2] = -1
+            one_vals = self._get_one_val(series, min_x_q, max_x_q)
+            for ind in range(4):
+                if series[ind]:
+                    is_now = True
+                    for r in one_vals[ind]:
+                        if r[4] == 1:
+                            chart_data[ind].insert(0, r)
+                        else:
+                            chart_data[ind] += [r]
+                            is_now = False
 
-            ccc = datetime.datetime.now().timestamp()
-            curr_time_x = (ccc - min_x) / kx + left
-                
-            color = [1, 1, 1]
-            color_fill = [1, 1, 1, 1]
-            y0 = height - bottom - (-min_y) / ky
-            for row in chart_data:
-                if currVarID != row[2]:
-                    # Заканчиваем график
+                    if is_now:
+                        if len(chart_data[ind]) > 0:
+                            r = list(chart_data[ind][len(chart_data[ind]) - 1])
+                            r[0] = datetime.datetime.now().timestamp()
+                            chart_data[ind] += [r]
+
+                color = colors[ind]
+                color_fill = color.copy()
+                color_fill += [0.3]
+                is_first = True
+                y0 = height - bottom + min_y / ky
+                for row in chart_data[ind]:
+                    x = (row[0] - min_x) / kx + left
+                    y = height - bottom - (row[1] - min_y) / ky
                     
-                    if currVarID != -1:
-                        x = curr_time_x
-                        if x > width:
-                            x = width
+                    if is_first:                    
+                        is_first = False
+                    else:
                         ctx.set_source_rgb(*color)
                         ctx.move_to(prevX, prevY)
                         ctx.line_to(x, prevY)
                         ctx.line_to(x, y)
                         ctx.stroke()
                         ctx.set_source_rgba(*color_fill)
-                        rx, ry, rw, rh = prevX, y0, x - prevX, prevY - y0 - 0.1
+                        rx, ry, rw, rh = prevX, y0, x - prevX, prevY - y0
                         ctx.rectangle(rx, ry, rw, rh)
                         ctx.fill()
-                    # --------------------
-                    
-                    for i in range(4):
-                        if series[i] == row[2]:
-                            color = colors[i]
-                            color_fill = color.copy()
-                            color_fill += [0.3]
-                    is_first = True
-                    
-                x = (row[0] - min_x) / kx + left
-                y = height - bottom - (row[1] - min_y) / ky
-                
-                if is_first:                    
-                    is_first = False
-                else:
-                    ctx.set_source_rgb(*color)
-                    ctx.move_to(prevX, prevY)
-                    ctx.line_to(x, prevY)
-                    ctx.line_to(x, y)
-                    ctx.stroke()
-                    ctx.set_source_rgba(*color_fill)
-                    rx, ry, rw, rh = prevX, y0, x - prevX, prevY - y0 - 0.1
-                    ctx.rectangle(rx, ry, rw, rh)
-                    ctx.fill()
 
-                currVarID = row[2]
-                prevX, prevY = x, y            
-
+                    prevX, prevY = x, y
+                        
         # Рисуем оси
 
         ctx.set_source_rgb(0, 0, 0)

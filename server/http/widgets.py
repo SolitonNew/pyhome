@@ -76,11 +76,12 @@ class TreeField(ListField):
         return res, tabs    
 
 class TabControl(WidgetBase):
-    def __init__(self, id, tabClosed = False):
+    def __init__(self, id, tabClosed=False, position="top"):
         super().__init__(id)
         self.tabClosed = tabClosed
         self.tabs = []
         self.btnCloseTpl = "<button type=\"button\" onMousedown=\"@ID@_close(@NUM@);stop_mouse_events(event);return false;\">X</button>"
+        self.position = position
 
     def add_tab(self, label, url):
         self.tabs += [{'label':label,
@@ -95,7 +96,7 @@ class TabControl(WidgetBase):
         if self.tabClosed:
             btnClose = self.btnCloseTpl
         for tab in self.tabs:
-            res += ["<div id=\"%s_tab_%s\" class=\"page_tab\" onClick=\"%s_select(%s)\">" % (self.id, i, self.id, i)]
+            res += ["<div id=\"%s_tab_%s\" class=\"page_tab_%s\" onMouseDown=\"%s_select(%s); return false;\">" % (self.id, i, self.position, self.id, i)]
             res += [tab['label']]            
             res += ["&nbsp;", btnClose.replace("@NUM@", str(i))]
             res += ["</div>"]
@@ -156,7 +157,7 @@ class TabControl(WidgetBase):
               "   i = @ID@_tabs.length;"
               "   @ID@_tabs[i] = url;"
               "   var btn = @ID@_btn_close_tpl.replace('@NUM@', i);"
-              "   $('#@ID@_tab_list').append('<div id=\"@ID@_tab_' + i + '\" class=\"page_tab\" onClick=\"@ID@_select(' + i + ')\"><span id=\"@ID@_tab_title_' + i + '\">' + label + '</span>' + btn + '</div>');"
+              "   $('#@ID@_tab_list').append('<div id=\"@ID@_tab_' + i + '\" class=\"page_tab_@POSITION@\" onMouseDown=\"@ID@_select(' + i + '); return false;\"><span id=\"@ID@_tab_title_' + i + '\">' + label + '</span>' + btn + '</div>');"
               "   $('#@ID@_page_list').append('<div id=\"@ID@_page_' + i + '\" class=\"page_data\"></div>');"
               "   "
               "   @ID@_select(i);"
@@ -217,21 +218,26 @@ class TabControl(WidgetBase):
         else:
             js = js.replace("@CLOSE_TPL@", "")
         js = js.replace("@ID@", str(self.id))
-        js = js.replace("@URLS@", urls)            
+        js = js.replace("@URLS@", urls)
+        js = js.replace("@POSITION@", self.position)
         
         return js
         
-    def html(self):        
+    def html(self):
+        tab_html = ("<tr><td id=\"@ID@_tab_list\" style=\"position:relative;width:100%;\">"
+                    "@TABS@"
+                    "</td></tr>")
+        page_html = "<tr><td id=\"@ID@_page_list\" height=\"100%\">@PAGES@</td></tr>"
+        
         res = ("<table class=\"tab_control\" cellpadding=\"0\" cellspacing=\"0\">"
-               "<tr>"
-                   "<td id=\"@ID@_tab_list\" style=\"position:relative;width:100%;\">"
-                       "@TABS@"
-                   "</td>"
-               "</tr>"
-               "<tr>"
-                   "<td id=\"@ID@_page_list\" height=\"100%\">@PAGES@</td>"
-               "</tr>"
+               "%s"
+               "%s"               
                "</table>")
+
+        if self.position == "top":
+            res = res % (tab_html, page_html)
+        else:
+            res = res % (page_html, tab_html)
 
         res = res.replace("@ID@", str(self.id))
         res = res.replace("@TABS@", self._gen_tabs())

@@ -79,7 +79,7 @@
 </script>
 
 <div id="stat_panel_@ID@" class="splitter_top" style="height:@HEIGHT@px;">
-    <table width="100%" height="100%" cellpadding="5" cellspacing="0" style="cursor:default;">
+    <table width="100%" height="100%" cellpadding="5" cellspacing="0" style="cursor:default;" onMouseDown="return false;">
     <tr>
         <td id="stat_panel_@ID@_label">
            @LABEL@ 
@@ -99,7 +99,7 @@
                     onMouseOut="stat_panel_@ID@_up(event)">
             </div>
         </td>
-    <tr>
+    </tr>
     <tr>
         <td colspan="2" align="center">
             <table>

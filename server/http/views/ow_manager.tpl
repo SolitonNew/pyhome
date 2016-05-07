@@ -15,7 +15,7 @@
 </style>
 
 <script type="text/javascript">
-    $('#popup_window_border').width(980);
+    $('#popup_window_border').width(820);
     $('#popup_window_title').html("Менеджер OneWire");
 
     function create_vars_for_free() {
@@ -29,17 +29,19 @@
     }
 
     function del_ow(key) {
-        alert('CONFIRM: Удалить OneWire устройство?', 'yes,no', function (res) {
-            if (res == 'yes') {
-                $.ajax({url:'ow_manager?FORM_QUERY=delete&key=' + key}).done(function (data) {
-                    if (data == 'OK') {
-                        OW_MANAGER_GRID_refresh();
-                    } else {
-                        alert(data);
-                    }
-                });
-            }
-        });
+        if (key > 0) {
+            alert('CONFIRM: Удалить OneWire устройство?', 'yes,no', function (res) {
+                if (res == 'yes') {
+                    $.ajax({url:'ow_manager?FORM_QUERY=delete&key=' + key}).done(function (data) {
+                        if (data == 'OK') {
+                            OW_MANAGER_GRID_refresh();
+                        } else {
+                            alert(data);
+                        }
+                    });
+                }
+            });
+        }
     }
 
     function send_query(query_data, view_id) {        
@@ -78,9 +80,13 @@
     <TR>
         <TD colspan="2">
             <div class="toolbar">
-                <button onClick="send_query('SCAN_OW', 'OW_STATUS')">Просканировать OW сети...</button>
-                <button onClick="create_vars_for_free();">Создать переменные для свободных OW устройств</button>
-                <button onClick="send_query('GET_OW_VALUES', 'OW_STATUS')">Обновить значения OW устройств</button>
+                <table width="100%" cellpadding="0" cellspacing="0" style="padding-right:10px;">
+                <tr>
+                    <td><button onClick="send_query('SCAN_OW', 'OW_STATUS')">Просканировать&nbsp;OW&nbsp;сети...</button></td>
+                    <td width="100%"><button onClick="create_vars_for_free();">Создать переменные для свободных OW устройств</button></td>
+                    <td><button onClick="del_ow(_OW_MANAGER_GRID_selected_key);">Удалить</button></td>
+                </tr>
+                </table>
             </div>
         </TD>
     </TR>    

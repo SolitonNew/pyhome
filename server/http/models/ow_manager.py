@@ -7,7 +7,8 @@ class OWManager(BaseForm):
     VIEW = "ow_manager.tpl"
 
     def create_widgets(self):
-        variableSql = ("select w.ID, c.NAME, w.ROM_1, w.ROM_2, w.ROM_3, w.ROM_4, w.ROM_5, w.ROM_6, w.ROM_7, w.ROM_8, t.CHANNELS, w.VALUE, '' F1, '' F2, '' F3 "
+        #variableSql = ("select w.ID, c.NAME, HEX(w.ROM_1, w.ROM_2, w.ROM_3, w.ROM_4, w.ROM_5, w.ROM_6, w.ROM_7, w.ROM_8, t.CHANNELS, w.VALUE, '' F1, '' F2 "
+        variableSql = ("select w.ID, c.NAME, CONCAT(HEX(w.ROM_1), ' ', HEX(w.ROM_2), ' ', HEX(w.ROM_3), ' ', HEX(w.ROM_4), ' ', HEX(w.ROM_5), ' ', HEX(w.ROM_6), ' ', HEX(w.ROM_7), ' ', HEX(w.ROM_8)) ROM, t.CHANNELS, w.VALUE, '' F1 "
                        "  from core_controllers c, "
                        "       core_ow_devs w LEFT JOIN core_ow_types t ON t.CODE = w.ROM_1 "
                        " where c.ID = w.CONTROLLER_ID")
@@ -15,26 +16,24 @@ class OWManager(BaseForm):
         grid = Grid("OW_MANAGER_GRID", "ID", variableSql)
         grid.add_column("ID", "ID", 50, visible=False)
         grid.add_column("Контроллер", "NAME", 150, sort="asc")
-        grid.add_column("ROM", "F3", 290, sort="asc", func=self._rom_to_hex)        
+        grid.add_column("ROM", "ROM", 290, sort="asc", func=self._rom_to_hex)
         grid.add_column("Каналы", "CHANNELS", 100, sort="on")
         grid.add_column("Связанные переменные", "F1", 190, func=self._vars)        
-        grid.add_column("Текущее значение", "VALUE", 70, sort="on")
-        grid.add_column("", "F2", 70, func=self._delete_column)
-        self.add_widget(grid)
+        self.add_widget(grid)        
 
     def _rom_to_hex(self, index, row):
         res = []
-        for r in row[2:10]:
+        for r in row[index].split(' '):
             res += [self._to_hex(r)]
-            res += [", "]
+            res += [" "]
         return "".join(res[:-1])
 
     def _to_hex(self, val):
-        val = hex(int(val)).upper()
-        if len(val) == 3:
-            val = val.replace("0X", "0x0")
+        val = val.upper()
+        if len(val) == 1:
+            val = "0x0%s" % val
         else:
-            val = val.replace("0X", "0x")
+            val = "0x%s" % val
         return val
 
     def _vars(self, index, row):
@@ -45,9 +44,6 @@ class OWManager(BaseForm):
             res += ["<div style=\"padding:2px;\"><a class=\"ow_variable\" href=\"\" onClick=\"show_window('var_edit_dialog?key=", str(r[0]), "', true);return false;\">", str(r[1], "utf-8"), "</a></div>"]
 
         return "".join(res)
-
-    def _delete_column(self, index, row):
-        return "<button onClick=\"del_ow(%s);\">Удалить</button>" % (row[0])
 
     def _check_or_add_var(self, ow_id, channel, controller_id):
         for row in self.db.select(("select v.ID "

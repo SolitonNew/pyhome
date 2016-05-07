@@ -94,7 +94,7 @@
             position:relative;
         }
 
-        div.page_tab {
+        div.page_tab_top, div.page_tab_bottom {
             position:relative;
             display:inline-block;
             padding:7px 14px;
@@ -105,7 +105,14 @@
             border-bottom:none;
             cursor: default;
             background-color: #eeeeee;
-        }        
+        }
+
+        div.page_tab_bottom {
+            margin-top:0;
+            margin-bottom:5px;
+            border: 1px solid #cccccc;
+            border-top:none;
+        }
 
         div.page_tab:hover {
             opacity:0.7;
@@ -115,7 +122,7 @@
             background-color: #ffffff;
         }
 
-        div.page_tab button {
+        div.page_tab_top button, div.page_tab_bottom button {
             width:16px;
             height:16px;
             margin:-10px;
@@ -134,6 +141,7 @@
             display:none;
             background-color: #ffffff;
             border-top:1px solid #cccccc;
+            border-bottom:1px solid #cccccc;
             cursor: default;
         }
 

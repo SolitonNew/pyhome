@@ -23,7 +23,7 @@
         stat_panel_@ID@_height = h;        
         var p_h = $('#stat_panel_@ID@').height();
         var r = $('#stat_panel_range').prop('value');
-        $('#stat_panel_@ID@_img').attr({src:'page5?FORM_QUERY=panel_img&start=' + stat_panel_start + '&width=' + w + '&height=' + h + '&range=' + r + '&panel_h=' + p_h + '&key=@ID@&rnd=' + Math.random()}).one('load', function () {
+        $('#stat_panel_@ID@_img').attr({src:'page5_1?FORM_QUERY=panel_img&start=' + stat_panel_start + '&width=' + w + '&height=' + h + '&range=' + r + '&panel_h=' + p_h + '&key=@ID@&rnd=' + Math.random()}).one('load', function () {
             $('#stat_panel_@ID@_img').css('left', '0px');
         });
 

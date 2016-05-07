@@ -5,6 +5,8 @@ from models.page2 import Page2
 from models.page3 import Page3
 from models.page4 import Page4
 from models.page5 import Page5
+from models.page5_1 import Page5_1
+from models.page5_2 import Page5_2
 from models.var_edit_dialog import VarEditDialog
 from models.system_dialog import SystemDialog
 from models.scripteditor import ScriptEditor
@@ -16,7 +18,8 @@ from models.comp_edit_dialog import CompEditDialog
 from models.app import App
 from models.app_login import AppLogin
 
-FORMS = (Index, EventList, Page1, Page2, Page3, Page4, Page5, VarEditDialog,
-         SystemDialog, ScriptEditor, AttachEventDialog, StatPanelDialog,
-         OWManager, ConsoleEditDialog, CompEditDialog, App, AppLogin)
+FORMS = (Index, EventList, Page1, Page2, Page3, Page4, Page5, Page5_1, Page5_2,
+         VarEditDialog, SystemDialog, ScriptEditor, AttachEventDialog,
+         StatPanelDialog, OWManager, ConsoleEditDialog, CompEditDialog,
+         App, AppLogin)
     

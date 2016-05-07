@@ -241,11 +241,12 @@ class TabControl(WidgetBase):
 
 
 class Grid(WidgetBase):
-    def __init__(self, id, keyField, sql):
+    def __init__(self, id, keyField, sql, detail=False):
         super().__init__(id)
         self.columns = []
         self.sql = sql
         self.keyField = keyField
+        self.detail = detail
 
     def _gen_js(self):
         js = ("<script type=\"text/javascript\">"
@@ -408,14 +409,21 @@ class Grid(WidgetBase):
         if orders:
             orders = " order by " + orders[:-2]
 
-        filter_data = ''
+        det = ""
+        filter_data = ""
         if filt:
-            if self.sql.index("where "):
+            try:
+                self.sql.index("where ")
                 filter_data = " and %s" % filt
-            else:
+            except:
                 filter_data = " where %s" % filt
+        elif self.detail:
+            det = " limit 0"
+
+        if det == "":
+            det = " limit 1000"
             
-        q = self.parentForm.db.query(self.sql + filter_data + orders)
+        q = self.parentForm.db.query(self.sql + filter_data + orders + det)
         data = q.fetchall()
         fields = q.column_names
         keyIndex = fields.index(self.keyField)

@@ -10,7 +10,7 @@ class EventList(BaseForm):
                                "   from core_variable_changes c, core_variables v"
                                "  where c.VARIABLE_ID = v.ID"
                                " order by c.ID desc"
-                               " limit 100"))
+                               " limit 50"))
         res = []
         for row in data:
             d = row[0].time()

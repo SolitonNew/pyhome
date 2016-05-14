@@ -23,4 +23,3 @@ class Index(BaseForm):
         tab.add_tab("Консоли", "page4")
         tab.add_tab("Статистика", "page5")
         self.add_widget(tab)
-        

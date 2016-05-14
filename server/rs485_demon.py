@@ -17,7 +17,7 @@ class Main():
     def __init__(self):
         # Connect to serial port
         try:
-            self.serialPort = serial.Serial(self.SERIAL_PORT, self.SERIAL_SPEED, parity='O', timeout=0.5)
+            self.serialPort = serial.Serial(self.SERIAL_PORT, self.SERIAL_SPEED, parity='O', timeout=0.1)
         except:
             print("Ошибка подключения к '%s'" % self.SERIAL_PORT)
 
@@ -59,7 +59,7 @@ class Main():
                     pack_data += [[var[0], var[1]]]
 
             date = datetime.datetime.now().strftime('%H:%M:%S')
-            print("[%s] Запрос синхронизации для '%s': " % (date, dev[1]), end="")
+            print("[%s] SYNC. '%s': " % (date, dev[1]), end="")
             self.send_pack(dev[0], self.PACK_SYNC, pack_data)
             res_pack = self.check_lan()
             if res_pack:
@@ -67,14 +67,16 @@ class Main():
                     print("RESET ", end="")
                     self.send_pack(dev[0], self.PACK_SYNC, self._reset_pack())
                     if self.check_lan():
-                        print("OK")
+                        print("OK\n")
                     else:
-                        print("ERROR")
+                        print("ERROR\n")
                 else:
                     self._store_variable_to_db(res_pack[0], res_pack[2])
                     print("OK")
+                    print("   >> ", pack_data)
+                    print("   << ", res_pack[2], "\n")
             else:
-                print("ERROR")
+                print("ERROR\n")
 
     def _reset_pack(self):
         return self.db.all_variables();

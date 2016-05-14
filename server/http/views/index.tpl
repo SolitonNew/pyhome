@@ -19,6 +19,20 @@
             q.fail(function () {setTimeout(load_event_list, 500)});
         }
         load_event_list();
+
+        function check_sync() {
+            var q = $.ajax({url:'system_dialog?FORM_QUERY=SYNC_CHECK&rnd=' + Math.random()});
+            q.done(function (data) {
+                if (data != 'OK') {
+                    $('#sync_check').css('display', 'inline-block');
+                } else {
+                    $('#sync_check').css('display', 'none');
+                }
+                setTimeout(check_sync, 5000);
+            });
+            q.fail(function () {setTimeout(check_sync, 5000)});
+        }
+        check_sync();
         
     </script>
     
@@ -280,6 +294,9 @@
                     </div>                    
                 </td>
                 <td style="position:relative;background-color:#cccccc;" align="right" valign="middle">
+                    <div id="sync_check" style="display:inline-block;padding:5px;width:170px;background-color:#00ff00;text-align:center;">
+                        ЕСТЬ ИЗМЕНЕНИЯ В БД
+                    </div>
                     <button onClick="show_window('ow_manager')">Менеджер OneWire...</button>
                     <button style="margin-right:20px;" onClick="show_window('system_dialog')">Системные утилиты...</button>
                 </td>                
@@ -293,7 +310,7 @@
         </td>
         <td style="position:relative;height:100%;">            
             <div class="splitter_right" style="width:350px;">
-                <div id="event_list" style="position:absolute;cursor:default;width:100%;height:100%;overflow:hidden;overflow-y:auto;color:#ffffff;background-color:#000000;">
+                <div id="event_list" style="position:absolute;cursor:default;width:100%;height:100%;overflow:hidden;color:#ffffff;background-color:#000000;" onMouseDown="return false;">
                 </div>
             </div>
         </td>        

@@ -79,7 +79,13 @@ def set_sync_change_variables(data):
     for var in data:
         for vl in variableList:
             if vl.id == var[0]:
-                vl.silent_value(var[1])
+                try:
+                    if vl.dev_id == 100:
+                        vl.system_value(var[1])
+                    else:
+                        vl.silent_value(var[1])
+                except:
+                    pass
 
 
 class Variable(object):
@@ -119,17 +125,25 @@ class Variable(object):
         except:
             pass
 
+    def system_value(self, val):
+        if self.val != val:
+            self.val = val
+            if self.changeScript:
+                self.changeScript()
+
     def value(self, val = None):
         if val == None:
             return self.val
         else:
-            # Убеждаемся, что переменная принадлежит текущему контроллеру.
-            if self.dev_id == self.curr_dev_id:            
+            # Убеждаемся, что переменная принадлежит текущему контроллеру
+            # или является системной
+            if self.dev_id == self.curr_dev_id or self.dev_id == 100:
                 if self.val != val:
                     self.val = val
-                    self.driver.value(val, self.channel)
+                    if self.driver:
+                        self.driver.value(val, self.channel)
                     self.isChange = True
-                    if self.changeScript:                    
+                    if self.changeScript:
                         self.changeScript()
 
     def load_value(self):

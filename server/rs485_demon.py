@@ -17,7 +17,7 @@ class Main():
     def __init__(self):
         # Connect to serial port
         try:
-            self.serialPort = serial.Serial(self.SERIAL_PORT, self.SERIAL_SPEED, parity='O', timeout=0.1)
+            self.serialPort = serial.Serial(self.SERIAL_PORT, self.SERIAL_SPEED, parity='O', timeout=0.5)
         except:
             print("Ошибка подключения к '%s'" % self.SERIAL_PORT)
 
@@ -53,7 +53,8 @@ class Main():
         # Рассылаем изменения в БД и паралельно читаем обновления
         for dev in self.db.controllers:
             pack_data = []
-            pack_data += [[-100, round(time.time())]] #Передаем системное время в контроллеры
+            t = time.mktime((2000, 1, 1, -1, 0, 0, 0, 0, 0))
+            pack_data += [[-100, round(time.time() - t)]] #Передаем системное время в контроллеры
             for var in var_data:
                 if var[2] != dev[0]:
                     pack_data += [[var[0], var[1]]]
@@ -130,7 +131,7 @@ class Main():
                 else:
                     self._command_info(error_text)
             elif command == "CONFIG_UPDATE":
-                self.serialPort.timeout = 5
+                self.serialPort.timeout = 10
                 try:
                     self._command_info("Запрос обновления конфигурационного файла контроллера '%s'..." % dev[1])
                     pack_data = generate_config_file(self.db)

@@ -49,7 +49,7 @@ BEDROOM_1_TERM_R = Variable(45, 2, 1, '', '')
 BEDROOM_2_TERM_S = Variable(46, 2, 0, '', '')
 BEDROOM_2_TERM_V = Variable(47, 2, 1, 'variable', '')
 BEDROOM_2_TERM_R = Variable(48, 2, 1, '', '')
-BEDROOM_3_TERM_S = Variable(49, 1, 0, [0x28, 0x6e, 0x24, 0x76, 0x05, 0x00, 0x00, 0xbd], '')
+BEDROOM_3_TERM_S = Variable(49, 1, 0, [0x28, 0x40, 0x11, 0x75, 0x05, 0x00, 0x00, 0xc6], '')
 BEDROOM_3_TERM_V = Variable(50, 1, 1, 'variable', '')
 BEDROOM_3_TERM_R = Variable(51, 1, 1, '', '')
 HALL_2_TERM_S = Variable(56, 2, 0, '', '')
@@ -78,7 +78,7 @@ LIVING_SOCKET_2 = Variable(78, 1, 1, 'pyb', '')
 LIVING_SOCKET_3 = Variable(79, 1, 1, 'pyb', '')
 WINTER_GARDEN_SWITCH_1 = Variable(80, 1, 1, 'pyb', '')
 WINTER_GARDEN_SWITCH_2 = Variable(81, 1, 1, 'pyb', '')
-BOILER_SWITCH = Variable(82, 1, 1, 'pyb', '')
+BOILER_SWITCH = Variable(82, 1, 1, 'pyb', 'Y1')
 DINING_SOCKET = Variable(83, 2, 1, 'pyb', '')
 COOK_SWITCH = Variable(84, 2, 1, 'pyb', '')
 HALL_1_SWITCH = Variable(85, 2, 1, 'pyb', '')
@@ -94,6 +94,9 @@ HEATING_MAIN_IN = Variable(94, 1, 0, '', '')
 HEATING_CHIMNEY = Variable(95, 1, 0, '', '')
 HEATING_TP_IN = Variable(96, 1, 0, '', '')
 HEATING_TP_OUT = Variable(97, 1, 0, '', '')
+BOILER_OFF_HOUR = Variable(98, 1, 1, 'variable', '')
+BOILER_ON_HOUR = Variable(99, 1, 1, 'variable', '')
+DEBUG_RIGHT = Variable(100, 1, 1, 'variable', '')
 
 # Scripts
 def script_1():
@@ -139,10 +142,17 @@ def script_26():
         BEDROOM_3_SECOND_R.value(not BEDROOM_3_SECOND_R.value())
 
 def script_27():
+    DEBUG_RIGHT.value(DEBUG_RIGHT.value() + 1)
+    
     import time
     
     sys_time = time.localtime(DATE_TIME.value())
-    print(sys_time.tm_min)
+    
+    #Значение часов с минутами в виде числа с плавающей запятой
+    tm = sys_time.tm_hour + sys_time.tm_min * 100 / 60
+    
+    #Условие для вкл/выкл бойлера по таймингу
+    BOILER_SWITCH.value(tm >= BOILER_ON_HOUR.value() and tm <= BOILER_OFF_HOUR.value())
 
 def script_28():
     if BEDROOM_1_MAIN_S.value():
@@ -191,6 +201,12 @@ def script_40():
 def script_43():
     if BEDROOM_1_SECOND_R.value():
         BEDROOM_1_SECOND_R.value()
+
+def script_44():
+    BACK_DOOR_R.value(0)
+
+def script_45():
+    pass
 
 
 # Links

@@ -99,7 +99,6 @@ HEATING_CHIMNEY = Variable('HEATING_CHIMNEY', 0)
 HEATING_TP_IN = Variable('HEATING_TP_IN', 0)
 HEATING_TP_OUT = Variable('HEATING_TP_OUT', 0)
 
-if BEDROOM_2_SECOND_S.value():
-    BEDROOM_2_SECOND_R.value(not BEDROOM_2_SECOND_R.value())
+pass
 printInput()
 printChanges()

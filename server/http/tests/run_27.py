@@ -5,7 +5,7 @@ from variables import printInput
 from variables import printChanges 
 
 # Variables
-DATE_TIME = Variable('DATE_TIME', 1458550000.0)
+DATE_TIME = Variable('DATE_TIME', 1463300000.0)
 TERM_1 = Variable('TERM_1', 23.75)
 TERM_2 = Variable('TERM_2', 23.5)
 LIVING_S = Variable('LIVING_S', 0.0)
@@ -53,13 +53,13 @@ BEDROOM_1_TERM_R = Variable('BEDROOM_1_TERM_R', 0)
 BEDROOM_2_TERM_S = Variable('BEDROOM_2_TERM_S', 0)
 BEDROOM_2_TERM_V = Variable('BEDROOM_2_TERM_V', 22.0)
 BEDROOM_2_TERM_R = Variable('BEDROOM_2_TERM_R', 0)
-BEDROOM_3_TERM_S = Variable('BEDROOM_3_TERM_S', 20.125)
+BEDROOM_3_TERM_S = Variable('BEDROOM_3_TERM_S', 19.1875)
 BEDROOM_3_TERM_V = Variable('BEDROOM_3_TERM_V', 21.0)
 BEDROOM_3_TERM_R = Variable('BEDROOM_3_TERM_R', 0)
 HALL_2_TERM_S = Variable('HALL_2_TERM_S', 0)
 HALL_2_TERM_V = Variable('HALL_2_TERM_V', 22.0)
 HALL_2_TERM_R = Variable('HALL_2_TERM_R', 0)
-LIVING_TERM_S = Variable('LIVING_TERM_S', 20.6875)
+LIVING_TERM_S = Variable('LIVING_TERM_S', 19.8125)
 LIVING_TERM_V = Variable('LIVING_TERM_V', 21.0)
 LIVING_TERM_R = Variable('LIVING_TERM_R', 0)
 WINTER_GARDEN_TERM_S = Variable('WINTER_GARDEN_TERM_S', 0)
@@ -91,17 +91,27 @@ HALL_2_SWITCH = Variable('HALL_2_SWITCH', 0.0)
 SHOWER_2_SWITCH = Variable('SHOWER_2_SWITCH', 0)
 PODVAL_R = Variable('PODVAL_R', 0.0)
 WINTER_GARDEN_S = Variable('WINTER_GARDEN_S', 0.0)
-BACK_DOOR_TERM_IN_S = Variable('BACK_DOOR_TERM_IN_S', 20.0)
-BEDROOM_3_WC_TERM = Variable('BEDROOM_3_WC_TERM', 20.0)
+BACK_DOOR_TERM_IN_S = Variable('BACK_DOOR_TERM_IN_S', 19.0625)
+BEDROOM_3_WC_TERM = Variable('BEDROOM_3_WC_TERM', 19.1875)
 HEATING_MAIN_OUT = Variable('HEATING_MAIN_OUT', 0)
 HEATING_MAIN_IN = Variable('HEATING_MAIN_IN', 0)
 HEATING_CHIMNEY = Variable('HEATING_CHIMNEY', 0)
 HEATING_TP_IN = Variable('HEATING_TP_IN', 0)
 HEATING_TP_OUT = Variable('HEATING_TP_OUT', 0)
+BOILER_OFF_HOUR = Variable('BOILER_OFF_HOUR', 23.0)
+BOILER_ON_HOUR = Variable('BOILER_ON_HOUR', 6.5)
+DEBUG_RIGHT = Variable('DEBUG_RIGHT', 191.0)
 
 import time
 
 sys_time = time.localtime(DATE_TIME.value())
-print(sys_time.tm_min)
+
+#Значение часов с минутами в виде числа с плавающей запятой
+DEBUG_RIGHT.value(sys_time.tm_min)
+tm = sys_time.tm_hour + sys_time.tm_min / 60
+print(sys_time[3])
+
+#Условие для вкл/выкл бойлера по таймингу
+BOILER_SWITCH.value(tm >= BOILER_ON_HOUR.value() and tm <= BOILER_OFF_HOUR.value())
 printInput()
 printChanges()

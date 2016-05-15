@@ -58,7 +58,7 @@ def generate_script_list(db):
         res += ["def script_", str(row[0]), "():\n"]
         s = tab + str(row[2], "utf-8")
         s = s.replace(chr(10), "\n" + tab)
-        s = s.replace(chr(13), "")        
+        s = s.replace(chr(13), "")
         res += [s]
         res += ["\n\n"]
     return res

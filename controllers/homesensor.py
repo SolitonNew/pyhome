@@ -21,13 +21,13 @@ class HomeSensor(object):
         if self._match_rom(rom):
             self.ow.write_byte(self.CMD_READ_DATA)
         else:
-            return False
+            return None
         
         buff = bytearray(2)
         for i in range(2):
             buff[i] = self.ow.read_byte()
 
         if self.ow.crc8(buff):
-            return False
+            return None
 
         return buff[0]

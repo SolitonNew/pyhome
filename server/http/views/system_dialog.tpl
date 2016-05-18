@@ -27,7 +27,6 @@
     var status_view_id = '';
 
     function send_query(query_data, view_id) {        
-        sysdialog_canclose = false;
         status_view_id = view_id;
         $('#' + status_view_id).html('');
         $.ajax({url:'system_dialog?FORM_QUERY=' + query_data}).done(function (data) {
@@ -40,24 +39,20 @@
         });
     }
 
-    var sysdialog_canclose = false;
-
     function load_terminal_log() {
         $.ajax({url:'system_dialog?FORM_QUERY=load_terminal'}).done(function (data) {
             if (data.indexOf("TERMINAL EXIT") > 0) {
-                sysdialog_canclose = true;
-                setTimeout(function () {$('#terminal_bg').fadeOut(3000)}, 2000);
+                var btn = '<button style="margin:20px;" onClick="$(\'#terminal_bg\').fadeOut(300);">Закрыть терминал</button>';
+                $('#terminal_log').append(btn);
             } else {
                 $('#terminal_log').html(data);
-                setTimeout(load_terminal_log, 500);
+                setTimeout(load_terminal_log, 100);
             }
         });
     }
 
     function sysdialog_close() {
-        if (sysdialog_canclose) {
-            $('#terminal_bg').fadeOut(300)
-        }
+        $('#terminal_bg').fadeOut(300)
     }
 
 </script>
@@ -124,7 +119,7 @@
     <div id="terminal_bg" style="position:absolute;left:0px;top:0px;width:100%;height:100%;background-color:#fff;display:none;">
         <div style="position:absolute;width:100%;height:100%;background-color:#fff;opacity:0.4;">
         </div>
-        <div id="terminal_log" style="position:relative;width:100%;height:100%;background-color:#000;color:#fff;overflow:none;overflow-y:auto;text-align:left;" onClick="sysdialog_close();">
+        <div id="terminal_log" style="position:relative;width:100%;height:100%;background-color:#000;color:#fff;overflow:none;overflow-y:auto;text-align:left;">
         </div>                    
     </div>
 </div>

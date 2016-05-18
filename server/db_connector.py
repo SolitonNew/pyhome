@@ -103,11 +103,10 @@ class DBConnector(object):
 
     def set_variable_value(self, var_id, var_value, dev_id):
         if dev_id == False:
-            dev_id = "null"
-
-        var_v = float(var_value)
+            dev_id = "null"        
             
         try:
+            var_v = float(var_value)
             q = self.query("insert into core_variable_changes "
                            " (VARIABLE_ID, VALUE, FROM_ID)"
                            "values"

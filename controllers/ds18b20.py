@@ -86,11 +86,12 @@ class DS18B20(object):
         if self._match_rom(rom):
             self.ow.write_byte(self.THERM_CMD_RSCRATCHPAD)
         else:
-            return False
+            return None
         for i in range(9):
             self.buff[i] = self.ow.read_byte()
         if self.ow.crc8(self.buff):
-            return False
+            return None
+        return True
         
     def get_temp(self, rom = False):
         """
@@ -99,8 +100,8 @@ class DS18B20(object):
         (method search() is automaticly colled). 
         """
         
-        if self._get_data(rom) == False:
-            return False
+        if self._get_data(rom) == None:
+            return None
         
         return (self.buff[1] << 8 | self.buff[0]) / 16
 
@@ -115,8 +116,8 @@ class DS18B20(object):
             - bit temperature measurement (9-12 bits)
         """
         
-        if self._get_data(rom) == False:
-            return False
+        if self._get_data(rom) == None:
+            return None
 
         max_temp = self.buff[2]
         if max_temp & (1<<7):

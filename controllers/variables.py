@@ -119,6 +119,8 @@ class Variable(object):
             self.value(value)
 
     def silent_value(self, val):
+        if val == None:
+            return
         self.val = val
         try:
             self.driver.value(val, self.channel)
@@ -126,6 +128,8 @@ class Variable(object):
             pass
 
     def system_value(self, val):
+        if val == None:
+            return
         if self.val != val:
             self.val = val
             if self.changeScript:
@@ -135,6 +139,8 @@ class Variable(object):
         if val == None:
             return self.val
         else:
+            if val == None:
+                return
             # Убеждаемся, что переменная принадлежит текущему контроллеру
             # или является системной
             if self.dev_id == self.curr_dev_id or self.dev_id == 100:

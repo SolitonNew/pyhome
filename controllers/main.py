@@ -67,7 +67,7 @@ def onewire_termometrs():
     timer_1_flag = False
     
     global curr_termometr_index
-    
+
     if termometrs:
         curr_termometr_index += 1
         if curr_termometr_index > (len(termometrs) - 1):
@@ -103,9 +103,7 @@ while True:
                     rs485.send_pack(PACK_COMMAND, [comm_data[0], roms])
                     pyb.LED(3).off()
                 elif comm_data[0] == "SET_CONFIG_FILE":
-                    f = open("config.py", "w")
-                    f.write(comm_data[1])
-                    f.close()
+                    print("SEND")
                     rs485.send_pack(PACK_COMMAND, [comm_data[0], False])
                 elif comm_data[0] == "REBOOT_CONTROLLER":
                     rs485.send_pack(PACK_COMMAND, [comm_data[0], False])
@@ -113,7 +111,3 @@ while True:
 
     onewire_alarms()
     onewire_termometrs()
-        
-    delay(1)
-    
-    

@@ -6,18 +6,21 @@ import datetime
 import time
 import json
 from config_utils import generate_config_file
+import math
 
 class Main():
     SERIAL_PORT = "/dev/ttyUSB0"
-    SERIAL_SPEED = 38400
+    SERIAL_SPEED = 57600
 
     PACK_SYNC = 1
     PACK_COMMAND = 2
 
     def __init__(self):
+        self.fast_timeput = 0.1
+        
         # Connect to serial port
         try:
-            self.serialPort = serial.Serial(self.SERIAL_PORT, self.SERIAL_SPEED, parity='O', timeout=0.5)
+            self.serialPort = serial.Serial(self.SERIAL_PORT, self.SERIAL_SPEED, parity='O', timeout=self.fast_timeput)
         except:
             print("Ошибка подключения к '%s'" % self.SERIAL_PORT)
 
@@ -28,11 +31,12 @@ class Main():
         # Run main loop
         self.run()
 
-    def send_pack(self, dev_id, pack_type, pack_data):
+    def send_pack(self, dev_id, pack_type, pack_data, flush=True):
         buf = json.dumps([dev_id, pack_type, pack_data]).encode("utf-8")
         buf += bytearray([0x0])
         self.serialPort.write(buf)
-        self.serialPort.flush()
+        if flush:
+            self.serialPort.flush() 
 
     def _store_variable_to_db(self, dev_id, pack_data):
         for var in pack_data:
@@ -40,7 +44,8 @@ class Main():
 
     def check_lan(self):
         try:
-            resp = self.serialPort.readline().decode("utf-8")
+            buf = self.serialPort.readline()
+            resp = buf.decode("utf-8")
             for pack in resp.split(chr(0x0)):
                 return json.loads(pack)
         except:
@@ -131,19 +136,33 @@ class Main():
                 else:
                     self._command_info(error_text)
             elif command == "CONFIG_UPDATE":
-                self.serialPort.timeout = 10
+                self.serialPort.timeout = 1
                 try:
-                    self._command_info("Запрос обновления конфигурационного файла контроллера '%s'..." % dev[1])
+                    self._command_info("CONFIG FILE UPLOAD '%s'..." % dev[1])
                     pack_data = generate_config_file(self.db)
-                    self._command_info(str(len(pack_data)) + ' байт.')
-                    self.send_pack(dev[0], self.PACK_COMMAND, ["SET_CONFIG_FILE", pack_data])
-                    if self.check_lan():
+                    self._command_info(str(len(pack_data)) + ' bytes.')
+
+                    bts = 512
+                    cou = math.ceil(len(pack_data) / bts)
+                    self.send_pack(dev[0], self.PACK_COMMAND, ["SET_CONFIG_FILE", cou, False], False)
+                    for i in range(cou):
+                        t = i * bts
+                        s = pack_data[t:t + bts]
+                        self.send_pack(dev[0], self.PACK_COMMAND, ["SET_CONFIG_FILE", i + 1, s], i == cou - 1)
+
+                    is_ok = False
+                    for i in range(30):
+                        if self.check_lan():
+                            is_ok = True
+                            break
+
+                    if is_ok:
                         self._command_info("OK")
                     else:
                         self._command_info(error_text)
                 except:
                     pass
-                self.serialPort.timeout = 0.5
+                self.serialPort.timeout = self.fast_timeput
             elif command == "REBOOT_CONTROLLERS":
                 self._command_info("Запрос перезагрузки контроллера '%s'..." % dev[1])
                 self.send_pack(dev[0], self.PACK_COMMAND, ["REBOOT_CONTROLLER", ""])

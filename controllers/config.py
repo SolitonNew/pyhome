@@ -97,6 +97,8 @@ HEATING_TP_OUT = Variable(97, 1, 0, '', '')
 BOILER_OFF_HOUR = Variable(98, 1, 1, 'variable', '')
 BOILER_ON_HOUR = Variable(99, 1, 1, 'variable', '')
 DEBUG_RIGHT = Variable(100, 1, 1, 'variable', '')
+ALARM_CLOCK_TIME = Variable(101, 100, 0, 'variable', '')
+ALARM_CLOCK_OK = Variable(102, 100, 0, 'variable', '')
 
 # Scripts
 def script_1():
@@ -142,14 +144,12 @@ def script_26():
         BEDROOM_3_SECOND_R.value(not BEDROOM_3_SECOND_R.value())
 
 def script_27():
-    DEBUG_RIGHT.value(DEBUG_RIGHT.value() + 1)
-    
     import time
     
     sys_time = time.localtime(DATE_TIME.value())
     
     #Значение часов с минутами в виде числа с плавающей запятой
-    tm = sys_time.tm_hour + sys_time.tm_min * 100 / 60
+    tm = sys_time[3] + sys_time[4] / 60
     
     #Условие для вкл/выкл бойлера по таймингу
     BOILER_SWITCH.value(tm >= BOILER_ON_HOUR.value() and tm <= BOILER_OFF_HOUR.value())

@@ -66,7 +66,7 @@
                 $('#terminal_log').append(btn);
             } else {
                 $('#terminal_log').html(data);
-                setTimeout(load_terminal_log, 500);
+                setTimeout(load_terminal_log, 100);
             }
         });
     }

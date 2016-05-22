@@ -305,7 +305,7 @@
                     </div>
                     <button onClick="show_window('ow_manager')">Менеджер OneWire...</button>
                     <button onClick="show_window('system_dialog')">Системные утилиты...</button>
-                    <button style="margin-right:20px;" onClick="log_out()">Выход</button>
+                    <button style="margin-right:5px;" onClick="log_out()">Выход</button>
                 </td>                
             </tr>
             <tr style="position:relative;height:100%;">

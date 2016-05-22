@@ -16,6 +16,12 @@
             overflow:hidden;
         }
     </style>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+        }); 
+    });
+    </script>
 </head>
 
 <body>
@@ -41,7 +47,7 @@
                         </tr>
                         <tr>
                             <td>Логин:</td>
-                            <td><input name="wh_login" type="text" style="width:140px;"></td>
+                            <td><input name="wh_login" type="text" style="width:140px;" autofocus></td>
                         </tr>
                         <tr>
                             <td>Пароль:</td>

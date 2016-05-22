@@ -72,6 +72,7 @@ class HttpProcessor(BaseHTTPRequestHandler):
                     self.send_header('content-type','text/html')
                     self.send_header('charset','UTF8')
                     self.end_headers()
+                    self.flush_headers()
                     self.wfile.write(f.read())
                     f.close;
                 except:
@@ -89,7 +90,8 @@ class HttpProcessor(BaseHTTPRequestHandler):
                     self.send_response(200)                    
                     self.send_header('content-type','image/%s' % ext)
                     self.send_header('charset','UTF8')
-                    self.end_headers()                    
+                    self.end_headers()
+                    self.flush_headers()
                     self.wfile.write(f.read())
                     f.close;
                 except:
@@ -107,7 +109,8 @@ class HttpProcessor(BaseHTTPRequestHandler):
                     self.send_response(200)                    
                     self.send_header('content-type','image/%s' % ext)
                     self.send_header('charset','UTF8')
-                    self.end_headers()                    
+                    self.end_headers()
+                    self.flush_headers()
                     self.wfile.write(f.read())
                     f.close;
                 except:
@@ -125,7 +128,8 @@ class HttpProcessor(BaseHTTPRequestHandler):
                     self.send_response(200)
                     self.send_header('content-type','text/%s' % ext)
                     self.send_header('charset','UTF8')
-                    self.end_headers()            
+                    self.end_headers()
+                    self.flush_headers()
                     self.wfile.write(f.read())
                     f.close;
                 except:
@@ -170,6 +174,7 @@ class HttpProcessor(BaseHTTPRequestHandler):
                         self.send_header('content-type', f.content_type)
                         self.send_header('charset', 'UTF8')
                         self.end_headers()
+                        self.flush_headers()
                             
                         if f.content_type == "text/html":
                             self.wfile.write(res.encode("utf-8"))
@@ -182,8 +187,11 @@ class HttpProcessor(BaseHTTPRequestHandler):
                 if is_empty:
                     self.wfile.write(("Форма '%s' не найдена" % path).encode("utf-8"))
             except Exception as e:
-                s = "Форма '%s' ругнулась:<br><b>%s</b>" % (path, e.args)
-                self.wfile.write(s.encode("utf-8"))
+                try:
+                    s = "Форма '%s' ругнулась:<br><b>%s</b>" % (path, e.args)
+                    self.wfile.write(s.encode("utf-8"))
+                except:
+                    print("Вероятно закрылось соединение и %s" % s)
     
 """
 sudo iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 8082
@@ -202,5 +210,5 @@ print(
 )
 
 if __name__ == "__main__":
-    serv = HTTPServer((HTTP_HOST, HTTP_PORT), HttpProcessor)    
+    serv = HTTPServer((HTTP_HOST, HTTP_PORT), HttpProcessor)
     serv.serve_forever()

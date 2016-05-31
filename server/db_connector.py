@@ -62,7 +62,7 @@ class DBConnector(object):
         while row is not None:
             nr = []
             for r in row:
-                if type(r) == bytearray:
+                if type(r) == bytes:
                     r = str(r, "utf-8")
                 nr += [r]
             self.controllers += [nr]

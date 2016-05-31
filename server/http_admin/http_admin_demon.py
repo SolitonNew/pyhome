@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/python3.4
 
 import random
 from http.server import BaseHTTPRequestHandler, HTTPServer

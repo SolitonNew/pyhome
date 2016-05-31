@@ -30,7 +30,7 @@ class ListField(WidgetBase):
         res = []
         for row in self.data:
             s = row[self.labelIndex]
-            if type(s) == bytearray:
+            if type(s) == bytes:
                 s = str(s, "utf-8")
             sel = ""
             if type(self.selectedKey) == list:
@@ -54,7 +54,7 @@ class TreeField(ListField):
         for i in range(len(self.data)):
             row = list(self.data[i])
             s = row[self.labelIndex]
-            if type(s) == bytearray:
+            if type(s) == bytes:
                 s = str(s, "utf-8")
 
             s = "&nbsp;" * self.child_tabs[i] * 4 + "%s" % s            
@@ -443,7 +443,7 @@ class Grid(WidgetBase):
                     if f:
                         v = f(i, row)
                     else:
-                        if type(row[field]) == bytearray:
+                        if type(row[field]) == bytes:
                             v = str(row[field], "utf-8")
                         else:
                             v = str(row[field])
@@ -572,14 +572,14 @@ class List(WidgetBase):
         for row in data:
             v = ""
             if toolTipField:
-                if type(row[toolTipField]) == bytearray:
+                if type(row[toolTipField]) == bytes:
                     v = str(row[toolTipField], "utf-8")
                 else:
                     v = str(row[toolTipField])
                 v = toolTip % (v)
             
             res += "<tr id=\"%s_row_%s\" %s>" % (self.id, row[keyField], v)
-            if type(row[labelField]) == bytearray:
+            if type(row[labelField]) == bytes:
                 v = str(row[labelField], "utf-8")
             else:
                 v = str(row[labelField])
@@ -662,7 +662,7 @@ class Tree(List):
         i = 0
         for row in data:
             res += "<tr id=\"%s_row_%s\">" % (self.id, row[keyField])
-            if type(row[labelField]) == bytearray:
+            if type(row[labelField]) == bytes:
                 v = str(row[labelField], "utf-8")
             else:
                 v = str(row[labelField])

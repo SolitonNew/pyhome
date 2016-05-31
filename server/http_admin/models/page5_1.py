@@ -3,6 +3,7 @@ from widgets import TextField
 from cairo import ImageSurface, Context, FontOptions, FORMAT_ARGB32
 import math
 import datetime
+from io import BytesIO
 
 class Page5_1(BaseForm):
     ACTION = "page5_1"
@@ -399,9 +400,8 @@ class Page5_1(BaseForm):
         # ---------------------------        
         
         del ctx
-        img.write_to_png("chart.png")
 
-        f = open("chart.png", "rb")
-        buf = f.read()
-        f.close()        
-        return buf
+        byt = BytesIO()
+        img.write_to_png(byt)
+        byt.seek(0)
+        return byt.read()

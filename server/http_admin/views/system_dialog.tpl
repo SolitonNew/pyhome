@@ -108,7 +108,12 @@
                 </p>
             </div>
         </TD>
-    </TR>        
+    </TR>
+    <TR>
+        <TD>
+            Расчетное потребление системы: <B>@CURRENTLY@</B>
+        </TD>
+    </TR>
     <TR>
         <TD align="right" valign="bottom" height="60">
             <button onClick="hide_window()">Закрыть</button>

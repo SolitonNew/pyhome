@@ -153,21 +153,54 @@ class Page5_1(BaseForm):
         # собираем статистику.
         prev_vals = [-9999] * 4
         chart_data = [[], [], [], []]
+
+        """
         for row in self.db.select("select UNIX_TIMESTAMP(CHANGE_DATE) D, VALUE, VARIABLE_ID, ID "
                                   "  from core_variable_changes "
                                   " where VARIABLE_ID in (" + var_ids + ") "
                                   "   and CHANGE_DATE >= FROM_UNIXTIME(%s) "
                                   "   and CHANGE_DATE <= FROM_UNIXTIME(%s) "
                                   "order by CHANGE_DATE " % (min_x_q, max_x_q)):
-            ind = series.index(row[2])
-            prev_vals[ind] = row[1]
+        """
+        try:
+            self.db.IUD("set @rn := 0")
 
-            if abs(prev_vals[ind] - row[1]) < 10:
-                chart_data[ind] += [row]
-                if row[0] > min_x and row[0] < max_x:
-                    max_y = max(max_y, row[1])
-                    min_y = min(min_y, row[1])
-            prev_vals[ind] = row[1]
+            sql = ("select UNIX_TIMESTAMP(CHANGE_DATE) D, VALUE, VARIABLE_ID, ID "
+                   "  from core_variable_changes "
+                   " where VARIABLE_ID in (" + var_ids + ") "
+                   "   and CHANGE_DATE >= FROM_UNIXTIME(%s) "
+                   "   and CHANGE_DATE <= FROM_UNIXTIME(%s) "
+                   "order by CHANGE_DATE " % (min_x_q, max_x_q))
+
+            for c in self.db.select("select count(*) c "
+                                    "  from core_variable_changes "
+                                    " where VARIABLE_ID in (" + var_ids + ") "
+                                    "   and CHANGE_DATE >= FROM_UNIXTIME(%s) "
+                                    "   and CHANGE_DATE <= FROM_UNIXTIME(%s) " % (min_x_q, max_x_q)):
+                cou = c[0]
+                ccc = 4000
+                if cou > ccc:
+                    sql = ("select UNIX_TIMESTAMP(CHANGE_DATE) D, VALUE, VARIABLE_ID, ID, @rn := @rn + 1 rownum "
+                           "  from core_variable_changes "
+                           " where VARIABLE_ID in (" + var_ids + ") "
+                           "   and CHANGE_DATE >= FROM_UNIXTIME(%s) "
+                           "   and CHANGE_DATE <= FROM_UNIXTIME(%s) "
+                           "having mod(rownum, %s) = 0 "
+                           "order by CHANGE_DATE " % (min_x_q, max_x_q, math.ceil(cou / ccc)))
+            
+            for row in self.db.select(sql):
+                ind = series.index(row[2])
+                prev_vals[ind] = row[1]
+
+                if abs(prev_vals[ind] - row[1]) < 10:
+                    chart_data[ind] += [row]
+                    if row[0] > min_x and row[0] < max_x:
+                        max_y = max(max_y, row[1])
+                        min_y = min(min_y, row[1])
+                prev_vals[ind] = row[1]
+        except:
+            pass
+            
         
         if min_y is None or max_y is None or min_y == 9999 or max_y == -9999 or min_y == max_y:
             max_y = 1
@@ -314,7 +347,7 @@ class Page5_1(BaseForm):
                     if is_first:
                         ctx.move_to(x, y)
                     else:
-                        if row[0] - prevX > 3000:
+                        if row[0] - prevX > 10000:
                             ctx.move_to(x, y)
                         else:
                             ctx.line_to(x, y)

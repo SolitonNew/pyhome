@@ -178,7 +178,7 @@ class Page5_1(BaseForm):
                                     "   and CHANGE_DATE >= FROM_UNIXTIME(%s) "
                                     "   and CHANGE_DATE <= FROM_UNIXTIME(%s) " % (min_x_q, max_x_q)):
                 cou = c[0]
-                ccc = 4000
+                ccc = 500 * 4
                 if cou > ccc:
                     sql = ("select UNIX_TIMESTAMP(CHANGE_DATE) D, VALUE, VARIABLE_ID, ID, @rn := @rn + 1 rownum "
                            "  from core_variable_changes "
@@ -186,7 +186,7 @@ class Page5_1(BaseForm):
                            "   and CHANGE_DATE >= FROM_UNIXTIME(%s) "
                            "   and CHANGE_DATE <= FROM_UNIXTIME(%s) "
                            "having mod(rownum, %s) = 0 "
-                           "order by CHANGE_DATE " % (min_x_q, max_x_q, math.ceil(cou / ccc)))
+                           "order by VARIABLE_ID, CHANGE_DATE " % (min_x_q, max_x_q, math.ceil(cou / ccc)))
             
             for row in self.db.select(sql):
                 ind = series.index(row[2])

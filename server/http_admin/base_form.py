@@ -61,8 +61,7 @@ class BaseForm(object):
                     s = w.query()
                     if s: return s
                 except Exception as e:
-                    print("ERROR %s " % (e.args,))
-            
+                    print("ERROR %s " % (e.args,))            
             f = open(self.data_path + self.VIEW, 'r')
             res = f.read()
             for w in self._widgets:
@@ -70,7 +69,7 @@ class BaseForm(object):
                     res = res.replace("@%s@" % w.id, w.html())
                 except Exception as e:
                     return "Ошибка в виджете '%s': %s" % (w.id, e.args)
-            f.close()
+            f.close()            
         except Exception as e:
             res = "Шаблон формы не найден: %s" % e.args
         return res

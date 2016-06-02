@@ -4,9 +4,9 @@ import sys
 import hashlib
 
 try:
-    sys.path.index('/home/administrator/pyhome/server')
+    sys.path.index('/home/pyhome/server')
 except:
-    sys.path += ['/home/administrator/pyhome/server']        
+    sys.path += ['/home/pyhome/server']        
 from config_utils import generate_config_file
 
 class SystemDialog(BaseForm):

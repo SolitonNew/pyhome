@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "/home/pyhome/server/player/player_demon.py", line 109, in <module>
+    % (Main.ALARM_FILES, Main.ALARM_LOOPS)
+UnicodeEncodeError: 'ascii' codec can't encode characters in position 99-104: ordinal not in range(128)

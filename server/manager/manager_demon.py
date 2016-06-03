@@ -5,14 +5,13 @@ import time
 import curses
 from subprocess import Popen, PIPE, STDOUT
 import math
-#import pipes
 
 SCREENS = [["Помощь", "", "", None, None, [], None],
-           ["RS485", "rs485_demon.py", "../", None, None, [], None],
-           ["Админка", "http_admin_demon.py", "../http_admin", None, None, [], None],
-           ["Консоль", "http_app_demon.py", "../http_app", None, None, [], None],
-           ["Говорилка", "speacker_demon.py", "../speacker", None, None, [], None],
-           ["Будильник", "player_demon.py", "../player", None, None, [], None]]
+           ["RS485", "rs485_demon.py", "/home/pyhome/server", None, None, [], None],
+           ["Админка", "http_admin_demon.py", "/home/pyhome/server/http_admin", None, None, [], None],
+           ["Консоль", "http_app_demon.py", "/home/pyhome/server/http_app", None, None, [], None],
+           ["Говорилка", "speacker_demon.py", "/home/pyhome/server/speacker", None, None, [], None],
+           ["Будильник", "player_demon.py", "/home/pyhome/server/player", None, None, [], None]]
 
 CURRENT_SCREEN = 0
 
@@ -31,7 +30,7 @@ def startProceses():
                 fff = open(str(ind) + ".txt", "w")
                 f = open(str(ind) + ".txt", "w+")
                 SCREENS[ind][3] = f
-                SCREENS[ind][4] = Popen(["/usr/bin/python3", "-u", SCREENS[ind][1]], cwd=SCREENS[ind][2], stdout=fff, stderr=fff)
+                SCREENS[ind][4] = Popen(["/usr/bin/python3", "-u", SCREENS[ind][2] + "/" + SCREENS[ind][1]], cwd=SCREENS[ind][2], stdout=fff, stderr=fff)
                 SCREENS[ind][6] = fff
                 time.sleep(0.25)
             except:
@@ -98,10 +97,10 @@ while True:
             if not emp:
                 f1 = SCREENS[i][3]
                 f2 = SCREENS[i][6]
-                f1.seek(0)
-                f2.seek(0)
-                f1.truncate()
-                f2.truncate()
+                #f1.seek(0)
+                #f2.seek(0)
+                #f1.truncate()
+                #f2.truncate()
         btn = " %s-%s " % (i, SCREENS[i][0])
         if CURRENT_SCREEN == i:
             scr.addstr(0, x, btn, c_header | curses.A_REVERSE)

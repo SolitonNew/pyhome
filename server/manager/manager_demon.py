@@ -97,10 +97,10 @@ while True:
             if not emp:
                 f1 = SCREENS[i][3]
                 f2 = SCREENS[i][6]
-                #f1.seek(0)
-                #f2.seek(0)
-                #f1.truncate()
-                #f2.truncate()
+                f1.seek(0)
+                f2.seek(0)
+                f1.truncate()
+                f2.truncate()
         btn = " %s-%s " % (i, SCREENS[i][0])
         if CURRENT_SCREEN == i:
             scr.addstr(0, x, btn, c_header | curses.A_REVERSE)

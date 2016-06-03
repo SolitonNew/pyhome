@@ -1,4 +1,0 @@
-Traceback (most recent call last):
-  File "/home/pyhome/server/http_app/http_app_demon.py", line 191, in <module>
-    % (HTTP_HOST, HTTP_PORT)
-UnicodeEncodeError: 'ascii' codec can't encode characters in position 102-107: ordinal not in range(128)

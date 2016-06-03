@@ -1,4 +1,0 @@
-Traceback (most recent call last):
-  File "/home/pyhome/server/rs485_demon.py", line 213, in <module>
-    % (Main.SERIAL_PORT, Main.SERIAL_SPEED)
-UnicodeEncodeError: 'ascii' codec can't encode characters in position 96-101: ordinal not in range(128)

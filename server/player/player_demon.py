@@ -95,7 +95,7 @@ class Main():
                 self.player = False
                 print("%s   Не разбудили" % self._curr_time())
 
-p = "/home/administrator/pyhome/server/player/tracks/"
+p = "/home/pyhome/server/player/tracks/"
 for f in os.listdir(p):
     Main.ALARM_FILES += [p + f]
 

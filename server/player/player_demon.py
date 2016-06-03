@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+# -*- coding: utf-8 -*-
 
 from db_connector import DBConnector
 from subprocess import Popen, PIPE

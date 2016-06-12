@@ -18,8 +18,9 @@ CURRENT_SCREEN = 0
 
 SCREENS[0][5] = ["",
                  "   + Кнопки 1-%s это переключение между экранами." % (len(SCREENS) - 1),
+                 "   + Кнопки Right|Left переклюают экраны по порядку.",
                  "   + Кнопка R перезапускает модули всех экранов.",
-                 "   + Кнопка Q закрывает прерывает работу экранов и закрывает приложение.",
+                 "   + Кнопка Q прерывает работу экранов и закрывает приложение.",
                  ""]
 
 def startProceses():
@@ -79,6 +80,14 @@ while True:
     elif c in btn_reboot:
         stopProceses()
         startProceses()
+    elif c == curses.KEY_RIGHT:
+        CURRENT_SCREEN += 1
+        if CURRENT_SCREEN > len(SCREENS) - 1:
+            CURRENT_SCREEN = 0 
+    elif c == curses.KEY_LEFT:
+        CURRENT_SCREEN -= 1
+        if CURRENT_SCREEN < 0:
+            CURRENT_SCREEN = len(SCREENS) - 1
         
     x = 0
     for i in range(len(SCREENS)):
@@ -97,10 +106,10 @@ while True:
             if not emp:
                 f1 = SCREENS[i][3]
                 f2 = SCREENS[i][6]
-                #f1.seek(0)
-                #f2.seek(0)
-                #f1.truncate()
-                #f2.truncate()
+                f1.seek(0)
+                f2.seek(0)
+                f1.truncate()
+                f2.truncate()
         btn = " %s-%s " % (i, SCREENS[i][0])
         if CURRENT_SCREEN == i:
             scr.addstr(0, x, btn, c_header | curses.A_REVERSE)

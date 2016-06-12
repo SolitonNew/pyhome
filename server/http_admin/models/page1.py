@@ -31,13 +31,14 @@ class Page1(BaseForm):
         grid.add_column("Канал", "CHANNEL", 100, sort="on")
         self.add_widget(grid)
 
+        self.controls = [(0, b"--//--")] + self.db.select("select ID, NAME from core_variable_controls order by ID")
+
     def column_ro_func(self, index, row):
         return ["ДА", "НЕТ"][row[3]]
 
     def column_control_func(self, index, row):
-        ls = ("--//--", "Лампочка", "Выключатель", "Розетка", "Термометр", "Термостат", "Камера")
         try:
-            return "<div style=\"padding:3px;\">%s</div>" % (ls[row[index]])
+            return "<div style=\"padding:3px;\">%s</div>" % (self.controls[row[index]][1].decode("utf-8"))
         except:
             return "<div style=\"padding:3px;\">%s</div>" % (row[index])        
 
@@ -53,7 +54,10 @@ class Page1(BaseForm):
             click = "$.ajax({url:'page1?FORM_QUERY=set_value&key=%s&value=%s'})" % (row[0], v)
             return "<button onMousedown=\"%s\">%s</button>" % (click, lab)
         else:
-            return "<div style=\"padding:3px;\">%s</div>" % (row[index])
+            if row[index] != None:
+                return "<div style=\"padding:3px;\">%s</div>" % (row[index])
+            else:
+                return "<div style=\"padding:3px;\"></div>"
 
     def _treeRecursive(self, parentNode):
         res = str(parentNode.id) + ','

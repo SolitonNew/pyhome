@@ -41,7 +41,7 @@ class VarEditDialog(BaseForm):
         self.add_widget(TextField("VALUE", VALUE))
         self.add_widget(TextField("CHANNEL", CHANNEL))
         self.add_widget(TreeField("VAR_GROUP_TREE", 0, 1, 2, GROUP_ID, self.db.select("select ID, PARENT_ID, NAME from plan_parts order by ORDER_NUM")))
-        self.add_widget(ListField("VAR_CONTROL", 0, 1, CONTROL, [(0, "--//--"), (1, "Лампочка"), (2, "Выключатель"), (3, "Розетка"), (4, "Термометр"), (5, "Термостат"), (6, "Камера")]))
+        self.add_widget(ListField("VAR_CONTROL", 0, 1, CONTROL, [(0, "--//--")] + self.db.select("select ID, NAME from core_variable_controls order by ID")))
 
     def _load_ow_devs(self, controller_id):
         data = self.db.select("select ID, ROM_1, ROM_2, ROM_3, ROM_4, ROM_5, ROM_6, ROM_7, ROM_8 "

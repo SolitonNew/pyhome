@@ -117,7 +117,7 @@ class VarEditDialog(BaseForm):
                     key_id = self.db._lastID
                 else:
                     key_id = self.param('VAR_KEY')
-                if self.param('VAR_TYPE') == 'variable':
+                if self.param('VAR_TYPE') == 'variable' or self.param_str('VAR_READ_ONLY') == "1":
                     self.db.IUD("call CORE_SET_VARIABLE(%s, %s, %s)" %
                                  (key_id, self.param('VAR_VALUE'), 'null'))
                 self.db.commit()

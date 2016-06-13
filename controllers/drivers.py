@@ -72,13 +72,13 @@ class Fan(FanControl):
             return {'F1':self.data[0], 'F2':self.data[1], 'F3':self.data[2], 'F4':self.data[3]}
         else:
             if channel == 'F1':
-                self.data[0] = val
+                self.data[0] = int(val)
             elif channel == 'F2':
-                self.data[1] = val
+                self.data[1] = int(val)
             elif channel == 'F3':
-                self.data[2] = val
+                self.data[2] = int(val)
             elif channel == 'F4':
-                self.data[3] = val
+                self.data[3] = int(val)
             
             self.set_data(self.data, self.rom)
 

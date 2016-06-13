@@ -27,6 +27,8 @@ def set_variable_drivers(ow, dev_id):
                         driver = drivers.Termometr(ow, var.rom)
                     elif var.rom[0] == 0xf0:
                         driver = drivers.Switch(ow, var.rom)
+                    elif var.rom[0] == 0xf1:
+                        driver = drivers.Fan(ow, var.rom)
 
                 driverList += [driver]            
                 
@@ -180,12 +182,11 @@ class Variable(object):
             # изменит статус.
             if delay > 0:
                 global DATE_TIME
-                
-                delayValue = val
-                delayTime = DATE_TIME + delay
+                self.delayValue = val
+                self.delayTime = DATE_TIME + delay
                 return
             else:
-                delayTime = False
+                self.delayTime = False
             
             # Убеждаемся, что переменная принадлежит текущему контроллеру
             # или является системной

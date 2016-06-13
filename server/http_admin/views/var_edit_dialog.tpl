@@ -4,7 +4,7 @@
     $('#popup_window_title').html("Свойства переменной");
 
     function variable_settings_change() {
-        if ($('#VAR_TYPE').val() == 'variable')
+        if ($('#VAR_TYPE').val() == 'variable' || $('#VAR_READ_ONLY').val() == '1')
             $('#value_row').css('display', 'table-row');
         else
             $('#value_row').css('display', 'none');

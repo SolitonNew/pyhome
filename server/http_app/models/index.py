@@ -12,7 +12,7 @@ class Index(BaseForm):
         self.add_widget(TextField("IS_MOBILE", str(self.owner.isAndroid()).lower()))
         
         self.control_tpls = []
-        for i in range(1, 7):
+        for i in range(1, 8):
             self.control_tpls += [self._load_control_tpl(i)]
 
         rot = "true"
@@ -44,9 +44,12 @@ class Index(BaseForm):
                 self.add_widget(tf)
 
     def _load_control_tpl(self, num):
-        f = open("views/app/control_%s.tpl" % (num), "r")
-        res = f.read()
-        f.close()
+        try:
+            f = open("views/app/control_%s.tpl" % (num), "r")
+            res = f.read()
+            f.close()
+        except:
+            res = ''
         return res
 
     def _gen_controls(self):
@@ -76,7 +79,7 @@ class Index(BaseForm):
         return "".join(res)
 
     def query(self, query_type):
-        if query_type in ["1", "3", "5"]:
+        if query_type in ["1", "3", "5", "7"]:
             self.db.IUD("call CORE_SET_VARIABLE(%s, %s, null)" % (self.param('key'), self.param('value')))
             self.db.commit()
             return self.param('value')

@@ -73,7 +73,7 @@ class Page4(BaseForm):
         elif query_type == "1":
             return self._comp_list("select ID, COMM, APP_CONTROL "
                                    "  from core_variables "
-                                   " where APP_CONTROL in (1, 3, 5)"
+                                   " where APP_CONTROL in (1, 3, 5, 7)"
                                    " order by COMM")
         elif query_type == "2":
             return self._comp_list("select ID, COMM, APP_CONTROL "

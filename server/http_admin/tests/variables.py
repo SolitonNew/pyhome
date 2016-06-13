@@ -1,7 +1,7 @@
 variableList = []
 
 class Variable(object):
-    def __init__(self, name, startValue = 0):
+    def __init__(self, name, startValue=0):
         global variableList
         variableList += [self]
         self.name = name
@@ -12,14 +12,13 @@ class Variable(object):
         self.rom = ""
         self.dev_id = 1
         
-    def value(self, val = None):
+    def value(self, val=None, delay=0):
         self.isUse = True
         if val != None:
             self.isChange = True
             self.val = val
         else:
             return self.val
-
 
 def printInput():
     print("-------------------------------------------------------------------")

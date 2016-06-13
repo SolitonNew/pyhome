@@ -3,6 +3,8 @@ import drivers
 driverList = []
 variableList = []
 
+DATE_TIME = 0
+
 def set_variable_drivers(ow, dev_id):
     """
     Создает список драйверов устройств и назначает их переменным.
@@ -76,17 +78,35 @@ def get_sync_change_variables():
     return res
 
 def set_sync_change_variables(data):
+    global DATE_TIME
+    
     for var in data:
         for vl in variableList:
             if vl.id == var[0]:
                 try:
                     if vl.dev_id == 100:
                         vl.system_value(var[1])
+                        if vl.id == -100:
+                            if DATE_TIME != vl.value():
+                                DATE_TIME = vl.value()
+                                check_delays()
                     else:
                         vl.silent_value(var[1])
                 except:
                     pass
 
+def check_delays():
+    """
+    Функция вызывается всякий раз, как приходит сигнал изменения времени.
+    При вызове выполняет проверку всех переменных с отложенным исполнением и
+    если время выполнения истекло, то назначает отложенное значение переменной.
+    """
+    global DATE_TIME
+    
+    for vl in variableList:
+        if vl.delayTime:
+            if vl.delayTime <= DATE_TIME:
+                vl.value(vl.delayValue)
 
 class Variable(object):
     """
@@ -111,6 +131,8 @@ class Variable(object):
         self.val = False
         self.isChange = False
         self.changeScript = False
+        self.delayTime = False
+        self.delayValue = None
 
     def _set_driver_value(self, value):
         if self.channel:
@@ -135,12 +157,36 @@ class Variable(object):
             if self.changeScript:
                 self.changeScript()
 
-    def value(self, val = None):
+    def value(self, val=None, delay=0):
+        """
+        Метод назначения/получения данных переменной.
+        Параметры:
+           val - значение переменной для установки. Если None, то метод вернет
+                 текущее значение переменной.
+           delay - время в секундах на которое отложено изменение переменной.
+                   Если метод вызван с этим параметров большим 0 то изменения
+                   переменной будет отложено до указанного времени. Повторный
+                   вызов метода с этим параметром обновит значение времени
+                   выполнения. Если значение равно 0, то предыдущие задержки
+                   будут анулированы до их истечения и присваивание нового
+                   значения будет выполнено немедленно.
+        """
         if val == None:
             return self.val
         else:
-            if val == None:
+            # Если изменение отложено, то выполнять сразу не станем, а укажем
+            # переменной время изменения и нужный новый статус.
+            # Повторная попытка изменения значения обновит время или немедленно
+            # изменит статус.
+            if delay > 0:
+                global DATE_TIME
+                
+                delayValue = val
+                delayTime = DATE_TIME + delay
                 return
+            else:
+                delayTime = False
+            
             # Убеждаемся, что переменная принадлежит текущему контроллеру
             # или является системной
             if self.dev_id == self.curr_dev_id or self.dev_id == 100:

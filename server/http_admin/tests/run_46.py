@@ -91,8 +91,8 @@ HALL_2_SWITCH = Variable('HALL_2_SWITCH', 0.0)
 SHOWER_2_SWITCH = Variable('SHOWER_2_SWITCH', 0)
 PODVAL_R = Variable('PODVAL_R', 0.0)
 WINTER_GARDEN_S = Variable('WINTER_GARDEN_S', 0.0)
-BACK_DOOR_TERM_IN_S = Variable('BACK_DOOR_TERM_IN_S', 20.9375)
-BEDROOM_3_WC_TERM = Variable('BEDROOM_3_WC_TERM', 21.125)
+BACK_DOOR_TERM_IN_S = Variable('BACK_DOOR_TERM_IN_S', 21.0625)
+BEDROOM_3_WC_TERM = Variable('BEDROOM_3_WC_TERM', 21.1875)
 HEATING_MAIN_OUT = Variable('HEATING_MAIN_OUT', 0)
 HEATING_MAIN_IN = Variable('HEATING_MAIN_IN', 0)
 HEATING_CHIMNEY = Variable('HEATING_CHIMNEY', 0)
@@ -109,15 +109,12 @@ SHOWER_FAN = Variable('SHOWER_FAN', 0)
 BEDROOM_3_WC_FAN = Variable('BEDROOM_3_WC_FAN', 0)
 MASTER_FAN = Variable('MASTER_FAN', 0)
 COOK_FAN = Variable('COOK_FAN', 0)
+PODVAL_MASTER_FAN = Variable('PODVAL_MASTER_FAN', 0)
+PODVAL_COOK_FAN = Variable('PODVAL_COOK_FAN', 0)
 
-import time
-
-sys_time = time.localtime(DATE_TIME.value())
-
-#Значение часов с минутами в виде числа с плавающей запятой
-tm = sys_time[3] + sys_time[4] / 60
-
-#Условие для вкл/выкл бойлера по таймингу
-BOILER_SWITCH.value(tm >= BOILER_ON_HOUR.value() and tm <= BOILER_OFF_HOUR.value())
+if BEDROOM_3_WC_R.value():
+    BEDROOM_3_WC_FAN.value(6)
+else:
+    BEDROOM_3_WC_FAN.value(0, 60)
 printInput()
 printChanges()

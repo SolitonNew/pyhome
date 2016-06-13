@@ -69,12 +69,12 @@
         var doc = document.getElementById('script_text_@ID@');
         var text = $(doc).val();
         text = text.substr(0, doc.selectionStart);
-        var i = text.lastIndexOf('\n');
+        var i = text.lastIndexOf('\n');        
         if (text.charAt(i + 1) == ' ') {
             var t = text.lastIndexOf(' ');
             var n = Math.round((t - i) / 4);
             var res = '';
-            for (var k = 0; k < n; k++)
+            for (var k = 0; k < n - 1; k++)
                 res += '    ';
             return res;
         } else {

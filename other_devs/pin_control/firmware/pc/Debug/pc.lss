@@ -1,0 +1,830 @@
+
+pc.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text         00000398  00000000  00000000  00000094  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .data         0000000a  00800060  00000398  0000042c  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  2 .bss          00000004  0080006a  0080006a  00000436  2**0
+                  ALLOC
+  3 .stab         000006b4  00000000  00000000  00000438  2**2
+                  CONTENTS, READONLY, DEBUGGING
+  4 .stabstr      00000090  00000000  00000000  00000aec  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  5 .debug_aranges 00000020  00000000  00000000  00000b7c  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  6 .debug_pubnames 000000e1  00000000  00000000  00000b9c  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  7 .debug_info   000005cc  00000000  00000000  00000c7d  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  8 .debug_abbrev 0000020b  00000000  00000000  00001249  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  9 .debug_line   00000612  00000000  00000000  00001454  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 10 .debug_frame  000000a0  00000000  00000000  00001a68  2**2
+                  CONTENTS, READONLY, DEBUGGING
+ 11 .debug_str    000001a3  00000000  00000000  00001b08  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 12 .debug_loc    000003e2  00000000  00000000  00001cab  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 13 .debug_pubtypes 0000002b  00000000  00000000  0000208d  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 14 .debug_ranges 00000038  00000000  00000000  000020b8  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	09 c0       	rjmp	.+18     	; 0x14 <__ctors_end>
+   2:	43 c1       	rjmp	.+646    	; 0x28a <__vector_1>
+   4:	20 c0       	rjmp	.+64     	; 0x46 <__bad_interrupt>
+   6:	62 c1       	rjmp	.+708    	; 0x2cc <__vector_3>
+   8:	1e c0       	rjmp	.+60     	; 0x46 <__bad_interrupt>
+   a:	1d c0       	rjmp	.+58     	; 0x46 <__bad_interrupt>
+   c:	1c c0       	rjmp	.+56     	; 0x46 <__bad_interrupt>
+   e:	1b c0       	rjmp	.+54     	; 0x46 <__bad_interrupt>
+  10:	1a c0       	rjmp	.+52     	; 0x46 <__bad_interrupt>
+  12:	19 c0       	rjmp	.+50     	; 0x46 <__bad_interrupt>
+
+00000014 <__ctors_end>:
+  14:	11 24       	eor	r1, r1
+  16:	1f be       	out	0x3f, r1	; 63
+  18:	cf e9       	ldi	r28, 0x9F	; 159
+  1a:	cd bf       	out	0x3d, r28	; 61
+
+0000001c <__do_copy_data>:
+  1c:	10 e0       	ldi	r17, 0x00	; 0
+  1e:	a0 e6       	ldi	r26, 0x60	; 96
+  20:	b0 e0       	ldi	r27, 0x00	; 0
+  22:	e8 e9       	ldi	r30, 0x98	; 152
+  24:	f3 e0       	ldi	r31, 0x03	; 3
+  26:	02 c0       	rjmp	.+4      	; 0x2c <__do_copy_data+0x10>
+  28:	05 90       	lpm	r0, Z+
+  2a:	0d 92       	st	X+, r0
+  2c:	aa 36       	cpi	r26, 0x6A	; 106
+  2e:	b1 07       	cpc	r27, r17
+  30:	d9 f7       	brne	.-10     	; 0x28 <__do_copy_data+0xc>
+
+00000032 <__do_clear_bss>:
+  32:	10 e0       	ldi	r17, 0x00	; 0
+  34:	aa e6       	ldi	r26, 0x6A	; 106
+  36:	b0 e0       	ldi	r27, 0x00	; 0
+  38:	01 c0       	rjmp	.+2      	; 0x3c <.do_clear_bss_start>
+
+0000003a <.do_clear_bss_loop>:
+  3a:	1d 92       	st	X+, r1
+
+0000003c <.do_clear_bss_start>:
+  3c:	ae 36       	cpi	r26, 0x6E	; 110
+  3e:	b1 07       	cpc	r27, r17
+  40:	e1 f7       	brne	.-8      	; 0x3a <.do_clear_bss_loop>
+  42:	6b d1       	rcall	.+726    	; 0x31a <main>
+  44:	a7 c1       	rjmp	.+846    	; 0x394 <_exit>
+
+00000046 <__bad_interrupt>:
+  46:	dc cf       	rjmp	.-72     	; 0x0 <__vectors>
+
+00000048 <crc_table>:
+unsigned char port_val = 0;
+
+unsigned char mask = 0b0001101;
+
+unsigned char crc_table(unsigned char data)
+{
+  48:	28 e0       	ldi	r18, 0x08	; 8
+	unsigned char crc = 0x0;
+  4a:	90 e0       	ldi	r25, 0x00	; 0
+	unsigned char fb_bit = 0;
+	for (unsigned char b = 0; b < 8; b++)
+	{ 
+		fb_bit = (crc ^ data) & 0x01;
+		if (fb_bit==0x01) 
+			crc = crc ^ 0x18;
+  4c:	48 e1       	ldi	r20, 0x18	; 24
+{
+	unsigned char crc = 0x0;
+	unsigned char fb_bit = 0;
+	for (unsigned char b = 0; b < 8; b++)
+	{ 
+		fb_bit = (crc ^ data) & 0x01;
+  4e:	39 2f       	mov	r19, r25
+  50:	38 27       	eor	r19, r24
+		if (fb_bit==0x01) 
+  52:	30 ff       	sbrs	r19, 0
+  54:	04 c0       	rjmp	.+8      	; 0x5e <crc_table+0x16>
+			crc = crc ^ 0x18;
+  56:	94 27       	eor	r25, r20
+		crc = (crc >> 1) & 0x7F;
+  58:	96 95       	lsr	r25
+		if (fb_bit==0x01) 
+			crc = crc | 0x80;
+  5a:	90 68       	ori	r25, 0x80	; 128
+  5c:	01 c0       	rjmp	.+2      	; 0x60 <crc_table+0x18>
+	for (unsigned char b = 0; b < 8; b++)
+	{ 
+		fb_bit = (crc ^ data) & 0x01;
+		if (fb_bit==0x01) 
+			crc = crc ^ 0x18;
+		crc = (crc >> 1) & 0x7F;
+  5e:	96 95       	lsr	r25
+  60:	21 50       	subi	r18, 0x01	; 1
+
+unsigned char crc_table(unsigned char data)
+{
+	unsigned char crc = 0x0;
+	unsigned char fb_bit = 0;
+	for (unsigned char b = 0; b < 8; b++)
+  62:	11 f0       	breq	.+4      	; 0x68 <crc_table+0x20>
+		if (fb_bit==0x01) 
+			crc = crc ^ 0x18;
+		crc = (crc >> 1) & 0x7F;
+		if (fb_bit==0x01) 
+			crc = crc | 0x80;
+		data >>= 1;
+  64:	86 95       	lsr	r24
+  66:	f3 cf       	rjmp	.-26     	; 0x4e <crc_table+0x6>
+	}
+	return crc;
+}
+  68:	89 2f       	mov	r24, r25
+  6a:	08 95       	ret
+
+0000006c <OW_readBit>:
+
+unsigned char OW_readBit()
+{
+	unsigned char res = 0;
+	WAIT_FOR_LOW;
+  6c:	b1 99       	sbic	0x16, 1	; 22
+  6e:	04 c0       	rjmp	.+8      	; 0x78 <OW_readBit+0xc>
+  70:	07 c0       	rjmp	.+14     	; 0x80 <OW_readBit+0x14>
+  72:	01 97       	sbiw	r24, 0x01	; 1
+  74:	19 f4       	brne	.+6      	; 0x7c <OW_readBit+0x10>
+  76:	04 c0       	rjmp	.+8      	; 0x80 <OW_readBit+0x14>
+  78:	87 ee       	ldi	r24, 0xE7	; 231
+  7a:	93 e0       	ldi	r25, 0x03	; 3
+  7c:	b1 99       	sbic	0x16, 1	; 22
+  7e:	f9 cf       	rjmp	.-14     	; 0x72 <OW_readBit+0x6>
+	#else
+		//round up by default
+		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
+	#endif
+
+	__builtin_avr_delay_cycles(__ticks_dc);
+  80:	80 e4       	ldi	r24, 0x40	; 64
+  82:	8a 95       	dec	r24
+  84:	f1 f7       	brne	.-4      	; 0x82 <OW_readBit+0x16>
+	return crc;
+}
+
+unsigned char OW_readBit()
+{
+	unsigned char res = 0;
+  86:	81 e0       	ldi	r24, 0x01	; 1
+  88:	b1 9b       	sbis	0x16, 1	; 22
+  8a:	80 e0       	ldi	r24, 0x00	; 0
+	WAIT_FOR_LOW;
+	_delay_us(20);	
+	if (IS_HIGH) res = 1;
+	WAIT_FOR_HIGH;
+  8c:	b1 9b       	sbis	0x16, 1	; 22
+  8e:	05 c0       	rjmp	.+10     	; 0x9a <OW_readBit+0x2e>
+  90:	08 95       	ret
+  92:	21 50       	subi	r18, 0x01	; 1
+  94:	30 40       	sbci	r19, 0x00	; 0
+  96:	19 f4       	brne	.+6      	; 0x9e <OW_readBit+0x32>
+  98:	08 95       	ret
+  9a:	27 ee       	ldi	r18, 0xE7	; 231
+  9c:	33 e0       	ldi	r19, 0x03	; 3
+  9e:	b1 9b       	sbis	0x16, 1	; 22
+  a0:	f8 cf       	rjmp	.-16     	; 0x92 <OW_readBit+0x26>
+	return res;
+}
+  a2:	08 95       	ret
+
+000000a4 <OW_readByte>:
+
+unsigned char OW_readByte()
+{
+  a4:	0f 93       	push	r16
+  a6:	1f 93       	push	r17
+	unsigned char res = 0;
+	WAIT_FOR_HIGH;
+  a8:	b1 9b       	sbis	0x16, 1	; 22
+  aa:	06 c0       	rjmp	.+12     	; 0xb8 <OW_readByte+0x14>
+  ac:	08 e0       	ldi	r16, 0x08	; 8
+  ae:	10 e0       	ldi	r17, 0x00	; 0
+  b0:	0c c0       	rjmp	.+24     	; 0xca <OW_readByte+0x26>
+  b2:	01 97       	sbiw	r24, 0x01	; 1
+  b4:	19 f4       	brne	.+6      	; 0xbc <OW_readByte+0x18>
+  b6:	07 c0       	rjmp	.+14     	; 0xc6 <OW_readByte+0x22>
+  b8:	87 ee       	ldi	r24, 0xE7	; 231
+  ba:	93 e0       	ldi	r25, 0x03	; 3
+  bc:	b1 9b       	sbis	0x16, 1	; 22
+  be:	f9 cf       	rjmp	.-14     	; 0xb2 <OW_readByte+0xe>
+  c0:	08 e0       	ldi	r16, 0x08	; 8
+  c2:	10 e0       	ldi	r17, 0x00	; 0
+  c4:	02 c0       	rjmp	.+4      	; 0xca <OW_readByte+0x26>
+  c6:	08 e0       	ldi	r16, 0x08	; 8
+  c8:	10 e0       	ldi	r17, 0x00	; 0
+	for (unsigned char i = 0; i < 8; i++)
+	{
+		res = res >> 1;
+  ca:	16 95       	lsr	r17
+		if (OW_readBit())
+  cc:	cf df       	rcall	.-98     	; 0x6c <OW_readBit>
+  ce:	81 11       	cpse	r24, r1
+			res |= 0x80;
+  d0:	10 68       	ori	r17, 0x80	; 128
+  d2:	01 50       	subi	r16, 0x01	; 1
+
+unsigned char OW_readByte()
+{
+	unsigned char res = 0;
+	WAIT_FOR_HIGH;
+	for (unsigned char i = 0; i < 8; i++)
+  d4:	d1 f7       	brne	.-12     	; 0xca <OW_readByte+0x26>
+		res = res >> 1;
+		if (OW_readBit())
+			res |= 0x80;
+	}
+	return res;
+}
+  d6:	81 2f       	mov	r24, r17
+  d8:	1f 91       	pop	r17
+  da:	0f 91       	pop	r16
+  dc:	08 95       	ret
+
+000000de <OW_writeBit>:
+
+void OW_writeBit(unsigned char b)
+{	
+	WAIT_FOR_LOW;
+  de:	b1 99       	sbic	0x16, 1	; 22
+  e0:	05 c0       	rjmp	.+10     	; 0xec <OW_writeBit+0xe>
+  e2:	08 c0       	rjmp	.+16     	; 0xf4 <OW_writeBit+0x16>
+  e4:	21 50       	subi	r18, 0x01	; 1
+  e6:	30 40       	sbci	r19, 0x00	; 0
+  e8:	19 f4       	brne	.+6      	; 0xf0 <OW_writeBit+0x12>
+  ea:	04 c0       	rjmp	.+8      	; 0xf4 <OW_writeBit+0x16>
+  ec:	27 ee       	ldi	r18, 0xE7	; 231
+  ee:	33 e0       	ldi	r19, 0x03	; 3
+  f0:	b1 99       	sbic	0x16, 1	; 22
+  f2:	f8 cf       	rjmp	.-16     	; 0xe4 <OW_writeBit+0x6>
+	OW_UP;
+  f4:	b9 98       	cbi	0x17, 1	; 23
+	//_delay_us(1);
+	if (b == 0) OW_DOWN;	
+  f6:	88 23       	and	r24, r24
+  f8:	09 f4       	brne	.+2      	; 0xfc <OW_writeBit+0x1e>
+  fa:	b9 9a       	sbi	0x17, 1	; 23
+  fc:	80 ec       	ldi	r24, 0xC0	; 192
+  fe:	8a 95       	dec	r24
+ 100:	f1 f7       	brne	.-4      	; 0xfe <OW_writeBit+0x20>
+	_delay_us(60);
+	OW_UP;
+ 102:	b9 98       	cbi	0x17, 1	; 23
+	WAIT_FOR_HIGH;
+ 104:	b1 9b       	sbis	0x16, 1	; 22
+ 106:	04 c0       	rjmp	.+8      	; 0x110 <OW_writeBit+0x32>
+ 108:	08 95       	ret
+ 10a:	01 97       	sbiw	r24, 0x01	; 1
+ 10c:	19 f4       	brne	.+6      	; 0x114 <OW_writeBit+0x36>
+ 10e:	08 95       	ret
+ 110:	87 ee       	ldi	r24, 0xE7	; 231
+ 112:	93 e0       	ldi	r25, 0x03	; 3
+ 114:	b1 9b       	sbis	0x16, 1	; 22
+ 116:	f9 cf       	rjmp	.-14     	; 0x10a <OW_writeBit+0x2c>
+ 118:	08 95       	ret
+
+0000011a <OW_writeByte>:
+}
+
+void OW_writeByte(unsigned char data)
+{
+ 11a:	0f 93       	push	r16
+ 11c:	1f 93       	push	r17
+ 11e:	18 2f       	mov	r17, r24
+	WAIT_FOR_HIGH;
+ 120:	b1 9b       	sbis	0x16, 1	; 22
+ 122:	09 c0       	rjmp	.+18     	; 0x136 <OW_writeByte+0x1c>
+ 124:	08 e0       	ldi	r16, 0x08	; 8
+ 126:	0e c0       	rjmp	.+28     	; 0x144 <OW_writeByte+0x2a>
+ 128:	2f 5f       	subi	r18, 0xFF	; 255
+ 12a:	3f 4f       	sbci	r19, 0xFF	; 255
+ 12c:	83 e0       	ldi	r24, 0x03	; 3
+ 12e:	28 3e       	cpi	r18, 0xE8	; 232
+ 130:	38 07       	cpc	r19, r24
+ 132:	19 f4       	brne	.+6      	; 0x13a <OW_writeByte+0x20>
+ 134:	06 c0       	rjmp	.+12     	; 0x142 <OW_writeByte+0x28>
+ 136:	21 e0       	ldi	r18, 0x01	; 1
+ 138:	30 e0       	ldi	r19, 0x00	; 0
+ 13a:	b1 9b       	sbis	0x16, 1	; 22
+ 13c:	f5 cf       	rjmp	.-22     	; 0x128 <OW_writeByte+0xe>
+ 13e:	08 e0       	ldi	r16, 0x08	; 8
+ 140:	01 c0       	rjmp	.+2      	; 0x144 <OW_writeByte+0x2a>
+ 142:	08 e0       	ldi	r16, 0x08	; 8
+	for (unsigned char i = 0; i < 8; i++)
+	{
+		OW_writeBit(data & 1);
+ 144:	81 2f       	mov	r24, r17
+ 146:	81 70       	andi	r24, 0x01	; 1
+ 148:	ca df       	rcall	.-108    	; 0xde <OW_writeBit>
+		data >>= 1;
+ 14a:	16 95       	lsr	r17
+ 14c:	01 50       	subi	r16, 0x01	; 1
+}
+
+void OW_writeByte(unsigned char data)
+{
+	WAIT_FOR_HIGH;
+	for (unsigned char i = 0; i < 8; i++)
+ 14e:	d1 f7       	brne	.-12     	; 0x144 <OW_writeByte+0x2a>
+	{
+		OW_writeBit(data & 1);
+		data >>= 1;
+	}
+}
+ 150:	1f 91       	pop	r17
+ 152:	0f 91       	pop	r16
+ 154:	08 95       	ret
+
+00000156 <one_wire_action>:
+
+void one_wire_action()
+{	
+ 156:	af 92       	push	r10
+ 158:	bf 92       	push	r11
+ 15a:	cf 92       	push	r12
+ 15c:	df 92       	push	r13
+ 15e:	ef 92       	push	r14
+ 160:	ff 92       	push	r15
+ 162:	0f 93       	push	r16
+ 164:	1f 93       	push	r17
+ 166:	cf 93       	push	r28
+ 168:	df 93       	push	r29
+	//Presence
+	WAIT_FOR_HIGH;
+ 16a:	b1 9b       	sbis	0x16, 1	; 22
+ 16c:	04 c0       	rjmp	.+8      	; 0x176 <one_wire_action+0x20>
+ 16e:	07 c0       	rjmp	.+14     	; 0x17e <one_wire_action+0x28>
+ 170:	01 97       	sbiw	r24, 0x01	; 1
+ 172:	19 f4       	brne	.+6      	; 0x17a <one_wire_action+0x24>
+ 174:	04 c0       	rjmp	.+8      	; 0x17e <one_wire_action+0x28>
+ 176:	87 ee       	ldi	r24, 0xE7	; 231
+ 178:	93 e0       	ldi	r25, 0x03	; 3
+ 17a:	b1 9b       	sbis	0x16, 1	; 22
+ 17c:	f9 cf       	rjmp	.-14     	; 0x170 <one_wire_action+0x1a>
+ 17e:	20 e6       	ldi	r18, 0x60	; 96
+ 180:	2a 95       	dec	r18
+ 182:	f1 f7       	brne	.-4      	; 0x180 <one_wire_action+0x2a>
+	_delay_us(30);
+	OW_DOWN;
+ 184:	b9 9a       	sbi	0x17, 1	; 23
+ 186:	80 ef       	ldi	r24, 0xF0	; 240
+ 188:	90 e0       	ldi	r25, 0x00	; 0
+ 18a:	01 97       	sbiw	r24, 0x01	; 1
+ 18c:	f1 f7       	brne	.-4      	; 0x18a <one_wire_action+0x34>
+	_delay_us(100);
+	OW_UP;		
+ 18e:	b9 98       	cbi	0x17, 1	; 23
+	WAIT_FOR_HIGH;
+ 190:	b1 9b       	sbis	0x16, 1	; 22
+ 192:	07 c0       	rjmp	.+14     	; 0x1a2 <one_wire_action+0x4c>
+ 194:	0a c0       	rjmp	.+20     	; 0x1aa <one_wire_action+0x54>
+ 196:	01 96       	adiw	r24, 0x01	; 1
+ 198:	23 e0       	ldi	r18, 0x03	; 3
+ 19a:	88 3e       	cpi	r24, 0xE8	; 232
+ 19c:	92 07       	cpc	r25, r18
+ 19e:	19 f4       	brne	.+6      	; 0x1a6 <one_wire_action+0x50>
+ 1a0:	04 c0       	rjmp	.+8      	; 0x1aa <one_wire_action+0x54>
+ 1a2:	81 e0       	ldi	r24, 0x01	; 1
+ 1a4:	90 e0       	ldi	r25, 0x00	; 0
+ 1a6:	b1 9b       	sbis	0x16, 1	; 22
+ 1a8:	f6 cf       	rjmp	.-20     	; 0x196 <one_wire_action+0x40>
+	unsigned char k;
+	unsigned char count;
+	unsigned char tmp[4];
+	unsigned char crc = 0;
+	
+	unsigned char rom_cmd = OW_readByte();	
+ 1aa:	7c df       	rcall	.-264    	; 0xa4 <OW_readByte>
+
+	switch (rom_cmd)
+ 1ac:	8c 3e       	cpi	r24, 0xEC	; 236
+ 1ae:	31 f0       	breq	.+12     	; 0x1bc <one_wire_action+0x66>
+ 1b0:	80 3f       	cpi	r24, 0xF0	; 240
+ 1b2:	21 f0       	breq	.+8      	; 0x1bc <one_wire_action+0x66>
+ 1b4:	85 35       	cpi	r24, 0x55	; 85
+ 1b6:	09 f0       	breq	.+2      	; 0x1ba <one_wire_action+0x64>
+ 1b8:	5d c0       	rjmp	.+186    	; 0x274 <one_wire_action+0x11e>
+ 1ba:	2b c0       	rjmp	.+86     	; 0x212 <one_wire_action+0xbc>
+	{
+		case SEARCH_ROM: // Поиск устройств на шине
+		case ALARM_SEARCH: // Поиск устройств с флагом ALARM
+			if ((rom_cmd != SEARCH_ROM) && (isChange == 0))
+ 1bc:	80 3f       	cpi	r24, 0xF0	; 240
+ 1be:	79 f4       	brne	.+30     	; 0x1de <one_wire_action+0x88>
+ 1c0:	c0 e6       	ldi	r28, 0x60	; 96
+ 1c2:	d0 e0       	ldi	r29, 0x00	; 0
+		OW_writeBit(data & 1);
+		data >>= 1;
+	}
+}
+
+void one_wire_action()
+ 1c4:	aa 24       	eor	r10, r10
+ 1c6:	bb 24       	eor	r11, r11
+ 1c8:	68 94       	set
+ 1ca:	a3 f8       	bld	r10, 3
+ 1cc:	ac 0e       	add	r10, r28
+ 1ce:	bd 1e       	adc	r11, r29
+		case ALARM_SEARCH: // Поиск устройств с флагом ALARM
+			if ((rom_cmd != SEARCH_ROM) && (isChange == 0))
+				return ;
+			for (i = 0; i < 8; i++)
+			{	
+				unsigned char b = ROM[i];
+ 1d0:	cc 24       	eor	r12, r12
+ 1d2:	68 94       	set
+ 1d4:	c3 f8       	bld	r12, 3
+				for (k = 0; k < 8; k++)
+				{			
+					unsigned char wb = (b & 1);
+					OW_writeBit(wb);
+					OW_writeBit(!wb);									
+ 1d6:	ee 24       	eor	r14, r14
+ 1d8:	e3 94       	inc	r14
+ 1da:	dd 24       	eor	r13, r13
+ 1dc:	05 c0       	rjmp	.+10     	; 0x1e8 <one_wire_action+0x92>
+
+	switch (rom_cmd)
+	{
+		case SEARCH_ROM: // Поиск устройств на шине
+		case ALARM_SEARCH: // Поиск устройств с флагом ALARM
+			if ((rom_cmd != SEARCH_ROM) && (isChange == 0))
+ 1de:	80 91 6a 00 	lds	r24, 0x006A
+ 1e2:	88 23       	and	r24, r24
+ 1e4:	69 f7       	brne	.-38     	; 0x1c0 <one_wire_action+0x6a>
+ 1e6:	46 c0       	rjmp	.+140    	; 0x274 <one_wire_action+0x11e>
+				return ;
+			for (i = 0; i < 8; i++)
+			{	
+				unsigned char b = ROM[i];
+ 1e8:	f9 90       	ld	r15, Y+
+ 1ea:	1c 2d       	mov	r17, r12
+				for (k = 0; k < 8; k++)
+				{			
+					unsigned char wb = (b & 1);
+ 1ec:	0f 2d       	mov	r16, r15
+ 1ee:	01 70       	andi	r16, 0x01	; 1
+					OW_writeBit(wb);
+ 1f0:	80 2f       	mov	r24, r16
+ 1f2:	75 df       	rcall	.-278    	; 0xde <OW_writeBit>
+					OW_writeBit(!wb);									
+ 1f4:	8e 2d       	mov	r24, r14
+ 1f6:	01 11       	cpse	r16, r1
+ 1f8:	8d 2d       	mov	r24, r13
+ 1fa:	71 df       	rcall	.-286    	; 0xde <OW_writeBit>
+					unsigned char rb = OW_readBit();
+ 1fc:	37 df       	rcall	.-402    	; 0x6c <OW_readBit>
+					if (rb != wb)
+ 1fe:	80 17       	cp	r24, r16
+ 200:	c9 f5       	brne	.+114    	; 0x274 <one_wire_action+0x11e>
+ 202:	11 50       	subi	r17, 0x01	; 1
+			if ((rom_cmd != SEARCH_ROM) && (isChange == 0))
+				return ;
+			for (i = 0; i < 8; i++)
+			{	
+				unsigned char b = ROM[i];
+				for (k = 0; k < 8; k++)
+ 204:	11 f0       	breq	.+4      	; 0x20a <one_wire_action+0xb4>
+					OW_writeBit(wb);
+					OW_writeBit(!wb);									
+					unsigned char rb = OW_readBit();
+					if (rb != wb)
+						return ;			
+					b >>= 1;
+ 206:	f6 94       	lsr	r15
+ 208:	f1 cf       	rjmp	.-30     	; 0x1ec <one_wire_action+0x96>
+	{
+		case SEARCH_ROM: // Поиск устройств на шине
+		case ALARM_SEARCH: // Поиск устройств с флагом ALARM
+			if ((rom_cmd != SEARCH_ROM) && (isChange == 0))
+				return ;
+			for (i = 0; i < 8; i++)
+ 20a:	ca 15       	cp	r28, r10
+ 20c:	db 05       	cpc	r29, r11
+ 20e:	61 f7       	brne	.-40     	; 0x1e8 <one_wire_action+0x92>
+ 210:	31 c0       	rjmp	.+98     	; 0x274 <one_wire_action+0x11e>
+ 212:	c0 e6       	ldi	r28, 0x60	; 96
+ 214:	d0 e0       	ldi	r29, 0x00	; 0
+		OW_writeBit(data & 1);
+		data >>= 1;
+	}
+}
+
+void one_wire_action()
+ 216:	8e 01       	movw	r16, r28
+ 218:	08 5f       	subi	r16, 0xF8	; 248
+ 21a:	1f 4f       	sbci	r17, 0xFF	; 255
+			break; 
+		
+		case MATCH_ROM: // Выбор устройства
+			// Проверем ключ устройства
+			for (i = 0; i < 8; i++) 
+				if (OW_readByte() != ROM[i])
+ 21c:	43 df       	rcall	.-378    	; 0xa4 <OW_readByte>
+ 21e:	99 91       	ld	r25, Y+
+ 220:	89 17       	cp	r24, r25
+ 222:	41 f5       	brne	.+80     	; 0x274 <one_wire_action+0x11e>
+			}				
+			break; 
+		
+		case MATCH_ROM: // Выбор устройства
+			// Проверем ключ устройства
+			for (i = 0; i < 8; i++) 
+ 224:	c0 17       	cp	r28, r16
+ 226:	d1 07       	cpc	r29, r17
+ 228:	c9 f7       	brne	.-14     	; 0x21c <one_wire_action+0xc6>
+				if (OW_readByte() != ROM[i])
+					return ;
+												
+			switch (OW_readByte()) // Читаем комманду для этого устройства
+ 22a:	3c df       	rcall	.-392    	; 0xa4 <OW_readByte>
+ 22c:	80 3a       	cpi	r24, 0xA0	; 160
+ 22e:	19 f0       	breq	.+6      	; 0x236 <one_wire_action+0xe0>
+ 230:	81 3b       	cpi	r24, 0xB1	; 177
+ 232:	01 f5       	brne	.+64     	; 0x274 <one_wire_action+0x11e>
+ 234:	12 c0       	rjmp	.+36     	; 0x25a <one_wire_action+0x104>
+			{
+				case READ_DATA: // Чтение данных для мастера
+					crc = crc_table(isInited);
+ 236:	10 91 6b 00 	lds	r17, 0x006B
+ 23a:	81 2f       	mov	r24, r17
+ 23c:	05 df       	rcall	.-502    	; 0x48 <crc_table>
+ 23e:	08 2f       	mov	r16, r24
+					OW_writeByte(isInited);
+ 240:	81 2f       	mov	r24, r17
+ 242:	6b df       	rcall	.-298    	; 0x11a <OW_writeByte>
+					crc = crc_table(crc ^ isInited);
+ 244:	80 91 6b 00 	lds	r24, 0x006B
+ 248:	80 27       	eor	r24, r16
+ 24a:	fe de       	rcall	.-516    	; 0x48 <crc_table>
+ 24c:	18 2f       	mov	r17, r24
+					OW_writeByte(port_val);					
+ 24e:	80 91 6d 00 	lds	r24, 0x006D
+ 252:	63 df       	rcall	.-314    	; 0x11a <OW_writeByte>
+					OW_writeByte(crc);
+ 254:	81 2f       	mov	r24, r17
+ 256:	61 df       	rcall	.-318    	; 0x11a <OW_writeByte>
+					break;
+ 258:	0d c0       	rjmp	.+26     	; 0x274 <one_wire_action+0x11e>
+									
+				case WRITE_PROP: // Запись настроек пинов от мастера
+					k = OW_readByte();
+ 25a:	24 df       	rcall	.-440    	; 0xa4 <OW_readByte>
+					crc = crc_table(k);
+ 25c:	f5 de       	rcall	.-534    	; 0x48 <crc_table>
+ 25e:	18 2f       	mov	r17, r24
+					if (OW_readByte() == crc) {
+ 260:	21 df       	rcall	.-446    	; 0xa4 <OW_readByte>
+ 262:	81 17       	cp	r24, r17
+ 264:	21 f4       	brne	.+8      	; 0x26e <one_wire_action+0x118>
+						port_prop = 0;
+ 266:	10 92 6c 00 	sts	0x006C, r1
+						PORTB &= (port_prop & mask);
+ 26a:	88 b3       	in	r24, 0x18	; 24
+ 26c:	18 ba       	out	0x18, r1	; 24
+					}
+					isInited = 1;
+ 26e:	81 e0       	ldi	r24, 0x01	; 1
+ 270:	80 93 6b 00 	sts	0x006B, r24
+					break;
+			}			
+			break;			
+		default: ;
+	}	
+}
+ 274:	df 91       	pop	r29
+ 276:	cf 91       	pop	r28
+ 278:	1f 91       	pop	r17
+ 27a:	0f 91       	pop	r16
+ 27c:	ff 90       	pop	r15
+ 27e:	ef 90       	pop	r14
+ 280:	df 90       	pop	r13
+ 282:	cf 90       	pop	r12
+ 284:	bf 90       	pop	r11
+ 286:	af 90       	pop	r10
+ 288:	08 95       	ret
+
+0000028a <__vector_1>:
+	
+ISR (INT0_vect)
+{
+ 28a:	1f 92       	push	r1
+ 28c:	0f 92       	push	r0
+ 28e:	0f b6       	in	r0, 0x3f	; 63
+ 290:	0f 92       	push	r0
+ 292:	11 24       	eor	r1, r1
+ 294:	8f 93       	push	r24
+	if ((MCUCR & (1<<ISC00))!=0) 
+ 296:	05 b6       	in	r0, 0x35	; 53
+ 298:	00 fe       	sbrs	r0, 0
+ 29a:	07 c0       	rjmp	.+14     	; 0x2aa <__vector_1+0x20>
+	{
+		TCCR0B = 0; //Выключаем таймер
+ 29c:	13 be       	out	0x33, r1	; 51
+		TIFR0 |= (1<<TOV0);
+ 29e:	88 b7       	in	r24, 0x38	; 56
+ 2a0:	82 60       	ori	r24, 0x02	; 2
+ 2a2:	88 bf       	out	0x38, r24	; 56
+		MCUCR = (1<<ISC01); //Сброс ISC00 - прерывание по \__
+ 2a4:	82 e0       	ldi	r24, 0x02	; 2
+ 2a6:	85 bf       	out	0x35, r24	; 53
+ 2a8:	0b c0       	rjmp	.+22     	; 0x2c0 <__vector_1+0x36>
+	}
+	else
+	{		
+		TCNT0 = 255-60;
+ 2aa:	83 ec       	ldi	r24, 0xC3	; 195
+ 2ac:	82 bf       	out	0x32, r24	; 50
+		TIFR0 |= (1<<TOV0); //Сброс флага TOV0
+ 2ae:	88 b7       	in	r24, 0x38	; 56
+ 2b0:	82 60       	ori	r24, 0x02	; 2
+ 2b2:	88 bf       	out	0x38, r24	; 56
+		TIMSK0 |= (1<<TOIE0);
+ 2b4:	89 b7       	in	r24, 0x39	; 57
+ 2b6:	82 60       	ori	r24, 0x02	; 2
+ 2b8:	89 bf       	out	0x39, r24	; 57
+		MCUCR = (1<<ISC01)|(1<<ISC00); // прерывание по __/
+ 2ba:	83 e0       	ldi	r24, 0x03	; 3
+ 2bc:	85 bf       	out	0x35, r24	; 53
+		TCCR0B = (1<<CS01)|(1<<CS00); //Делитель на 64		
+ 2be:	83 bf       	out	0x33, r24	; 51
+	}
+}
+ 2c0:	8f 91       	pop	r24
+ 2c2:	0f 90       	pop	r0
+ 2c4:	0f be       	out	0x3f, r0	; 63
+ 2c6:	0f 90       	pop	r0
+ 2c8:	1f 90       	pop	r1
+ 2ca:	18 95       	reti
+
+000002cc <__vector_3>:
+
+ISR (TIM0_OVF_vect)
+{			
+ 2cc:	1f 92       	push	r1
+ 2ce:	0f 92       	push	r0
+ 2d0:	0f b6       	in	r0, 0x3f	; 63
+ 2d2:	0f 92       	push	r0
+ 2d4:	11 24       	eor	r1, r1
+ 2d6:	2f 93       	push	r18
+ 2d8:	3f 93       	push	r19
+ 2da:	4f 93       	push	r20
+ 2dc:	5f 93       	push	r21
+ 2de:	6f 93       	push	r22
+ 2e0:	7f 93       	push	r23
+ 2e2:	8f 93       	push	r24
+ 2e4:	9f 93       	push	r25
+ 2e6:	af 93       	push	r26
+ 2e8:	bf 93       	push	r27
+ 2ea:	ef 93       	push	r30
+ 2ec:	ff 93       	push	r31
+	TCCR0B = 0;
+ 2ee:	13 be       	out	0x33, r1	; 51
+	TIFR0 |= 1<<TOV0;
+ 2f0:	88 b7       	in	r24, 0x38	; 56
+ 2f2:	82 60       	ori	r24, 0x02	; 2
+ 2f4:	88 bf       	out	0x38, r24	; 56
+	one_wire_action();
+ 2f6:	2f df       	rcall	.-418    	; 0x156 <one_wire_action>
+}
+ 2f8:	ff 91       	pop	r31
+ 2fa:	ef 91       	pop	r30
+ 2fc:	bf 91       	pop	r27
+ 2fe:	af 91       	pop	r26
+ 300:	9f 91       	pop	r25
+ 302:	8f 91       	pop	r24
+ 304:	7f 91       	pop	r23
+ 306:	6f 91       	pop	r22
+ 308:	5f 91       	pop	r21
+ 30a:	4f 91       	pop	r20
+ 30c:	3f 91       	pop	r19
+ 30e:	2f 91       	pop	r18
+ 310:	0f 90       	pop	r0
+ 312:	0f be       	out	0x3f, r0	; 63
+ 314:	0f 90       	pop	r0
+ 316:	1f 90       	pop	r1
+ 318:	18 95       	reti
+
+0000031a <main>:
+
+int main(void)
+{
+ 31a:	0f 93       	push	r16
+ 31c:	1f 93       	push	r17
+ 31e:	cf 93       	push	r28
+ 320:	df 93       	push	r29
+	unsigned char crc = 0;
+ 322:	c0 e6       	ldi	r28, 0x60	; 96
+ 324:	d0 e0       	ldi	r29, 0x00	; 0
+	TCCR0B = 0;
+	TIFR0 |= 1<<TOV0;
+	one_wire_action();
+}
+
+int main(void)
+ 326:	8e 01       	movw	r16, r28
+ 328:	09 5f       	subi	r16, 0xF9	; 249
+ 32a:	1f 4f       	sbci	r17, 0xFF	; 255
+{
+	unsigned char crc = 0;
+ 32c:	80 e0       	ldi	r24, 0x00	; 0
+	for (unsigned char i = 0; i < 7; i++)
+		crc = (crc_table(crc ^ ROM[i]));
+ 32e:	99 91       	ld	r25, Y+
+ 330:	89 27       	eor	r24, r25
+ 332:	8a de       	rcall	.-748    	; 0x48 <crc_table>
+}
+
+int main(void)
+{
+	unsigned char crc = 0;
+	for (unsigned char i = 0; i < 7; i++)
+ 334:	c0 17       	cp	r28, r16
+ 336:	d1 07       	cpc	r29, r17
+ 338:	d1 f7       	brne	.-12     	; 0x32e <main+0x14>
+		crc = (crc_table(crc ^ ROM[i]));
+	ROM[7] = crc;
+ 33a:	80 93 67 00 	sts	0x0067, r24
+	// Шина
+	CPIN(OW_DDR, OW_PIN);
+ 33e:	b9 98       	cbi	0x17, 1	; 23
+		
+	TIFR0 |= 1<<TOV0;
+ 340:	88 b7       	in	r24, 0x38	; 56
+ 342:	82 60       	ori	r24, 0x02	; 2
+ 344:	88 bf       	out	0x38, r24	; 56
+	GIFR |= 1<<INTF0;
+ 346:	8a b7       	in	r24, 0x3a	; 58
+ 348:	80 64       	ori	r24, 0x40	; 64
+ 34a:	8a bf       	out	0x3a, r24	; 58
+	MCUCR = (1<<ISC01); //Сброс ISC00 - прерывание по \__
+ 34c:	82 e0       	ldi	r24, 0x02	; 2
+ 34e:	85 bf       	out	0x35, r24	; 53
+	GIMSK |= (1<<INT0);
+ 350:	8b b7       	in	r24, 0x3b	; 59
+ 352:	80 64       	ori	r24, 0x40	; 64
+ 354:	8b bf       	out	0x3b, r24	; 59
+	
+	sei();
+ 356:	78 94       	sei
+
+    while(1)
+    {
+		if (PINB & mask != port_val & mask) {
+ 358:	a0 91 68 00 	lds	r26, 0x0068
+ 35c:	4a 2f       	mov	r20, r26
+ 35e:	50 e0       	ldi	r21, 0x00	; 0
+ 360:	61 e0       	ldi	r22, 0x01	; 1
+ 362:	70 e0       	ldi	r23, 0x00	; 0
+ 364:	e0 e0       	ldi	r30, 0x00	; 0
+ 366:	f0 e0       	ldi	r31, 0x00	; 0
+			isChange = 1;
+ 368:	b1 e0       	ldi	r27, 0x01	; 1
+	
+	sei();
+
+    while(1)
+    {
+		if (PINB & mask != port_val & mask) {
+ 36a:	9b 01       	movw	r18, r22
+ 36c:	80 91 6d 00 	lds	r24, 0x006D
+ 370:	a8 17       	cp	r26, r24
+ 372:	09 f4       	brne	.+2      	; 0x376 <main+0x5c>
+ 374:	9f 01       	movw	r18, r30
+ 376:	86 b3       	in	r24, 0x16	; 22
+ 378:	90 e0       	ldi	r25, 0x00	; 0
+ 37a:	82 23       	and	r24, r18
+ 37c:	93 23       	and	r25, r19
+ 37e:	84 23       	and	r24, r20
+ 380:	95 23       	and	r25, r21
+ 382:	00 97       	sbiw	r24, 0x00	; 0
+ 384:	c1 f3       	breq	.-16     	; 0x376 <main+0x5c>
+			isChange = 1;
+ 386:	b0 93 6a 00 	sts	0x006A, r27
+			port_val = PINB & mask;
+ 38a:	86 b3       	in	r24, 0x16	; 22
+ 38c:	8a 23       	and	r24, r26
+ 38e:	80 93 6d 00 	sts	0x006D, r24
+ 392:	eb cf       	rjmp	.-42     	; 0x36a <main+0x50>
+
+00000394 <_exit>:
+ 394:	f8 94       	cli
+
+00000396 <__stop_program>:
+ 396:	ff cf       	rjmp	.-2      	; 0x396 <__stop_program>

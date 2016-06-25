@@ -27,9 +27,7 @@ def generate_variable_list(db):
     roms = get_ow_roms(db)
     
     templ = "%s = Variable(%d, %d, %d, %s, '%s')"
-    q = db.query("select NAME, ID, CONTROLLER_ID, DIRECTION, ROM, CHANNEL, OW_ID from core_variables order by ID")
-    row = q.fetchone()    
-    while row is not None:
+    for row in db.select("select NAME, ID, CONTROLLER_ID, DIRECTION, ROM, CHANNEL, OW_ID from core_variables order by ID"):
         name = row[0].decode("utf-8")
         rom = row[4].decode("utf-8")
         if rom == "ow":
@@ -47,8 +45,6 @@ def generate_variable_list(db):
           
         s = templ % (name, row[1], row[2], row[3], rom, channel)
         res += [s, "\n"]
-        row = q.fetchone()
-    q.close()
     return res
 
 def generate_script_list(db):
@@ -85,4 +81,4 @@ def generate_config_file(db):
     return "".join(res)
 
 
-#print(generate_config_file(DBConnector()))
+print(generate_config_file(DBConnector()))

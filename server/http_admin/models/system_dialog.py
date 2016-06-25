@@ -52,15 +52,16 @@ class SystemDialog(BaseForm):
         return m.hexdigest()
 
     def calc_currently(self):        
-        I = 0.09 * 2 # Две платы pyb
-        I += 2.5 # Orange Pi
+        I = 0.09 * 2 # Две платы pyb 90mA
+        I += 2.5 * 5 / 12 / 0.8 # Orange Pi (I * 5V / 12V / KPD 80%)
+        
         # Релюхи 12VDC-SL-S  30mA
         for row in self.db.select("select count(1) from core_variables where ROM = 'pyb'"):
             I += row[0] * 0.03
 
-        for row in self.db.select("select ROM_1 from core_ow_devs"):
-            if row[0] == 0x28:
-                I += 0.001 # DS18B20  1mA
-            elif row[0] == 0xF0:
-                I += 0.1 # ATtiny13A  100mA
+        for row in self.db.select("select sum(t.CONSUMING) "
+                                  "  from core_ow_devs d, core_ow_types t "
+                                  " where d.ROM_1 = t.CODE"):
+            I += row[0] / 1000 # Переводим в амперы
+            
         return round(I, 3)

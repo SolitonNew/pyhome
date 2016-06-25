@@ -1,6 +1,7 @@
 from ds18b20 import DS18B20
 from homesensor import HomeSensor
 from fancontrol import FanControl
+from pincontrol import PinControl
 from pyb import Pin
 
 class Termometr(DS18B20):
@@ -82,6 +83,21 @@ class Fan(FanControl):
             
             self.set_data(self.data, self.rom)
 
+class Pins(PinControl):
+    def __init__(self, ow, rom):
+        super().__init__(ow)
+        self.rom = rom
+        self.data = bytearray(4)
+
+    def value(self, val = None, channel = ''):
+        if val == None:
+            d = self.get_data(self.rom)
+
+            if d:
+                self.data = d
+                return {'P1':self.data[0], 'P2':self.data[1], 'P3':self.data[2], 'P4':self.data[3]}
+            
+            return None
 
 class Pyboard(object):
     def __init__(self):

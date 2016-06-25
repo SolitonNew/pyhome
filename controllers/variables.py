@@ -29,8 +29,10 @@ def set_variable_drivers(ow, dev_id):
                         driver = drivers.Switch(ow, var.rom)
                     elif var.rom[0] == 0xf1:
                         driver = drivers.Fan(ow, var.rom)
+                    elif var.rom[0] == 0xf2:
+                        driver = drivers.Pins(ow, var.rom)
 
-                driverList += [driver]            
+                driverList += [driver]
                 
             var.driver = driver
 

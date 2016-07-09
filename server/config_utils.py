@@ -81,4 +81,4 @@ def generate_config_file(db):
     return "".join(res)
 
 
-print(generate_config_file(DBConnector()))
+#print(generate_config_file(DBConnector()))

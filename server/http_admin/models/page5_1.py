@@ -85,7 +85,11 @@ class Page5_1(BaseForm):
                             "order by CHANGE_DATE limit 1) a" % (series[i], max_x))
             if len(sql) > 0:
                 sql += [" union "]
-            sql += ["%s union %s" % (sql_prev, sql_next)]
+
+            try:    
+                sql += ["%s union %s" % (sql_prev, sql_next)]
+            except:
+                pass
             
         for row in self.db.select("".join(sql)):
             try:

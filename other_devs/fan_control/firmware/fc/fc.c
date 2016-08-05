@@ -223,7 +223,7 @@ int main(void)
 	        check_chan(0, PORTB4);
 			check_chan(1, PORTB3);
 			check_chan(2, PORTB0);
-			check_chan(3, PORTB2);
+			check_chan(3, PORTB2); 
 		}		
     }
 }

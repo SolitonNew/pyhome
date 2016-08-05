@@ -24,7 +24,7 @@ unsigned int current_time = 0;
 void sound_init() {
 	OCR2 = 190;
 	TCCR2 = (1<<COM21)|(1<<WGM20)|(1<<WGM21)|(1<<CS22)|(1<<CS20);
-	TIMSK |= (1<<TOIE2);	
+	TIMSK |= (1<<TOIE2);
 }
 
 unsigned int sound_duration = 0;

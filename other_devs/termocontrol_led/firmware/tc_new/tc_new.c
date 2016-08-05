@@ -14,8 +14,10 @@
 
 #define main_loop_delay 50
 
+#include "tc_new.h"
 #include "led.h"
 #include "sound.h"
+#include "ow_utils.h"
 #include "ow_master.h"
 #include "ow_slave.h"
 
@@ -58,13 +60,6 @@ unsigned char query_sel = 0;
 unsigned char query_sel_sub = 0;
 
 unsigned char btn_flags[3] = {0, 0, 0};
-
-/* 
-0 - рабочий режим; 
-10 - настройка условий;
-20 - сканирование OW; 21 - настройка термометров; 
-*/
-unsigned char regim = 0; 
 
 unsigned char stop_sel_handler = 0;
 
@@ -125,7 +120,8 @@ void btn_up_handler() {
 	char v = 0;
 	switch (regim) {
 		case 0:
-			//
+			if (btn_flags[1] > 0 && btn_flags[2] > 0)
+				cancel_slave_ow = !cancel_slave_ow;
 			break;
 		case 10:
 			switch (query_sel_sub) {
@@ -182,7 +178,8 @@ void btn_down_handler() {
 	char v = 0;
 	switch (regim) {
 		case 0:
-			//
+			if (btn_flags[1] > 0 && btn_flags[2] > 0)
+				cancel_slave_ow = !cancel_slave_ow;
 			break;
 		case 10:
 			switch (query_sel_sub) {
@@ -328,7 +325,7 @@ void setReleValue(unsigned char num, unsigned char val) {
 				OCR0 = 100;				
 			} else {
 				OCR0 = 0;
-			}			
+			}
 			break;
 		case 1:
 			if (val)
@@ -422,9 +419,10 @@ int main(void) {
 	
 	btn_port |= (1<<btn_sel_pin)|(1<<btn_up_pin)|(1<<btn_down_pin);
 	
-	//switch_ddr |= (1<<switch_pin);
-	//Switch
-	TCCR0 = (1<<COM01)|(1<<WGM00)|(1<<CS00);
+	//Switch 
+	// Подстроим под 460мкс для слейва
+	TCCR0 = (1<<COM01)|(1<<WGM00)|(1<<WGM01)|(1<<CS00)|(1<<CS01);
+	TIMSK |= (1<<TOIE0);
 	switch_ddr |= (1<<switch_pin);
 	//Relays
 	rele_ddr |= (1<<rele_main_pin)|(1<<rele_tp_pin);

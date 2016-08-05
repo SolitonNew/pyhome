@@ -12,11 +12,6 @@
 #define OW_M_PIN PIND
 #define OW_M_BIT 2
 
-#define OW_M_SEARCH_ROM 0xF0
-#define OW_M_MATCH_ROM 0x55
-#define READ_M_DATA 0xA0
-#define WRITE_M_DATA 0xB0
-
 #define	OW_M_SEARCH_FIRST	0xFF		// start new search
 #define	OW_M_PRESENCE_ERR	0xFF
 #define	OW_M_DATA_ERR	    0xFE
@@ -30,21 +25,6 @@ float ow_master_values[5] = {-100, -100, -100, -100, -100};
 
 void ow_master_init() {
 	OW_M_DDR &= ~(1<<OW_M_PIN);
-}
-
-unsigned char crc_table(unsigned char data) {
-	unsigned char crc = 0x0;
-	unsigned char fb_bit = 0;
-	for (unsigned char b = 0; b < 8; b++) { 
-		fb_bit = (crc ^ data) & 0x01;
-		if (fb_bit==0x01)
-			crc = crc ^ 0x18;
-		crc = (crc >> 1) & 0x7F;
-		if (fb_bit==0x01) 
-			crc = crc | 0x80;
-		data >>= 1;
-	}
-	return crc;
 }
 
 void OW_M_set(unsigned char mode) {
@@ -120,7 +100,7 @@ unsigned char OW_M_searchROM( unsigned char diff, unsigned char *id ) {
 	if(!OW_M_reset())
 		return OW_M_PRESENCE_ERR;       // error, no device found
 
-	OW_M_writeByte(OW_M_SEARCH_ROM);     // ROM search command
+	OW_M_writeByte(OW_SEARCH_ROM);     // ROM search command
 	next_diff = OW_M_LAST_DEVICE;      // unchanged on last device
 	
 	i = 64;
@@ -176,7 +156,7 @@ void OW_M_scan_devs() {
 
 unsigned char OW_M_matchROM(unsigned char *rom) {
  	if (!OW_M_reset()) return 0;
-	OW_M_writeByte(OW_M_MATCH_ROM);	
+	OW_M_writeByte(OW_MATCH_ROM);	
 	for(unsigned char i=0; i<8; i++)
 		OW_M_writeByte(rom[i]);
 	return 1;

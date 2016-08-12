@@ -60,7 +60,7 @@ unsigned char chars[20] = {0b10110111, // 0
 void outChar(unsigned char num) {	
 	PORTA |= d_mask_A;
 	PORTB |= d_mask_B;
-	PORTD |= d_mask_D;
+	PORTD |= d_mask_D;	
 	PORTC = 0;
 	switch (num) {
 		case 0:
@@ -110,44 +110,45 @@ void outChar(unsigned char num) {
 			break;
 	}
 	
-	unsigned char draw_led = 0;
+	unsigned char draw_led = (regim == 0);
 	
-	led_blink++;
-	char led_num = num / 3;
-	
-	if (!hide_not_selected) {
-		if (!led_blink_all) {
-			if ((selected_led == led_num || selected_led_degs[0] == num || selected_led_degs[1] == num) && led_blink > BLINK_TIME) {
-				//
-			} else {
-				if (led_blink > (BLINK_TIME + BLINK_TIME))
-					led_blink = 0;
+	if (regim != 0) {	
+		led_blink++;
+		char led_num = num / 3;
+		if (hide_not_selected) {
+			if (selected_led == led_num) {
 				draw_led = 1;
 			}
 		} else {
-			if (led_blink < BLINK_TIME) {
-				draw_led = 1;
+			if (led_blink_all) {
+				if (led_blink < BLINK_TIME) {
+					draw_led = 1;
+				} else {
+					if (led_blink > (BLINK_TIME + BLINK_TIME))
+						led_blink = 0;
+				}
 			} else {
-				if (led_blink > (BLINK_TIME + BLINK_TIME))
-					led_blink = 0;
-			}
-		}		
-	} else {
-		if (selected_led == led_num) {
-			draw_led = 1;
+				if ((selected_led == led_num || selected_led_degs[0] == num || selected_led_degs[1] == num) && led_blink > BLINK_TIME && !btns_is_push) {
+					//
+				} else {
+					if (led_blink > (BLINK_TIME + BLINK_TIME))
+						led_blink = 0;
+					draw_led = 1;
+				}
+			}		
 		}
-	}
+	}	
 	
 	if (draw_led) {
-		PORTC = chars[led_buff[num] & 0b00011111];
-	
-		if (led_buff[num] & 0b00100000) {
-			PORTC |= 0b00001000;
+		if (led_buff[num] & 0b00100000 || cancel_slave_ow) {
+			PORTC = chars[led_buff[num] & 0b00011111] | 0b00001000;
+		} else {
+			PORTC = chars[led_buff[num] & 0b00011111];			
 		}
 	}
 }
 
-void write_num(unsigned char dec_num, float val) {	
+void write_num(unsigned char dec_num, int val) {	
 	if (val < 0) {
 		led_buff[dec_num * 3] = 17;
 		led_buff[dec_num * 3 + 1] = 17;
@@ -155,7 +156,7 @@ void write_num(unsigned char dec_num, float val) {
 		return ;
 	}
 	
-	int v = floor(val * 10);
+	int v = val;
 	unsigned char v1 = v / 100;
 	v -= v1 * 100;
 	unsigned char v2 = v / 10;
@@ -175,8 +176,9 @@ unsigned char curr_deg = 0;
 ISR(TIMER1_OVF_vect)
 {
 	TCNT1 = TCNT1_VAL; //выставляем начальное значение TCNT1
+	
 	outChar(curr_deg);
 	curr_deg++;
-	
-	if (curr_deg > 15) curr_deg = 0;
+	if (curr_deg > 15) 
+		curr_deg = 0;
 }

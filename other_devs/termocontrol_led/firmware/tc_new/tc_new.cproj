@@ -65,10 +65,16 @@
     <Compile Include="ow_slave.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="ow_utils.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="sound.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="tc_new.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="tc_new.h">
       <SubType>compile</SubType>
     </Compile>
   </ItemGroup>

@@ -19,7 +19,6 @@
 #define WAIT_S_FOR_HIGH for (int i = 0; i < WAIT_S_COUNT && IS_S_LOW; i++)
 
 unsigned int ow_s_alarm_interval = 0;
-unsigned char cancel_slave_ow = 0;
 
 unsigned char OW_S_ROM[8] = {0xE0,0x00,0x00,0x00,0x00,0x00,0x01,0x0};
 	
@@ -78,6 +77,44 @@ void OW_S_writeByte(unsigned char data) {
 	}
 }
 
+unsigned char ow_s_outpack[12];
+
+void ow_s_make_outpack() {
+	unsigned char crc = 0;
+	unsigned char f_signals = 0;	
+	unsigned char num = 0;
+	
+	// Пакуем сигналы и состояния ВКЛ/ВЫКЛ					
+	if (OCR0 > 0)
+		f_signals |= (1<<0);
+	if (rele_port & (1<<rele_main_pin))
+		f_signals |= (1<<1);
+	if (rele_port & (1<<rele_tp_pin))
+		f_signals |= (1<<2);
+	for (unsigned char i = 0; i < 3; i++) {
+		if (signals[i])
+			f_signals |= (1<<(i + 3));
+	}
+	// ---------------------------------
+				
+	crc = 0;
+	for (unsigned char i = 0; i < 5; i++) {
+		int v = ow_master_values[i];
+		unsigned char v1 = v & (0xff);
+		unsigned char v2 = (v >> 8) & (0xff);
+		ow_s_outpack[num] = v1;
+		crc = crc_table(crc ^ v1);
+		num++;
+		ow_s_outpack[num] = v2;
+		crc = crc_table(crc ^ v2);
+		num++;
+	}
+	
+	ow_s_outpack[num] = f_signals;
+	num++;
+	ow_s_outpack[num] = crc_table(crc ^ f_signals);
+}
+
 void OW_S_action() {
 	WAIT_S_FOR_HIGH;
 	_delay_us(30);
@@ -91,19 +128,15 @@ void OW_S_action() {
 	unsigned char count;
 	unsigned char crc = 0;
 	
-	unsigned char rom_cmd = OW_S_readByte();
+	unsigned char rom_cmd = OW_S_readByte();	
 	
-	// -----------------------------------
-	//ow_master_values[4] = rom_cmd / 10.0;
-	// -----------------------------------
-
 	switch (rom_cmd) {
 		case OW_SEARCH_ROM: // Поиск устройств на шине
 		case OW_ALARM_SEARCH: // Поиск устройств с флагом ALARM
 			if (rom_cmd == OW_ALARM_SEARCH && cancel_slave_ow)
 				return ;
 		
-			for (i = 0; i < 8; i++) {	
+			for (i = 0; i < 8; i++) {
 				unsigned char b = OW_S_ROM[i];
 				for (k = 0; k < 8; k++) {			
 					unsigned char wb = (b & 1);
@@ -126,17 +159,8 @@ void OW_S_action() {
 			// Читаем комманду для этого устройства			
 			switch (OW_S_readByte()) {
 				case OW_READ_DATA: // Чтение данных для мастера
-					crc = 0;
-					for (unsigned char i = 0; i < 5; i++) {
-						float v = ow_master_values[i];
-						char v1 = ceil(v);
-						char v2 = floor((v - v1) * 100);
-						OW_S_writeByte(v1);
-						crc = crc_table(crc ^ v1);
-						OW_S_writeByte(v2);
-						crc = crc_table(crc ^ v2);
-					}				
-					OW_S_writeByte(crc);
+					for (unsigned char i = 0; i < 12; i++)
+						OW_S_writeByte(ow_s_outpack[i]);
 					ow_s_alarm_interval = 0;
 					break; 
 			}			
@@ -150,32 +174,26 @@ unsigned char ow_s_timer_on = 1;
 ISR (INT1_vect) {
 	if ((MCUCR & (1<<ISC10))!=0) {
 		ow_s_timer_on = 0;
-		//TCNT0 = 0;
-		//TCCR0 = 0; //Выключаем таймер
-		//TIFR |= (1<<TOV0);
 		MCUCR = (1<<ISC11); //Сброс ISC00 - прерывание по \__
 	} else {		
 		TCNT0 = 255-50;
 		ow_s_timer_on = 1;
-		//TIFR |= (1<<TOV0); //Сброс флага TOV0
 		TIMSK |= (1<<TOIE0);
 		MCUCR = (1<<ISC11)|(1<<ISC10); // прерывание по __/
-		//TCCR0 = (1<<CS01)|(1<<CS00); //Делитель на 64		
 	}
 }
 
 ISR (TIMER0_OVF_vect) {
 	if (regim != 0) return ;
-	if (ow_s_alarm_interval < 60000 && !cancel_slave_ow) {
+	
+	if (ow_s_alarm_interval < 30000 && !cancel_slave_ow) {
 		ow_s_alarm_interval++;
 		return ;
 	}	
 	
 	if (ow_s_timer_on) {
-		ow_s_timer_on = 0;		
+		ow_s_timer_on = 0;
 		PORTC = 0x0;
 		OW_S_action();
-	}
-	//TCCR0 = 0;
-	//TIFR |= 1<<TOV0;
+	}			
 }

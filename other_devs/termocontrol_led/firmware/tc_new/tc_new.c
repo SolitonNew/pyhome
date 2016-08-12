@@ -21,28 +21,10 @@
 #include "ow_master.h"
 #include "ow_slave.h"
 
-#define btn_ddr DDRD
-#define btn_pin PIND
-#define btn_port PORTD
-#define btn_sel_pin 4
-#define btn_up_pin 5
-#define btn_down_pin 6
-#define btn_sel_delay 20
-#define btn_delay 10
-
-#define tempPauseLONG 25;
-#define tempPauseFAST 5;
+#define tempPauseLONG 1; //25
+#define tempPauseFAST 1;
 
 #define check_btn(pin) !(btn_pin & (1<<pin))
-
-#define switch_ddr DDRB
-#define switch_port PORTB
-#define switch_pin 3
-
-#define rele_ddr DDRA
-#define rele_port PORTA
-#define rele_main_pin PORTA0
-#define rele_tp_pin PORTA1
 
 #define query_len 6
 
@@ -55,7 +37,7 @@
 	сигнализация "перегрев трубы"
 */
 
-unsigned char query[4][6];
+unsigned char query[6][4];
 unsigned char query_sel = 0;
 unsigned char query_sel_sub = 0;
 
@@ -122,6 +104,8 @@ void btn_up_handler() {
 		case 0:
 			if (btn_flags[1] > 0 && btn_flags[2] > 0)
 				cancel_slave_ow = !cancel_slave_ow;
+			else
+				sound_mute = sound_mute_time;
 			break;
 		case 10:
 			switch (query_sel_sub) {
@@ -180,6 +164,8 @@ void btn_down_handler() {
 		case 0:
 			if (btn_flags[1] > 0 && btn_flags[2] > 0)
 				cancel_slave_ow = !cancel_slave_ow;
+			else
+				sound_mute = sound_mute_time;
 			break;
 		case 10:
 			switch (query_sel_sub) {
@@ -232,7 +218,7 @@ void btn_down_handler() {
 }
 
 void change_temp_order(unsigned char i1, unsigned char i2) {
-	float t = ow_master_values[i1];
+	int t = ow_master_values[i1];
 	ow_master_values[i1] = ow_master_values[i2];
 	ow_master_values[i2] = t;
 	
@@ -249,7 +235,10 @@ void sel_query_sel(unsigned char val) {
 		if (i != val)
 			setReleValue(i, 0);
 	}
-	setReleValue(val, 1);
+	if (val == 0)
+		setReleValue(val, 100);
+	else
+		setReleValue(val, 1);
 	query_sel_sub = 0;
 	redraw_query_led();
 }
@@ -321,11 +310,7 @@ void redraw_query_led() {
 void setReleValue(unsigned char num, unsigned char val) {
 	switch (num) {
 		case 0:
-			if (val) {
-				OCR0 = 100;				
-			} else {
-				OCR0 = 0;
-			}
+			OCR0 = val;
 			break;
 		case 1:
 			if (val)
@@ -357,33 +342,64 @@ void clearReleValues() {
 	}
 }
 
+void checkQuery_0() {
+	// Коридор градиента 5 градусов
+	int val = ow_master_values[query[0][0]];
+	switch (query[0][1]) {		
+		case 1: // Темп больше порога
+			val -= query[0][2] * 10;
+			if (val < 0)
+				setReleValue(0, 0);
+			else
+			if (val > switch_delta * 10)
+				setReleValue(0, 100);
+			else
+				setReleValue(0, 10 * val / switch_delta);
+			break;
+		case 2: // Темп меньше порога
+			val -= query[0][2] * 10;
+			val *= -1;
+			if (val < 0)
+				setReleValue(0, 0);
+			else
+			if (val > switch_delta * 10)
+				setReleValue(0, 100);
+			else
+				setReleValue(0, 10 * val / switch_delta);
+			break;
+	}
+}
+
 void checkQuery() {
-	for (unsigned char q = 0; q < 6; q++) {
-		if (query[q][0] > 0) {
-			switch (query[q][1]) {
-				case 1:
-					if (ow_master_values[query[q][0]] >= query[q][2]) {
-						setReleValue(q, 1);
-					} else 
-					if (ow_master_values[query[q][0]] < query[q][2] - 2) {
+	// Отдельное условие для крана (запрос 0)
+	checkQuery_0();
+	// ---------------------------
+	
+	for (unsigned char q = 1; q < 6; q++) {
+		float val = ow_master_values[query[q][0]] / 10;
+		switch (query[q][1]) {
+			case 1:
+				if (val >= query[q][2]) {
+					setReleValue(q, 1);
+				} else 
+					if (val < query[q][2] - 2) {
 						setReleValue(q, 0);
 					}
-					break;
-				case 2:
-					if (ow_master_values[query[q][0]] <= query[q][2]) {
-						setReleValue(q, 1);
-					} else
-					if (ow_master_values[query[q][0]] > query[q][2] + 2) {
+				break;
+			case 2:
+				if (val <= query[q][2]) {
+					setReleValue(q, 1);
+				} else
+					if (val > query[q][2] + 2) {
 						setReleValue(q, 0);
 					}
-					break;
-			}
-		}		
+				break;
+		}
 	}
 }
 
 EEMEM unsigned char eep_ow_master_roms[5][8];
-EEMEM unsigned char eep_query[4][6];
+EEMEM unsigned char eep_query[6][4];
 
 void load_props() {
 	eeprom_read_block(&ow_master_roms, &eep_ow_master_roms, sizeof(ow_master_roms));
@@ -476,14 +492,17 @@ int main(void) {
 			case 0:
 			case 21:
 				checkTemp();
-				for (unsigned char i = 0; i < 5; i++)
-					write_num(i, ow_master_values[i]);
+				for (unsigned char i = 0; i < 5; i++) {
+					write_num(i, ow_master_values[i]);					
+				}
+				ow_s_make_outpack();
 				break;
 			case 10:
 				break;
 		}
 		
 		if (regim == 0) checkQuery();
+		sound_player();
 				
 		_delay_ms(main_loop_delay);
     }

@@ -20,8 +20,11 @@
 #define THERM_CMD_CONVERTTEMP 0x44
 #define THERM_CMD_RSCRATCHPAD 0xBE
 
+#define OW_M_checkIn OW_M_PIN & (1<<OW_M_BIT)
+
 unsigned char ow_master_roms[5][8];
-float ow_master_values[5] = {-100, -100, -100, -100, -100};
+int ow_master_values[5] = {-1000, -1000, -1000, -1000, -1000};
+unsigned char ow_master_errors[5] = {0, 0, 0, 0, 0};
 
 void ow_master_init() {
 	OW_M_DDR &= ~(1<<OW_M_PIN);
@@ -37,11 +40,6 @@ void OW_M_set(unsigned char mode) {
 	}
 }
 
-unsigned char OW_M_checkIn(void)
-{
-	return OW_M_PIN & (1<<OW_M_BIT);
-}
-
 unsigned char OW_M_reset(void)
 {
 	unsigned char status;
@@ -49,7 +47,7 @@ unsigned char OW_M_reset(void)
 	_delay_us(480);
 	OW_M_set(0);
 	_delay_us(60);	
-	status = OW_M_checkIn();
+	status = OW_M_checkIn;
 	_delay_us(420);
 	return !status;
 }
@@ -59,8 +57,7 @@ void OW_M_writeBit(unsigned char bit)
 {
 	OW_M_set(1);
 	_delay_us(1);
-	if(bit) 
-		OW_M_set(0); 
+	if(bit) OW_M_set(0); 
 	_delay_us(60);	
 	OW_M_set(0);
 }
@@ -71,10 +68,9 @@ unsigned char OW_M_readBit(void)
 	OW_M_set(1);
 	_delay_us(1);	
 	OW_M_set(0);
-	_delay_us(14);	
-	if(OW_M_checkIn()) 
-		bit=1;
-	_delay_us(45);
+	_delay_us(1);
+	if (OW_M_checkIn) bit = 1;
+	_delay_us(40);
 	return bit;
 }
 
@@ -155,7 +151,6 @@ void OW_M_scan_devs() {
 }
 
 unsigned char OW_M_matchROM(unsigned char *rom) {
- 	if (!OW_M_reset()) return 0;
 	OW_M_writeByte(OW_MATCH_ROM);	
 	for(unsigned char i=0; i<8; i++)
 		OW_M_writeByte(rom[i]);
@@ -167,51 +162,76 @@ unsigned char OW_M_set_measPause = 1;
 unsigned char OW_M_measPause = 0;
 unsigned char OW_M_currDev = 0;
 
-float getTemp(unsigned char *rom) {
+int getTemp(unsigned char *rom) {
 	if (!OW_M_reset()) {
-		return -100;
+		return -1000;
 	}
-	OW_M_matchROM(rom);
-	OW_M_writeByte(THERM_CMD_RSCRATCHPAD);	
-	unsigned char d[8];
-	unsigned char crc = 0;
-	for (unsigned char i = 0; i < 8; i++) {
-		d[i] = OW_M_readByte();
-		crc = crc_table(crc ^ d[i]);
-	}	
 	
-	if (crc == OW_M_readByte()) {
-		return (d[1] << 8 | d[0]) / 16.0;
-	}	
-	return -100;
+	unsigned char d[9];	
+		
+	OW_M_matchROM(rom);	
+	OW_M_writeByte(THERM_CMD_RSCRATCHPAD);	
+	for (unsigned char i = 0; i < 9; i++)
+		d[i] = OW_M_readByte();
+	
+	unsigned char crc = 0;
+	for (unsigned char i = 0; i < 9; i++) {
+		crc = crc_table(crc ^ d[i]);
+	}		
+	
+	if (crc == 0) {
+		return ceil(((d[1] << 8 | d[0]) / 16.0) * 10);
+	}
+	
+	return -1000;
 }
+
+unsigned char measure = 0;
 
 void checkTemp() {
 	OW_M_measPause--;
 	if (OW_M_measPause > 0)
-		return 0;
-	cli();
-	PORTC = 0;
-	OW_M_measPause = OW_M_set_measPause;
-	unsigned char data[2];
-	if (ow_master_roms[OW_M_currDev][0] != 0) {
-		ow_master_values[OW_M_currDev] = getTemp(ow_master_roms[OW_M_currDev]);
-	} else
-		ow_master_values[OW_M_currDev] = -100;
+		return 0;		
 	
-	OW_M_currDev++;
-	if (OW_M_currDev > 4)
-		OW_M_currDev = 0;
-		
-	if (ow_master_roms[OW_M_currDev][0] != 0 && OW_M_reset()) {
-		OW_M_matchROM(ow_master_roms[OW_M_currDev]);
-		OW_M_writeByte(THERM_CMD_CONVERTTEMP);
+	if (regim != 0) {
+		cli();
+		PORTC = 0;
 	}
-	sei();
+		
+	OW_M_measPause = OW_M_set_measPause;
+	
+	if (measure) {
+		if (ow_master_roms[OW_M_currDev][0] != 0 && OW_M_reset()) {
+			OW_M_matchROM(ow_master_roms[OW_M_currDev]);
+			OW_M_writeByte(THERM_CMD_CONVERTTEMP);
+		}
+		OW_M_currDev++;
+		if (OW_M_currDev > 4)
+			OW_M_currDev = 0;
+	} else {
+		unsigned char data[2];
+		if (ow_master_roms[OW_M_currDev][0] != 0) {
+			int temp = getTemp(ow_master_roms[OW_M_currDev]);
+			if (temp == -1000) {
+				if (ow_master_errors[OW_M_currDev]++ > 2)
+					ow_master_values[OW_M_currDev] = temp;
+			} else {
+				ow_master_errors[OW_M_currDev] = 0;
+				ow_master_values[OW_M_currDev] = temp;
+			}
+		} else
+			ow_master_values[OW_M_currDev] = -1000;
+	}
+	
+	if (regim != 0) {
+		sei();
+	}	
+	
+	measure = !measure;
 }
 
 void OW_M_startLoading() {
-	for (unsigned char i = 0; i < 10; i++) {
+	for (unsigned char i = 0; i < 20; i++) {
 		OW_M_measPause = 1;
 		checkTemp();
 		_delay_ms(100);

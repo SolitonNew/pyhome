@@ -55,14 +55,35 @@
         $('#terminal_bg').fadeOut(300)
     }
 
+    function send_command() {
+        $.ajax({url:'system_dialog?FORM_QUERY=SEND_COMMAND&COMM_TEXT=' + $('#COMM_TEXT').val()}).done(function (data) {
+            if (data == 'OK') {
+                $('#COMM_TEXT').val('');
+            } else {
+                alert(data);
+            }
+        });        
+    }
 </script>
-
 
 <div style="position:relative;background-color:#fff;border: 10px solid #fff;">
     <table cellpadding="0" cellspacing="10" width="100%">
     <TR>
         <TD></TD>
-    </TR>    
+    </TR>
+    <TR>
+        <TD>
+            <div class="group">
+                Выполнить команду:
+                <table width="100%" cellpadding="5" cellspacing="0">
+                <tr>
+                    <td width="100%"><input type="text" id="COMM_TEXT" style="width:100%;"/></td>
+                    <td><button onClick="send_command();">Выполнить</button></td>
+                </tr>
+                </table>
+            </div>
+        </TD>
+    </TR>
     <TR>
         <TD>
             <div class="group">

@@ -432,6 +432,7 @@ class Grid(WidgetBase):
         q = self.parentForm.db.query(self.sql + filter_data + orders + det)
         data = q.fetchall()
         fields = q.column_names
+        self.func_fields = fields
         keyIndex = fields.index(self.keyField)
         q.close()
         for row in data:
@@ -440,7 +441,7 @@ class Grid(WidgetBase):
                 if self.columns[i]['visible']:                    
                     f = self.columns[i]['func']
                     field = fields.index(self.columns[i]["field"])
-                    if f:
+                    if f:                        
                         v = f(i, row)
                     else:
                         if type(row[field]) == bytes:

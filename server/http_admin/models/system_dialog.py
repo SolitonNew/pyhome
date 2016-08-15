@@ -43,6 +43,10 @@ class SystemDialog(BaseForm):
                     return "NOT SYNC"
                 else:
                     return "OK"
+            elif query_type == "SEND_COMMAND":
+                self.db.IUD("insert into core_execute (COMMAND) values ('%s')" % (self.param_str("COMM_TEXT")))
+                self.db.commit()
+                return "OK"
         except Exception as e:
             return "ERROR: %s" % e.args
 

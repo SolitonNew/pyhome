@@ -44,7 +44,10 @@ class TcNew(object):
             v = self.buf[i * 2] + (self.buf[i * 2 + 1] << 8)
             if v > 32767:
                 v -= 0xffff + 1
-            res[0] += [v / 10]
+            v = v / 10
+            if v == -100:
+                v = None
+            res[0] += [v]
 
         for i in range(6):
             if self.buf[10] & (1<<i):

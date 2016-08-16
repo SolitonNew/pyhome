@@ -7,11 +7,12 @@ from subprocess import Popen, PIPE, STDOUT
 import math
 
 SCREENS = [["Помощь", "", "", None, None, [], None],
-           ["RS485", "rs485_demon.py", "/home/pyhome/server", None, None, [], None],
+           ["RS485", "rs485_demon.py", "/home/pyhome/server/rs485", None, None, [], None],
            ["Админка", "http_admin_demon.py", "/home/pyhome/server/http_admin", None, None, [], None],
            ["Консоль", "http_app_demon.py", "/home/pyhome/server/http_app", None, None, [], None],
-           ["Говорилка", "speacker_demon.py", "/home/pyhome/server/speacker", None, None, [], None],
-           ["Будильник", "player_demon.py", "/home/pyhome/server/player", None, None, [], None]]
+           ["Расписание", "scheduler_demon.py", "/home/pyhome/server/scheduler", None, None, [], None],
+           ["Команды", "executor_demon.py", "/home/pyhome/server/executor", None, None, [], None],
+           ["Наблюдатель", "watcher_demon.py", "/home/pyhome/server/watcher", None, None, [], None]]
 
 CURRENT_SCREEN = 0
 
@@ -19,33 +20,42 @@ CURRENT_SCREEN = 0
 SCREENS[0][5] = ["",
                  "   + Кнопки 1-%s это переключение между экранами." % (len(SCREENS) - 1),
                  "   + Кнопки Right|Left переклюают экраны по порядку.",
-                 "   + Кнопка R перезапускает модули всех экранов.",
+                 "   + Кнопка B перезапускает модули всех экранов.",
+                 "   + Кнопка R перезапускает только модуль текущего экрана.",
                  "   + Кнопка Q прерывает работу экранов и закрывает приложение.",
                  ""]
 
+def startProces(ind):
+    global SCREENS
+    if SCREENS[ind][1]:
+        try:                                
+            fff = open(str(ind) + ".txt", "w")
+            f = open(str(ind) + ".txt", "w+")
+            SCREENS[ind][3] = f
+            SCREENS[ind][4] = Popen(["/usr/bin/python3", "-u", SCREENS[ind][2] + "/" + SCREENS[ind][1]], cwd=SCREENS[ind][2], stdout=fff, stderr=fff)
+            SCREENS[ind][6] = fff
+            time.sleep(0.25)
+        except:
+            pass
+            
 def startProceses():
     global SCREENS
     for ind in range(len(SCREENS)):
-        if SCREENS[ind][1]:
-            try:                                
-                fff = open(str(ind) + ".txt", "w")
-                f = open(str(ind) + ".txt", "w+")
-                SCREENS[ind][3] = f
-                SCREENS[ind][4] = Popen(["/usr/bin/python3", "-u", SCREENS[ind][2] + "/" + SCREENS[ind][1]], cwd=SCREENS[ind][2], stdout=fff, stderr=fff)
-                SCREENS[ind][6] = fff
-                time.sleep(0.25)
-            except:
-                pass
+        startProces(ind)
 
+def stopProces(ind):
+    global SCREENS
+    if SCREENS[ind][4]:
+        SCREENS[ind][4].kill()
+        SCREENS[ind][4] = None
+    if SCREENS[ind][3]:
+        SCREENS[ind][3].close()
+        SCREENS[ind][3] = None
+            
 def stopProceses():
     global SCREENS
     for ind in range(len(SCREENS)):
-        if SCREENS[ind][4]:
-            SCREENS[ind][4].kill()
-            SCREENS[ind][4] = None
-        if SCREENS[ind][3]:
-            SCREENS[ind][3].close()
-            SCREENS[ind][3] = None
+        stopProces(ind)
 
 startProceses()
 
@@ -59,6 +69,7 @@ scr.keypad(1)
 btn_keys = [ord('0'), 49, 50, 51, 52, 53]
 btn_exit = [ord('q'), ord('Q')]
 btn_reboot = [ord('r'), ord('R')]
+btn_reboot_all = [ord('b'), ord('B')]
 
 curses.start_color()
 curses.init_pair(1, curses.COLOR_WHITE, curses.COLOR_BLACK)
@@ -78,6 +89,9 @@ while True:
     elif c in btn_exit:
         break
     elif c in btn_reboot:
+        stopProces(CURRENT_SCREEN)
+        startProces(CURRENT_SCREEN)
+    elif c in btn_reboot_all:
         stopProceses()
         startProceses()
     elif c == curses.KEY_RIGHT:

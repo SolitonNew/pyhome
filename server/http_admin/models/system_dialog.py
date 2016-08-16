@@ -4,9 +4,9 @@ import sys
 import hashlib
 
 try:
-    sys.path.index('/home/pyhome/server')
+    sys.path.index('/home/pyhome/server/rs485')
 except:
-    sys.path += ['/home/pyhome/server']        
+    sys.path += ['/home/pyhome/server/rs485']        
 from config_utils import generate_config_file
 
 class SystemDialog(BaseForm):
@@ -43,6 +43,10 @@ class SystemDialog(BaseForm):
                     return "NOT SYNC"
                 else:
                     return "OK"
+            elif query_type == "SEND_COMMAND":
+                self.db.IUD("insert into core_execute (COMMAND) values ('%s')" % (self.param_str("COMM_TEXT")))
+                self.db.commit()
+                return "OK"
         except Exception as e:
             return "ERROR: %s" % e.args
 

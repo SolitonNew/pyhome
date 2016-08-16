@@ -5,10 +5,12 @@ from db_connector import DBConnector
 import time
 from player import Player
 from variable import Variable
+from speecher import Speecher
+from info import Info
 
 class Main():
     def __init__(self):
-        self.commans = (Player(), Variable())
+        self.commans = (Player(), Variable(), Speecher(), Info())
         self.db = DBConnector()
         # Очищаем список команд. Список не актуален.        
         self.db.IUD("delete from core_execute")

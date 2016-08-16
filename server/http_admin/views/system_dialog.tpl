@@ -64,6 +64,12 @@
             }
         });        
     }
+
+    function command_key_press(event) {
+        if (event.keyCode == 13)
+            send_command();
+    }
+    
 </script>
 
 <div style="position:relative;background-color:#fff;border: 10px solid #fff;">
@@ -77,7 +83,9 @@
                 Выполнить команду:
                 <table width="100%" cellpadding="5" cellspacing="0">
                 <tr>
-                    <td width="100%"><input type="text" id="COMM_TEXT" style="width:100%;"/></td>
+                    <td width="100%">
+                        <input type="text" id="COMM_TEXT" style="width:100%;" onKeyPress="command_key_press(event)"/>
+                    </td>
                     <td><button onClick="send_command();">Выполнить</button></td>
                 </tr>
                 </table>

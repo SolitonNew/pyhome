@@ -7,12 +7,12 @@ from subprocess import Popen, PIPE, STDOUT
 import math
 
 SCREENS = [["Помощь", "", "", None, None, [], None],
-           ["RS485", "rs485_demon.py", "/home/pyhome/server", None, None, [], None],
+           ["RS485", "rs485_demon.py", "/home/pyhome/server/rs485", None, None, [], None],
            ["Админка", "http_admin_demon.py", "/home/pyhome/server/http_admin", None, None, [], None],
            ["Консоль", "http_app_demon.py", "/home/pyhome/server/http_app", None, None, [], None],
-           ["Говорилка", "speacker_demon.py", "/home/pyhome/server/speacker", None, None, [], None],
            ["Расписание", "scheduler_demon.py", "/home/pyhome/server/scheduler", None, None, [], None],
-           ["Команды", "executor_demon.py", "/home/pyhome/server/executor", None, None, [], None]]
+           ["Команды", "executor_demon.py", "/home/pyhome/server/executor", None, None, [], None],
+           ["Наблюдатель", "watcher_demon.py", "/home/pyhome/server/watcher", None, None, [], None]]
 
 CURRENT_SCREEN = 0
 

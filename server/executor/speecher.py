@@ -12,7 +12,7 @@ class Speecher():
             s = s.replace("(", "")
             s = s.replace(")", "")
             s = s.replace("\"", "")
-            subprocess.call('echo "' + s.strip() + '" | spd-say -o rhvoice -l ru -e -t female1', shell=True)
+            subprocess.call('echo "' + s.strip() + '" | spd-say -o rhvoice -l ru -e -t female1 -r 30 -p 10', shell=True)
             return True
         except:
             pass

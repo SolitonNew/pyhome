@@ -46,7 +46,13 @@ class Main():
         # Получаем список времени в секундах
         for t in time_of_day.split(","):
             m = t.split(":")
-            s = (int(m[0]) * 60) + int(m[1])
+            hour = int(m[0].strip()) * 60
+            minutes = 0
+            try:
+                minutes = int(m[1].strip())
+            except:
+                pass
+            s = hour + minutes
             times += [s * 60]
 
         if int_type == 0:
@@ -57,9 +63,9 @@ class Main():
             dw = now.timestamp() - now.weekday() * 24 * 3600
             # Получаем дату понедельника следующей недели в секундах
             dw_next = dw + 7 * 24 * 3600
-            w = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"]
+            w = ["пн", "вт", "ср", "чт", "пт", "сб", "вс"]
             for d in day_of_type.split(","):
-                s = w.index(d)
+                s = w.index(d.strip().lower())
                 dates += [dw + (s * 24 * 3600)]
                 dates += [dw_next + (s * 24 * 3600)]
                 
@@ -73,16 +79,16 @@ class Main():
                 m_next = datetime.datetime(now.year + 1, 1, 1).timestamp()
             
             for d in day_of_type.split(","):
-                s = int(d)
+                s = int(d.strip())
                 dates += [m + (s * 24 * 3600)]
                 dates += [m_next + (s * 24 * 3600)]
                 
         elif int_type == 3:            
             for d in day_of_type.split(","):
                 m = d.split("-")
-                s = datetime.datetime(now.year, int(m[1]), int(m[0])).timestamp()
+                s = datetime.datetime(now.year, int(m[1].strip()), int(m[0].strip())).timestamp()
                 dates += [s]
-                s_next = datetime.datetime(now.year + 1, int(m[1]), int(m[0])).timestamp()
+                s_next = datetime.datetime(now.year + 1, int(m[1].strip()), int(m[0].strip())).timestamp()
                 dates += [s_next]
 
         dt = []

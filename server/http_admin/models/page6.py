@@ -19,6 +19,7 @@ class Page6(BaseForm):
 
         grid.add_column("ID", "ID", 50, visible=False)
         grid.add_column("Описание", "COMM", 250)
+        grid.add_column("Следующее действие", "ACTION_DATETIME", 90)
         grid.add_column("Действие", "ACTION", 300)
         grid.add_column("Переодичность", "INTERVAL_TYPE", 500, func=self.column_interval_func)
         self.add_widget(grid)

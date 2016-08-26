@@ -6,14 +6,14 @@
 
     function stat_panel_autorefresh() {
         var r = $('#stat_panel_range').prop('value');
-        if (r == '-12 hour') {
+        if (r == '-6 hour') {
             refresh_stat_panels();
         }
         setTimeout(stat_panel_autorefresh, 30000);
     }
 
 
-    var date_intervals = [12, 24, 24 * 3, 24 * 7, 24 * 14, 24 * 30];
+    var date_intervals = [6, 12, 24, 24 * 3, 24 * 7, 24 * 14, 24 * 30, 24 * 90];
     var stat_panel_start = @START_TIME@;
     var stat_panels = [];
     var stat_panels_ids = [];
@@ -64,12 +64,14 @@
     <td style="position:relative;">
         <div class="toolbar">&nbsp;&nbsp;
             <select id="stat_panel_range" onChange="refresh_stat_panels()">
+                <option value="-6 hour">6 часов</option>
                 <option value="-12 hour">12 часов</option>
                 <option selected value="-1 day">1 день</option>
                 <option value="-3 day">3 дня</option>
                 <option value="-7 day">1 неделя</option>
                 <option value="-14 day">2 недели</option>
                 <option value="-30 day">1 месяц</option>
+                <option value="-60 day">3 месяца</option>
             </select>
             <button onClick="refresh_stat_panels();">Обновить</button>
             <span id="stat_refresh_label"></span>

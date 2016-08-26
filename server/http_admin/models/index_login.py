@@ -35,6 +35,7 @@ class IndexLogin(BaseForm):
                     if ind > -1:
                         del FAILED_CONNECTS[ind]
                     self.owner.create_session(True)
+                    print("Законнектились")
                 else:
                     ind = self._find_ip_index(ip)
                     if ind > -1:

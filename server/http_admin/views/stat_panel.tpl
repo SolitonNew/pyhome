@@ -29,7 +29,7 @@
 
         var label = $('#stat_refresh_label');
 
-        if (r == '-12 hour') {
+        if (r == '-6 hour') {
             label.html('Автообновление каждые 30 сек.');
         } else {
             label.html('');

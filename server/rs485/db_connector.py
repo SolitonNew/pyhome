@@ -76,17 +76,20 @@ class DBConnector(object):
         return row[0]
 
     def variable_changes(self):
-        q = self.query(("select ID, VARIABLE_ID, VALUE, FROM_ID"
-                        "  from core_variable_changes "
-                        " where ID > %s "
-                        "order by ID"), [self.lastVarChangeID])
-        row = q.fetchone()
         res = []
-        while row is not None:
-            res += [[row[1], row[2], row[3]]]
-            self.lastVarChangeID = row[0]
-            row = q.fetchone()
-        q.close()
+        for r in self.select("select CORE_GET_LAST_CHANGE_ID()"):
+            if r[0] > self.lastVarChangeID + 1:
+                q = self.query(("select ID, VARIABLE_ID, VALUE, FROM_ID"
+                                "  from core_variable_changes "
+                                " where ID > %s "
+                                "order by ID"), [self.lastVarChangeID])
+                row = q.fetchone()
+
+                while row is not None:
+                    res += [[row[1], row[2], row[3]]]
+                    self.lastVarChangeID = row[0]
+                    row = q.fetchone()
+                q.close()
         return res
 
     def all_variables(self):

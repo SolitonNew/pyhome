@@ -924,7 +924,7 @@ Disassembly of section .text:
      772:	00 c0       	rjmp	.+0      	; 0x774 <OW_M_readBit+0xe>
      774:	80 e0       	ldi	r24, 0x00	; 0
      776:	0e 94 7b 03 	call	0x6f6	; 0x6f6 <OW_M_set>
-     77a:	82 e0       	ldi	r24, 0x02	; 2
+     77a:	8a e1       	ldi	r24, 0x1A	; 26
      77c:	8a 95       	dec	r24
      77e:	f1 f7       	brne	.-4      	; 0x77c <OW_M_readBit+0x16>
      780:	00 c0       	rjmp	.+0      	; 0x782 <OW_M_readBit+0x1c>
@@ -1375,7 +1375,7 @@ Disassembly of section .text:
      b26:	32 2f       	mov	r19, r18
      b28:	3f 5f       	subi	r19, 0xFF	; 255
      b2a:	3c 93       	st	X, r19
-     b2c:	23 30       	cpi	r18, 0x03	; 3
+     b2c:	26 30       	cpi	r18, 0x06	; 6
      b2e:	98 f0       	brcs	.+38     	; 0xb56 <checkTemp+0xe4>
      b30:	05 c0       	rjmp	.+10     	; 0xb3c <checkTemp+0xca>
      b32:	f0 e0       	ldi	r31, 0x00	; 0

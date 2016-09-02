@@ -25,7 +25,7 @@ class Main():
                     self.execute(str(row[1], "utf-8"))
                     self.db.IUD("delete from core_execute where ID = %s" % row[0])
                     self.db.commit()
-                time.sleep(1)
+                time.sleep(0.2)
 
                 # Дергаем секундный таймер, может кому пригодится
                 for cmd in self.commans:

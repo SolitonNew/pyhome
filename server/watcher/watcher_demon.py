@@ -33,7 +33,7 @@ class Main():
                                 s += ["выключен"]
                                 
                             self._add_command('speech("%s")' % "".join(s).lower())
-            time.sleep(1)
+            time.sleep(0.2)
             
     def _add_command(self, command):
         print(command)

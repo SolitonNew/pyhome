@@ -52,8 +52,13 @@ class Main():
                 minutes = int(m[1].strip())
             except:
                 pass
+            sec = 0
+            try:
+                sec = int(m[2].strip())
+            except:
+                pass
             s = hour + minutes
-            times += [s * 60]
+            times += [s * 60 + sec]
 
         if int_type == 0:
             # Сегодняшняя дата и завтрашняя

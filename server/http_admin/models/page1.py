@@ -24,7 +24,7 @@ class Page1(BaseForm):
         grid.add_column("Контроллер", "C_NAME", 150, sort="asc")
         grid.add_column("Тип", "ROM", 70, sort="on")
         grid.add_column("Только чтение", "DIRECTION", 60, sort="on", func=self.column_ro_func)
-        grid.add_column("Идентификатор", "NAME", 200, sort="on")
+        grid.add_column("Идентификатор", "NAME", 200, sort="asc")
         grid.add_column("Описание", "COMM", 200, sort="on")
         grid.add_column("Устройство", "APP_CONTROL", 100, sort="on", func=self.column_control_func)
         grid.add_column("Значение", "VALUE", 100, sort="on", func=self.column_val_func)

@@ -31,5 +31,10 @@
 </table>
 
 <script type="text/javascript">
+    function sched_refresh_timer() {
+        SCHEDULER_LIST_refresh();
+        setTimeout(sched_refresh_timer, 20000);
+    };
 
+    sched_refresh_timer();
 </script>

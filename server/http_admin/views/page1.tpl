@@ -44,10 +44,10 @@
 </table>
 
 <script type="text/javascript">
-    function refresh_timer() {
+/*    function refresh_timer() {
         VARIABLE_LIST_refresh();
         setTimeout(refresh_timer, 1000);
     };
 
-    refresh_timer();
+    refresh_timer();*/
 </script>

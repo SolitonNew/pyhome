@@ -13,14 +13,24 @@
                 $(document).html(data);
             });
         }
+
+        var last_id = -1;
     
         function load_event_list() {
-            var q = $.ajax({url:'eventlist'});
-            q.done(function (data) {
-                if ($('#event_list').html() != data) {
-                    $('#event_list').html(data);
-                };
-                setTimeout(load_event_list, 1000);
+            var q = $.ajax({url:'eventlist?FORM_QUERY=last_id'});
+            q.done(function(data) {
+                if (data > last_id) {
+                    last_id = data;
+                    var q_list = $.ajax({url:'eventlist?FORM_QUERY=list'});
+                    q_list.done(function (data) {
+                        $('#event_list').html(data);
+                        setTimeout(load_event_list, 1000);
+                        VARIABLE_LIST_refresh();
+                    });
+                    q_list.fail(function () {setTimeout(load_event_list, 500)});
+                } else {
+                    setTimeout(load_event_list, 1000);
+                }
             });
             q.fail(function () {setTimeout(load_event_list, 500)});
         }

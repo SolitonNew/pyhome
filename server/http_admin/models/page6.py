@@ -12,15 +12,15 @@ class Page6(BaseForm):
 
     def create_widgets(self):
         variableSql = ("select s.* "
-                       "  from core_scheduler s "
-                       " order by s.COMM")
+                       "  from core_scheduler s ")
 
         grid = Grid("SCHEDULER_LIST", "ID", variableSql)
 
         grid.add_column("ID", "ID", 50, visible=False)
-        grid.add_column("Описание", "COMM", 250)
-        grid.add_column("Действие", "ACTION", 300)
-        grid.add_column("Переодичность", "INTERVAL_TYPE", 500, func=self.column_interval_func)
+        grid.add_column("Описание", "COMM", 250, sort="asc")
+        grid.add_column("Следующее действие", "ACTION_DATETIME", 90, sort="on")
+        grid.add_column("Действие", "ACTION", 300, sort="on")
+        grid.add_column("Переодичность", "INTERVAL_TYPE", 500, sort="on", func=self.column_interval_func)
         self.add_widget(grid)
         self.SCHEDULER_LIST = grid;
 

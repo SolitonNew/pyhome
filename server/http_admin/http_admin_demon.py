@@ -32,7 +32,27 @@ class HttpProcessor(BaseHTTPRequestHandler):
             return False
 
     def do_GET(self):
-        self._execute_query(parse.urlsplit(self.path))
+        try:
+            s = "/speech_text?text="
+            self.path.index(s)
+
+            url_data = parse.urlsplit(self.path)
+            p = parse.parse_qs(url_data.query)
+            s = p["text"][0]
+            
+            self.send_response(200)
+            self.send_header('content-type', "text/html")
+            self.send_header('charset', 'UTF8')
+            self.end_headers()
+            self.flush_headers()            
+
+            from db_connector import DBConnector
+            db = DBConnector()
+            db.IUD("insert into core_execute (COMMAND) values ('speech(\"%s\")')" % s)
+            db.commit()
+            db.disconnect()
+        except:
+            self._execute_query(parse.urlsplit(self.path))
 
     def _execute_query(self, url_data):
         # Зачитываем куки
@@ -138,12 +158,12 @@ class HttpProcessor(BaseHTTPRequestHandler):
             except:
                 pass
 
-        if is_empty:
+        if is_empty:           
             if path == "":
                 path = "index"
             # Перенаправление если сессия невалидна
 
-            if not current_session:
+            if not current_session: # Исключение на случай необходимости проговорить текст
                 if path in ("index", "index_login"):
                     path = "index_login"
                 else:
@@ -152,7 +172,7 @@ class HttpProcessor(BaseHTTPRequestHandler):
                     return
 
             # --------------------------------------
-            from db_connector import DBConnector                
+            from db_connector import DBConnector
             import models.forms
 
             try:

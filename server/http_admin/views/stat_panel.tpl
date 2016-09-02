@@ -29,11 +29,14 @@
 
         var label = $('#stat_refresh_label');
 
-        if (r == '-12 hour') {
+        if (r == '-6 hour') {
             label.html('Автообновление каждые 30 сек.');
         } else {
             label.html('');
         }
+
+        var w = $('#stat_panel_@ID@_img').width();
+        $('#stat_panel_center_@ID@').css('left', ((w - 25) / 2) + 27 + 'px');
     }
 
     function stat_panel_@ID@_dialog() {
@@ -97,6 +100,7 @@
                     onMouseMove="stat_panel_@ID@_move(event)"
                     onMouseUp="stat_panel_@ID@_up(event)"
                     onMouseOut="stat_panel_@ID@_up(event)">
+                <div id="stat_panel_center_@ID@" style="position:absolute;width:1px;height:100%;background-color:#ff0000;opacity:0.5;"></div>
             </div>
         </td>
     </tr>

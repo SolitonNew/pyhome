@@ -105,7 +105,8 @@ class Page5_1(BaseForm):
         
         color_x_line = (0.7, 0.7, 0.7)
         color_x_line_2 = (0.9, 0.9, 0.9)
-        color_y_line = (0.7, 0.7, 0.7)
+        color_y_line = (0.9, 0.9, 0.9)
+        color_y_line_date = (0.7, 0.7, 0.7)
         color_border = (0.5, 0.5, 0.5)
         
         left = 40
@@ -131,7 +132,9 @@ class Page5_1(BaseForm):
         interval = self.param('range')
 
         delta_x = 1
-        if interval == "-12 hour":
+        if interval == "-6 hour":
+            delta_x = 6 * 3600
+        elif interval == "-12 hour":
             delta_x = 12 * 3600
         elif interval == "-1 day":
             delta_x = 24 * 3600
@@ -140,9 +143,11 @@ class Page5_1(BaseForm):
         elif interval == "-7 day":
             delta_x = 7 * 24 * 3600
         elif interval == "-14 day":
-            delta_x = 14 * 24 * 3600            
-        else:
+            delta_x = 14 * 24 * 3600
+        elif interval == "-30 day":
             delta_x = 30 * 24 * 3600
+        else:
+            delta_x = 3 * 30 * 24 * 3600
 
         min_x = int(self.param('start')) - delta_x // 2
         max_x = min_x + delta_x
@@ -182,7 +187,7 @@ class Page5_1(BaseForm):
                                     "   and CHANGE_DATE >= FROM_UNIXTIME(%s) "
                                     "   and CHANGE_DATE <= FROM_UNIXTIME(%s) " % (min_x_q, max_x_q)):
                 cou = c[0]
-                ccc = 500 * 4
+                ccc = 1000 * 4
                 if cou > ccc:
                     sql = ("select UNIX_TIMESTAMP(CHANGE_DATE) D, VALUE, VARIABLE_ID, ID, @rn := @rn + 1 rownum "
                            "  from core_variable_changes "
@@ -268,7 +273,8 @@ class Page5_1(BaseForm):
             # Метки на оси Х
 
             x_step = 3600
-            if (interval == "-12 hour" or
+            if (interval == "-6 hour" or
+                interval == "-12 hour" or
                 interval == "-1 day"):
                 # Дополнительно метки часов
                 x_step = 3600
@@ -296,19 +302,25 @@ class Page5_1(BaseForm):
 
             sc = 0
             tz = 3600 * 2
+            tx_prev = -100
             for i in range(math.ceil(min_x / x_step), math.ceil(max_x / x_step) + 1):
                 if sc == 0:
                     x = (i * x_step - min_x - tz) / kx + left
-                    if x >= left and x < width:
-                        ctx.set_source_rgb(*(color_y_line))
-                        ctx.move_to(x, 0)
-                        ctx.line_to(x, height - bottom)
-                        ctx.stroke()
                     ctx.set_source_rgb(0, 0, 0)
                     num = datetime.datetime.fromtimestamp(i * x_step).strftime('%d-%m-%Y')
                     tw, th = ctx.text_extents(num)[2:4]
-                    ctx.move_to(x - tw // 2, height - bottom + th + 5)
-                    ctx.show_text(num)
+                    tx = x - tw // 2
+                    ctx.move_to(tx, height - bottom + th + 5)
+                    if tx - tx_prev > tw:
+                        ctx.show_text(num)
+                        tx_prev = tx
+                        ctx.set_source_rgb(*(color_y_line_date))
+                    else:
+                        ctx.set_source_rgb(*(color_y_line))
+                    if x >= left and x < width:
+                        ctx.move_to(x, 0)
+                        ctx.line_to(x, height - bottom)
+                        ctx.stroke()                        
                     sc = space_count
                 sc -= 1
         except Exception as e:
@@ -320,7 +332,7 @@ class Page5_1(BaseForm):
         ctx.move_to(left, 0)
         ctx.line_to(width, 0)
         ctx.line_to(width, height - bottom)        
-        ctx.stroke()                        
+        ctx.stroke()
 
         #Рисуем сами графики
 

@@ -68,7 +68,7 @@ unsigned char OW_M_readBit(void)
 	OW_M_set(1);
 	_delay_us(1);	
 	OW_M_set(0);
-	_delay_us(1);
+	_delay_us(10);
 	if (OW_M_checkIn) bit = 1;
 	_delay_us(40);
 	return bit;
@@ -213,7 +213,7 @@ void checkTemp() {
 		if (ow_master_roms[OW_M_currDev][0] != 0) {
 			int temp = getTemp(ow_master_roms[OW_M_currDev]);
 			if (temp == -1000) {
-				if (ow_master_errors[OW_M_currDev]++ > 2)
+				if (ow_master_errors[OW_M_currDev]++ > 5)
 					ow_master_values[OW_M_currDev] = temp;
 			} else {
 				ow_master_errors[OW_M_currDev] = 0;

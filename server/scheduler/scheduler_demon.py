@@ -7,6 +7,7 @@ import time
 import datetime
 import math
 import os
+from solar_time import GetSunTime
 
 class Main():
     def __init__(self):
@@ -43,22 +44,42 @@ class Main():
         
         times = []
         dates = []
-        # Получаем список времени в секундах
-        for t in time_of_day.split(","):
-            m = t.split(":")
-            hour = int(m[0].strip()) * 60
-            minutes = 0
-            try:
-                minutes = int(m[1].strip())
-            except:
-                pass
-            sec = 0
-            try:
-                sec = int(m[2].strip())
-            except:
-                pass
-            s = hour + minutes
-            times += [s * 60 + sec]
+
+        time_type = ""
+        try:
+            time_of_day.upper().index("SUNRISE")
+            time_type = "Sunrise"
+        except:
+            pass
+
+        try:
+            time_of_day.upper().index("SUNSET")
+            time_type = "Sunset"
+        except:
+            pass
+
+        if time_type == "Sunrise" or time_type == "Sunset":
+            st = GetSunTime(now.timestamp() // (24 * 3600), 49.697287, 34.354388, 90.8333333333333, 3, time_type)
+            hour = math.trunc(st)
+            minutes = round((st - hour) * 60)
+            times += [(hour * 60 + minutes) * 60]
+        else:
+            # Получаем список времени в секундах
+            for t in time_of_day.split(","):
+                m = t.split(":")
+                hour = int(m[0].strip()) * 60
+                minutes = 0
+                try:
+                    minutes = int(m[1].strip())
+                except:
+                    pass
+                sec = 0
+                try:
+                    sec = int(m[2].strip())
+                except:
+                    pass
+                s = hour + minutes
+                times += [s * 60 + sec]
 
         if int_type == 0:
             # Сегодняшняя дата и завтрашняя

@@ -146,8 +146,10 @@ class Page5_1(BaseForm):
             delta_x = 14 * 24 * 3600
         elif interval == "-30 day":
             delta_x = 30 * 24 * 3600
-        else:
+        elif interval == "-90 day":
             delta_x = 3 * 30 * 24 * 3600
+        else:
+            delta_x = 12 * 30 * 24 * 3600
 
         min_x = int(self.param('start')) - delta_x // 2
         max_x = min_x + delta_x

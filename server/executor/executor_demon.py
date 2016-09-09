@@ -8,10 +8,11 @@ from play import Play
 from variable import Variable
 from speech import Speech
 from info import Info
+from sinoptik import Sinoptik
 
 class Main():
     def __init__(self):
-        self.commans = (Play(), Variable(), Speech(), Info())
+        self.commans = (Play(), Variable(), Speech(), Info(), Sinoptik())
         self.db = DBConnector()
         # Очищаем список команд. Список не актуален.        
         self.db.IUD("delete from core_execute")

@@ -59,7 +59,9 @@ class Main():
             pass
 
         if time_type == "Sunrise" or time_type == "Sunset":
-            st = GetSunTime(now.timestamp() // (24 * 3600), 49.697287, 34.354388, 90.8333333333333, 3, time_type)
+            d = now.timestamp() // (24 * 3600)
+            d += 1
+            st = GetSunTime(d, 49.697287, 34.354388, 90.8333333333333, 3, time_type)
             hour = math.trunc(st)
             minutes = round((st - hour) * 60)
             times += [(hour * 60 + minutes) * 60]

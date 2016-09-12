@@ -27,6 +27,17 @@ class Sinoptik():
         return (t1, t2)
 
     def check_comm(self, db, command):
+        temps = ("градусов",
+                 "градус",
+                 "градуса", 
+                 "градуса",
+                 "градуса",
+                 "градусов",
+                 "градусов",
+                 "градусов",
+                 "градусов",
+                 "градусов")
+        
         try:
             command.index("sinoptik()")
 
@@ -39,7 +50,8 @@ class Sinoptik():
 
             text = "Прогноз погоды. " + self.parceDescr(content)
             t = self.parceTemp(content)
-            text = text + " Температура воздуха %s %s градуса." % t
+            tt = int(t[1][-1:])
+            text = text + " Температура воздуха %s %s %s." % (t[0], t[1], temps[tt])
 
             text = text.replace("вечера", "в*ечера")
 

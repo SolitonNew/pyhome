@@ -12,6 +12,9 @@ from solar_time import GetSunTime
 class Main():
     def __init__(self):
         self.db = DBConnector()
+        self.db.IUD("update core_scheduler set ACTION_DATETIME = NULL")
+        self.db.commit()
+        
         print("-- Предстоящие задачи --")
         for row in self.db.select("select ID, COMM, ACTION, ACTION_DATETIME, INTERVAL_TIME_OF_DAY, INTERVAL_DAY_OF_TYPE, INTERVAL_TYPE from core_scheduler"):
             next_time = self.parse_time(None, str(row[4], "utf-8"), str(row[5], "utf-8"), row[6])

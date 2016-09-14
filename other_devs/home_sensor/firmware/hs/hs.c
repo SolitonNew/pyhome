@@ -18,6 +18,8 @@
 #define LED_R 0
 #define SENSOR_L 3
 #define SENSOR_R 4
+#define SENSOR_LONG_L 5
+#define SENSOR_LONG_R 6
 
 #define OW_DDR DDRB
 #define OW_READ PINB
@@ -37,10 +39,14 @@
 #define WAIT_FOR_LOW for (int i = 0; i < WAIT_COUNT && IS_HIGH; i++)
 #define WAIT_FOR_HIGH for (int i = 0; i < WAIT_COUNT && IS_LOW; i++)
 
+#define GAIN 15
+#define MAX_GAIN 45
+#define LONG_COUNT 800
+
 unsigned char sensor_data = 0;
 unsigned char isChange = 0;
 
-unsigned char ROM[8] = {0xF0,0x00,0x00,0x00,0x00,0x00,0x01,0x0};
+unsigned char ROM[8] = {0xF0,0x00,0x00,0x00,0x00,0x00,0x05,0x0};
 	
 unsigned char crc_table(unsigned char data)
 {
@@ -115,7 +121,6 @@ void one_wire_action()
 	
 	unsigned char i;
 	unsigned char k;
-	unsigned char count;
 	
 	unsigned char rom_cmd = OW_readByte();
 
@@ -199,7 +204,11 @@ unsigned char checkSensor(unsigned char pin)
 {
 	unsigned char b = 1;
 	DDRB &= ~(1<<pin);
-	for (unsigned char i = 0; i < 8; i++)
+	/*
+	8 - большая чувствительность
+	9 - для мест с проводкой в подрозетнике
+	*/
+	for (unsigned char i = 0; i < 9; i++)
 		if (PINB & (1<<pin))
 			b = 0;
 	return b;
@@ -228,56 +237,73 @@ int main(void)
 	sei();
 	
 	unsigned char data;
-	unsigned char sleep_l = 0;
-	unsigned char sleep_r = 0;
+	unsigned char on_l = 0;
+	unsigned char on_r = 0;
+	unsigned int long_l = 0;
+	unsigned int long_r = 0;
+	unsigned char long_indicate = 0;	
 	
     while(1)
     {
-		data = 0;
-		unsigned char n = 0;
-		unsigned char cn = 12;
+		shutdownSensor(SENSOR_L);
+		if (checkSensor(SENSOR_L)) {
+			if (on_l < MAX_GAIN)
+				on_l++;
+		} else {
+			if (on_l != 0) on_l--;
+		}
 		
-		if (sleep_l == 0) {
-			n = 0;
-			for (unsigned char a = 0; a < 15; a++)
-			{
-				shutdownSensor(SENSOR_L);
-				if (checkSensor(SENSOR_L)) n++;
-			}
-			if (n > cn) {
-				SPIN(data, SENSOR_L);
+		shutdownSensor(SENSOR_R);
+		if (checkSensor(SENSOR_R)) {
+			if (on_r < MAX_GAIN)
+				on_r++;
+		} else {
+			if (on_r != 0) on_r--;
+		}
+		
+		data = 0;		
+		if (on_l > GAIN) {
+			SPIN(data, SENSOR_L);			
+			if (long_l > LONG_COUNT) {
+				SPIN(data, SENSOR_LONG_L);
+				if (long_indicate > 127)
+					SPIN(DDRB, LED_L);
+				else
+					CPIN(DDRB, LED_L);
+			} else {
+				long_l++;
 				SPIN(DDRB, LED_L);
-				sleep_l = 9;
-			} else {
-				CPIN(DDRB, LED_L);
 			}			
-		} else {
-			sleep_l--;
+		} else 
+		if (on_l == 0){
+			CPIN(DDRB, LED_L);
+			long_l = 0;
 		}		
-		
-		if (sleep_r == 0) {
-			n = 0;
-			for (unsigned char a = 0; a < 15; a++)
-			{
-				shutdownSensor(SENSOR_R);
-				if (checkSensor(SENSOR_R)) n++;
-			}		
-			if (n > cn) {
-				SPIN(data, SENSOR_R);
+			
+		if (on_r > GAIN) {
+			SPIN(data, SENSOR_R);			
+			if (long_r > LONG_COUNT) {
+				SPIN(data, SENSOR_LONG_R);
+				if (long_indicate > 127)
+					SPIN(DDRB, LED_R);
+				else
+					CPIN(DDRB, LED_R);
+			} else {
+				long_r++;
 				SPIN(DDRB, LED_R);
-				sleep_r = 9;
-			} else {
-				CPIN(DDRB, LED_R);
-			}			
-		} else {
-			sleep_r--;
-		}		
+			}						
+		} else 
+		if (on_r == 0) {
+			CPIN(DDRB, LED_R);
+			long_r = 0;
+		}
 				
 		if (sensor_data != data)
 		{
 			isChange = 1;			
 			sensor_data = data;
-			_delay_ms(50);
-		}					
+		}
+		
+		long_indicate++;
     }
 }

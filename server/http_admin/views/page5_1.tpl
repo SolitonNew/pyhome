@@ -13,7 +13,7 @@
     }
 
 
-    var date_intervals = [6, 12, 24, 24 * 3, 24 * 7, 24 * 14, 24 * 30, 24 * 90, 24 * 30 * 12];
+    var date_intervals = [6, 12, 24, 24 * 3, 24 * 7, 24 * 14, 24 * 30, 24 * 90, 24 * 30 * 6, 24 * 30 * 12];
     var stat_panel_start = @START_TIME@;
     var stat_panels = [];
     var stat_panels_ids = [];
@@ -71,7 +71,8 @@
                 <option value="-7 day">1 неделя</option>
                 <option value="-14 day">2 недели</option>
                 <option value="-30 day">1 месяц</option>
-                <option value="-60 day">3 месяца</option>
+                <option value="-90 day">3 месяца</option>
+                <option value="-180 day">6 месяцев</option>
                 <option value="-360 day">12 месяцев</option>
             </select>
             <button onClick="refresh_stat_panels();">Обновить</button>

@@ -65,6 +65,54 @@ class Page5_1(BaseForm):
             self.content_type = "image/png"
             return self._paint_panel(self.param('key'), self.param('width'), self.param('height'), self.param('panel_h'))
     
+    def _get_one_val(self, series, min_max_vals, min_x, max_x):
+        def min_x_val(key):
+            for v in min_max_vals:
+                if v[0] == key:
+                    print(v[1])
+                    return v[1]
+            return min_x
+
+        def max_x_val(key):
+            for v in min_max_vals:
+                if v[0] == key:
+                    print(v[2])
+                    return v[2]
+            return max_x
+        
+        res = [[], [], [], []]
+        sql = []
+        for i in range(4):
+            if series[i] > 0:            
+                sql_prev = ("select a.* from ("
+                            "select UNIX_TIMESTAMP(CHANGE_DATE) D, VALUE, VARIABLE_ID, ID, 1 "
+                            "  from core_variable_changes "
+                            " where VARIABLE_ID = %s "
+                            "   and CHANGE_DATE < FROM_UNIXTIME(%s) "
+                            "order by CHANGE_DATE desc limit 1) a" % (series[i], min_x_val(series[i])))
+
+                sql_next = ("select a.* from ("
+                            "select UNIX_TIMESTAMP(CHANGE_DATE) D, VALUE, VARIABLE_ID, ID, 2 "
+                            "  from core_variable_changes "
+                            " where VARIABLE_ID = %s "
+                            "   and CHANGE_DATE > FROM_UNIXTIME(%s) "
+                            "order by CHANGE_DATE limit 1) a" % (series[i], max_x_val(series[i])))
+            if len(sql) > 0:
+                sql += [" union "]
+
+            try:    
+                sql += ["%s union %s" % (sql_prev, sql_next)]
+            except:
+                pass
+            
+        for row in self.db.select("".join(sql)):
+            try:
+                i = series.index(row[2])
+                res[i] += [row]
+            except Exception as e:
+                print("{}".format(e.args))
+        return res
+    """
     def _get_one_val(self, series, min_x, max_x):
         res = [[], [], [], []]   
         sql = []
@@ -98,7 +146,8 @@ class Page5_1(BaseForm):
             except:
                 pass
         return res
-
+    """
+    
     def _paint_panel(self, key, width, height, panel_h):
         self.db.IUD("update web_stat_panels set HEIGHT = %s where ID = %s" % (panel_h, key))
         self.db.commit()        
@@ -148,14 +197,16 @@ class Page5_1(BaseForm):
             delta_x = 30 * 24 * 3600
         elif interval == "-90 day":
             delta_x = 3 * 30 * 24 * 3600
-        else:
+        elif interval == "-180 day":
+            delta_x = 6 * 30 * 24 * 3600
+        elif interval == "-360 day":
             delta_x = 12 * 30 * 24 * 3600
 
         min_x = int(self.param('start')) - delta_x // 2
         max_x = min_x + delta_x
 
-        min_x_q = min_x - delta_x // 20
-        max_x_q = max_x + delta_x // 20
+        min_x_q = min_x - delta_x# // 100
+        max_x_q = max_x + delta_x# // 100
         
         max_y = -9999
         min_y = 9999
@@ -164,7 +215,51 @@ class Page5_1(BaseForm):
         # собираем статистику.
         prev_vals = [-9999] * 4
         chart_data = [[], [], [], []]
+        
+        zoom_step = delta_x / (width * 5)
+        if zoom_step < 1 or typ != 0:
+            zoom_step = 1
 
+        x_min_max_values = []
+        mi_x = max_x_q
+        ma_x = min_x_q
+        tt = -100
+        
+        for row in self.db.select("select UNIX_TIMESTAMP(CHANGE_DATE) D, MIN(VALUE) + (MAX(VALUE) - MIN(VALUE)) VALUE, VARIABLE_ID "
+                                  "  from core_variable_changes "
+                                  " where VARIABLE_ID in (%s) "
+                                  "   and CHANGE_DATE >= FROM_UNIXTIME(%s) "
+                                  "   and CHANGE_DATE <= FROM_UNIXTIME(%s) "
+                                  " group by 3, ROUND(UNIX_TIMESTAMP(CHANGE_DATE) / %s)"
+                                  " order by 3, 1 " % (var_ids, min_x_q, max_x_q, zoom_step)):
+            ind = series.index(row[2])
+            chart_data[ind] += [row]
+            if row[0] > min_x and row[0] < max_x:
+                max_y = max(max_y, row[1])
+                min_y = min(min_y, row[1])
+
+            if tt == -100:
+                tt = row[2]
+
+            if tt != row[2]:
+                v = [tt, mi_x, ma_x]
+                x_min_max_values += [v]
+                mi_x = max_x_q
+                ma_x = min_x_q
+                tt = row[2]
+
+            if row[0] < mi_x:
+                mi_x = row[0]
+            if row[0] > ma_x:
+                ma_x = row[0]            
+
+        if tt != -1:
+            v = [tt, mi_x, ma_x]
+            x_min_max_values += [v]
+
+        print(x_min_max_values)
+        print(series)
+        
         """
         for row in self.db.select("select UNIX_TIMESTAMP(CHANGE_DATE) D, VALUE, VARIABLE_ID, ID "
                                   "  from core_variable_changes "
@@ -172,6 +267,7 @@ class Page5_1(BaseForm):
                                   "   and CHANGE_DATE >= FROM_UNIXTIME(%s) "
                                   "   and CHANGE_DATE <= FROM_UNIXTIME(%s) "
                                   "order by CHANGE_DATE " % (min_x_q, max_x_q)):
+        """
         """
         try:
             self.db.IUD("set @rn := 0")
@@ -211,7 +307,7 @@ class Page5_1(BaseForm):
                 prev_vals[ind] = row[1]
         except:
             pass
-            
+        """
         
         if min_y is None or max_y is None or min_y == 9999 or max_y == -9999 or min_y == max_y:
             max_y = 1
@@ -399,7 +495,8 @@ class Page5_1(BaseForm):
                     currVarID = row[2]
                 ctx.fill()
         else: # Линейчастая
-            one_vals = self._get_one_val(series, min_x_q, max_x_q)
+            #one_vals = self._get_one_val(series, min_x_q, max_x_q)
+            one_vals = self._get_one_val(series, x_min_max_values, min_x_q, max_x_q)
             for ind in range(4):
                 if series[ind]:
                     is_now = True

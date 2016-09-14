@@ -37,12 +37,26 @@ class Main():
             
     def _add_command(self, command):
         print(command)
+        """
         for row in self.db.select("select ID from core_execute where COMMAND = '%s'" % command):
             self.db.IUD("delete from core_execute where ID = %s" % row[0])
             self.db.commit()
-        
+        """
+        if self.get_quiet_time():
+            try:
+                command.index("speech(")
+                command = "speech(\"\")"
+            except:
+                pass
         self.db.IUD("insert into core_execute (COMMAND) values ('%s')" % command)
         self.db.commit()
+
+    def get_quiet_time(self):
+        for rec in self.db.select("select VALUE from core_variables where NAME = 'QUIET_TIME'"):
+            if rec[0]:
+                return True
+        return False
+
 
 print(
 "=============================================================================\n"

@@ -4,7 +4,8 @@ import datetime
 def GetDays(dat):
     y = datetime.datetime.now().year
     fe = datetime.datetime(y, 12, 31).timestamp()
-    return (datetime.datetime.now().timestamp() - fe) / (24 * 3600)
+    #return (datetime.datetime.now().timestamp() - fe) / (24 * 3600)
+    return (dat * 24 * 3600 - fe) / (24 * 3600)
     
 def Adjust(Value, Bounds):
     while Value >= Bounds:

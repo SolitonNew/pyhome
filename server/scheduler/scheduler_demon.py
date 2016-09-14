@@ -12,12 +12,14 @@ from solar_time import GetSunTime
 class Main():
     def __init__(self):
         self.db = DBConnector()
+        self.db.IUD("update core_scheduler set ACTION_DATETIME = NULL")
+        self.db.commit()
+        
         print("-- Предстоящие задачи --")
         for row in self.db.select("select ID, COMM, ACTION, ACTION_DATETIME, INTERVAL_TIME_OF_DAY, INTERVAL_DAY_OF_TYPE, INTERVAL_TYPE from core_scheduler"):
             next_time = self.parse_time(None, str(row[4], "utf-8"), str(row[5], "utf-8"), row[6])
             print("[%s] %s" % (datetime.datetime.fromtimestamp(next_time), str(row[1], "utf-8")))
         print("------------------------")
-        
         self.check_time()
         self.run()
 
@@ -34,6 +36,12 @@ class Main():
             if next_time != None:
                 self.db.IUD("update core_scheduler set ACTION_DATETIME = FROM_UNIXTIME(%s) where ID = %s" % (next_time, row[0]))
                 self.db.commit()
+
+    def calc_suntime(self, d, sun_type):
+        st = GetSunTime(d // (24 * 3600), 49.697287, 34.354388, 90.8333333333333, -time.altzone // 3600, sun_type)
+        hour = math.trunc(st)
+        minutes = round((st - hour) * 60)
+        return (hour * 60 + minutes) * 60
 
     def parse_time(self, action_datetime, time_of_day, day_of_type, int_type):
         if action_datetime == None:
@@ -59,10 +67,24 @@ class Main():
             pass
 
         if time_type == "Sunrise" or time_type == "Sunset":
-            st = GetSunTime(now.timestamp() // (24 * 3600), 49.697287, 34.354388, 90.8333333333333, 3, time_type)
-            hour = math.trunc(st)
-            minutes = round((st - hour) * 60)
-            times += [(hour * 60 + minutes) * 60]
+            """
+            Это особый случай блуждающего времени.
+            Сборка даты/времени выполняется здесь отдельно и дальше код
+            не пойдет.
+            """
+            
+            d1 = now.timestamp()
+            d2 = now.timestamp() + 24 * 3600
+            dt = [d1 + self.calc_suntime(d1, time_type),
+                  d2 + self.calc_suntime(d2, time_type)]
+
+            dt.sort()
+
+            # Проверяем какая дата из расписания готова к выполнению
+            for d in dt:
+                if d > action_datetime:
+                    return d
+            return None
         else:
             # Получаем список времени в секундах
             for t in time_of_day.split(","):
@@ -80,7 +102,7 @@ class Main():
                     pass
                 s = hour + minutes
                 times += [s * 60 + sec]
-
+                
         if int_type == 0:
             # Сегодняшняя дата и завтрашняя
             dates += [now.timestamp(), now.timestamp() + 24 * 3600]
@@ -94,7 +116,6 @@ class Main():
                 s = w.index(d.strip().lower())
                 dates += [dw + (s * 24 * 3600)]
                 dates += [dw_next + (s * 24 * 3600)]
-                
         elif int_type == 2:
             # Получаем 1 число этого месяца в секундах
             m = datetime.datetime(now.year, now.month, 1).timestamp()

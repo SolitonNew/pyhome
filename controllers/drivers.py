@@ -27,34 +27,32 @@ class Termometr(DS18B20):
 class Switch(HomeSensor):
     SENSOR_L = 8
     SENSOR_R = 16
-    
+    SENSOR_LONG_L = 32
+    SENSOR_LONG_R = 64
+        
     def __init__(self, ow, rom):
         super().__init__(ow)
         self.rom = rom
-        self.stL = 0
-        self.stR = 0
     
     def value(self, val = None, channel = ''):
         if val == None:
-            resL = False
-            resR = False
+            resL = 0
+            resR = 0
             
             d = self.get_data(self.rom)
 
             if d != None:
                 if (d & self.SENSOR_L):
-                    if self.stL == 0:
-                        self.stL = 1
-                        resL = True
-                else:
-                    self.stL = 0
+                    if (d & self.SENSOR_LONG_L):
+                        resL = 2
+                    else:
+                        resL = 1
 
                 if (d & self.SENSOR_R):
-                    if self.stR == 0:
-                        self.stR = 1
-                        resR = True
-                else:
-                    self.stR = 0
+                    if (d & self.SENSOR_LONG_R):
+                        resR = 2
+                    else:
+                        resR = 1
 
             return {'LEFT':resL, 'RIGHT':resR}
 

@@ -17,8 +17,10 @@ class Speech():
             shell_comm = "aplay /home/pyhome/server/executor/notify.wav"
             subprocess.call(shell_comm, shell=True)
             #time.sleep(0.5)
-            shell_comm = 'echo "' + s + '" | spd-say -o rhvoice -l ru -e -t female1'            
-            subprocess.call(shell_comm, shell=True)
+
+            if len(s) > 0:
+                shell_comm = 'echo "' + s + '" | spd-say -o rhvoice -l ru -e -t female1'
+                subprocess.call(shell_comm, shell=True)
             return True
         except:
             pass

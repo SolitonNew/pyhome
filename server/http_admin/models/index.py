@@ -23,4 +23,5 @@ class Index(BaseForm):
         tab.add_tab("Консоли", "page4")
         tab.add_tab("Статистика", "page5")
         tab.add_tab("Расписание", "page6")
+        tab.add_tab("Схема", "page7")
         self.add_widget(tab)

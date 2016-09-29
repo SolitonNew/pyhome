@@ -107,7 +107,11 @@ class Info():
                  "градусов")
         v = 0
         c = 0
-        for row in db.select("select v.VALUE from core_variables v where ID in (%s)" % ids):
+        t = datetime.now().timestamp() - 900 #15 минут
+        for row in db.select("select v.VALUE "
+                             "  from core_variables v "
+                             " where ID in (%s) "
+                             "   and UNIX_TIMESTAMP(LAST_UPDATE) > %s"% (ids, t)):
             v += row[0]
             c += 1
 

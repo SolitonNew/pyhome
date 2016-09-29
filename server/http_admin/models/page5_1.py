@@ -69,14 +69,14 @@ class Page5_1(BaseForm):
         def min_x_val(key):
             for v in min_max_vals:
                 if v[0] == key:
-                    print(v[1])
+                    #print(v[1])
                     return v[1]
             return min_x
 
         def max_x_val(key):
             for v in min_max_vals:
                 if v[0] == key:
-                    print(v[2])
+                    #print(v[2])
                     return v[2]
             return max_x
         
@@ -110,7 +110,8 @@ class Page5_1(BaseForm):
                 i = series.index(row[2])
                 res[i] += [row]
             except Exception as e:
-                print("{}".format(e.args))
+                #print("{}".format(e.args))
+                pass
         return res
     """
     def _get_one_val(self, series, min_x, max_x):
@@ -257,8 +258,8 @@ class Page5_1(BaseForm):
             v = [tt, mi_x, ma_x]
             x_min_max_values += [v]
 
-        print(x_min_max_values)
-        print(series)
+        #print(x_min_max_values)
+        #print(series)
         
         """
         for row in self.db.select("select UNIX_TIMESTAMP(CHANGE_DATE) D, VALUE, VARIABLE_ID, ID "

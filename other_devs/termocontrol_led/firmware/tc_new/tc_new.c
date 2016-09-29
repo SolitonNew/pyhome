@@ -377,24 +377,26 @@ void checkQuery() {
 	
 	for (unsigned char q = 1; q < 6; q++) {
 		float val = ow_master_values[query[q][0]] / 10;
-		switch (query[q][1]) {
-			case 1:
-				if (val >= query[q][2]) {
-					setReleValue(q, 1);
-				} else 
-					if (val < query[q][2] - 2) {
-						setReleValue(q, 0);
-					}
-				break;
-			case 2:
-				if (val <= query[q][2]) {
-					setReleValue(q, 1);
-				} else
-					if (val > query[q][2] + 2) {
-						setReleValue(q, 0);
-					}
-				break;
-		}
+		if (val > 0) {
+			switch (query[q][1]) {
+				case 1:
+					if (val >= query[q][2]) {
+						setReleValue(q, 1);
+					} else 
+						if (val < query[q][2] - 2) {
+							setReleValue(q, 0);
+						}
+					break;
+				case 2:
+					if (val <= query[q][2]) {
+						setReleValue(q, 1);
+					} else
+						if (val > query[q][2] + 2) {
+							setReleValue(q, 0);
+						}
+					break;
+			}
+		}		
 	}
 }
 

@@ -213,7 +213,7 @@ void checkTemp() {
 		if (ow_master_roms[OW_M_currDev][0] != 0) {
 			int temp = getTemp(ow_master_roms[OW_M_currDev]);
 			if (temp == -1000) {
-				if (ow_master_errors[OW_M_currDev]++ > 5)
+				if (ow_master_errors[OW_M_currDev]++ > 10)
 					ow_master_values[OW_M_currDev] = temp;
 			} else {
 				ow_master_errors[OW_M_currDev] = 0;

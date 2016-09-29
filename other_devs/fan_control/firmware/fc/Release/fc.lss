@@ -3,15 +3,15 @@ fc.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .text         0000036e  00000000  00000000  00000094  2**1
+  0 .text         0000037a  00000000  00000000  00000094  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  1 .data         00000008  00800060  0000036e  00000402  2**0
+  1 .data         00000008  00800060  0000037a  0000040e  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  2 .bss          00000004  00800068  00800068  0000040a  2**0
+  2 .bss          00000004  00800068  00800068  00000416  2**0
                   ALLOC
-  3 .stab         000006b4  00000000  00000000  0000040c  2**2
+  3 .stab         000006b4  00000000  00000000  00000418  2**2
                   CONTENTS, READONLY, DEBUGGING
-  4 .stabstr      00000090  00000000  00000000  00000ac0  2**0
+  4 .stabstr      00000090  00000000  00000000  00000acc  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -38,7 +38,7 @@ Disassembly of section .text:
   1c:	10 e0       	ldi	r17, 0x00	; 0
   1e:	a0 e6       	ldi	r26, 0x60	; 96
   20:	b0 e0       	ldi	r27, 0x00	; 0
-  22:	ee e6       	ldi	r30, 0x6E	; 110
+  22:	ea e7       	ldi	r30, 0x7A	; 122
   24:	f3 e0       	ldi	r31, 0x03	; 3
   26:	02 c0       	rjmp	.+4      	; 0x2c <__do_copy_data+0x10>
   28:	05 90       	lpm	r0, Z+
@@ -61,7 +61,7 @@ Disassembly of section .text:
   3e:	b1 07       	cpc	r27, r17
   40:	e1 f7       	brne	.-8      	; 0x3a <.do_clear_bss_loop>
   42:	55 d1       	rcall	.+682    	; 0x2ee <main>
-  44:	92 c1       	rjmp	.+804    	; 0x36a <_exit>
+  44:	98 c1       	rjmp	.+816    	; 0x376 <_exit>
 
 00000046 <__bad_interrupt>:
   46:	dc cf       	rjmp	.-72     	; 0x0 <__vectors>
@@ -471,13 +471,19 @@ Disassembly of section .text:
  35c:	c2 9a       	sbi	0x18, 2	; 24
  35e:	01 c0       	rjmp	.+2      	; 0x362 <main+0x74>
  360:	c2 98       	cbi	0x18, 2	; 24
- 362:	8f 5f       	subi	r24, 0xFF	; 255
- 364:	8a 30       	cpi	r24, 0x0A	; 10
- 366:	00 f7       	brcc	.-64     	; 0x328 <main+0x3a>
- 368:	e0 cf       	rjmp	.-64     	; 0x32a <main+0x3c>
+ 362:	ef e7       	ldi	r30, 0x7F	; 127
+ 364:	fb eb       	ldi	r31, 0xBB	; 187
+ 366:	31 97       	sbiw	r30, 0x01	; 1
+ 368:	f1 f7       	brne	.-4      	; 0x366 <main+0x78>
+ 36a:	00 c0       	rjmp	.+0      	; 0x36c <main+0x7e>
+ 36c:	00 00       	nop
+ 36e:	8f 5f       	subi	r24, 0xFF	; 255
+ 370:	8a 30       	cpi	r24, 0x0A	; 10
+ 372:	d0 f6       	brcc	.-76     	; 0x328 <main+0x3a>
+ 374:	da cf       	rjmp	.-76     	; 0x32a <main+0x3c>
 
-0000036a <_exit>:
- 36a:	f8 94       	cli
+00000376 <_exit>:
+ 376:	f8 94       	cli
 
-0000036c <__stop_program>:
- 36c:	ff cf       	rjmp	.-2      	; 0x36c <__stop_program>
+00000378 <__stop_program>:
+ 378:	ff cf       	rjmp	.-2      	; 0x378 <__stop_program>

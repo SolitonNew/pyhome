@@ -10,7 +10,7 @@
 #include <avr/interrupt.h>
 #include "util/delay.h"
 
-unsigned char chan_v[4];
+unsigned char chan_v[4] = {0, 0, 0, 0};
 
 #define SPIN(data, pin) (data |= (1<<pin))
 #define CPIN(data, pin) (data &= ~(1<<pin))
@@ -223,7 +223,8 @@ int main(void)
 	        check_chan(0, PORTB4);
 			check_chan(1, PORTB3);
 			check_chan(2, PORTB0);
-			check_chan(3, PORTB2); 
+			check_chan(3, PORTB2);
+			_delay_ms(20);
 		}		
     }
 }

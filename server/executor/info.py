@@ -80,7 +80,7 @@ class Info():
                 minute = ", %s" % minute
 
             t_in = self._get_temp(db, "49,59,91,92", False)
-            t_out = self._get_temp(db, "-1", True)
+            t_out = self._get_temp(db, "124", True)
             
             text = "%s%s. Средняя температура по дому %s. Температура на улице %s." % (hours[d], minute, t_in, t_out)
 
@@ -126,8 +126,12 @@ class Info():
             znak = " мороза"
         elif v > 0 and plus:
             znak = " тепла"
+
+        t_i = int(t_s[-1:])
+        if abs(int(v)) > 9 and abs(int(v)) < 20:
+            t_i = 0
         
-        return "%s %s%s" % (t_s, temps[int(t_s[-1:])], znak)
+        return "%s %s%s" % (t_s, temps[t_i], znak)
 
     def time_handler(self):
         pass

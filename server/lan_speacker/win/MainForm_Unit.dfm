@@ -1,11 +1,12 @@
 object MainForm: TMainForm
-  Left = 716
-  Top = 223
+  Left = 1009
+  Top = 449
+  AutoSize = True
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
   Caption = 'LAN Speacker'
-  ClientHeight = 335
-  ClientWidth = 447
+  ClientHeight = 41
+  ClientWidth = 228
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -13,15 +14,37 @@ object MainForm: TMainForm
   Font.Name = 'MS Sans Serif'
   Font.Style = []
   OldCreateOrder = False
+  Position = poDefault
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
   PixelsPerInch = 96
   TextHeight = 13
+  object Panel1: TPanel
+    Left = 0
+    Top = 0
+    Width = 228
+    Height = 41
+    Align = alTop
+    Caption = 'STARTING'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'MS Sans Serif'
+    Font.Style = [fsBold]
+    ParentFont = False
+    TabOrder = 0
+  end
   object ClientSocket1: TClientSocket
-    Active = True
+    Active = False
     ClientType = ctNonBlocking
     Host = '192.168.40.5'
     Port = 8084
-    Left = 16
-    Top = 16
+    OnConnecting = ClientSocket1Connecting
+    OnDisconnect = ClientSocket1Disconnect
+    OnRead = ClientSocket1Read
+    OnError = ClientSocket1Error
+    Left = 8
+    Top = 8
   end
   object CoolTrayIcon1: TCoolTrayIcon
     CycleInterval = 0
@@ -54,7 +77,13 @@ object MainForm: TMainForm
     IconIndex = 0
     MinimizeToTray = True
     OnClick = CoolTrayIcon1Click
-    Left = 56
-    Top = 16
+    Left = 40
+    Top = 8
+  end
+  object Timer1: TTimer
+    Interval = 2000
+    OnTimer = Timer1Timer
+    Left = 72
+    Top = 8
   end
 end

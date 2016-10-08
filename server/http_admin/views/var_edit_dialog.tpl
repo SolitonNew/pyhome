@@ -57,7 +57,13 @@
     <table cellpadding="0" cellspacing="10" width="100%">
     <TR>
         <TD colspan="2"></TD>
-    </TR>    
+    </TR>
+    <TR>
+        <TD width="100">ID:</TD>
+        <TD>
+            @KEY@
+        </TD>
+    </TR>
     <TR>
         <TD width="100">Контроллер:</TD>
         <TD>

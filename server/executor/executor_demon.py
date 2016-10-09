@@ -23,7 +23,9 @@ class Main():
         while True:
             try:
                 for row in self.db.select("select * from core_execute order by ID"):
-                    self.execute(str(row[1], "utf-8"))
+                    print(str(row[1], "utf-8"))
+                    for c in str(row[1], "utf-8").split("\n"):
+                        self.execute(c.strip())
                     self.db.IUD("delete from core_execute where ID = %s" % row[0])
                     self.db.commit()
                 time.sleep(0.2)

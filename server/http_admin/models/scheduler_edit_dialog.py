@@ -73,3 +73,8 @@ class SchedulerEditDialog(BaseForm):
             except Exception as e:
                 self.db.rollback()
                 return "ERROR: {}".format(e.args)
+            
+        elif query_type == "test":
+            self.db.IUD("insert into core_execute (COMMAND) values ('%s')" % (self.param_str("SCHEDULER_ACTION")))
+            self.db.commit()
+            return "OK"

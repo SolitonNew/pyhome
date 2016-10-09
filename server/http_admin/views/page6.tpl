@@ -19,7 +19,6 @@
         <div class="toolbar">
             <button onClick="scheduler_settings(-1);">Создать новую запись...</button>
             <button onClick="if (_SCHEDULER_LIST_selected_key) scheduler_settings(_SCHEDULER_LIST_selected_key);">Свойства выбраной записи...</button>
-            <button onClick="SCHEDULER_LIST_refresh();">Обновить</button>
         </div>
     </td>
 </tr>

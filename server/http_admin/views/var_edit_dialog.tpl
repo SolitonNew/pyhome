@@ -43,9 +43,10 @@
         variable_settings_change();
 
         $("#VARIABLE_SETTINGS").ajaxForm(function(data) {
-            if (data == "OK")
+            if (data == "OK") {
                 hide_window();
-            else
+                VARIABLE_LIST_refresh();
+            } else
                 alert(data); 
         }); 
     });

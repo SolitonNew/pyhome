@@ -95,12 +95,15 @@
     <tr>
         <td style="position:relative;" colspan="2" height="100%">
             <div style="position:absolute;left:0px;top:0px;width:100%;height:100%;overflow:hidden;">
+                <div id="stat_panel_center_@ID@" style="position:absolute;width:1px;height:100%;">
+                    <div style="position:relative;width:1px;height:100%;background-color:#ff0000;opacity:0.5;margin-top:-16px;">
+                    </div>
+                </div>
                 <img id="stat_panel_@ID@_img" style="position:absolute;width:100%;height:100%;display:none;"
                     onMouseDown="stat_panel_@ID@_down(event)"
                     onMouseMove="stat_panel_@ID@_move(event)"
                     onMouseUp="stat_panel_@ID@_up(event)"
-                    onMouseOut="stat_panel_@ID@_up(event)">
-                <div id="stat_panel_center_@ID@" style="position:absolute;width:1px;height:100%;background-color:#ff0000;opacity:0.5;"></div>
+                    onMouseOut="stat_panel_@ID@_up(event)">                
             </div>
         </td>
     </tr>

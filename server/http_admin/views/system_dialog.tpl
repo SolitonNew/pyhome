@@ -58,17 +58,16 @@
     function send_command() {
         $.ajax({url:'system_dialog?FORM_QUERY=SEND_COMMAND&COMM_TEXT=' + $('#COMM_TEXT').val()}).done(function (data) {
             if (data == 'OK') {
-                $('#COMM_TEXT').val('');
+                //$('#COMM_TEXT').val('');
             } else {
                 alert(data);
             }
         });        
     }
 
-    function command_key_press(event) {
-        if (event.keyCode == 13)
-            send_command();
-    }
+    $(document).ready(function() {
+        $("#command_form").ajaxForm(); 
+    });
     
 </script>
 
@@ -81,14 +80,17 @@
         <TD>
             <div class="group">
                 Выполнить команду:
+                <form id="command_form" action="system_dialog" method="GET">
                 <table width="100%" cellpadding="5" cellspacing="0">
                 <tr>
                     <td width="100%">
-                        <input type="text" id="COMM_TEXT" style="width:100%;" onKeyPress="command_key_press(event)"/>
+                        <input type="text" id="COMM_TEXT" name="COMM_TEXT" style="width:100%;"/>
+                        <input type="hidden" name="FORM_QUERY" value="SEND_COMMAND">                        
                     </td>
-                    <td><button onClick="send_command();">Выполнить</button></td>
+                    <td><button type="submit">Выполнить</button></td>
                 </tr>
                 </table>
+                </form>
             </div>
         </TD>
     </TR>

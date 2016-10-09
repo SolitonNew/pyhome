@@ -32,6 +32,11 @@
         });
     }
 
+    function test_scheduler() {
+        $('#FORM_QUERY').val('test');
+        $("#SCHEDULER_SETTINGS").submit();
+    }
+
     $(document).ready(function() {
         if ($('#SCHEDULER_KEY').val() == '-1')
             $('#del_button').css('display', 'none');
@@ -39,12 +44,16 @@
         scheduler_settings_change();
 
         $("#SCHEDULER_SETTINGS").ajaxForm(function(data) {
-            if (data == "OK") {
-                hide_window();
-                SCHEDULER_LIST_refresh();
+            if (data == "OK") {                
+                if ($('#FORM_QUERY').val() != 'test') {
+                    hide_window();
+                    SCHEDULER_LIST_refresh();
+                }
             } else
-                alert(data); 
-        }); 
+                alert(data);
+
+            $('#FORM_QUERY').val('update');
+        });
     });
 </script>
 
@@ -62,10 +71,15 @@
         </TD>
     </TR>
     <TR>
+        <form id="scheduler_command_form" action="scheduler_edit_dialog" method="GET">
         <TD valign="top">Действие:</TD>
         <TD>
             <textarea id="SCHEDULER_ACTION" name="SCHEDULER_ACTION" style="width:100%;height:60px;">@ACTION@</textarea>
+            <p align="right" style="padding:0; margin:0px;">
+                <button onClick="test_scheduler();return false;">Тест действия</button>
+            <p>
         </TD>
+        </form>
     </TR>
     <TR>
         <TD>Повторять:</TD>

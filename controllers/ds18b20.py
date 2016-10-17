@@ -102,8 +102,19 @@ class DS18B20(object):
         
         if self._get_data(rom) == None:
             return None
-        
-        return (self.buff[1] << 8 | self.buff[0]) / 16
+
+        #return (self.buff[1] << 8 | self.buff[0]) / 16
+
+        b = self.buff[1] << 8 | self.buff[0]
+        if (b & (1<<15)):        
+            m = b
+            b = 0
+            for i in range(16):
+                if m & (1<<i) == 0:
+                    b |= (1<<i)
+            b = -b
+            b += 1        
+        return b / 16
 
     def get_config(self, rom = False):
         """

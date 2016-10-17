@@ -36,7 +36,7 @@ class Main():
             time.sleep(0.2)
             
     def _add_command(self, command):
-        print(command)
+        print("[%s] %s" % (time.strftime("%d-%m-%Y %H:%M"), command))
         """
         for row in self.db.select("select ID from core_execute where COMMAND = '%s'" % command):
             self.db.IUD("delete from core_execute where ID = %s" % row[0])

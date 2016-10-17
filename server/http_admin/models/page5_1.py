@@ -64,6 +64,24 @@ class Page5_1(BaseForm):
         elif query_type == "panel_img":
             self.content_type = "image/png"
             return self._paint_panel(self.param('key'), self.param('width'), self.param('height'), self.param('panel_h'))
+        elif query_type == "panel_cursor":
+            sql = ("select * from (select c.VALUE, %s NUM "
+                                  "  from core_variable_changes c, web_stat_panels p "
+                                  " where p.ID = %s "
+                                  "   and p.SERIES_%s = c.VARIABLE_ID "
+                                  "   and c.CHANGE_DATE < FROM_UNIXTIME(%s) "
+                                  "order by c.CHANGE_DATE desc limit 1) a")
+            s = []
+            for i in range(1, 5):
+                s += [sql % (i, self.param('key'), i, self.param('pos')), " union "]
+
+            s = "".join(s[:-1])
+
+            res = [",", ",", ",", ","]
+            for rec in self.db.select("select b.* from (%s) b order by b.NUM " % (s)):
+                res[rec[1] - 1] = "%s," % (round(rec[0], 2))
+            
+            return "".join(res)
     
     def _get_one_val(self, series, min_max_vals, min_x, max_x):
         def min_x_val(key):

@@ -79,10 +79,10 @@ class Info():
                         pass
                 minute = ", %s" % minute
 
-            t_in = self._get_temp(db, "49,59,91", False)
+            t_in = self._get_temp(db, "49,59", False)
             t_out = self._get_temp(db, "124", True)
             
-            text = "%s%s. Средняя температура по дому %s. Температура на улице %s." % (hours[d], minute, t_in, t_out)
+            text = "%s%s. Температура по дому %s. Температура на улице %s." % (hours[d], minute, t_in, t_out)
 
             print(text)
 
@@ -107,7 +107,7 @@ class Info():
                  "градусов")
         v = 0
         c = 0
-        t = datetime.now().timestamp() - 900 #15 минут
+        t = datetime.now().timestamp() - 1800 #30 минут
         for row in db.select("select v.VALUE "
                              "  from core_variables v "
                              " where ID in (%s) "

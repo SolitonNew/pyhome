@@ -25,7 +25,9 @@
         var r = $('#stat_panel_range').prop('value');
         $('#stat_panel_@ID@_img').attr({src:'page5_1?FORM_QUERY=panel_img&start=' + stat_panel_start + '&width=' + w + '&height=' + h + '&range=' + r + '&panel_h=' + p_h + '&key=@ID@&rnd=' + Math.random()}).one('load', function () {
             $('#stat_panel_@ID@_img').css('left', '0px');
-            stat_panel_@ID@_cur_update($('#stat_panel_cursor_@ID@').css('left').replace('px', ''), false);
+            var x = $('#stat_panel_cursor_@ID@').css('left').replace('px', '');
+            var y = $('#stat_panel_cursor_@ID@_y').css('top').replace('px', '');
+            stat_panel_@ID@_cur_update(x, y, false);
         });
 
         var label = $('#stat_refresh_label');
@@ -48,14 +50,14 @@
     function stat_panel_@ID@_down(event) {
         event.preventDefault();
 
-        stat_panel_@ID@_cur_update(event.pageX, true);
+        stat_panel_@ID@_cur_update(event.pageX, event.offsetY, true);
         
         var img = $('#stat_panel_@ID@_img');
         stat_panel_@ID@_scroll_left = event.pageX;
     }
 
     function stat_panel_@ID@_move(event) {
-        stat_panel_@ID@_cur_update(event.pageX, true);
+        stat_panel_@ID@_cur_update(event.pageX, event.offsetY, true);
         
         if (stat_panel_@ID@_scroll_left == false)
             return ;        
@@ -76,7 +78,7 @@
         stat_panel_@ID@_scroll_left = false;
     }
 
-    function stat_panel_@ID@_cur_update(x, isStart) {
+    function stat_panel_@ID@_cur_update(x, y, isMaster) {
         var center_x = $('#stat_panel_center_@ID@').css('left').replace('px', '');
         var img = $('#stat_panel_@ID@_img');
         var dx = (img.width() - 50) / (center_x - x);
@@ -100,18 +102,27 @@
         
         var img = $('#stat_panel_@ID@_img');
         var cur = $('#stat_panel_cursor_@ID@');
-        if (x < 40 || x > img.width() - 10 || img.css('left') != '0px')
+        var cur_y = $('#stat_panel_cursor_@ID@_y');
+        
+        if (x < 40 || x > img.width() - 10 || img.css('left') != '0px') {
             cur.css('display', 'none');
-        else {            
+            cur_y.css('display', 'none');
+        } else {            
             cur.css('display', 'block');
+            if (isMaster)
+                cur_y.css('display', 'block');
+            else
+                cur_y.css('display', 'none');
         }
         
         cur.css('left', x + 'px');
 
-        if (isStart) {
+        if (isMaster) {
+            cur_y.css('top', y + 'px');
+            
             for (var i = 0; i < stat_panels_ids.length; i++) {
                 if (stat_panels_ids[i] != @ID@)
-                    eval('stat_panel_' + stat_panels_ids[i] + '_cur_update(' + x + ', false)');
+                    eval('stat_panel_' + stat_panels_ids[i] + '_cur_update(' + x + ',' + y + ', false)');
             }
         }
     }
@@ -171,11 +182,10 @@
                     </div>
                 </div>
                 <div id="stat_panel_cursor_@ID@" style="position:absolute;height:100%;">
-                    <div style="position:relative;width:2px;height:100%;background-color:#0000ff;opacity:0.5;margin-top:-16px;">
-                    </div>
-
+                    <div style="position:relative;width:2px;height:100%;background-color:#0000ff;opacity:0.3;margin-top:-16px;"></div>                    
                     <div id="stat_panel_@ID@_cur_time" style="position:absolute;left:7px;top:5px;font-weight:bold;"></div>
                 </div>
+                <div id="stat_panel_cursor_@ID@_y" style="position:absolute;width:100%;height:2px;background-color:#0000ff;opacity:0.3;"></div>
                 <img id="stat_panel_@ID@_img" style="position:absolute;width:100%;height:100%;display:none;"
                     onMouseDown="stat_panel_@ID@_down(event)"
                     onMouseMove="stat_panel_@ID@_move(event)"

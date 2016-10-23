@@ -15,9 +15,12 @@ class Main():
 
     PACK_SYNC = 1
     PACK_COMMAND = 2
+    PACK_ERROR = 3
 
     def __init__(self):
         self.fast_timeput = 0.1
+
+        self.check_lan_error = False
         
         # Connect to serial port
         try:
@@ -46,10 +49,17 @@ class Main():
     def check_lan(self):
         try:
             buf = self.serialPort.readline()
-            resp = buf.decode("utf-8")
-            for pack in resp.split(chr(0x0)):
-                return json.loads(pack)
-        except:
+            if len(buf) > 0:
+                resp = buf.decode("utf-8")
+                for pack in resp.split(chr(0x0)):
+                    data = json.loads(pack)
+                    #print(data)
+                    return data
+            else:
+                return False
+        except Exception as e:
+            self.check_lan_error = True
+            self._command_info("EXCEPT {}".format(e.args))
             return False
 
     def _sync_variables(self):
@@ -74,7 +84,12 @@ class Main():
                 if res_pack[2] == "RESET":
                     print("RESET ", end="")
                     self.send_pack(dev[0], self.PACK_SYNC, self._reset_pack())
-                    if self.check_lan():
+                    is_ok = False
+                    for r in range(30):
+                        if self.check_lan():
+                            is_ok = True
+                            break
+                    if is_ok:
                         print("OK\n")
                     else:
                         print("ERROR\n")
@@ -92,6 +107,8 @@ class Main():
     def _command_info(self, text):
         print(text)
         text = text.replace("'", "`")
+        text = text.replace("<", "&lt;")
+        text = text.replace(">", "&gt;")
         s = self.db.get_property('RS485_COMMAND_INFO')
         self.db.set_property('RS485_COMMAND_INFO', s + '<p>' + text + '</p>')
 
@@ -138,26 +155,35 @@ class Main():
                 else:
                     self._command_info(error_text)
             elif command == "CONFIG_UPDATE":
-                self.serialPort.timeout = 1
+                #self.serialPort.timeout = 0.1
                 try:
                     self._command_info("CONFIG FILE UPLOAD '%s'..." % dev[1])
-                    pack_data = generate_config_file(self.db)
+                    pack_data = generate_config_file(self.db)# + generate_config_file(self.db)
                     self._command_info(str(len(pack_data)) + ' bytes.')
 
                     #bts = 512
-                    bts = 64
+                    bts = 512
                     cou = math.ceil(len(pack_data) / bts)
+                    is_ok = False
                     self.send_pack(dev[0], self.PACK_COMMAND, ["SET_CONFIG_FILE", cou, False], False)
                     for i in range(cou):
                         t = i * bts
                         s = pack_data[t:t + bts]
                         self.send_pack(dev[0], self.PACK_COMMAND, ["SET_CONFIG_FILE", i + 1, s], i == cou - 1)
-
-                    is_ok = False
-                    for i in range(30):
-                        if self.check_lan():
+                        self.check_lan()
+                        if self.check_lan_error:
                             is_ok = True
                             break
+                        
+                    if is_ok == False:
+                        for i in range(100):
+                            e = self.check_lan() 
+                            if e or self.check_lan_error:
+                                if e[1] == PACK_COMMAND:
+                                    is_ok = True
+                                else:
+                                    self._command_info("%s" % e[2])
+                                break
 
                     if is_ok:
                         self._command_info("OK")
@@ -166,6 +192,7 @@ class Main():
                 except:
                     pass
                 self.serialPort.timeout = self.fast_timeput
+                self.check_lan_error = False
             elif command == "REBOOT_CONTROLLERS":
                 self._command_info("Запрос перезагрузки контроллера '%s'..." % dev[1])
                 self.send_pack(dev[0], self.PACK_COMMAND, ["REBOOT_CONTROLLER", ""])

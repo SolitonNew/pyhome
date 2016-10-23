@@ -15,6 +15,7 @@ IS_START = True
 
 PACK_SYNC = 1
 PACK_COMMAND = 2
+PACK_ERROR = 3
 
 # Инициализация шин
 ow = OneWire('Y12')
@@ -103,11 +104,14 @@ while True:
                     rs485.send_pack(PACK_COMMAND, [comm_data[0], roms])
                     pyb.LED(3).off()
                 elif comm_data[0] == "SET_CONFIG_FILE":
-                    print("SEND")
                     rs485.send_pack(PACK_COMMAND, [comm_data[0], False])
                 elif comm_data[0] == "REBOOT_CONTROLLER":
                     rs485.send_pack(PACK_COMMAND, [comm_data[0], False])
                     pyb.hard_reset()
+            elif pack[1] == PACK_ERROR:
+                rs485.send_pack(PACK_ERROR, ["error"])
+                rs485.error = []
+                #LED(4).off()
 
     onewire_alarms()
     onewire_termometrs()

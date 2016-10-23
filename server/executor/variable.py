@@ -15,10 +15,11 @@ class Variable():
             s = command.replace(tag + "(", "")
             s = s.replace(")", "")
             s = s.replace("\"", "")
-            for v in db.select("select ID from core_variables where NAME='%s'" % s.strip()):
-                db.IUD("call CORE_SET_VARIABLE(%s, %s, null)" %
-                       (v[0], val))
-                db.commit()
+            for v in db.select("select ID, VALUE from core_variables where NAME='%s'" % s.strip()):
+                if v[1] != val:
+                    db.IUD("call CORE_SET_VARIABLE(%s, %s, null)" %
+                           (v[0], val))
+                    db.commit()
             return True
         except:
             pass

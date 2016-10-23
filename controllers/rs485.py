@@ -3,15 +3,9 @@ from pyb import Pin
 from pyb import LED
 from ujson import loads, dumps
 
-class RS485(object):
-    PACK_SYNC = 1
-    PACK_REBOOT = 2
-    PACK_SET_CONFIG = 3
-    
-    PACK_SCAN_OW = 5
-    PACK_ROMS_OW = 6
-    
+class RS485(object):   
     def __init__(self, uart_num, pin_rw, dev_id):
+        self.error = []
         self.uart = UART(uart_num)
         self.uart.init(57600, bits=8, parity=0, timeout=10, read_buf_len=64)
         self.pin_rw = Pin(pin_rw)
@@ -49,15 +43,18 @@ class RS485(object):
                             else:
                                 res += [data]
                     except Exception as e:
-                        print("{}".format(e.args))
+                        #print("{}".format(e.args))
+                        self.error += ["{} ".format(e.args)]
                         LED(4).on()
         except Exception as e:
-            res = []
-            print("{}".format(e.args))
+            res = [(0, 3)] # Формируем пакет PACK_ERROR
+            #print("{}".format(e.args))
+            self.error += ["{} ".format(e.args)]
+            LED(4).on()
 
         if file_handler:
             file_handler.close()
-            print("OK")
+            #print("OK")
         
         return res
 

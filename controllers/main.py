@@ -104,14 +104,14 @@ while True:
                     rs485.send_pack(PACK_COMMAND, [comm_data[0], roms])
                     pyb.LED(3).off()
                 elif comm_data[0] == "SET_CONFIG_FILE":
-                    rs485.send_pack(PACK_COMMAND, [comm_data[0], False])
+                    #pyb.LED(3).toggle()
+                    rs485.send_pack(PACK_COMMAND, [comm_data[0], rs485.file_parts_i])
                 elif comm_data[0] == "REBOOT_CONTROLLER":
                     rs485.send_pack(PACK_COMMAND, [comm_data[0], False])
                     pyb.hard_reset()
             elif pack[1] == PACK_ERROR:
-                rs485.send_pack(PACK_ERROR, ["error"])
+                rs485.send_pack(PACK_ERROR, [rs485.error])
                 rs485.error = []
-                #LED(4).off()
 
     onewire_alarms()
     onewire_termometrs()

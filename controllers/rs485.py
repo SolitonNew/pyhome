@@ -2,6 +2,7 @@ from pyb import UART
 from pyb import Pin
 from pyb import LED
 from ujson import loads, dumps
+from os import remove
 
 class RS485(object):   
     def __init__(self, uart_num, pin_rw, dev_id):
@@ -12,17 +13,16 @@ class RS485(object):
         self.pin_rw.init(Pin.OUT_PP)
         self.pin_rw.value(0)
         self.dev_id = dev_id
+        
+        self.file_parts = 0
+        self.file_parts_i = 1
+        self.file_handler = False
 
     def check_lan(self):
         res = []
-        uart = self.uart;
-        file_handler = False
-
-        self.buf_len_of_error = 0
+        uart = self.uart
         try:
-            file_parts = 0
-            file_parts_i = 1
-            buf = uart.readline().decode("utf-8")
+            buf = uart.readall().decode("utf-8")
             if buf:
                 LED(2).toggle()
             for pack in buf.split(chr(0x0)):
@@ -31,41 +31,62 @@ class RS485(object):
                         data = loads(pack)
                         if data[0] == self.dev_id:
                             if data[2][0] == "SET_CONFIG_FILE":
-                                #print(data[2][1], " ", file_parts_i)
+                                res = [data]
                                 if data[2][2] == False:
-                                    res += [data]
-                                    file_parts = data[2][1]
-                                    file_handler = open("config.py", "w")
+                                    self.file_parts = data[2][1]
+                                    self.file_parts_i = 1
+                                    self._open_file()
                                 else:
-                                    if file_handler and file_parts_i == data[2][1]:
-                                        file_handler.write(data[2][2])
-                                    file_parts_i += 1
+                                    if self.file_handler:
+                                        if self.file_parts_i == data[2][1]:
+                                            self.file_handler.write(data[2][2])
+                                            if self.file_parts_i == self.file_parts:
+                                                self._close_file()
+                                            self.file_parts_i += 1
+                                        else:
+                                            res = [[self.dev_id, 3]]
+                                            self.error += ["Error 3  %s" % (data)]
+                                            self._close_file()
+                                            break
+                                    else:
+                                        res = [[self.dev_id, 3]]
+                                        self.error += ["Error 4  %s" % (data)]
+                                        break
                             else:
-                                res += [data]
+                                self._close_file()
+                                res = [data]
                     except Exception as e:
-                        #print("{}".format(e.args))
-                        self.error += ["{} ".format(e.args)]
+                        #self._close_file()
+                        res = [[self.dev_id, 3]]
+                        self.error += ["Error 1 {}".format(e.args) + "  %s" % (data)]
                         LED(4).on()
         except Exception as e:
-            res = [(0, 3)] # Формируем пакет PACK_ERROR
-            #print("{}".format(e.args))
-            self.error += ["{} ".format(e.args)]
+            #self._close_file()
+            res = [[self.dev_id, 3]]
+            self.error += ["Error 2 {}".format(e.args)]
             LED(4).on()
-
-        if file_handler:
-            file_handler.close()
-            #print("OK")
-        
         return res
 
     def send_pack(self, pack_type, pack_data):
-        self.pin_rw.value(1)
+        pin_rw = self.pin_rw.value
+        uart = self.uart
+        pin_rw(1)
         try:
             buf = [self.dev_id, pack_type, pack_data]
             data = dumps(buf).encode("utf-8")
             data += bytearray([0x0])
-            self.uart.write(data)
+            uart.write(data)
         except:
-            print("Возникла ошибка при отправке пакета")
-            print(data)
-        self.pin_rw.value(0)
+            #print("Возникла ошибка при отправке пакета")
+            #print(data)
+            LED(3).on()
+        pin_rw(0)
+
+    def _open_file(self):
+        self._close_file()
+        self.file_handler = open("config.py", "w")
+
+    def _close_file(self):
+        if self.file_handler:
+            self.file_handler.close()
+            self.file_handler = False

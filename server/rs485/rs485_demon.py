@@ -38,9 +38,19 @@ class Main():
     def send_pack(self, dev_id, pack_type, pack_data, flush=True):
         buf = json.dumps([dev_id, pack_type, pack_data]).encode("utf-8")
         buf += bytearray([0x0])
-        self.serialPort.write(buf)
-        if flush:
-            self.serialPort.flush() 
+
+        c = 5
+        for err in range(c):
+            self.serialPort.write(buf)
+            if flush:
+                self.serialPort.flush()
+            #print(buf)
+            res = self.check_lan()
+            if self.check_lan_error == False:
+                break
+            if err < (c - 1):
+                self.check_lan_error = False
+        return res
 
     def _store_variable_to_db(self, dev_id, pack_data):
         for var in pack_data:
@@ -50,11 +60,18 @@ class Main():
         try:
             buf = self.serialPort.readline()
             if len(buf) > 0:
+                #print(buf)
                 resp = buf.decode("utf-8")
+                data = []
                 for pack in resp.split(chr(0x0)):
-                    data = json.loads(pack)
-                    #print(data)
-                    return data
+                    if len(pack) > 0:
+                        d = json.loads(pack)
+                        data += [d]
+                        if d[1] == self.PACK_ERROR:
+                            self.check_lan_error = True
+                            for s in d[2]:
+                                self._command_info("%s" % s)
+                return data
             else:
                 return False
         except Exception as e:
@@ -78,39 +95,43 @@ class Main():
 
             date = datetime.datetime.now().strftime('%H:%M:%S')
             print("[%s] SYNC. '%s': " % (date, dev[1]), end="")
-            self.send_pack(dev[0], self.PACK_SYNC, pack_data)
-            res_pack = self.check_lan()
-            if res_pack:
-                if res_pack[2] == "RESET":
-                    print("RESET ", end="")
-                    self.send_pack(dev[0], self.PACK_SYNC, self._reset_pack())
-                    is_ok = False
-                    for r in range(30):
-                        if self.check_lan():
-                            is_ok = True
-                            break
-                    if is_ok:
-                        print("OK\n")
+            cl = self.send_pack(dev[0], self.PACK_SYNC, pack_data)
+            #cl = self.check_lan()
+            if cl:
+                for res_pack in cl:
+                    if res_pack[2] == "RESET":
+                        print("RESET ", end="")
+                        is_ok = self.send_pack(dev[0], self.PACK_SYNC, self._reset_pack()) != False
+                        for r in range(30):
+                            if self.check_lan():
+                                is_ok = True
+                                break
+                        if is_ok:
+                            print("OK\n")
+                        else:
+                            print("ERROR\n")
                     else:
-                        print("ERROR\n")
-                else:
-                    self._store_variable_to_db(res_pack[0], res_pack[2])
-                    print("OK")
-                    print("   >> ", pack_data)
-                    print("   << ", res_pack[2], "\n")
+                        self._store_variable_to_db(res_pack[0], res_pack[2])
+                        print("OK")
+                        print("   >> ", pack_data)
+                        print("   << ", res_pack[2], "\n")
             else:
                 print("ERROR\n")
 
     def _reset_pack(self):
         return self.db.all_variables();
 
-    def _command_info(self, text):
-        print(text)
+    def _command_info(self, text, replace_text = None):
         text = text.replace("'", "`")
-        text = text.replace("<", "&lt;")
-        text = text.replace(">", "&gt;")
+        text = text.replace('"', '\"')
         s = self.db.get_property('RS485_COMMAND_INFO')
-        self.db.set_property('RS485_COMMAND_INFO', s + '<p>' + text + '</p>')
+        if replace_text == None:
+            text = text.replace("<", "&lt;")
+            text = text.replace(">", "&gt;")
+            print(text)
+            self.db.set_property('RS485_COMMAND_INFO', s + '<p>' + text + '</p>')
+        else:
+            self.db.set_property('RS485_COMMAND_INFO', s.replace(text, replace_text))
 
     def _send_commands(self):
         command = self.db.get_property('RS485_COMMAND')
@@ -132,10 +153,9 @@ class Main():
                     time.sleep(3)
                     self._command_info("Запрос списка найденых на шине OneWire устройств для контроллера '%s'" % dev[1])
                     self.send_pack(dev[0], self.PACK_COMMAND, ["LOAD_ONE_WIRE_ROMS", ""])
-                    res_pack = self.check_lan()
-                    if res_pack:
+                    for res_pack in self.check_lan():
                         count = 0
-                        allCount = len(res_pack[2][1])                        
+                        allCount = len(res_pack[2][1])
                         for rom in res_pack[2][1]:
                             rom_s = []
                             for r in rom:
@@ -155,10 +175,10 @@ class Main():
                 else:
                     self._command_info(error_text)
             elif command == "CONFIG_UPDATE":
-                #self.serialPort.timeout = 0.1
+                self.serialPort.timeout = 0.5
                 try:
                     self._command_info("CONFIG FILE UPLOAD '%s'..." % dev[1])
-                    pack_data = generate_config_file(self.db)# + generate_config_file(self.db)
+                    pack_data = generate_config_file(self.db)
                     self._command_info(str(len(pack_data)) + ' bytes.')
 
                     #bts = 512
@@ -166,23 +186,27 @@ class Main():
                     cou = math.ceil(len(pack_data) / bts)
                     is_ok = False
                     self.send_pack(dev[0], self.PACK_COMMAND, ["SET_CONFIG_FILE", cou, False], False)
-                    for i in range(cou):
-                        t = i * bts
-                        s = pack_data[t:t + bts]
-                        self.send_pack(dev[0], self.PACK_COMMAND, ["SET_CONFIG_FILE", i + 1, s], i == cou - 1)
-                        self.check_lan()
-                        if self.check_lan_error:
-                            is_ok = True
-                            break
+                    if self.check_lan_error == False:
+                        prev_command = "[]"
+                        self._command_info(prev_command)
+                        for i in range(cou):
+                            t = i * bts
+                            s = pack_data[t:t + bts]
+                            self.send_pack(dev[0], self.PACK_COMMAND, ["SET_CONFIG_FILE", i + 1, s], i == cou - 1)
+                            if self.check_lan_error:
+                                is_ok = True
+                                break
+                            else:
+                                new_command = self._gen_text_progress(i, cou)
+                                self._command_info(prev_command, new_command)
+                                prev_command = new_command                                
+                        self._command_info(prev_command, self._gen_text_progress(cou, cou))
                         
                     if is_ok == False:
                         for i in range(100):
-                            e = self.check_lan() 
+                            e = self.check_lan()
                             if e or self.check_lan_error:
-                                if e[1] == PACK_COMMAND:
-                                    is_ok = True
-                                else:
-                                    self._command_info("%s" % e[2])
+                                is_ok = True
                                 break
 
                     if is_ok:
@@ -195,8 +219,7 @@ class Main():
                 self.check_lan_error = False
             elif command == "REBOOT_CONTROLLERS":
                 self._command_info("Запрос перезагрузки контроллера '%s'..." % dev[1])
-                self.send_pack(dev[0], self.PACK_COMMAND, ["REBOOT_CONTROLLER", ""])
-                if self.check_lan():
+                if self.send_pack(dev[0], self.PACK_COMMAND, ["REBOOT_CONTROLLER", ""]):
                     self._command_info("OK")
                 else:
                     self._command_info(error_text)
@@ -207,6 +230,14 @@ class Main():
         self._command_info("Готово.")
         time.sleep(2)
         self._command_info("TERMINAL EXIT")
+
+    def _gen_text_progress(self, pos, max_pos):
+        i = round(pos * 100 / max_pos)
+        s = "<center>["
+        s += ("<span style=\"color:#ffffff;\">|</span>") * (i + 1)
+        s += ("<span style=\"color:#000000;\">|</span>") * (100 - i - 1)
+        s += "] " + str(i) + "% </center>"
+        return s
 
     SYNC_STATE = ""
             

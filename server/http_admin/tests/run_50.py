@@ -53,13 +53,13 @@ BEDROOM_1_TERM_R = Variable('BEDROOM_1_TERM_R', 0)
 BEDROOM_2_TERM_S = Variable('BEDROOM_2_TERM_S', 0)
 BEDROOM_2_TERM_V = Variable('BEDROOM_2_TERM_V', 22.0)
 BEDROOM_2_TERM_R = Variable('BEDROOM_2_TERM_R', 0)
-BEDROOM_3_TERM_S = Variable('BEDROOM_3_TERM_S', 18.6875)
+BEDROOM_3_TERM_S = Variable('BEDROOM_3_TERM_S', 18.75)
 BEDROOM_3_TERM_V = Variable('BEDROOM_3_TERM_V', 21.0)
 BEDROOM_3_TERM_R = Variable('BEDROOM_3_TERM_R', 0)
 HALL_2_TERM_S = Variable('HALL_2_TERM_S', 0)
 HALL_2_TERM_V = Variable('HALL_2_TERM_V', 22.0)
 HALL_2_TERM_R = Variable('HALL_2_TERM_R', 0)
-LIVING_TERM_S = Variable('LIVING_TERM_S', 20.5625)
+LIVING_TERM_S = Variable('LIVING_TERM_S', 21.125)
 LIVING_TERM_V = Variable('LIVING_TERM_V', 21.0)
 LIVING_TERM_R = Variable('LIVING_TERM_R', 0)
 GAME_ROOM_TERM_S = Variable('GAME_ROOM_TERM_S', 0)
@@ -91,8 +91,8 @@ HALL_2_SWITCH = Variable('HALL_2_SWITCH', 0.0)
 SHOWER_2_SWITCH = Variable('SHOWER_2_SWITCH', 0)
 PODVAL_R = Variable('PODVAL_R', 0.0)
 GAME_ROOM_S = Variable('GAME_ROOM_S', 0.0)
-BACK_DOOR_TERM_IN_S = Variable('BACK_DOOR_TERM_IN_S', 19.125)
-BEDROOM_3_WC_TERM = Variable('BEDROOM_3_WC_TERM', 18.625)
+BACK_DOOR_TERM_IN_S = Variable('BACK_DOOR_TERM_IN_S', 19.75)
+BEDROOM_3_WC_TERM = Variable('BEDROOM_3_WC_TERM', 19.0)
 HEATING_MAIN_OUT = Variable('HEATING_MAIN_OUT', 0)
 HEATING_MAIN_IN = Variable('HEATING_MAIN_IN', 0)
 HEATING_CHIMNEY = Variable('HEATING_CHIMNEY', 0)
@@ -120,15 +120,11 @@ HEATING_SIGNAL_1 = Variable('HEATING_SIGNAL_1', 0)
 HEATING_SIGNAL_2 = Variable('HEATING_SIGNAL_2', 0)
 HEATING_SIGNAL_3 = Variable('HEATING_SIGNAL_3', 0)
 QUIET_TIME = Variable('QUIET_TIME', 0.0)
-BACK_DOOR_TERM_OUT_S = Variable('BACK_DOOR_TERM_OUT_S', 9.875)
+BACK_DOOR_TERM_OUT_S = Variable('BACK_DOOR_TERM_OUT_S', 11.3125)
 
-import time
+import variables
 
-#Системное время
-sys_time = time.localtime(DATE_TIME.value())
-
-tm = sys_time[3] + sys_time[4] / 60
-
-#BOILER_SWITCH.value(tm >= BOILER_ON_HOUR.value() and tm <= BOILER_OFF_HOUR.value())
+for var in variables.variableList:
+    var.value()
 printInput()
 printChanges()

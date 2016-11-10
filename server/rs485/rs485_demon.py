@@ -274,7 +274,10 @@ class Main():
             if SYNC_STATE == "RUN":
                 if stateChange:
                     print("Синхронизация запущена")
-                self._sync_variables()
+                try:
+                    self._sync_variables()
+                except:
+                    pass
             else:
                 if stateChange:
                     print("Синхронизация остановлена")

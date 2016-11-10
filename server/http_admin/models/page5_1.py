@@ -422,9 +422,13 @@ class Page5_1(BaseForm):
             tx_prev = -100
             for i in range(math.ceil(min_x / x_step), math.ceil(max_x / x_step) + 1):
                 if sc == 0:
+                    d_i = datetime.datetime.fromtimestamp(i * x_step)
                     x = (i * x_step - min_x - tz) / kx + left
                     ctx.set_source_rgb(0, 0, 0)
-                    num = datetime.datetime.fromtimestamp(i * x_step).strftime('%d-%m-%Y')
+                    num = d_i.strftime('%d-%m-%Y %H')
+                    
+                    x -= (int(d_i.strftime('%H')) * 3600 - tz) / kx
+                    
                     tw, th = ctx.text_extents(num)[2:4]
                     tx = x - tw // 2
                     ctx.move_to(tx, height - bottom + th + 5)

@@ -27,7 +27,6 @@ class SpeackThread(threading.Thread):
                             channels=CHANNELS,
                             rate=RATE,
                             input=True,
-                            input_device_index=0,
                             frames_per_buffer=CHUNK)
         except:
             stream = False
@@ -49,6 +48,10 @@ class SpeackThread(threading.Thread):
         del(threads[threads.index(self)])
 
 p = pyaudio.PyAudio()
+
+print(p.get_default_input_device_info())
+print("----------")
+
 for i in range(p.get_device_count()):
     print(p.get_device_info_by_index(i)['name'])
 p.terminate()

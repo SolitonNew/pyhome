@@ -49,13 +49,17 @@ class SpeackThread(threading.Thread):
 
 p = pyaudio.PyAudio()
 
+<<<<<<< HEAD
+=======
 print(p.get_default_input_device_info())
 print("----------")
 
+>>>>>>> 8f3e89013cbff56dd3025c81406ee8991e7045c0
 for i in range(p.get_device_count()):
-    print(p.get_device_info_by_index(i)['name'])
+    print("%s. %s" % (i, p.get_device_info_by_index(i)["name"]))
 p.terminate()
 print('---------------------------------------------------------------------')
+    
 
 port = 8084
 

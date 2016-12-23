@@ -16,13 +16,15 @@ SCREENS = [["Справка", "", "", None, None, [], None],
 
 CURRENT_SCREEN = 0
 
-SCREENS[0][5] = ["",
+screen_0_tmp = ["",
                  "   + Кнопки 1-%s это переключение между экранами." % (len(SCREENS) - 1),
                  "   + Кнопки Right|Left переклюают экраны по порядку.",
                  "   + Кнопка B перезапускает модули всех экранов.",
                  "   + Кнопка R перезапускает только модуль текущего экрана.",
                  "   + Кнопка Q прерывает работу экранов и закрывает приложение.",
                  ""]
+
+SCREENS[0][5] = screen_0_tmp
 
 def startProces(ind):
     global SCREENS
@@ -131,6 +133,16 @@ while True:
         x += len(btn)
 
         if CURRENT_SCREEN == i:
+            if CURRENT_SCREEN == 0:
+                temp = "-//-"
+                try:
+                    ft = open("sys/devices/virtual/termal/termal_zone_0/temp", "r")
+                    temp = ft.readline()
+                    ft.close()
+                except:
+                    pass
+                SCREENS[i][5] = screen_0_tmp + ["   Температура процессора: %s ºC" % (temp)]
+            
             lines = SCREENS[i][5]
             try:                
                 h = size[0] - 1

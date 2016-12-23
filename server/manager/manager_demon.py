@@ -134,13 +134,14 @@ while True:
 
         if CURRENT_SCREEN == i:
             if CURRENT_SCREEN == 0:
-                temp = "-//-"
+                temp = "--"
                 try:
                     ft = open("/sys/devices/virtual/thermal/thermal_zone0/temp", "r")
                     temp = ft.readline()
                     ft.close()
                 except:
                     pass
+                temp = temp.replace("/n", "")
                 SCREENS[i][5] = screen_0_tmp + ["   Температура процессора: %s ºC" % (temp)]
             
             lines = SCREENS[i][5]

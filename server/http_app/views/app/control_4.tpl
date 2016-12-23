@@ -39,6 +39,9 @@
         var val_deg = '.0';
         if (val_s.indexOf('.') > 0) {
             val_num = val_s.substr(0, val_s.length - 2);
+            if (val < 0) {
+                val_num = '-' + val_num;
+            }
             val_deg = '.' + val_s.substr(val_s.length - 1, 1);
         }
         

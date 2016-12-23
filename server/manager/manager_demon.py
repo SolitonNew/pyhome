@@ -136,7 +136,7 @@ while True:
             if CURRENT_SCREEN == 0:
                 temp = "-//-"
                 try:
-                    ft = open("/sys/devices/virtual/termal/termal_zone0/temp", "r")
+                    ft = open("/sys/devices/virtual/thermal/thermal_zone0/temp", "r")
                     temp = ft.readline()
                     ft.close()
                 except:

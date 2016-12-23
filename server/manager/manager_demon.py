@@ -141,8 +141,8 @@ while True:
                     ft.close()
                 except:
                     pass
-                temp = temp.replace("/n", "")
-                SCREENS[i][5] = screen_0_tmp + ["   Температура процессора: %s ºC" % (temp)]
+                temp = temp.replace("\n", "")
+                SCREENS[i][5] = screen_0_tmp + ["   Температура процессора: %sºC" % (temp)]
             
             lines = SCREENS[i][5]
             try:                

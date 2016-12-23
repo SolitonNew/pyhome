@@ -106,21 +106,11 @@ class DBConnector(object):
 
     def set_variable_value(self, var_id, var_value, dev_id):
         if dev_id == False:
-            dev_id = "null"        
+            dev_id = "null"
             
         try:
             var_v = float(var_value)
-            q = self.query("insert into core_variable_changes "
-                           " (VARIABLE_ID, VALUE, FROM_ID)"
-                           "values"
-                           " (%s, %s, %s)" % (var_id, var_v, dev_id))
-            q.close()
-
-            q = self.query("update core_variables"
-                           "   set VALUE=%s"
-                           " where ID = %s" % (var_v, var_id))
-            q.close();
-
+            self.IUD("call CORE_SET_VARIABLE(%s, %s, %s)" % (var_id, var_v, dev_id))
             self.commit()
         except:
             print("Ошибка записи переменной в БД. ID: %s   VALUE: %s   FROM_ID: %s" % (var_id, var_v, dev_id))

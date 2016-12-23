@@ -51,7 +51,7 @@ class DBConnector(object):
 
     def variable_changes(self):
         res = self.select(("select c.ID, c.VARIABLE_ID, c.VALUE, v.APP_CONTROL, v.GROUP_ID"
-                           "  from core_variable_changes c, core_variables v "
+                           "  from core_variable_changes_mem c, core_variables v "
                            " where c.ID > %s "
                            "   and c.VARIABLE_ID = v.ID "
                            "order by c.ID"), [self.lastVarChangeID])

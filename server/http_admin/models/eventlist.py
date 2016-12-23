@@ -14,7 +14,7 @@ class EventList(BaseForm):
                 return str(row[0])
         elif query_type == "list":
             data = self.db.select((" select c.CHANGE_DATE, v.COMM, c.VALUE, v.ROM"
-                                   "   from core_variable_changes c, core_variables v"
+                                   "   from core_variable_changes_mem c, core_variables v"
                                    "  where c.VARIABLE_ID = v.ID"
                                    " order by c.ID desc"
                                    " limit 50"))

@@ -80,7 +80,7 @@ class DBConnector(object):
         for r in self.select("select CORE_GET_LAST_CHANGE_ID()"):
             if r[0] > self.lastVarChangeID + 1:
                 q = self.query(("select ID, VARIABLE_ID, VALUE, FROM_ID"
-                                "  from core_variable_changes "
+                                "  from core_variable_changes_mem "
                                 " where ID > %s "
                                 "order by ID"), [self.lastVarChangeID])
                 row = q.fetchone()

@@ -19,7 +19,7 @@ class SpeackThread(threading.Thread):
         CHUNK = 1024
         FORMAT = pyaudio.paInt16
         CHANNELS = 2
-        RATE = 16000
+        RATE = 44100
         
         p = pyaudio.PyAudio()
         try:
@@ -35,7 +35,7 @@ class SpeackThread(threading.Thread):
         while True:            
             try:                
                 conn.send(stream.read(CHUNK))
-                conn.recv(1024)
+                conn.recv(4)
             except:                
                 break
 

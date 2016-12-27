@@ -3,7 +3,7 @@
 
 import time
 import curses
-from subprocess import Popen, PIPE, STDOUT
+from subprocess import Popen, PIPE, STDOUT, call
 import math
 
 SCREENS = [["Справка", "", "", None, None, [], None],
@@ -12,7 +12,8 @@ SCREENS = [["Справка", "", "", None, None, [], None],
            ["Пульт", "http_app_demon.py", "/home/pyhome/server/http_app", None, None, [], None],
            ["Расписание", "scheduler_demon.py", "/home/pyhome/server/scheduler", None, None, [], None],
            ["Команды", "executor_demon.py", "/home/pyhome/server/executor", None, None, [], None],
-           ["Контроль", "watcher_demon.py", "/home/pyhome/server/watcher", None, None, [], None]]
+           ["Контроль", "watcher_demon.py", "/home/pyhome/server/watcher", None, None, [], None],
+           ["LAN", "lan_speacker_demon.py", "/home/pyhome/server/lan_speacker", None, None, [], None]]
 
 CURRENT_SCREEN = 0
 
@@ -57,6 +58,8 @@ def stopProceses():
     global SCREENS
     for ind in range(len(SCREENS)):
         stopProces(ind)
+
+call("pulseaudio", shell=True)
 
 startProceses()
 
@@ -134,6 +137,8 @@ while True:
 
         if CURRENT_SCREEN == i:
             if CURRENT_SCREEN == 0:
+                tim = ["   Системное время:        %s" % (time.strftime("%d-%m-%Y %H:%M:%S"))]
+
                 temp = "--"
                 try:
                     ft = open("/sys/devices/virtual/thermal/thermal_zone0/temp", "r")
@@ -142,10 +147,10 @@ while True:
                 except:
                     pass
                 temp = temp.replace("\n", "")
-                SCREENS[i][5] = screen_0_tmp + ["   Температура процессора: %sºC" % (temp)]
-            
+                SCREENS[i][5] = screen_0_tmp + tim + ["   Температура процессора: %sºC" % (temp)]
+    
             lines = SCREENS[i][5]
-            try:                
+            try:
                 h = size[0] - 1
                 num = len(lines)
                 off = 0

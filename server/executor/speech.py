@@ -28,6 +28,7 @@ class Speech():
                 subprocess.call('echo "' + s + '" | RHVoice-test -p Anna -o speech.wav', shell=True)
                 subprocess.call("aplay /home/pyhome/server/executor/notify.wav", shell=True)
                 subprocess.call("aplay speech.wav", shell=True)
+                print("")
                 
             return True
         except:

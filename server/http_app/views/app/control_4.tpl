@@ -33,12 +33,16 @@
     }
 
     function set_val_@NUM@(val) {
+        var minus = (val < 0)
         val = Math.abs(val);
         var val_s = Math.round(val * 10) / 10 + '';
         var val_num = val_s;
         var val_deg = '.0';
         if (val_s.indexOf('.') > 0) {
             val_num = val_s.substr(0, val_s.length - 2);
+            if (minus) {
+                val_num = '-' + val_num;
+            }
             val_deg = '.' + val_s.substr(val_s.length - 1, 1);
         }
         

@@ -19,7 +19,7 @@ class SpeackThread(threading.Thread):
         CHUNK = 1024
         FORMAT = pyaudio.paInt16
         CHANNELS = 2
-        RATE = 16000
+        RATE = 44100
         
         p = pyaudio.PyAudio()
         try:
@@ -27,7 +27,6 @@ class SpeackThread(threading.Thread):
                             channels=CHANNELS,
                             rate=RATE,
                             input=True,
-                            input_device_index=0,
                             frames_per_buffer=CHUNK)
         except:
             stream = False
@@ -36,7 +35,7 @@ class SpeackThread(threading.Thread):
         while True:            
             try:                
                 conn.send(stream.read(CHUNK))
-                conn.recv(1024)
+                conn.recv(4)
             except:                
                 break
 
@@ -49,10 +48,15 @@ class SpeackThread(threading.Thread):
         del(threads[threads.index(self)])
 
 p = pyaudio.PyAudio()
+
+print(p.get_default_input_device_info())
+print("----------")
+
 for i in range(p.get_device_count()):
-    print(p.get_device_info_by_index(i)['name'])
+    print("%s. %s" % (i, p.get_device_info_by_index(i)["name"]))
 p.terminate()
 print('---------------------------------------------------------------------')
+    
 
 port = 8084
 

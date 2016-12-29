@@ -86,7 +86,7 @@ class Index(BaseForm):
         if query_type == "changes":
             res = []
             res += ["@CHANGE_LOG@"]
-            for rec in self.db.select("select ID, VARIABLE_ID, VALUE from core_variable_changes where ID > %s" % (self.param('key'))):
+            for rec in self.db.select("select ID, VARIABLE_ID, VALUE from core_variable_changes_mem where ID > %s" % (self.param('key'))):
                 res += [str(rec[0]), ";"]
                 res += [str(rec[1]), ";"]
                 res += [str(rec[2])]

@@ -16,52 +16,57 @@ class RS485(object):
         
         self.file_parts = 0
         self.file_parts_i = 1
-        self.file_handler = False
+        self.file_is_open = False
 
     def check_lan(self):
         res = []
         uart = self.uart
         try:
-            buf = uart.readall().decode("utf-8")
+            
+            buf = uart.readall()            
             if buf:
+                buf = buf.decode("utf-8")
                 LED(2).toggle()
-            for pack in buf.split(chr(0x0)):
-                if pack:
-                    try:
-                        data = loads(pack)
-                        if data[0] == self.dev_id:
-                            if data[2][0] == "SET_CONFIG_FILE":
-                                res = [data]
-                                if data[2][2] == False:
-                                    self.file_parts = data[2][1]
-                                    self.file_parts_i = 1
-                                    self._open_file()
-                                else:
-                                    if self.file_handler:
-                                        if self.file_parts_i == data[2][1]:
-                                            self.file_handler.write(data[2][2])
-                                            if self.file_parts_i == self.file_parts:
-                                                self._close_file()
-                                            self.file_parts_i += 1
+                for pack in buf.split(chr(0x0)):
+                    if pack:
+                        try:
+                            data = False
+                            data = loads(pack)
+                            if len(data) > 0 and data[0] == self.dev_id:
+                                if data[2][0] == "SET_CONFIG_FILE":
+                                    res = [data]
+                                    if data[2][2] == False:
+                                        self.file_parts = data[2][1]
+                                        self.file_parts_i = 1
+                                        self._write_config(True, '')
+                                        self.file_is_open = True
+                                    else:
+                                        if self.file_is_open:
+                                            if self.file_parts_i == data[2][1]:
+                                                self._write_config(False, data[2][2])
+                                                if self.file_parts_i == self.file_parts:
+                                                    self.file_is_open = False
+                                                self.file_parts_i += 1
+                                            else:
+                                                res = [[self.dev_id, 3]]
+                                                self.error += ["Error 3  %s" % (data)]
+                                                self.file_is_open = False
+                                                break
                                         else:
                                             res = [[self.dev_id, 3]]
-                                            self.error += ["Error 3  %s" % (data)]
-                                            self._close_file()
+                                            self.error += ["Error 4 DATA: %s" % (data)]
                                             break
-                                    else:
-                                        res = [[self.dev_id, 3]]
-                                        self.error += ["Error 4  %s" % (data)]
-                                        break
+                                else:
+                                    self.file_is_open = False
+                                    res = [data]
+                        except Exception as e:
+                            res = [[self.dev_id, 3]]
+                            if data:
+                                self.error += ["Error 1 {}".format(e.args) + " DATA:  %s" % (data)]
                             else:
-                                self._close_file()
-                                res = [data]
-                    except Exception as e:
-                        #self._close_file()
-                        res = [[self.dev_id, 3]]
-                        self.error += ["Error 1 {}".format(e.args) + "  %s" % (data)]
-                        LED(4).on()
+                                self.error += ["Error 1 {}".format(e.args) + " PACK:  %s" % (pack)]
+                            LED(4).on()
         except Exception as e:
-            #self._close_file()
             res = [[self.dev_id, 3]]
             self.error += ["Error 2 {}".format(e.args)]
             LED(4).on()
@@ -82,11 +87,13 @@ class RS485(object):
             LED(3).on()
         pin_rw(0)
 
-    def _open_file(self):
-        self._close_file()
-        self.file_handler = open("config.py", "w")
-
-    def _close_file(self):
-        if self.file_handler:
-            self.file_handler.close()
-            self.file_handler = False
+    def _write_config(self, is_start, data):
+        if is_start:
+            f = open("config.py", "w")
+        else:
+            f = open("config.py", "a")
+        try:
+            f.write(data)
+        except:
+            pass
+        f.close()

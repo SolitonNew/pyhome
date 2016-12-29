@@ -18,11 +18,13 @@ def set_variable_drivers(ow, dev_id):
                 driver = _find_driver_at_rom(var.rom)
 
             if driver == False:
-                if var.rom == 'variable':
+                if var.rom == '':
                     driver = False
-                if var.rom == 'pyb':
+                elif var.rom == 'variable':
+                    driver = False
+                elif var.rom == 'pyb':
                     driver = drivers.Pyboard()
-                else:
+                else:                    
                     if var.rom[0] == 0x28:
                         driver = drivers.Termometr(ow, var.rom)
                     elif var.rom[0] == 0xf0:

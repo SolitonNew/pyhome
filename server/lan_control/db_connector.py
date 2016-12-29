@@ -15,7 +15,6 @@ class DBConnector(object):
                                                  password=self.MYSQL_PASS)
         
         self.query("SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED")
-        
         self.lastVarChangeID = self._last_var_change_id()
 
     def query(self, sql, vars = []):
@@ -50,11 +49,12 @@ class DBConnector(object):
         return row[0]
 
     def variable_changes(self):
-        res = self.select(("select c.ID, c.VARIABLE_ID, c.VALUE, v.APP_CONTROL, v.GROUP_ID"
-                           "  from core_variable_changes_mem c, core_variables v "
-                           " where c.ID > %s "
-                           "   and c.VARIABLE_ID = v.ID "
-                           "order by c.ID"), [self.lastVarChangeID])
-        if len(res) > 0:
-            self.lastVarChangeID = res[len(res) - 1][0]
+        res = []
+        for row in self.select(("select c.ID, c.VARIABLE_ID, c.VALUE, v.APP_CONTROL, v.GROUP_ID"
+                                "  from core_variable_changes_mem c, core_variables v "
+                                " where c.ID > %s "
+                                "   and c.VARIABLE_ID = v.ID "
+                                "order by c.ID"), [self.lastVarChangeID]):
+            res += [row]
+            self.lastVarChangeID = row[0]
         return res

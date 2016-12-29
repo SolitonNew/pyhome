@@ -57,7 +57,7 @@ class DBConnector(object):
 
     def load_controllers(self):
         self.controllers = []
-        q = self.query("select ID, NAME from core_controllers where ID < 100 and ID <> 2 order by ID")
+        q = self.query("select ID, NAME from core_controllers where ID < 100 order by ID desc")
         row = q.fetchone()
         while row is not None:
             nr = []
@@ -80,7 +80,7 @@ class DBConnector(object):
         for r in self.select("select CORE_GET_LAST_CHANGE_ID()"):
             if r[0] > self.lastVarChangeID + 1:
                 q = self.query(("select ID, VARIABLE_ID, VALUE, FROM_ID"
-                                "  from core_variable_changes "
+                                "  from core_variable_changes_mem "
                                 " where ID > %s "
                                 "order by ID"), [self.lastVarChangeID])
                 row = q.fetchone()
@@ -106,21 +106,11 @@ class DBConnector(object):
 
     def set_variable_value(self, var_id, var_value, dev_id):
         if dev_id == False:
-            dev_id = "null"        
+            dev_id = "null"
             
         try:
             var_v = float(var_value)
-            q = self.query("insert into core_variable_changes "
-                           " (VARIABLE_ID, VALUE, FROM_ID)"
-                           "values"
-                           " (%s, %s, %s)" % (var_id, var_v, dev_id))
-            q.close()
-
-            q = self.query("update core_variables"
-                           "   set VALUE=%s"
-                           " where ID = %s" % (var_v, var_id))
-            q.close();
-
+            self.IUD("call CORE_SET_VARIABLE(%s, %s, %s)" % (var_id, var_v, dev_id))
             self.commit()
         except:
             print("Ошибка записи переменной в БД. ID: %s   VALUE: %s   FROM_ID: %s" % (var_id, var_v, dev_id))

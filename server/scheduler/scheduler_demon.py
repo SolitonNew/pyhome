@@ -31,14 +31,15 @@ class Main():
                 next_time = self.parse_time(None, str(row[4], "utf-8"), str(row[5], "utf-8"), row[6])
             elif row[3].timestamp() <= now: # Это дата, что пришла для выполнения. Выполняем и перещитываем.
                 next_time = self.parse_time(row[3].timestamp(), str(row[4], "utf-8"), str(row[5], "utf-8"), row[6])
-                self.execute(str(row[1], "utf-8"), str(row[2], "utf-8"))
-
+                self.execute(str(row[1], "utf-8"), str(row[2], "utf-8"))            
             if next_time != None:
-                self.db.IUD("update core_scheduler set ACTION_DATETIME = FROM_UNIXTIME(%s) where ID = %s" % (next_time, row[0]))
+                #self.db.IUD("update core_scheduler set ACTION_DATETIME = FROM_UNIXTIME(%s) where ID = %s" % (next_time, row[0]))
+                d_s = datetime.datetime.fromtimestamp(next_time).strftime("%Y-%m-%d %H:%M:%S")
+                self.db.IUD("update core_scheduler set ACTION_DATETIME = '%s' where ID = %s" % (d_s, row[0]))
                 self.db.commit()
 
     def calc_suntime(self, d, sun_type):
-        st = GetSunTime(d // (24 * 3600), 49.697287, 34.354388, 90.8333333333333, -time.altzone // 3600, sun_type)
+        st = GetSunTime(d // (24 * 3600), 49.697287, 34.354388, 90.8333333333333, (-time.altzone // 3600) - 1, sun_type)
         hour = math.trunc(st)
         minutes = round((st - hour) * 60)
         return (hour * 60 + minutes) * 60

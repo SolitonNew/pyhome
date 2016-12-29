@@ -18,9 +18,9 @@ class Main():
     PACK_ERROR = 3
 
     def __init__(self):
-        self.fast_timeput = 0.1
-
+        self.fast_timeput = 0.05
         self.check_lan_error = False
+        self.sync_error_counter = []
         
         # Connect to serial port
         try:
@@ -54,7 +54,8 @@ class Main():
 
     def _store_variable_to_db(self, dev_id, pack_data):
         for var in pack_data:
-            self.db.set_variable_value(var[0], var[1], dev_id)
+            if len(var) > 1:
+                self.db.set_variable_value(var[0], var[1], dev_id)
 
     def check_lan(self):
         try:
@@ -85,38 +86,49 @@ class Main():
 
         # Рассылаем изменения в БД и паралельно читаем обновления
         for dev in self.db.controllers:
-            pack_data = []
-            lt = time.localtime()
-            t = time.mktime((2000, 1, 1, 0, 0, 0, 0, 0, lt.tm_isdst))
-            pack_data += [[-100, round(time.time() - t)]] #Передаем системное время в контроллеры
-            for var in var_data:
-                if var[2] != dev[0]:
-                    pack_data += [[var[0], var[1]]]
-
-            date = datetime.datetime.now().strftime('%H:%M:%S')
-            print("[%s] SYNC. '%s': " % (date, dev[1]), end="")
-            cl = self.send_pack(dev[0], self.PACK_SYNC, pack_data)
-            #cl = self.check_lan()
-            if cl:
-                for res_pack in cl:
-                    if res_pack[2] == "RESET":
-                        print("RESET ", end="")
-                        is_ok = self.send_pack(dev[0], self.PACK_SYNC, self._reset_pack()) != False
-                        for r in range(30):
-                            if self.check_lan():
-                                is_ok = True
-                                break
-                        if is_ok:
-                            print("OK\n")
-                        else:
-                            print("ERROR\n")
+            se_ignore = False
+            for i in range(len(self.sync_error_counter)):
+                if self.sync_error_counter[i][0] == dev[0]:
+                    self.sync_error_counter[i][1] -= 1
+                    if self.sync_error_counter[i][1] == 0:
+                        del self.sync_error_counter[i]
                     else:
-                        self._store_variable_to_db(res_pack[0], res_pack[2])
-                        print("OK")
-                        print("   >> ", pack_data)
-                        print("   << ", res_pack[2], "\n")
-            else:
-                print("ERROR\n")
+                        se_ignore = True
+
+            if se_ignore == False:
+                pack_data = []
+                lt = time.localtime()
+                t = time.mktime((2000, 1, 1, 0, 0, 0, 0, 0, lt.tm_isdst))
+                pack_data += [[-100, round(time.time() - t)]] #Передаем системное время в контроллеры
+                for var in var_data:
+                    if var[2] != dev[0]:
+                        pack_data += [[var[0], var[1]]]
+
+                date = datetime.datetime.now().strftime('%H:%M:%S')
+                print("[%s] SYNC. '%s': " % (date, dev[1]), end="")
+                cl = self.send_pack(dev[0], self.PACK_SYNC, pack_data)
+                if cl:
+                    for res_pack in cl:
+                        if res_pack[2] == "RESET":
+                            print("RESET ", end="")
+                            is_ok = self.send_pack(dev[0], self.PACK_SYNC, self._reset_pack()) != False
+                            for r in range(30):
+                                if self.check_lan():
+                                    is_ok = True
+                                    break
+                            if is_ok:
+                                print("OK\n")
+                            else:
+                                print("ERROR\n")
+                                self.sync_error_counter += [[dev[0], 30]]
+                        else:
+                            self._store_variable_to_db(res_pack[0], res_pack[2])
+                            print("OK")
+                            print("   >> ", pack_data)
+                            print("   << ", res_pack[2], "\n")
+                else:
+                    print("ERROR\n")
+                    self.sync_error_counter += [[dev[0], 30]]
 
     def _reset_pack(self):
         return self.db.all_variables();
@@ -146,16 +158,15 @@ class Main():
 
             if command == "SCAN_OW":
                 self._command_info("Запрос поиска OneWire устройств для контроллера '%s'..." % dev[1])
-                self.send_pack(dev[0], self.PACK_COMMAND, ["SCAN_ONE_WIRE", ""])
-                res_pack = self.check_lan()
-                if res_pack:
+                if self.send_pack(dev[0], self.PACK_COMMAND, ["SCAN_ONE_WIRE", ""]):
                     self._command_info("Пауза 3с...")
                     time.sleep(3)
                     self._command_info("Запрос списка найденых на шине OneWire устройств для контроллера '%s'" % dev[1])
-                    self.send_pack(dev[0], self.PACK_COMMAND, ["LOAD_ONE_WIRE_ROMS", ""])
-                    for res_pack in self.check_lan():
+                    is_ok = False
+                    for res_pack in self.send_pack(dev[0], self.PACK_COMMAND, ["LOAD_ONE_WIRE_ROMS", ""]):
                         count = 0
                         allCount = len(res_pack[2][1])
+                        is_ok = True
                         for rom in res_pack[2][1]:
                             rom_s = []
                             for r in rom:
@@ -170,31 +181,37 @@ class Main():
                             if self.db.append_scan_rom(dev[0], rom):
                                 count += 1
                         self._command_info("Всего найдено устройств: %s. Новых: %s" % (allCount, count))
-                    else:
+                        
+                    if is_ok == False:
                         self._command_info(error_text)
                 else:
                     self._command_info(error_text)
             elif command == "CONFIG_UPDATE":
-                self.serialPort.timeout = 0.5
+                self.serialPort.timeout = 2
+                time.sleep(2)
                 try:
                     self._command_info("CONFIG FILE UPLOAD '%s'..." % dev[1])
+                    #pack_data = self._str_to_hex(generate_config_file(self.db))
                     pack_data = generate_config_file(self.db)
                     self._command_info(str(len(pack_data)) + ' bytes.')
 
                     #bts = 512
-                    bts = 512
+                    bts = 1024
                     cou = math.ceil(len(pack_data) / bts)
                     is_ok = False
-                    self.send_pack(dev[0], self.PACK_COMMAND, ["SET_CONFIG_FILE", cou, False], False)
-                    if self.check_lan_error == False:
-                        prev_command = "[]"
+                    c_pack = self.send_pack(dev[0], self.PACK_COMMAND, ["SET_CONFIG_FILE", cou, False], False)
+                    if c_pack and self.check_lan_error == False:
+                        prev_command = "Начало загрузки..."
                         self._command_info(prev_command)
                         for i in range(cou):
                             t = i * bts
                             s = pack_data[t:t + bts]
-                            self.send_pack(dev[0], self.PACK_COMMAND, ["SET_CONFIG_FILE", i + 1, s], i == cou - 1)
-                            if self.check_lan_error:
+                            c_pack = self.send_pack(dev[0], self.PACK_COMMAND, ["SET_CONFIG_FILE", i + 1, s], i == cou - 1)
+                            if c_pack != False and self.check_lan_error or (i == cou - 1):
                                 is_ok = True
+                                if i != cou - 1:
+                                    #Значит не долили файл
+                                    self._command_info("ВНИМАНИЕ: Загрузка прервана");
                                 break
                             else:
                                 new_command = self._gen_text_progress(i, cou)
@@ -202,13 +219,6 @@ class Main():
                                 prev_command = new_command                                
                         self._command_info(prev_command, self._gen_text_progress(cou, cou))
                         
-                    if is_ok == False:
-                        for i in range(100):
-                            e = self.check_lan()
-                            if e or self.check_lan_error:
-                                is_ok = True
-                                break
-
                     if is_ok:
                         self._command_info("OK")
                     else:
@@ -218,11 +228,13 @@ class Main():
                 self.serialPort.timeout = self.fast_timeput
                 self.check_lan_error = False
             elif command == "REBOOT_CONTROLLERS":
+                self.serialPort.timeout = 1
                 self._command_info("Запрос перезагрузки контроллера '%s'..." % dev[1])
                 if self.send_pack(dev[0], self.PACK_COMMAND, ["REBOOT_CONTROLLER", ""]):
                     self._command_info("OK")
                 else:
                     self._command_info(error_text)
+                self.serialPort.timeout = self.fast_timeput
             elif command == "GET_OW_VALUES":
                 pass
                 
@@ -239,6 +251,17 @@ class Main():
         s += "] " + str(i) + "% </center>"
         return s
 
+    """
+    def _str_to_hex(self, text):
+        res = []
+        for c in text:
+            s = hex(ord(c)).replace('0x', '')
+            if len(s) == 1:
+                s = '0' + s
+            res += [s]
+        return "".join(res)
+    """
+
     SYNC_STATE = ""
             
     def run(self):
@@ -251,7 +274,10 @@ class Main():
             if SYNC_STATE == "RUN":
                 if stateChange:
                     print("Синхронизация запущена")
-                self._sync_variables()
+                try:
+                    self._sync_variables()
+                except:
+                    pass
             else:
                 if stateChange:
                     print("Синхронизация остановлена")

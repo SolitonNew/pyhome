@@ -318,6 +318,8 @@ end;
 procedure TPropertysForm.SpeedButton3Click(Sender: TObject);
 begin
    saveProp('IP', Edit3.Text);
+   saveProp('ID', '');
+
    MessageDlg('Изменения вступят в силу только после перезапуска приложения.', mtWarning, [mbOk], 0);
 end;
 

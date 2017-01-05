@@ -58,3 +58,6 @@ class DBConnector(object):
             res += [row]
             self.lastVarChangeID = row[0]
         return res
+
+    def last_insert_id(self):
+        return self.select("select LAST_INSERT_ID()")[0][0]

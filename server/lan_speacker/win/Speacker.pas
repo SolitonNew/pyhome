@@ -5,7 +5,7 @@ interface
 uses Windows, Messages, SysUtils, Classes, MMSystem, SyncObjs, Math;
 
 const
-  MaxBuffersCount = 5;
+  MaxBuffersCount = 15;
 
 type
   TPcmBuffer = array[$1..$500] of Smallint;
@@ -26,9 +26,12 @@ type
     procedure WndProc (var Message: TMessage);
     procedure HandleBufferDone (AWaveHdr: PWaveHdr);
     function LocateBuffer (var Index: Integer): Boolean;
+    function waveVolume(volume: integer; buf: pointer; samples: cardinal): Smallint;
   protected
     procedure Execute; override;
   public
+    fVolume:integer;
+    fMute: Boolean;
     procedure Play (Buffer: Pointer; Size: Integer);
     function BuffersAvailable: Boolean;
     constructor Create (AID: Int64);
@@ -51,9 +54,9 @@ var
     WF.wBitsPerSample:= 16;
     WF.wf.wFormatTag:= WAVE_FORMAT_PCM;
     WF.wf.nChannels:= 2;
-    WF.wf.nSamplesPerSec:= 16000;
-    WF.wf.nBlockAlign:= 16 div 8 * 2;
-    WF.wf.nAvgBytesPerSec:= 16000 * WF.wf.nBlockAlign;
+    WF.wf.nSamplesPerSec:= 44100;
+    WF.wf.nBlockAlign:= WF.wBitsPerSample div 8 * 2;
+    WF.wf.nAvgBytesPerSec:= WF.wf.nSamplesPerSec * WF.wf.nBlockAlign;
     waveOutOpen(@FHandle, FId, @WF, FWnd, 0, CALLBACK_WINDOW);
     for i:=0 to High(FHeaders) do
     Begin
@@ -128,15 +131,15 @@ procedure TSpeakerThread.Play (Buffer: Pointer; Size: Integer);
 var
   idx: Integer;
 begin
-   If LocateBuffer(idx) Then
+   waveVolume(fVolume, Buffer, Size);
+
+   If (LocateBuffer(idx) and (not fMute)) Then
    Begin
       Dec(FFreeBuffers);
       FHeaders[idx].dwBufferLength:=Size;
       FHeaders[idx].dwUser:=1;
       Move(Buffer^,FBuffers[idx][1],FHeaders[idx].dwBufferLength); // Size can be reused
       waveOutWrite(FHandle,@FHeaders[idx],SizeOf(TWaveHdr));
-
-      //saveRtpDataToFile(DateTimeToTimeStamp(Now()).Time, Buffer, Size);
    end;
 end;
 
@@ -188,6 +191,36 @@ begin
   Finally
     FCS.Leave;
   end;
+end;
+
+function TSpeakerThread.waveVolume(volume: integer; buf: pointer;samples: cardinal): Smallint;
+var
+   k, i: integer;
+   bb: array[1..1024] of Smallint;
+   v: Double;
+begin
+   Result := 0;
+
+   v := volume / 100;
+   Move(buf^, bb[1], samples);
+
+   if (volume > 0) then
+   begin
+      for k:= 1 to samples div 2 do
+      begin
+         i := round(bb[k] * v);
+
+         if (i < -32768) then
+            i := -32768
+         else
+         if (i > 32767) then
+            i := 32767;
+
+         bb[k] := i;
+      end;
+
+      Move(bb[1], buf^, samples);
+   end;
 end;
 
 end.

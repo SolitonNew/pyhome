@@ -344,17 +344,7 @@ begin
       if (VlcSocket.Tag = 2) then
       begin
          if (TimePanel.Tag > 0) then
-         begin
-            if (fTransferTime > 0) then
-            begin
-               VlcCommand('seek ' + IntToStr(fTransferTime));
-               fTransferTime := 0;
-            end
-            else
-            begin
-               VlcCommand('get_time');
-            end;
-         end
+            VlcCommand('get_time')
          else
             VlcCommand('get_length');
       end;
@@ -504,7 +494,8 @@ procedure TMainForm.SocketMetaRead(Sender: TObject; Socket: TCustomWinSocket);
       if (pack_type = 'medi') then
       begin
          res := parceTable(data);
-         PropertysForm.ListBox1.Items.Text := res[0][0];
+         if (length(res) > 0) then
+            PropertysForm.ListBox1.Items.Text := res[0][0];
          
          setStatusText('Загрузка списка медиафайлов');
          sentMetaPack('medi', 'get media list');
@@ -743,7 +734,7 @@ begin
       begin
          if (odSelected in State) then
          begin
-            Brush.Color := $00aaaaaa;
+            Brush.Color := $00777777;
             Font.Color := clWhite;
          end
          else
@@ -1146,7 +1137,7 @@ begin
       begin
          if (odSelected in State) then
          begin
-            Brush.Color := $00aaaaaa;
+            Brush.Color := $00777777;
             Font.Color := clWhite;
          end
          else
@@ -1349,6 +1340,11 @@ begin
                   if (TimePanel.Tag = 0) then // Ждем продолжительность
                   begin
                      TimePanel.Tag := StrToInt(s);
+                     if ((TimePanel.Tag > 0) and (fTransferTime > 0)) then
+                     begin
+                        VlcCommand('seek ' + IntToStr(fTransferTime));
+                        fTransferTime := 0;
+                     end;
                   end
                   else // Ждем позицию
                   begin
@@ -1767,7 +1763,7 @@ begin
    N6.Clear;
    for k:= 0 to Length(fSessions) - 1 do
    begin
-      if (fSessions[k][2] <> 'None') then
+      if ((fSessions[k][2] <> 'None') and (fSessions[k][0] <> IntToStr(fAppID))) then
       begin
          mi:= TMenuItem.Create(nil);
          mi.Caption := fSessions[k][1];
@@ -1775,6 +1771,14 @@ begin
          mi.OnClick := transferMedia;
          N6.Add(mi);
       end;
+   end;
+
+   if (N6.Count = 0) then
+   begin
+      mi:= TMenuItem.Create(nil);
+      mi.Caption := 'Пусто';
+      mi.Enabled := false;
+      N6.Add(mi);
    end;
 end;
 

@@ -8,11 +8,11 @@ import math
 
 SCREENS = [["Справка", "", "", None, None, [], None],
            ["RS485", "rs485_demon.py", "/home/pyhome/server/rs485", None, None, [], None],
-           ["Админка", "http_admin_demon.py", "/home/pyhome/server/http_admin", None, None, [], None],
+           ["Веб", "http_admin_demon.py", "/home/pyhome/server/http_admin", None, None, [], None],
            ["Расписание", "scheduler_demon.py", "/home/pyhome/server/scheduler", None, None, [], None],
-           ["Команды", "executor_demon.py", "/home/pyhome/server/executor", None, None, [], None],
-           ["Контроль", "watcher_demon.py", "/home/pyhome/server/watcher", None, None, [], None],
-           ["LAN", "lan_control_demon.py", "/home/pyhome/server/lan_control", None, None, [], None]]
+           ["Выполнение", "executor_demon.py", "/home/pyhome/server/executor", None, None, [], None],
+           ["Монитор", "watcher_demon.py", "/home/pyhome/server/watcher", None, None, [], None],
+           ["Пульты", "lan_control_demon.py", "/home/pyhome/server/lan_control", None, None, [], None]]
 
 CURRENT_SCREEN = 0
 

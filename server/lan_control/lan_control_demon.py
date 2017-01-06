@@ -12,6 +12,8 @@ class MetaThread(threading.Thread):
     def __init__(self, accept, owner):
         threading.Thread.__init__(self)
         self.acceptData = accept
+        self.conn = accept[0]
+        #self.conn.settimeout(60)
         self.owner = owner
         print("CONNECT META: %s" % accept[1][0])
         self.db = DBConnector()
@@ -20,10 +22,9 @@ class MetaThread(threading.Thread):
         self.app_sessions = False
 
     def sendpack(self, pack):
-        conn = self.acceptData[0]
         i = 0
         for k in range(1024):
-            i =+ conn.send(pack[i::])
+            i =+ self.conn.send(pack[i::])
             if i == len(pack):
                 break
 
@@ -47,10 +48,9 @@ class MetaThread(threading.Thread):
         
     def run(self):
         buf = ''
-        conn = self.acceptData[0]
-        while True:            
-            try:                                
-                line = conn.recv(1024)
+        while self.owner.is_alive():
+            try:
+                line = self.conn.recv(1024)
                 if line != b'':
                     buf += line.decode('cp1251')
                     packs = buf.split(chr(2))
@@ -61,7 +61,7 @@ class MetaThread(threading.Thread):
                         if a[0] == "ping":
                             pass
                         elif a[0] == "load":
-                            self.init_load(conn, a[1])
+                            self.init_load(a[1])
                         elif a[0] == "apps":
                             pack = b''
                             self.sendcursor('apps', ("select ID, COMM "
@@ -104,7 +104,7 @@ class MetaThread(threading.Thread):
                                                              "select ID, APP_CONTROL_ID, TITLE, FILE_NAME "
                                                              "  from media_lib"
                                                              " where APP_CONTROL_ID <> %s") % (self.app_id, self.app_id))
-                                print("    media lib pack: [%s]" % (l))
+                                print("    media lib pack [%s bytes]" % (l))
                             elif a[1] == "add files":
                                 for f in a[2:-1:]:
                                     title = f.split('\\')[-1::][0]
@@ -160,24 +160,27 @@ class MetaThread(threading.Thread):
                                 "   and ID <= %s"% (self.app_id, queue[-1::][0][0]))
                     self.db.commit()                
                 # ---------------------------------------------
-                time.sleep(0.5)                   
+                #time.sleep(0.5)                   
             except Exception as e:
-                print("{}".format(e.args))
+                print("    error: " + str(e))
                 break
-                
-        conn.close()
+        try:
+            self.conn.close()
+        except:
+            print("error: self.conn.close()")
+        
         try:
             self.db.IUD("delete from app_control_sess where APP_CONTROL_ID = %s" % (self.app_id))
             self.db.IUD("delete from app_control_queue where APP_CONTROL_ID = %s" % (self.app_id))
             self.db.commit()
         except Exception as e:
-            print(e)        
+            print("ERROR 1: " + str(e))        
         self.db = False
         print("DISCONNECT META [%s]" % self.acceptData[1][0])
         threads = self.owner.threads
         del(threads[threads.index(self)])
 
-    def init_load(self, conn, app_id):
+    def init_load(self, app_id):
         self.app_id = app_id
         # The registry session in base
         self.db.IUD("delete from app_control_sess where APP_CONTROL_ID = %s" % (app_id))
@@ -189,7 +192,7 @@ class MetaThread(threading.Thread):
         # Packed data for client
         l = self.sendcursor('load', ("select ID, NAME, COMM, APP_CONTROL, VALUE "
                                      "  from core_variables order by COMM"))
-        print("    load pack [%s]" % (l))
+        print("    load pack [%s bytes]" % (l))
 
     def _add_to_queue(self, typ, value, target = None):
         for r in self.app_sessions:
@@ -201,6 +204,7 @@ class SoundThread(threading.Thread):
     def __init__(self, accept, owner):
         threading.Thread.__init__(self)
         self.acceptData = accept
+        self.conn = accept[0]
         self.owner = owner
         print("CONNECT SOUND [%s]" % accept[1][0])        
         
@@ -220,7 +224,6 @@ class SoundThread(threading.Thread):
         except:
             stream = False
         
-        conn = self.acceptData[0]
         silent = 0
         while True:
             try:
@@ -239,12 +242,16 @@ class SoundThread(threading.Thread):
                     conn.recv(4)
 
                 """
-                conn.send(stream.read(CHUNK))
-                conn.recv(4)
+                self.conn.send(stream.read(CHUNK))
+                self.conn.recv(4)
             except:                
                 break
 
-        conn.close()
+        try:
+            self.conn.close()
+        except:
+            pass
+        
         if stream:
             stream.stop_stream()
             stream.close()
@@ -257,55 +264,79 @@ class SoundThread(threading.Thread):
 class ThreadManager(threading.Thread):
     def __init__(self, threadClass, port):
         threading.Thread.__init__(self)
+        self.isRun = True
         self.threadClass = threadClass
         self.port = port
         self.threads = []
+        self.start()
         
     def run(self):
         while True:
             try:
-                sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                sock.bind(("", self.port))
-                sock.listen(32)
-                sock.settimeout(None)        
+                self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                self.sock.bind(("", self.port))
+                self.sock.listen(32)
 
                 while True:
                     try:
-                        t = self.threadClass(sock.accept(), self)
-                        self.threads += [t]
-                        #print(self.threads)
-                        t.start()
+                        accept = self.sock.accept()
+                        if self.isRun: 
+                            t = self.threadClass(accept, self)
+                            self.threads += [t]
+                            t.start()
+                        else:
+                            accept[0].close()
+                            print(str(self.threadClass) + " EXIT")
+                            break
                     except Exception as e:
                         print(str(self.threadClass) + " THREAD ERROR")
-    
+                        break
+        
+                self._close_threads()
                 try:
-                    sock.close()
+                    self.sock.close()
+                except:
+                    print("error: sock.close()")
+            except:
+                time.sleep(5)
+                print("binding error for port: %s" % (self.port))
+
+    def _close_threads(self):
+        for t in self.threads:
+            if t:
+                try:
+                    t.conn.close()
                 except:
                     pass
-    
-                for t in self.threads:
-                    if t:
-                        try:
-                            t.conn.close()
-                        except:
-                            pass
-            except:
-                pass
-            time.sleep(5)
-        
+
+    def stopDemon(self):
+        self.isRun = False
+        self._close_threads()
+        self.sock.close()
 
 port_meta = 8090
 port_sound = 8091
 
-print("PORTS: %s, %s" % (port_meta, port_sound))
+class Main():
+    def __init__(self):
+        metaThread = ThreadManager(MetaThread, port_meta)
+        soundThread = ThreadManager(SoundThread, port_sound)
+        try:
+            while True:
+                time.sleep(1)
+        except:
+            pass
+        metaThread.stopDemon()
+        soundThread.stopDemon()
 
-metaThread = ThreadManager(MetaThread, port_meta)
-metaThread.start()
+print(
+"=============================================================================\n"
+"               МОДУЛЬ УДАЛЕННОГО КОНТРОЛЯ И УПРАВЛЕНИЯ v0.1\n"
+"\n"
+" Порты: %s, %s \n"
+"=============================================================================\n"
+% (port_meta, port_sound)
+)
 
-soundThread = ThreadManager(SoundThread, port_sound)
-soundThread.start()
-
-while True:
-    time.sleep(1)
-
-print("END")
+if __name__ == "__main__":
+    Main()

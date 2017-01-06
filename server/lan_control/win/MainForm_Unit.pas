@@ -334,6 +334,7 @@ begin
    begin
       SocketMeta.Close;
       SocketMeta.Open;
+      //sentMetaPack('ping', '');
    end
    else
       if not InfoPanel.Visible then

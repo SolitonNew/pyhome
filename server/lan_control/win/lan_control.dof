@@ -138,7 +138,7 @@ Comments=
 EurekaLog Version=6101
 Activate=1
 Activate Handle=1
-Save Log File=1
+Save Log File=0
 Foreground Tab=0
 Freeze Activate=0
 Freeze Timeout=0
@@ -615,6 +615,6 @@ Count mtException_AntiFreeze=1
 mtException_AntiFreeze0="The application seems to be frozen."
 Count mtInvalidEmailMsg=1
 mtInvalidEmailMsg0="Invalid email."
-TextsCollection=English
+TextsCollection=
 
 

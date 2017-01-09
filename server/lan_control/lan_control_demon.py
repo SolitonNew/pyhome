@@ -84,9 +84,9 @@ class MetaThread(threading.Thread):
                                 self.db.commit()
                             except:
                                 pass
-                        elif a[0] == "play":
-                            self._add_to_queue(3, a[2], int(a[1]))
-                            self._add_to_queue(4, a[3], int(a[1]))
+                        elif a[0] == "media_transfer":
+                            self._add_to_queue(10, a[2], a[3], int(a[1]))
+                            print(a)
                         elif a[0] == "medi":
                             if a[1] == "get folders":
                                 self.sendcursor("medi", ("select SEARCH_FOLDERS "
@@ -133,28 +133,29 @@ class MetaThread(threading.Thread):
                 # ---------------------------------------------
                 self.senddata('synk', self.db.variable_changes())
                 # ---------------------------------------------
-                sess = self.db.select("select c.ID, c.COMM, (select s.IP "
-                                      "                        from app_control_sess s "
-                                      "                       where s.APP_CONTROL_ID = c.ID) IP "
-                                      "  from app_controls c ")
+                sess = self.db.select("select c.ID, c.COMM, s.IP"
+                                      "  from app_controls c, app_control_sess s "
+                                      " where s.APP_CONTROL_ID = c.ID "
+                                      "order by 1")
                 if self.app_sessions != sess:
                     self.app_sessions = sess
                     self.senddata('sess', self.app_sessions)
                 # ---------------------------------------------
-                queueSql = ("select q.ID, q.TYP, q.VALUE, m.APP_CONTROL_ID, m.TITLE, m.FILE_NAME"
+                queueSql = ("select q.ID, q.TYP, q.VALUE, q.VALUE_2, m.APP_CONTROL_ID, m.TITLE, m.FILE_NAME"
                             "  from app_control_queue q, media_lib m "
                             " where q.VALUE = m.ID"
                             "   and q.APP_CONTROL_ID = %s"
                             "   and q.TYP in (0, 1) "
                             "union all "
-                            "select q.ID, q.TYP, q.VALUE, q.APP_CONTROL_ID, '' TITLE, '' FILE_NAME"
+                            "select q.ID, q.TYP, q.VALUE, q.VALUE_2, q.APP_CONTROL_ID, '' TITLE, '' FILE_NAME"
                             "  from app_control_queue q"
                             " where q.APP_CONTROL_ID = %s"
-                            "   and not q.TYP in (0, 1) "
+                            "   and q.TYP in (2, 10) "
                             "order by 1" % (self.app_id, self.app_id))
                 queue = self.db.select(queueSql)
                 self.senddata("m__q", queue)
                 if len(queue) > 0:
+                    print(queue)
                     self.db.IUD("delete from app_control_queue "
                                 " where APP_CONTROL_ID = %s"
                                 "   and ID <= %s"% (self.app_id, queue[-1::][0][0]))
@@ -194,11 +195,11 @@ class MetaThread(threading.Thread):
                                      "  from core_variables order by COMM"))
         print("    load pack [%s bytes]" % (l))
 
-    def _add_to_queue(self, typ, value, target = None):
+    def _add_to_queue(self, typ, value, value2 = 0, target = None):
         for r in self.app_sessions:
-            if r[2] != None:
+            if r[2] != b'':
                 if target == None or r[0] == target:
-                    self.db.IUD("insert into app_control_queue (APP_CONTROL_ID, TYP, VALUE) values (%s, %s, %s)" % (r[0], typ, value))
+                    self.db.IUD("insert into app_control_queue (APP_CONTROL_ID, TYP, VALUE, VALUE_2) values (%s, %s, %s, %s)" % (r[0], typ, value, value2))
 
 class SoundThread(threading.Thread):
     def __init__(self, accept, owner):

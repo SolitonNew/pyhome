@@ -86,7 +86,6 @@ class MetaThread(threading.Thread):
                                 pass
                         elif a[0] == "media_transfer":
                             self._add_to_queue(10, a[2], a[3], int(a[1]))
-                            print(a)
                         elif a[0] == "medi":
                             if a[1] == "get folders":
                                 self.sendcursor("medi", ("select SEARCH_FOLDERS "
@@ -155,7 +154,6 @@ class MetaThread(threading.Thread):
                 queue = self.db.select(queueSql)
                 self.senddata("m__q", queue)
                 if len(queue) > 0:
-                    print(queue)
                     self.db.IUD("delete from app_control_queue "
                                 " where APP_CONTROL_ID = %s"
                                 "   and ID <= %s"% (self.app_id, queue[-1::][0][0]))

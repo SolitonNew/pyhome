@@ -30,17 +30,17 @@ class MetaThread(threading.Thread):
 
     def senddata(self, pack_type, data):
         cols = 0
-        pack = b''
+        pack = []
         for rec in data:
             cols = 0
             for cell in rec:
                 if type(cell) == bytes:
-                    pack += cell.decode("utf-8").encode("cp1251")
+                    pack += [cell.decode("utf-8").encode("cp1251")]
                 else:
-                    pack += str(cell).encode("cp1251")
-                pack += b'\x01'
+                    pack += [str(cell).encode("cp1251")]
+                pack += [b'\x01']
                 cols += 1
-        self.sendpack(pack_type.encode('cp1251') + str(cols).encode('cp1251') + b'\x01' + pack + b'\x02')
+        self.sendpack(pack_type.encode('cp1251') + str(cols).encode('cp1251') + b'\x01' + b''.join(pack) + b'\x02')
         return len(pack)
 
     def sendcursor(self, pack_type, sql):
@@ -98,12 +98,8 @@ class MetaThread(threading.Thread):
                             elif a[1] == "get media list":
                                 l = self.sendcursor("mdls", ("select ID, APP_CONTROL_ID, TITLE, FILE_NAME "
                                                              "  from media_lib "
-                                                             " where APP_CONTROL_ID = %s"
-                                                             " union all "
-                                                             "select ID, APP_CONTROL_ID, TITLE, FILE_NAME "
-                                                             "  from media_lib"
-                                                             " where APP_CONTROL_ID <> %s") % (self.app_id, self.app_id))
-                                print("    media lib pack [%s bytes]" % (l))
+                                                             "order by ID"))
+                                self._print("    media lib pack [%s bytes]" % (l))
                             elif a[1] == "add files":
                                 for f in a[2:-1:]:
                                     title = f.split('\\')[-1::][0]
@@ -114,7 +110,7 @@ class MetaThread(threading.Thread):
                                         self.db.IUD(sql)
                                         self._add_to_queue(0, self.db.last_insert_id())
                                     except Exception as e:
-                                        print("ADD " + str(e))
+                                        self._print("ADD " + str(e))
                                 self.db.commit()
                                 self.senddata('m_ok', [["OK"]])
                             elif a[1] == "del files":
@@ -124,10 +120,10 @@ class MetaThread(threading.Thread):
                                         self._add_to_queue(2, i)
                                     self.db.commit()
                                 except Exception as e:                                    
-                                    print("DEL [%s] %s " % (self.app_id, str(e)))
+                                    self._print("DEL [%s] %s " % (self.app_id, str(e)))
                                 
                         else:
-                            print(a)
+                            self._print(a)
                             
                 # ---------------------------------------------
                 self.senddata('synk', self.db.variable_changes())
@@ -161,21 +157,21 @@ class MetaThread(threading.Thread):
                 # ---------------------------------------------
                 #time.sleep(0.5)                   
             except Exception as e:
-                print("    error: " + str(e))
+                self._print("    error: " + str(e))
                 break
         try:
             self.conn.close()
         except:
-            print("error: self.conn.close()")
+            self._print("error: self.conn.close()")
         
         try:
             self.db.IUD("delete from app_control_sess where APP_CONTROL_ID = %s" % (self.app_id))
             self.db.IUD("delete from app_control_queue where APP_CONTROL_ID = %s" % (self.app_id))
             self.db.commit()
         except Exception as e:
-            print("ERROR 1: " + str(e))        
+            self._print("ERROR 1: " + str(e))        
         self.db = False
-        print("DISCONNECT META [%s]" % self.acceptData[1][0])
+        self._print("DISCONNECT META [%s]" % self.acceptData[1][0])
         threads = self.owner.threads
         del(threads[threads.index(self)])
 
@@ -191,7 +187,7 @@ class MetaThread(threading.Thread):
         # Packed data for client
         l = self.sendcursor('load', ("select ID, NAME, COMM, APP_CONTROL, VALUE "
                                      "  from core_variables order by COMM"))
-        print("    load pack [%s bytes]" % (l))
+        self._print("    load pack [%s bytes]" % (l))
 
     def _add_to_queue(self, typ, value, value2 = 0, target = None):
         for r in self.app_sessions:
@@ -199,13 +195,16 @@ class MetaThread(threading.Thread):
                 if target == None or r[0] == target:
                     self.db.IUD("insert into app_control_queue (APP_CONTROL_ID, TYP, VALUE, VALUE_2) values (%s, %s, %s, %s)" % (r[0], typ, value, value2))
 
+    def _print(self, text):
+        print("[%s] %s" % (time.strftime("%d-%m-%Y %H:%M"), text))
+
 class SoundThread(threading.Thread):
     def __init__(self, accept, owner):
         threading.Thread.__init__(self)
         self.acceptData = accept
         self.conn = accept[0]
         self.owner = owner
-        print("CONNECT SOUND [%s]" % accept[1][0])        
+        self._print("CONNECT SOUND [%s]" % accept[1][0])        
         
     def run(self):
         CHUNK = 1024
@@ -255,9 +254,12 @@ class SoundThread(threading.Thread):
             stream.stop_stream()
             stream.close()
         p.terminate()
-        print("DISCONNECT SOUND: %s" % self.acceptData[1][0])
+        self._print("DISCONNECT SOUND: %s" % self.acceptData[1][0])
         threads = self.owner.threads
         del(threads[threads.index(self)])
+
+    def _print(self, text):
+        print("[%s] %s" % (time.strftime("%d-%m-%Y %H:%M"), text))
 
 
 class ThreadManager(threading.Thread):

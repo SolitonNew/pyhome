@@ -40,8 +40,9 @@ class MetaThread(threading.Thread):
                     pack += [str(cell).encode("cp1251")]
                 pack += [b'\x01']
                 cols += 1
-        self.sendpack(pack_type.encode('cp1251') + str(cols).encode('cp1251') + b'\x01' + b''.join(pack) + b'\x02')
-        return len(pack)
+        pack_j = b''.join(pack)                
+        self.sendpack(pack_type.encode('cp1251') + str(cols).encode('cp1251') + b'\x01' + pack_j + b'\x02')
+        return len(pack_j)
 
     def sendcursor(self, pack_type, sql):
         return self.senddata(pack_type, self.db.select(sql))

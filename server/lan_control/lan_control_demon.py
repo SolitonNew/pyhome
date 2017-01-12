@@ -13,11 +13,10 @@ class MetaThread(threading.Thread):
         threading.Thread.__init__(self)
         self.acceptData = accept
         self.conn = accept[0]
-        #self.conn.settimeout(60)
         self.owner = owner
-        print("CONNECT META: %s" % accept[1][0])
+        self._print("CONNECT META: %s" % accept[1][0])
         self.db = DBConnector()
-        print("    connect db")
+        self._print("    connect db")
         self.app_id = -1
         self.app_sessions = False
 
@@ -197,7 +196,7 @@ class MetaThread(threading.Thread):
                     self.db.IUD("insert into app_control_queue (APP_CONTROL_ID, TYP, VALUE, VALUE_2) values (%s, %s, %s, %s)" % (r[0], typ, value, value2))
 
     def _print(self, text):
-        print("[%s] %s" % (time.strftime("%d-%m-%Y %H:%M"), text))
+        print("[%s] %s" % (time.strftime("%d-%m-%Y %H:%M:%S"), text))
 
 class SoundThread(threading.Thread):
     def __init__(self, accept, owner):
@@ -242,8 +241,9 @@ class SoundThread(threading.Thread):
 
                 """
                 self.conn.send(stream.read(CHUNK))
-                self.conn.recv(4)
-            except:                
+                #self.conn.recv(4)
+            except Exception as e:
+                #print("sound error %s" % (e))
                 break
 
         try:
@@ -260,7 +260,7 @@ class SoundThread(threading.Thread):
         del(threads[threads.index(self)])
 
     def _print(self, text):
-        print("[%s] %s" % (time.strftime("%d-%m-%Y %H:%M"), text))
+        print("[%s] %s" % (time.strftime("%d-%m-%Y %H:%M:%S"), text))
 
 
 class ThreadManager(threading.Thread):

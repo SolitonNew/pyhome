@@ -24,7 +24,7 @@ object PropertysForm: TPropertysForm
     Top = 8
     Width = 521
     Height = 281
-    ActivePage = TabSheet3
+    ActivePage = TabSheet2
     TabOrder = 0
     object TabSheet3: TTabSheet
       Caption = #1054#1073#1097#1080#1077
@@ -154,6 +154,18 @@ object PropertysForm: TPropertysForm
           ReadOnly = True
           TabOrder = 0
         end
+      end
+    end
+    object TabSheet4: TTabSheet
+      Caption = #1051#1086#1075' '#1084#1077#1090#1072#1076#1072#1085#1085#1099#1093
+      ImageIndex = 3
+      object ListBox2: TListBox
+        Left = 8
+        Top = 8
+        Width = 497
+        Height = 233
+        ItemHeight = 13
+        TabOrder = 0
       end
     end
   end

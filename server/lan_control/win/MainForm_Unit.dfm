@@ -1,6 +1,6 @@
 object MainForm: TMainForm
-  Left = 1217
-  Top = 245
+  Left = 837
+  Top = 166
   Width = 253
   Height = 569
   BorderIcons = [biSystemMenu, biMinimize]
@@ -19,6 +19,7 @@ object MainForm: TMainForm
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnResize = FormResize
+  OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
   object Panel2: TPanel
@@ -351,6 +352,7 @@ object MainForm: TMainForm
         ParentCtl3D = False
         TabOrder = 0
         OnMouseDown = VolumePanelMouseDown
+        OnMouseMove = VolumePanelMouseMove
         OnMouseUp = VolumePanelMouseUp
         object VolumeShape: TShape
           Left = 1
@@ -361,6 +363,7 @@ object MainForm: TMainForm
           Brush.Color = 11184810
           Pen.Color = 11184810
           OnMouseDown = VolumePanelMouseDown
+          OnMouseMove = VolumePanelMouseMove
           OnMouseUp = VolumePanelMouseUp
         end
       end
@@ -422,6 +425,7 @@ object MainForm: TMainForm
         OnClick = PlayButtonClick
       end
       object StopButton: TSpeedButton
+        Tag = 1
         Left = 56
         Top = 48
         Width = 23
@@ -504,12 +508,13 @@ object MainForm: TMainForm
         ShowHint = True
         OnClick = PauseButtonClick
       end
-      object SpeedButton7: TSpeedButton
+      object PlayLoopButton: TSpeedButton
         Left = 88
         Top = 48
         Width = 23
         Height = 22
         Hint = #1048#1075#1088#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+        AllowAllUp = True
         GroupIndex = 30
         Flat = True
         Glyph.Data = {
@@ -541,6 +546,7 @@ object MainForm: TMainForm
           00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FF}
         ParentShowHint = False
         ShowHint = True
+        OnClick = PlayLoopButtonClick
       end
       object FilterEdit: TEdit
         Left = 0
@@ -684,6 +690,7 @@ object MainForm: TMainForm
       TabOrder = 1
       OnDblClick = MediaListDblClick
       OnDrawItem = MediaListDrawItem
+      OnKeyDown = MediaListKeyDown
     end
     object Panel6: TPanel
       Left = 0
@@ -998,12 +1005,11 @@ object MainForm: TMainForm
   end
   object SocketMeta: TClientSocket
     Active = False
-    ClientType = ctNonBlocking
+    ClientType = ctBlocking
     Port = 8090
     OnConnecting = SocketMetaConnecting
     OnConnect = SocketMetaConnect
     OnDisconnect = SocketMetaDisconnect
-    OnRead = SocketMetaRead
     OnError = SocketMetaError
     Left = 8
     Top = 72
@@ -2220,13 +2226,13 @@ object MainForm: TMainForm
       OnClick = N1Click
     end
     object N6: TMenuItem
-      Caption = #1055#1088#1086#1080#1088#1099#1074#1072#1090#1100' '#1085#1072
+      Caption = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1074#1086#1089#1087#1088#1086#1080#1079#1074#1077#1076#1077#1085#1080#1077' '#1085#1072
     end
     object N5: TMenuItem
       Caption = '-'
     end
     object N4: TMenuItem
-      Caption = #1058#1077#1088#1084#1080#1085#1072#1083'...'
+      Caption = 'VLC '#1090#1077#1088#1084#1080#1085#1072#1083'...'
       OnClick = N4Click
     end
     object N2: TMenuItem
@@ -2380,17 +2386,6 @@ object MainForm: TMainForm
       FFFFFBFFFFFF0000FFFFFFFFFFFF000000000000000000000000000000000000
       000000000000}
   end
-  object VlcSocket: TClientSocket
-    Active = False
-    ClientType = ctNonBlocking
-    Host = '127.0.0.1'
-    Port = 8092
-    OnConnect = VlcSocketConnect
-    OnRead = VlcSocketRead
-    OnError = VlcSocketError
-    Left = 104
-    Top = 72
-  end
   object IdHTTPServer1: TIdHTTPServer
     Bindings = <>
     CommandHandlers = <>
@@ -2402,11 +2397,11 @@ object MainForm: TMainForm
     ReplyTexts = <>
     ReplyUnknownCommand.NumericCode = 0
     OnCommandGet = IdHTTPServer1CommandGet
-    Left = 136
+    Left = 104
     Top = 72
   end
   object IdServerIOHandlerSocket1: TIdServerIOHandlerSocket
-    Left = 168
+    Left = 136
     Top = 72
   end
 end

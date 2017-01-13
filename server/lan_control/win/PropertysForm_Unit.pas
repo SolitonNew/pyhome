@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, ExtCtrls, ComCtrls, StdCtrls, Registry, FileCtrl, Buttons;
+  Dialogs, DlgMessagesRU, ExtCtrls, ComCtrls, StdCtrls, Registry, FileCtrl, Buttons;
 
 const
    extVideo = '.AVI;.MP4;.MKV';
@@ -32,6 +32,8 @@ type
     SpeedButton4: TSpeedButton;
     SpeedButton5: TSpeedButton;
     SpeedButton6: TSpeedButton;
+    TabSheet4: TTabSheet;
+    ListBox2: TListBox;
     procedure Button1Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
@@ -55,6 +57,7 @@ type
 var
   PropertysForm: TPropertysForm;
 
+procedure addToMetaLog(s: string);
 function loadProp(name:string):string;
 procedure saveProp(name, value:string);
 
@@ -93,6 +96,15 @@ begin
    end;
 end;
 
+procedure addToMetaLog(s: string);
+begin
+   if (PropertysForm <> nil) then
+   begin
+      s := '[' + TimeToStr(Now()) + '] ' + s;
+      PropertysForm.ListBox2.Items.Insert(0, s);
+   end;
+end;
+
 { TPropertysForm }
 
 procedure TPropertysForm.Button1Click(Sender: TObject);
@@ -102,7 +114,7 @@ end;
 
 procedure TPropertysForm.saveMediaListToBd;
 begin
-   MainForm.SocketMeta.Socket.SendText('medi' + chr(1) + 'set folders' + chr(1) + StringReplace(ListBox1.Items.Text, '\', '\\', [rfReplaceAll]) + chr(2));
+   MainForm.metaQuery('set media folders', StringReplace(ListBox1.Items.Text, '\', '\\', [rfReplaceAll]));
 end;
 
 procedure TPropertysForm.scanMediaLib;
@@ -220,8 +232,8 @@ begin
       Application.ProcessMessages();
    end;
 
-   MainForm.sentMetaPack('medi', 'del files' + chr(1) + s_del);
-   MainForm.sentMetaPack('medi', 'add files' + chr(1) + s_add);
+   MainForm.metaQuery('del media files', s_del);
+   MainForm.metaQuery('add media files', s_add);
 end;
 
 procedure TPropertysForm.FormCreate(Sender: TObject);
@@ -325,7 +337,7 @@ end;
 
 procedure TPropertysForm.SpeedButton2Click(Sender: TObject);
 begin
-   MainForm.sentMetaPack('name', Edit2.Text);
+   MainForm.metaQuery('name', Edit2.Text);
 end;
 
 end.

@@ -13,11 +13,10 @@ class MetaThread(threading.Thread):
         threading.Thread.__init__(self)
         self.acceptData = accept
         self.conn = accept[0]
-        #self.conn.settimeout(60)
         self.owner = owner
-        print("CONNECT META: %s" % accept[1][0])
+        self._print("CONNECT META: %s" % accept[1][0])
         self.db = DBConnector()
-        print("    connect db")
+        self._print("    connect db")
         self.app_id = -1
         self.app_sessions = False
 
@@ -28,23 +27,24 @@ class MetaThread(threading.Thread):
             if i == len(pack):
                 break
 
-    def senddata(self, pack_type, data):
+    def senddata(self, data):
         cols = 0
-        pack = b''
+        pack = []
         for rec in data:
             cols = 0
             for cell in rec:
                 if type(cell) == bytes:
-                    pack += cell.decode("utf-8").encode("cp1251")
+                    pack += [cell.decode("utf-8").encode("cp1251")]
                 else:
-                    pack += str(cell).encode("cp1251")
-                pack += b'\x01'
+                    pack += [str(cell).encode("cp1251")]
+                pack += [b'\x01']
                 cols += 1
-        self.sendpack(pack_type.encode('cp1251') + str(cols).encode('cp1251') + b'\x01' + pack + b'\x02')
-        return len(pack)
+        pack_j = b''.join(pack)                
+        self.sendpack(str(cols).encode('cp1251') + b'\x01' + pack_j + b'\x02')
+        return len(pack_j)
 
-    def sendcursor(self, pack_type, sql):
-        return self.senddata(pack_type, self.db.select(sql))
+    def sendcursor(self, sql):
+        return self.senddata(self.db.select(sql))
         
     def run(self):
         buf = ''
@@ -59,124 +59,98 @@ class MetaThread(threading.Thread):
                     for pack in packs[:-1:]:
                         a = pack.split(chr(1))
                         if a[0] == "ping":
-                            pass
-                        elif a[0] == "load":
+                            self.senddata([["OK"]])
+                        elif a[0] == "sync":
+                            self._sync()
+                        elif a[0] == "sessions":
+                            self._sess()
+                        elif a[0] == "media queue":
+                            self._media_queue()
+                        elif a[0] == "load variables":
                             self.init_load(a[1])
-                        elif a[0] == "apps":
+                        elif a[0] == "apps list":
                             pack = b''
-                            self.sendcursor('apps', ("select ID, COMM "
-                                                     " from app_controls "
-                                                     "order by COMM"))
-                        elif a[0] == "regi":
+                            self.sendcursor(("select ID, COMM "
+                                             "  from app_controls "
+                                             "order by COMM"))
+                        elif a[0] == "registration":
                             self.db.IUD("insert into app_controls (COMM) values ('%s')" % (a[1]))
                             self.db.commit()
-                            self.senddata('regi', [[self.db.last_insert_id()]])
+                            self.senddata([[self.db.last_insert_id()]])
                         elif a[0] == "name":
                             self.db.IUD("update app_controls "
                                         "   set COMM = '%s'"
                                         " where ID = %s" % (a[1], self.app_id))
                             self.db.commit()
+                            self.senddata([["OK"]])
                         elif a[0] == "setvar":
                             var_id = a[1]
                             var_v = float(a[2])
                             try:
                                 self.db.IUD("call CORE_SET_VARIABLE(%s, %s, null)" % (var_id, var_v))
                                 self.db.commit()
+                                self._sync()
                             except:
                                 pass
-                        elif a[0] == "play":
-                            self._add_to_queue(3, a[2], int(a[1]))
-                            self._add_to_queue(4, a[3], int(a[1]))
-                        elif a[0] == "medi":
-                            if a[1] == "get folders":
-                                self.sendcursor("medi", ("select SEARCH_FOLDERS "
-                                                         "  from app_controls where ID = %s" % (self.app_id)))
-                            elif a[1] == "set folders":
-                                self.db.IUD("update app_controls "
-                                            "   set SEARCH_FOLDERS = '%s' "
-                                            " where ID = %s" % (a[2], self.app_id))
-                                self.db.commit()
-                            elif a[1] == "get media list":
-                                l = self.sendcursor("mdls", ("select ID, APP_CONTROL_ID, TITLE, FILE_NAME "
-                                                             "  from media_lib "
-                                                             " where APP_CONTROL_ID = %s"
-                                                             " union all "
-                                                             "select ID, APP_CONTROL_ID, TITLE, FILE_NAME "
-                                                             "  from media_lib"
-                                                             " where APP_CONTROL_ID <> %s") % (self.app_id, self.app_id))
-                                print("    media lib pack [%s bytes]" % (l))
-                            elif a[1] == "add files":
-                                for f in a[2:-1:]:
-                                    title = f.split('\\')[-1::][0]
-                                    f = f.replace("'", "\\'")
-                                    title = title.replace("'", "\\'")
-                                    try:
-                                        sql = "insert into media_lib (APP_CONTROL_ID, TITLE, FILE_NAME) values (%s, '%s', '%s')" % (self.app_id, title, f)
-                                        self.db.IUD(sql)
-                                        self._add_to_queue(0, self.db.last_insert_id())
-                                    except Exception as e:
-                                        print("ADD " + str(e))
-                                self.db.commit()
-                                self.senddata('m_ok', [["OK"]])
-                            elif a[1] == "del files":
+                        elif a[0] == "media transfer":
+                            self._add_to_queue(10, a[2], a[3], int(a[1]))
+                            self.senddata([["OK"]])
+                        elif a[0] == "get media folders":
+                            self.sendcursor("select SEARCH_FOLDERS "
+                                            "  from app_controls where ID = %s" % (self.app_id))
+                        elif a[0] == "set media folders":
+                            self.db.IUD("update app_controls "
+                                        "   set SEARCH_FOLDERS = '%s' "
+                                        " where ID = %s" % (a[1], self.app_id))
+                            self.db.commit()
+                            self.senddata([["OK"]])
+                        elif a[0] == "get media list":
+                            l = self.sendcursor("select ID, APP_CONTROL_ID, TITLE, FILE_NAME "
+                                                "  from media_lib "
+                                                "order by ID")
+                            self._print("    media lib pack [%s bytes]" % (l))
+                        elif a[0] == "add media files":
+                            for f in a[1:-1:]:
+                                title = f.split('\\')[-1::][0]
+                                f = f.replace("'", "\\'")
+                                title = title.replace("'", "\\'")
                                 try:
-                                    self.db.IUD("delete from media_lib where ID in (%s)" % (a[2]))
-                                    for i in a[2].split(","):
-                                        self._add_to_queue(2, i)
-                                    self.db.commit()
-                                except Exception as e:                                    
-                                    print("DEL [%s] %s " % (self.app_id, str(e)))
-                                
+                                    sql = "insert into media_lib (APP_CONTROL_ID, TITLE, FILE_NAME) values (%s, '%s', '%s')" % (self.app_id, title, f)
+                                    self.db.IUD(sql)
+                                    self._add_to_queue(0, self.db.last_insert_id())
+                                except Exception as e:
+                                    self._print("ADD " + str(e))
+                            self.db.commit()
+                            self.senddata([["OK"]])
+                        elif a[0] == "del media files":
+                            try:
+                                self.db.IUD("delete from media_lib where ID in (%s)" % (a[1]))
+                                for i in a[1].split(","):
+                                    self._add_to_queue(2, i)
+                                self.db.commit()
+                            except Exception as e:                                    
+                                self._print("DEL [%s] %s " % (self.app_id, str(e)))
+                            self.senddata([["OK"]])
                         else:
-                            print(a)
-                            
-                # ---------------------------------------------
-                self.senddata('synk', self.db.variable_changes())
-                # ---------------------------------------------
-                sess = self.db.select("select c.ID, c.COMM, (select s.IP "
-                                      "                        from app_control_sess s "
-                                      "                       where s.APP_CONTROL_ID = c.ID) IP "
-                                      "  from app_controls c ")
-                if self.app_sessions != sess:
-                    self.app_sessions = sess
-                    self.senddata('sess', self.app_sessions)
-                # ---------------------------------------------
-                queueSql = ("select q.ID, q.TYP, q.VALUE, m.APP_CONTROL_ID, m.TITLE, m.FILE_NAME"
-                            "  from app_control_queue q, media_lib m "
-                            " where q.VALUE = m.ID"
-                            "   and q.APP_CONTROL_ID = %s"
-                            "   and q.TYP in (0, 1) "
-                            "union all "
-                            "select q.ID, q.TYP, q.VALUE, q.APP_CONTROL_ID, '' TITLE, '' FILE_NAME"
-                            "  from app_control_queue q"
-                            " where q.APP_CONTROL_ID = %s"
-                            "   and not q.TYP in (0, 1) "
-                            "order by 1" % (self.app_id, self.app_id))
-                queue = self.db.select(queueSql)
-                self.senddata("m__q", queue)
-                if len(queue) > 0:
-                    self.db.IUD("delete from app_control_queue "
-                                " where APP_CONTROL_ID = %s"
-                                "   and ID <= %s"% (self.app_id, queue[-1::][0][0]))
-                    self.db.commit()                
-                # ---------------------------------------------
-                #time.sleep(0.5)                   
+                            self.senddata([["OK"]])
+                            self._print(a)
+                time.sleep(0.1)
             except Exception as e:
-                print("    error: " + str(e))
+                self._print("    error: " + str(e))
                 break
         try:
             self.conn.close()
         except:
-            print("error: self.conn.close()")
+            self._print("error: self.conn.close()")
         
         try:
             self.db.IUD("delete from app_control_sess where APP_CONTROL_ID = %s" % (self.app_id))
             self.db.IUD("delete from app_control_queue where APP_CONTROL_ID = %s" % (self.app_id))
             self.db.commit()
         except Exception as e:
-            print("ERROR 1: " + str(e))        
+            self._print("ERROR 1: " + str(e))        
         self.db = False
-        print("DISCONNECT META [%s]" % self.acceptData[1][0])
+        self._print("DISCONNECT META [%s]" % self.acceptData[1][0])
         threads = self.owner.threads
         del(threads[threads.index(self)])
 
@@ -190,15 +164,53 @@ class MetaThread(threading.Thread):
                     " (%s, '%s')" % (app_id, self.acceptData[1][0]))
         self.db.commit()
         # Packed data for client
-        l = self.sendcursor('load', ("select ID, NAME, COMM, APP_CONTROL, VALUE "
-                                     "  from core_variables order by COMM"))
-        print("    load pack [%s bytes]" % (l))
+        l = self.sendcursor(("select ID, NAME, COMM, APP_CONTROL, VALUE "
+                             "  from core_variables order by COMM"))
+        self._print("    load pack [%s bytes]" % (l))
+        self._sess(True)
 
-    def _add_to_queue(self, typ, value, target = None):
+    def _add_to_queue(self, typ, value, value2 = 0, target = None):
         for r in self.app_sessions:
-            if r[2] != None:
+            if r[2] != b'':
                 if target == None or r[0] == target:
-                    self.db.IUD("insert into app_control_queue (APP_CONTROL_ID, TYP, VALUE) values (%s, %s, %s)" % (r[0], typ, value))
+                    self.db.IUD("insert into app_control_queue (APP_CONTROL_ID, TYP, VALUE, VALUE_2) values (%s, %s, %s, %s)" % (r[0], typ, value, value2))
+
+    def _sync(self):
+        self.senddata(self.db.variable_changes())
+
+    def _sess(self, nosend = False):
+        sess = self.db.select("select c.ID, c.COMM, s.IP"
+                              "  from app_controls c, app_control_sess s "
+                              " where s.APP_CONTROL_ID = c.ID "
+                              "order by 1")
+        if self.app_sessions != sess:
+            self.app_sessions = sess
+            
+        if not nosend:
+            self.senddata(self.app_sessions)
+
+    def _media_queue(self):
+        queueSql = ("select q.ID, q.TYP, q.VALUE, q.VALUE_2, m.APP_CONTROL_ID, m.TITLE, m.FILE_NAME"
+                    "  from app_control_queue q, media_lib m "
+                    " where q.VALUE = m.ID"
+                    "   and q.APP_CONTROL_ID = %s"
+                    "   and q.TYP in (0, 1) "
+                    "union all "
+                    "select q.ID, q.TYP, q.VALUE, q.VALUE_2, q.APP_CONTROL_ID, '' TITLE, '' FILE_NAME"
+                    "  from app_control_queue q"
+                    " where q.APP_CONTROL_ID = %s"
+                    "   and q.TYP in (2, 10) "
+                    "order by 1" % (self.app_id, self.app_id))
+        queue = self.db.select(queueSql)
+        self.senddata(queue)
+        if len(queue) > 0:
+            self.db.IUD("delete from app_control_queue "
+                        " where APP_CONTROL_ID = %s"
+                        "   and ID <= %s"% (self.app_id, queue[-1::][0][0]))
+            self.db.commit()                
+
+    def _print(self, text):
+        print("[%s] %s" % (time.strftime("%d-%m-%Y %H:%M:%S"), text))
 
 class SoundThread(threading.Thread):
     def __init__(self, accept, owner):
@@ -206,7 +218,7 @@ class SoundThread(threading.Thread):
         self.acceptData = accept
         self.conn = accept[0]
         self.owner = owner
-        print("CONNECT SOUND [%s]" % accept[1][0])        
+        self._print("CONNECT SOUND [%s]" % accept[1][0])        
         
     def run(self):
         CHUNK = 1024
@@ -244,7 +256,8 @@ class SoundThread(threading.Thread):
                 """
                 self.conn.send(stream.read(CHUNK))
                 self.conn.recv(4)
-            except:                
+            except Exception as e:
+                #print("sound error %s" % (e))
                 break
 
         try:
@@ -256,9 +269,12 @@ class SoundThread(threading.Thread):
             stream.stop_stream()
             stream.close()
         p.terminate()
-        print("DISCONNECT SOUND: %s" % self.acceptData[1][0])
+        self._print("DISCONNECT SOUND: %s" % self.acceptData[1][0])
         threads = self.owner.threads
         del(threads[threads.index(self)])
+
+    def _print(self, text):
+        print("[%s] %s" % (time.strftime("%d-%m-%Y %H:%M:%S"), text))
 
 
 class ThreadManager(threading.Thread):

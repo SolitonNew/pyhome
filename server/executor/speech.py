@@ -25,9 +25,9 @@ class Speech():
             """
             
             if len(s) > 0:
-                subprocess.call('echo "' + s + '" | RHVoice-test -p Anna -o speech.wav', shell=True)
+                subprocess.call('echo "' + s + '" | RHVoice-test -p Anna -o /var/tmp/speech.wav', shell=True)
                 subprocess.call("aplay /home/pyhome/server/executor/notify.wav", shell=True)
-                subprocess.call("aplay speech.wav", shell=True)
+                subprocess.call("aplay /var/tmp/speech.wav", shell=True)
                 print("")
                 
             return True

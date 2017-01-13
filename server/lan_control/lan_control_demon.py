@@ -241,7 +241,7 @@ class SoundThread(threading.Thread):
 
                 """
                 self.conn.send(stream.read(CHUNK))
-                #self.conn.recv(4)
+                self.conn.recv(4)
             except Exception as e:
                 #print("sound error %s" % (e))
                 break

@@ -13,6 +13,7 @@ class MetaThread(threading.Thread):
         threading.Thread.__init__(self)
         self.acceptData = accept
         self.conn = accept[0]
+        self.conn.setblocking(True)
         self.owner = owner
         self._print("CONNECT META: %s" % accept[1][0])
         self.db = DBConnector()
@@ -51,7 +52,7 @@ class MetaThread(threading.Thread):
         while self.owner.is_alive():
             try:
                 line = self.conn.recv(1024)
-                if line != b'':
+                if line != b'':                    
                     buf += line.decode('cp1251')
                     packs = buf.split(chr(2))
                     if len(packs) > 0:
@@ -134,10 +135,12 @@ class MetaThread(threading.Thread):
                         else:
                             self.senddata([["OK"]])
                             self._print(a)
-                time.sleep(0.1)
+                else:
+                    break
             except Exception as e:
                 self._print("    error: " + str(e))
                 break
+        
         try:
             self.conn.close()
         except:
@@ -289,8 +292,9 @@ class ThreadManager(threading.Thread):
     def run(self):
         while True:
             try:
-                self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                self.sock = socket.socket()
                 self.sock.bind(("", self.port))
+                print("binding for port %s OK" % (self.port))
                 self.sock.listen(32)
 
                 while True:

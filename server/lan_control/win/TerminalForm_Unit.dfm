@@ -11,6 +11,7 @@ object TerminalForm: TTerminalForm
   Font.Name = 'MS Sans Serif'
   Font.Style = []
   OldCreateOrder = False
+  OnDestroy = FormDestroy
   PixelsPerInch = 96
   TextHeight = 13
   object Memo1: TMemo
@@ -44,7 +45,6 @@ object TerminalForm: TTerminalForm
       Height = 25
       Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100
       TabOrder = 1
-      OnClick = Button1Click
     end
     object Button2: TButton
       Left = 464

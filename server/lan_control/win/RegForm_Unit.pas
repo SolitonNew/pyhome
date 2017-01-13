@@ -19,7 +19,7 @@ type
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure Button1Click(Sender: TObject);
   private
-    { Private declarations }
+    procedure appsLoad();
   public
     fIDs:array of string;
   end;
@@ -35,7 +35,7 @@ uses MainForm_Unit, PropertysForm_Unit;
 
 procedure TRegForm.FormActivate(Sender: TObject);
 begin
-   MainForm.SocketMeta.Socket.SendText('apps' + chr(2));
+   appsLoad();
 end;
 
 procedure TRegForm.Button2Click(Sender: TObject);
@@ -49,6 +49,8 @@ begin
 end;
 
 procedure TRegForm.Button1Click(Sender: TObject);
+var
+   res: TDataRec;
 begin
    if (RegForm.ComboBox1.Text = '') then
    begin
@@ -56,13 +58,31 @@ begin
       exit;
    end;
    if (ComboBox1.ItemIndex = -1) then
-      MainForm.SocketMeta.Socket.SendText('regi' + chr(1) + ComboBox1.Text + chr(2))
+   begin
+      res := MainForm.metaQuery('registration', ComboBox1.Text);
+      saveProp('ID', res[0][0]);
+   end
    else
    begin
       saveProp('ID', fIDs[ComboBox1.ItemIndex]);
       MainForm.SocketMetaConnect(nil, nil);
    end;
    //Application.Terminate
+end;
+
+procedure TRegForm.appsLoad;
+var
+   res: TDataRec;
+   k: integer;
+begin
+   RegForm.ComboBox1.Items.Clear;
+   res := MainForm.metaQuery('apps list', '');
+   SetLength(RegForm.fIDs, Length(res));
+   for k := 0 to Length(res) - 1 do
+   begin
+      RegForm.ComboBox1.Items.Add(res[k][1]);
+      RegForm.fIDs[k] := res[k][0];
+   end;
 end;
 
 end.

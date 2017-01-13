@@ -14,16 +14,17 @@ type
     Button1: TButton;
     Button2: TButton;
     procedure Edit1KeyPress(Sender: TObject; var Key: Char);
-    procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
   private
     { Private declarations }
   public
-    procedure addText(text: string);
   end;
 
 var
   TerminalForm: TTerminalForm;
+
+procedure addTextToTerminal(text: string);
 
 implementation
 
@@ -31,27 +32,28 @@ uses MainForm_Unit;
 
 {$R *.dfm}
 
-procedure TTerminalForm.addText(text: string);
+procedure addTextToTerminal(text: string);
 begin
-   Memo1.Lines.Add(text);
+   if (TerminalForm <> nil) then
+      TerminalForm.Memo1.Lines.Add(text);
 end;
 
 procedure TTerminalForm.Edit1KeyPress(Sender: TObject; var Key: Char);
 begin
-   if (Key = chr(13)) then
+{   if (Key = chr(13)) then
    begin
       Button1Click(nil);
-   end;
-end;
-
-procedure TTerminalForm.Button1Click(Sender: TObject);
-begin
-   MainForm.VlcCommand(Edit1.Text);
+   end;}
 end;
 
 procedure TTerminalForm.Button2Click(Sender: TObject);
 begin
    Memo1.Clear;
+end;
+
+procedure TTerminalForm.FormDestroy(Sender: TObject);
+begin
+   TerminalForm := nil;
 end;
 
 end.

@@ -5,10 +5,11 @@ interface
 uses Windows, Messages, SysUtils, Classes, MMSystem, SyncObjs, Math;
 
 const
-  MaxBuffersCount = 15;
+  MaxBuffersCount = 10;
 
 type
   TPcmBuffer = array[$1..$500] of Smallint;
+  //TPcmBuffer = array[1..4000] of Smallint;
 
   TBuff = array[1..1024] of Smallint;
   PBuff = ^TBuff;
@@ -32,7 +33,7 @@ type
   public
     fVolume:integer;
     fMute: Boolean;
-    procedure Play (Buffer: Pointer; Size: Integer);
+    function Play(Buffer: Pointer; Size: Integer):Boolean;
     function BuffersAvailable: Boolean;
     constructor Create (AID: Int64);
     destructor Destroy; override;
@@ -44,159 +45,162 @@ implementation
 
 procedure TSpeakerThread.Execute;
 var
-  Msg: TMsg;
+   Msg: TMsg;
 
-  procedure OpenAudio;
-  var
-    WF: TPCMWaveFormat;
-    i: Integer;
-  begin
-    WF.wBitsPerSample:= 16;
-    WF.wf.wFormatTag:= WAVE_FORMAT_PCM;
-    WF.wf.nChannels:= 2;
-    WF.wf.nSamplesPerSec:= 44100;
-    WF.wf.nBlockAlign:= WF.wBitsPerSample div 8 * 2;
-    WF.wf.nAvgBytesPerSec:= WF.wf.nSamplesPerSec * WF.wf.nBlockAlign;
-    waveOutOpen(@FHandle, FId, @WF, FWnd, 0, CALLBACK_WINDOW);
-    for i:=0 to High(FHeaders) do
-    Begin
-      // WITH optimization is possible
-      FHeaders[i].lpData:=@FBuffers[i][1];
-      FHeaders[i].dwBufferLength:=SizeOf(TPcmBuffer);
-      FHeaders[i].lpNext:=Nil;
-      FHeaders[i].dwUser:=0;
-      waveOutPrepareHeader(FHandle,@FHeaders[i],SizeOf(TWaveHdr));
-    end;
-    FFreeBuffers:=MaxBuffersCount;
-  end;
+   procedure OpenAudio;
+   var
+      WF: TPCMWaveFormat;
+      i: Integer;
+   begin
+      WF.wBitsPerSample := 16;
+      WF.wf.wFormatTag := WAVE_FORMAT_PCM;
+      WF.wf.nChannels := 2;
+      WF.wf.nSamplesPerSec := 44100;
+      WF.wf.nBlockAlign := WF.wBitsPerSample div 8 * 2;
+      WF.wf.nAvgBytesPerSec := WF.wf.nSamplesPerSec * WF.wf.nBlockAlign;
+      waveOutOpen(@FHandle, FId, @WF, FWnd, 0, CALLBACK_WINDOW);
+      for i := 0 to High(FHeaders) do
+      begin
+         FHeaders[i].lpData := @FBuffers[i][1];
+         FHeaders[i].dwBufferLength := SizeOf(TPcmBuffer);
+         FHeaders[i].lpNext := nil;
+         FHeaders[i].dwUser := 0;
+         waveOutPrepareHeader(FHandle, @FHeaders[i], SizeOf(TWaveHdr));
+      end;
+      FFreeBuffers := MaxBuffersCount;
+   end;
 
-  Procedure CloseAudio;
-  var
-    i:Integer;
-  Begin
-    waveOutReset(FHandle);
-    for i:=0 to High(FHeaders) Do
-      waveOutUnprepareHeader(FHandle,@FHeaders[i],SizeOf(TWaveHdr));
-    waveOutClose(FHandle);
-  end;
+   procedure CloseAudio;
+   var
+      i:Integer;
+   begin
+      waveOutReset(FHandle);
+      for i := 0 to High(FHeaders) do
+         waveOutUnprepareHeader(FHandle, @FHeaders[i], SizeOf(TWaveHdr));
+      waveOutClose(FHandle);
+   end;
 
 Begin
-  FWnd:=AllocateHWnd(WndProc);
-  SetEvent(FWindowCreatedEvent);
-  try
-    OpenAudio;
-    try
-      While Not Terminated Do
-      Try
-        GetMessage(Msg,FWnd,0,0);
-        if not Terminated and (Msg.message=MM_WOM_DONE) then HandleBufferDone(PWaveHdr(Msg.lParam))
-        else if not Terminated then DispatchMessage(Msg); // can be optimized for Terminated
-      Except
-      End;
-    Finally
-      CloseAudio;
-    end;
-  Finally
-    DeallocateHWnd(Fwnd);
-  End;
+   FWnd := AllocateHWnd(WndProc);
+   SetEvent(FWindowCreatedEvent);
+   try
+      OpenAudio;
+      try
+         while not Terminated do
+         begin
+            try
+               //GetMessage(Msg, FWnd, 0, 0);
+               GetMessage(Msg, FWnd, MM_WOM_DONE, MM_WOM_DONE);
+               if not Terminated and (Msg.message = MM_WOM_DONE) then
+                  HandleBufferDone(PWaveHdr(Msg.lParam))
+               else
+               if not Terminated then
+                  DispatchMessage(Msg); // can be optimized for Terminated
+            except
+            end;
+         end;
+      finally
+         CloseAudio;
+      end;
+   finally
+      DeallocateHWnd(Fwnd);
+   end;
 end;
 
 function TSpeakerThread.LocateBuffer (var Index: Integer): Boolean;
 var
-  i: Integer;
+   i: Integer;
 begin
-  Result:=False;
-  for i:=0 to High(FHeaders) Do
-    if FHeaders[i].dwUser=0 Then
-    Begin
-      Index:=i;
-      Result:=True;
-      Exit;
-    end;
+   Result:=False;
+   for i := 0 to High(FHeaders) do
+      if FHeaders[i].dwUser = 0 then
+      begin
+         Index := i;
+         Result := True;
+         exit;
+      end;
 end;
 
-procedure saveRtpDataToFile(time: dword; data: Pointer; size: integer);
 var
-   fs: TFileStream;
+   okPacks, cancelPacks: integer;
+
+function TSpeakerThread.Play(Buffer: Pointer; Size: Integer):Boolean;
+var
+   idx: Integer;
 begin
-   fs:= TFileStream.Create('d:\udp\' + IntToStr(time), fmCreate);
+   Result := false;
+   if (fMute) then
+   begin
+      Result := true;
+      exit;
+   end;
+
+   if LocateBuffer(idx) then
+   begin
+      dec(FFreeBuffers);
+      waveVolume(fVolume, Buffer, Size);
+      FHeaders[idx].dwBufferLength := Size;
+      FHeaders[idx].dwUser := 1;
+      Move(Buffer^, FBuffers[idx][1], FHeaders[idx].dwBufferLength); // Size can be reused
+      waveOutWrite(FHandle, @FHeaders[idx], SizeOf(TWaveHdr));
+      Result := true;
+   end;
+end;
+
+procedure TSpeakerThread.HandleBufferDone(AWaveHdr: PWaveHdr);
+begin
+   FCS.Enter;
    try
-      fs.Write(data^, size);
+      AWaveHdr.dwUser := 0;
+      //AWaveHdr.dwFlags := AWaveHdr.dwFlags and not WHDR_DONE;
+      inc(FFreeBuffers);
    finally
-      fs.Free;
+      FCS.Leave;
    end;
 end;
 
-procedure TSpeakerThread.Play (Buffer: Pointer; Size: Integer);
-var
-  idx: Integer;
+procedure TSpeakerThread.WndProc(var Message: TMessage);
 begin
-   waveVolume(fVolume, Buffer, Size);
-
-   If (LocateBuffer(idx) and (not fMute)) Then
-   Begin
-      Dec(FFreeBuffers);
-      FHeaders[idx].dwBufferLength:=Size;
-      FHeaders[idx].dwUser:=1;
-      Move(Buffer^,FBuffers[idx][1],FHeaders[idx].dwBufferLength); // Size can be reused
-      waveOutWrite(FHandle,@FHeaders[idx],SizeOf(TWaveHdr));
-   end;
+   DefWindowProc(FWnd, Message.Msg, Message.WParam, Message.LParam);
 end;
 
-procedure TSpeakerThread.HandleBufferDone (AWaveHdr: PWaveHdr);
+constructor TSpeakerThread.Create(AID: Int64); // no need for 64 bits
 begin
-  FCS.Enter;
-  try
-    Inc(FFreeBuffers);
-    AWaveHdr.dwUser:=0;
-    AWaveHdr.dwFlags:=AWaveHdr.dwFlags And not WHDR_DONE;
-  Finally
-    FCS.Leave;
-  end;
+   Inherited Create(True);
+   FFreeBuffers := MaxBuffersCount;
+   FWindowCreatedEvent := CreateEvent(nil, true, false, nil);
+   Priority := tpTimeCritical;
+   FCS := TCriticalSection.Create;
+   FreeOnTerminate := False;
+   FId := AID;
+   Resume;
+   WaitForSingleObject(FWindowCreatedEvent, INFINITE);
 end;
 
-procedure TSpeakerThread.WndProc (var Message: TMessage);
+destructor TSpeakerThread.Destroy;
 begin
-  DefWindowProc(FWnd,Message.Msg,Message.WParam,Message.LParam);
-end;
-
-constructor TSpeakerThread.Create (AID: Int64); // no need for 64 bits
-begin
-  Inherited Create(True);
-  FFreeBuffers:=MaxBuffersCount;
-  FWindowCreatedEvent:=CreateEvent(Nil,True,False,Nil);
-  Priority:=tpTimeCritical;
-  FCS:=TCriticalSection.Create;
-  FreeOnTerminate:=False;
-  FId:=AID;
-  Resume;
-  WaitForSingleObject(FWindowCreatedEvent,INFINITE);
-end;
-
-Destructor TSpeakerThread.Destroy;
-Begin
-  Terminate;
-  PostMessage(FWnd,WM_USER,0,0);
-  WaitFor;
-  FCS.Free;
-  CloseHandle(FWindowCreatedEvent);
-  Inherited;
+   Terminate;
+   PostMessage(FWnd, WM_USER, 0, 0);
+   WaitFor;
+   FCS.Free;
+   CloseHandle(FWindowCreatedEvent);
+   inherited;
 end;
 
 function TSpeakerThread.BuffersAvailable: Boolean;
 begin
-  FCS.Enter;
-  try
-    Result:=FFreeBuffers>0;
-  Finally
-    FCS.Leave;
-  end;
+   FCS.Enter;
+   try
+      Result := FFreeBuffers > 0;
+   finally
+      FCS.Leave;
+   end;
 end;
 
 function TSpeakerThread.waveVolume(volume: integer; buf: pointer;samples: cardinal): Smallint;
 var
    k, i: integer;
-   bb: array[1..1024] of Smallint;
+   bb: TBuff;
    v: Double;
 begin
    Result := 0;

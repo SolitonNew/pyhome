@@ -69,11 +69,6 @@ class MetaThread(threading.Thread):
                             self._media_queue()
                         elif a[0] == "load variables":
                             self.init_load(a[1])
-                        elif a[0] == "apps list":
-                            pack = b''
-                            self.sendcursor(("select ID, COMM "
-                                             "  from app_controls "
-                                             "order by COMM"))
                         elif a[0] == "registration":
                             self.db.IUD("insert into app_controls (COMM) values ('%s')" % (a[1]))
                             self.db.commit()
@@ -88,6 +83,7 @@ class MetaThread(threading.Thread):
                             var_id = a[1]
                             var_v = float(a[2])
                             try:
+                                self.db.IUD("delete from core_scheduler where TEMP_VARIABLE_ID = %s" % (var_id))
                                 self.db.IUD("call CORE_SET_VARIABLE(%s, %s, null)" % (var_id, var_v))
                                 self.db.commit()
                                 self._sync()
@@ -132,6 +128,41 @@ class MetaThread(threading.Thread):
                             except Exception as e:                                    
                                 self._print("DEL [%s] %s " % (self.app_id, str(e)))
                             self.senddata([["OK"]])
+                        elif a[0] == "get scheduler list":
+                            self.sendcursor("select ID, COMM, ACTION, ACTION_DATETIME, INTERVAL_TIME_OF_DAY, INTERVAL_DAY_OF_TYPE, INTERVAL_TYPE, TEMP_VARIABLE_ID "
+                                            "  from core_scheduler "
+                                            "order by COMM")
+                        elif a[0] == "edit scheduler":
+                            if a[1] == "-1":
+                                self.db.IUD("delete from core_scheduler where TEMP_VARIABLE_ID = %s" % (a[7]))
+                                if a[2] != '':
+                                    self.db.IUD(("insert into core_scheduler "
+                                                 " (COMM, ACTION, INTERVAL_TYPE, INTERVAL_TIME_OF_DAY, INTERVAL_DAY_OF_TYPE, TEMP_VARIABLE_ID)"
+                                                 "values"
+                                                 " ('%s', '%s', %s, '%s', '%s', %s)") % (a[2], a[3], a[4], a[5], a[6], a[7]))
+                                self.db.commit();
+                            else:
+                                self.db.IUD(("update core_scheduler "
+                                             " set COMM = '%s', "
+                                             "     ACTION = '%s', "
+                                             "     INTERVAL_TYPE = %s, "
+                                             "     INTERVAL_TIME_OF_DAY = '%s', "
+                                             "     INTERVAL_DAY_OF_TYPE = '%s' "
+                                             "where ID = %s") % (a[2], a[3], a[4], a[5], a[6], a[1]))
+                                self.db.commit();
+                            self.senddata([["OK"]])
+                        elif a[0] == "del scheduler":
+                            self.db.IUD("delete from core_scheduler where ID = %s" % (a[1]))
+                            self.db.commit()
+                            self.senddata([["OK"]])
+                        elif a[0] == "execute":
+                            self.db.IUD("insert into core_execute (COMMAND) values ('%s')" % (a[1]))
+                            self.db.commit()
+                            self.senddata([["OK"]])
+                        elif a[0] == "get app info":
+                            self.sendcursor(("select COMM "
+                                             "  from app_controls "
+                                             "where ID = %s") % (a[1]))
                         else:
                             self.senddata([["OK"]])
                             self._print(a)

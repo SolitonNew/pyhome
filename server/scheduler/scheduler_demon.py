@@ -31,7 +31,10 @@ class Main():
                 next_time = self.parse_time(None, str(row[4], "utf-8"), str(row[5], "utf-8"), row[6])
             elif row[3].timestamp() <= now: # Это дата, что пришла для выполнения. Выполняем и перещитываем.
                 next_time = self.parse_time(row[3].timestamp(), str(row[4], "utf-8"), str(row[5], "utf-8"), row[6])
-                self.execute(str(row[1], "utf-8"), str(row[2], "utf-8"))            
+                self.execute(str(row[1], "utf-8"), str(row[2], "utf-8"))
+                if row[6] == 4: # Одноразовая задача выполнена. Удаляем ее запись.
+                    self.db.IUD("delete from core_scheduler where ID = %s" % (row[0]))
+                    self.db.commit()
             if next_time != None:
                 #self.db.IUD("update core_scheduler set ACTION_DATETIME = FROM_UNIXTIME(%s) where ID = %s" % (next_time, row[0]))
                 d_s = datetime.datetime.fromtimestamp(next_time).strftime("%Y-%m-%d %H:%M:%S")
@@ -131,7 +134,7 @@ class Main():
                 dates += [m + (s * 24 * 3600)]
                 dates += [m_next + (s * 24 * 3600)]
                 
-        elif int_type == 3:            
+        elif int_type == 3 or int_type == 4: # Ежегодно или Только один раз
             for d in day_of_type.split(","):
                 m = d.split("-")
                 s = datetime.datetime(now.year, int(m[1].strip()), int(m[0].strip())).timestamp()

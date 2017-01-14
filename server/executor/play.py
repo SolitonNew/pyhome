@@ -46,7 +46,8 @@ class Play():
 
     def time_handler(self):
         if self.player:
-            self.volume += 60 / self.duration
-            if self.volume > 60:
-                self.volume = 60
+            max_vol = 40
+            self.volume += max_vol / self.duration
+            if self.volume > max_vol:
+                self.volume = max_vol
             self.send_cmd("volume %s 100" % round(40 + round(self.volume)))

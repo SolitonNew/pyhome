@@ -12,7 +12,7 @@ uses
 type
    TDataRec = array of array of string;
 
-   TItemListItem = class
+   TVarListItem = class
       id:integer;
       name:string;
       comm:string;
@@ -25,6 +25,17 @@ type
       app_id:integer;
       title:string;
       file_name:string;
+   end;
+
+   TSchedListItem = class
+      id: integer;
+      comm: string;
+      action: string;
+      datetime: TDateTime;
+      timeOfDay: string;
+      dayOfType: string;
+      typ: integer;
+      variable: integer;
    end;
 
    TSoundSocket = class (TThread)
@@ -53,7 +64,6 @@ type
     ImageList1: TImageList;
     PopupMenu1: TPopupMenu;
     N1: TMenuItem;
-    N2: TMenuItem;
     N3: TMenuItem;
     SpeedButton9: TSpeedButton;
     Panel1: TPanel;
@@ -79,7 +89,6 @@ type
     IdServerIOHandlerSocket1: TIdServerIOHandlerSocket;
     TimePanel: TPanel;
     TimeShape: TShape;
-    N4: TMenuItem;
     TimeLabel: TLabel;
     Panel3: TPanel;
     SpeedButton6: TSpeedButton;
@@ -87,7 +96,39 @@ type
     VlcVolShape: TShape;
     PlayLoopButton: TSpeedButton;
     N5: TMenuItem;
+    VarPopupMenu: TPopupMenu;
+    VarPopupItem1: TMenuItem;
+    VarPopupItem4: TMenuItem;
+    VarPopupItem2: TMenuItem;
+    VarPopupItem3: TMenuItem;
+    VarPopupItem5: TMenuItem;
+    VarPopupItem6: TMenuItem;
+    N13: TMenuItem;
+    SpeedButton7: TSpeedButton;
+    SchedList: TListBox;
+    ImageList3: TImageList;
+    PopupMenu2: TPopupMenu;
+    N7: TMenuItem;
+    N14: TMenuItem;
+    N15: TMenuItem;
+    Timer2: TTimer;
+    N16: TMenuItem;
+    N17: TMenuItem;
+    N18: TMenuItem;
+    PopupMenu3: TPopupMenu;
+    TransferMenu: TMenuItem;
+    VLC1: TMenuItem;
+    N9: TMenuItem;
+    N2: TMenuItem;
+    N4: TMenuItem;
     N6: TMenuItem;
+    N8: TMenuItem;
+    Buhfnm1: TMenuItem;
+    N10: TMenuItem;
+    N11: TMenuItem;
+    N12: TMenuItem;
+    N19: TMenuItem;
+    N20: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
@@ -120,14 +161,11 @@ type
     procedure FilterEditChange(Sender: TObject);
     procedure MediaListDrawItem(Control: TWinControl; Index: Integer;
       Rect: TRect; State: TOwnerDrawState);
-    procedure CoolTrayIcon1MouseDown(Sender: TObject; Button: TMouseButton;
-      Shift: TShiftState; X, Y: Integer);
     procedure Panel6Resize(Sender: TObject);
     procedure ComboBox1Change(Sender: TObject);
     procedure IdHTTPServer1CommandGet(AThread: TIdPeerThread;
       ARequestInfo: TIdHTTPRequestInfo;
       AResponseInfo: TIdHTTPResponseInfo);
-    procedure N4Click(Sender: TObject);
     procedure TimePanelResize(Sender: TObject);
     procedure TimePanelMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
@@ -142,7 +180,6 @@ type
     procedure VlcVolPanelMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
     procedure SpeedButton6Click(Sender: TObject);
-    procedure PopupMenu1Popup(Sender: TObject);
     procedure StopButtonClick(Sender: TObject);
     procedure PauseButtonClick(Sender: TObject);
     procedure PlayButtonClick(Sender: TObject);
@@ -151,6 +188,24 @@ type
     procedure PlayLoopButtonClick(Sender: TObject);
     procedure MediaListKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
+    procedure VarPopupItemClick(Sender: TObject);
+    procedure SchedListDrawItem(Control: TWinControl; Index: Integer;
+      Rect: TRect; State: TOwnerDrawState);
+    procedure N15Click(Sender: TObject);
+    procedure N7Click(Sender: TObject);
+    procedure N14Click(Sender: TObject);
+    procedure Timer2Timer(Sender: TObject);
+    procedure N18Click(Sender: TObject);
+    procedure VarPopupMenuPopup(Sender: TObject);
+    procedure SchedListMouseDown(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
+    procedure MediaListMouseDown(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
+    procedure VLC1Click(Sender: TObject);
+    procedure N4Click(Sender: TObject);
+    procedure N8Click(Sender: TObject);
+    procedure CoolTrayIcon1Click(Sender: TObject);
+    procedure PopupMenu3Popup(Sender: TObject);
   private
     fSoundSocket: TSoundSocket;
     fSocketMetaBufer: string;
@@ -159,8 +214,6 @@ type
     fSessionVlcState: integer;
     fSessionVlcID: integer;
 
-    procedure itemListClear;
-    procedure mediaListClear;
     procedure setStatusText(text:String);
     procedure refreshItemList();
     procedure refreshMediaList();
@@ -184,15 +237,21 @@ type
     procedure syncLoad();
     procedure syncPack(res: TDataRec);
     procedure firstRun();
+
+    procedure clearList(ls:TList);
+    function trimText(canvas: TCanvas; w:integer; s: string):string;
+    procedure drawIcon(canvas:TCanvas; imageList: TImageList; isSel:Boolean; x, y, index:integer; color_no_sel:integer = -1; color_sel:integer = -1);
+    procedure inverIcon(bmp:TBitmap; toColor: integer);
   public
     fAppID: integer;
     fItemList: TList;
     fMediaList: TList;
     fSessions:TDataRec;
     function metaQuery(pack_name, pack_data: string): TDataRec;
-    
+
     procedure sendMediaState(state: string; id, time: integer);
     procedure playMediaPlayAt(index: integer; blockWarning: boolean = false);
+    procedure schedLoad();
   end;
 
 var
@@ -201,7 +260,7 @@ var
 implementation
 
 uses StrUtils, PropertysForm_Unit, Mcs_Unit, RegForm_Unit,
-  TerminalForm_Unit, Types, Vlc_Unit;
+  TerminalForm_Unit, Types, Vlc_Unit, DateUtils, SchedDialog_Unit;
 
 {$R *.dfm}
 
@@ -212,8 +271,15 @@ var
 begin
    //saveProp('ID', '');
    InfoPanel.Align := alClient;
+   
    MediaPanel.Align := alClient;
+   MediaList.DoubleBuffered := true;
+
    VarList.Align := alClient;
+   VarList.DoubleBuffered := true;
+
+   SchedList.Align := alClient;
+   SchedList.DoubleBuffered := true;
 
    ComboBox1.AddItem('Вся медия', nil);
    ComboBox1.AddItem('Только видео', nil);
@@ -263,6 +329,7 @@ end;
 
 procedure TMainForm.FormDestroy(Sender: TObject);
 begin
+   Timer1.Enabled := false;
    SocketMeta.Close;
 
    saveProp('Left', IntToStr(Left));
@@ -279,10 +346,9 @@ begin
    except
    end;
 
-   mediaListClear;
+   clearList(fMediaList);
    fMediaList.Free;
-
-   itemListClear;
+   clearList(fItemList);
    fItemList.Free;
 end;
 
@@ -344,7 +410,7 @@ procedure TMainForm.refreshItemList;
 var
    k, t, i: integer;
    lb: string;
-   o:TItemListItem;
+   o:TVarListItem;
 begin
    t := currView();
 
@@ -352,7 +418,7 @@ begin
    i := 0;
    for k:= 0 to fItemList.Count - 1 do
    begin
-      o := TItemListItem(fItemList[k]);
+      o := TVarListItem(fItemList[k]);
       lb := o.comm + ' [' + FloatToStr(o.value) + ']';
 
       if (o.typ = t) then
@@ -381,6 +447,7 @@ begin
    t := 0;
    case currView of
       100: t := 1;
+      10: t := 2;
    end;
 
    if (InfoLabel.Caption <> '') then
@@ -389,6 +456,7 @@ begin
    InfoPanel.Visible := t = -1;
    VarList.Visible := t = 0;
    Panel5.Visible := t = 1;
+   SchedList.Visible := t = 2;
 
    case t of
       0:
@@ -401,6 +469,12 @@ begin
       begin
          if (MainForm.Visible) then
             MediaList.SetFocus;
+      end;
+
+      2:
+      begin
+         if (MainForm.Visible) then
+            SchedList.SetFocus;         
       end;
    end;
 end;
@@ -447,26 +521,15 @@ begin
    syncPack(metaQuery('setvar', p));
 end;
 
-procedure TMainForm.itemListClear;
-var
-   k: integer;
-begin
-   for k:= 0 to fItemList.Count - 1 do
-   begin
-      TObject(fItemList[k]).Free;
-      fItemList[k] := nil;
-   end;
-   fItemList.Clear;
-end;
-
 procedure TMainForm.VarListDrawItem(Control: TWinControl; Index: Integer;
   Rect: TRect; State: TOwnerDrawState);
 var
-   o: TItemListItem;
+   o: TVarListItem;
    itemBmp, bmp:TBitmap;
    v: string;
+   tl, tr, k: integer;
 begin
-   o := TItemListItem(VarList.Items.Objects[index]);
+   o := TVarListItem(VarList.Items.Objects[index]);
 
    itemBmp := TBitmap.Create;
    try
@@ -487,9 +550,8 @@ begin
          Pen.Color := Brush.Color;
          Rectangle(0, 0, itemBmp.Width, itemBmp.Height);
 
-         Font.Size := 8;
-         Font.Style := [];
-         TextOut(5, 5, o.comm);
+         tl := 5;
+         tr := 5;
 
          case o.typ of
             1, 3:
@@ -503,7 +565,20 @@ begin
                      ImageList1.Draw(bmp.Canvas, 0, 0, 0)
                   else
                      ImageList1.Draw(bmp.Canvas, 0, -13, 0);
+                  if (odSelected in State) then
+                     inverIcon(bmp, $00feffff);
                   Draw(itemBmp.Width - 5 - 26, 5, bmp);
+
+                  tr := tr + 26;
+                  for k:= 0 to SchedList.Count - 1 do
+                  begin
+                     if (TSchedListItem(SchedList.Items.Objects[k]).variable = o.id) then
+                     begin
+                        drawIcon(itemBmp.Canvas, ImageList3, (odSelected in State), 3, 4, 4);
+                        tl := tl + 18;
+                        break;
+                     end;
+                  end;
                finally
                   bmp.Free;
                end;
@@ -541,12 +616,18 @@ begin
                   bmp.Width := 30;
                   bmp.Height := 11;
                   ImageList1.Draw(bmp.Canvas, 0, -round(11 * (o.value / 2)), 1);
+                  if (odSelected in State) then
+                     inverIcon(bmp, $00feffff);
                   Draw(itemBmp.Width - 5 - 29, 6, bmp);
                finally
                   bmp.Free;
                end;
             end;
          end;
+
+         Font.Size := 8;
+         Font.Style := [];
+         TextOut(tl, 5, trimText(itemBmp.Canvas, itemBmp.Width - tl - tr, o.comm));
       end;
 
       VarList.Canvas.Draw(Rect.Left, Rect.Top, itemBmp);
@@ -559,15 +640,18 @@ procedure TMainForm.VarListMouseDown(Sender: TObject;
   Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 var
    i: integer;
-   o: TItemListItem;
+   o: TVarListItem;
    r: TRect;
    v: Double;
+   p: TPoint;
 begin
    i := VarList.ItemAtPos(Point(X, Y), True);
    if (i > -1) then
    begin
+      VarList.ItemIndex := i;
+
       r := VarList.ItemRect(i);
-      o := TItemListItem(VarList.Items.Objects[i]);
+      o := TVarListItem(VarList.Items.Objects[i]);
       case o.typ of
          1, 3:
          begin
@@ -577,6 +661,14 @@ begin
                   sendVarValue(o.id, 0)
                else
                   sendVarValue(o.id, 1);
+            end
+            else
+            begin
+               if (Button = mbRight) then
+               begin
+                  p := VarList.ClientToScreen(Point(X, Y));
+                  VarPopupMenu.Popup(p.X, p.Y);
+               end;
             end;
          end;
 
@@ -598,6 +690,7 @@ procedure TMainForm.FormResize(Sender: TObject);
 begin
    VarList.Repaint;
    MediaList.Repaint;
+   SchedList.Repaint;
 end;
 
 procedure TMainForm.VolumePanelMouseDown(Sender: TObject; Button: TMouseButton;
@@ -660,7 +753,7 @@ end;
 procedure TMainForm.VarListKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 var
-   o: TItemListItem;
+   o: TVarListItem;
    v: integer;
 begin
    // 39 - Right
@@ -668,7 +761,7 @@ begin
 
    if (VarList.ItemIndex > -1) then
    begin
-      o := TItemListItem(VarList.Items.Objects[VarList.ItemIndex]);
+      o := TVarListItem(VarList.Items.Objects[VarList.ItemIndex]);
       case o.typ of
          1, 3:
          begin
@@ -683,7 +776,8 @@ begin
                   v := 0;
                if (v > 1) then
                   v := 1;
-               sendVarValue(o.id, v);
+               if (v <> trunc(o.value)) then
+                  sendVarValue(o.id, v);
             end;
          end;
          4:
@@ -700,7 +794,8 @@ begin
                v := 10;
             if (v > 40) then
                v := 40;
-            sendVarValue(o.id, v);
+            if (v <> trunc(o.value)) then
+               sendVarValue(o.id, v);
          end;
 
          7:
@@ -714,7 +809,8 @@ begin
                v := 0;
             if (v > 10) then
                v := 10;
-            sendVarValue(o.id, v);
+            if (v <> trunc(o.value)) then
+               sendVarValue(o.id, v);
          end;
       end;
    end;
@@ -743,18 +839,6 @@ begin
    TimePanel.Width := Panel5.ClientWidth - (TimePanel.Left * 2);
    Panel3.Left := Panel5.ClientWidth - Panel3.Width;
    updateTimePanel; 
-end;
-
-procedure TMainForm.mediaListClear;
-var
-   k: integer;
-begin
-   for k:= 0 to fMediaList.Count - 1 do
-   begin
-      TObject(fMediaList[k]).Free;
-      fMediaList[k] := nil;
-   end;
-   fMediaList.Clear;
 end;
 
 procedure TMainForm.InfoPanelResize(Sender: TObject);
@@ -819,60 +903,7 @@ begin
    refreshMediaList;
 end;
 
-procedure TMainForm.MediaListDrawItem(Control: TWinControl; Index: Integer;
-  Rect: TRect; State: TOwnerDrawState);
-
-   function trimText(canvas: TCanvas; w:integer; s: string):string;
-   var
-      w_points: integer;
-      k: integer;
-   begin
-      Result := s;
-      if (canvas.TextWidth(s) <= w) then exit;
-
-      w_points := canvas.TextWidth('...');
-      for k:= Length(s) downto 1 do
-      begin
-         if (canvas.TextWidth(Result) + w_points <= w) then
-         begin
-            Result := Result + '...';
-            exit;
-         end;
-         delete(Result, k, 1);
-      end;
-   end;
-
-   procedure drawIcon(canvas:TCanvas; x, y, index:integer; color_no_sel:integer = -1; color_sel:integer = -1);
-   var
-      icoInv: TBitmap;
-      kx, ky: integer;
-      c: integer;
-   begin
-      c := color_no_sel;
-      if (odSelected in State) then
-      begin
-         c := $00feffff;
-         if (color_sel > -1) then
-            c := color_sel;
-      end;
-
-      icoInv := TBitmap.Create;
-      try
-         icoInv.Transparent := true;
-         ImageList2.GetBitmap(index, icoInv);
-         if (c > -1) then
-         begin
-            for ky:= 1 to icoInv.Height do
-               for kx:= 1 to icoInv.Width do
-                  if (icoInv.Canvas.Pixels[kx, ky] = 0) then
-                     icoInv.Canvas.Pixels[kx, ky] := c;
-         end;
-         canvas.Draw(x, y, icoInv);
-      finally
-         icoInv.Free;
-      end;
-   end;
-
+procedure TMainForm.MediaListDrawItem(Control: TWinControl; Index: Integer; Rect: TRect; State: TOwnerDrawState);
 var
    om: TMediaListItem;
    itemBmp: TBitmap;
@@ -910,11 +941,11 @@ begin
                   Font.Color := $00eeeeee
                else
                   Font.Color := $00999999;
-               drawIcon(itemBmp.Canvas, itemBmp.Width - 16 - 3, 4, 0, $00999999, $00eeeeee);
+               drawIcon(itemBmp.Canvas, ImageList2, (odSelected in State), itemBmp.Width - 16 - 3, 4, 0, $00999999, $00eeeeee);
             end
             else
             begin
-               drawIcon(itemBmp.Canvas, itemBmp.Width - 16 - 3, 4, 0);
+               drawIcon(itemBmp.Canvas, ImageList2, (odSelected in State), itemBmp.Width - 16 - 3, 4, 0);
             end;
          end;
 
@@ -925,7 +956,7 @@ begin
             tl := 5;
             if (VlcForm.playState in [2, 3]) then
             begin
-               drawIcon(itemBmp.Canvas, 1, 4, VlcForm.playState - 1);
+               drawIcon(itemBmp.Canvas, ImageList2, (odSelected in State), 1, 4, VlcForm.playState - 1);
                tl := 5 + 14;
             end;
          end
@@ -949,24 +980,6 @@ begin
       MediaList.Canvas.Draw(Rect.Left, Rect.Top, itemBmp);
    finally
       itemBmp.Free;
-   end;
-end;
-
-procedure TMainForm.CoolTrayIcon1MouseDown(Sender: TObject;
-  Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
-var
-   i: integer;
-begin
-   if(Button = mbLeft) then
-   begin
-      if (MainForm.Visible) then
-      begin
-         CoolTrayIcon1.HideMainForm;
-      end
-      else
-      begin
-         CoolTrayIcon1.ShowMainForm;
-      end;
    end;
 end;
 
@@ -1028,7 +1041,7 @@ begin
       fSoundSocket.Host := fHost;
       fSoundSocket.Port := fPort;
       fSoundSocket.ClientType := ctBlocking;
-      while True do
+      while not Application.Terminated do
       begin
          try
             fSoundSocket.Open;
@@ -1038,19 +1051,20 @@ begin
                i := fSoundSocket.Socket.ReceiveBuf(b, SizeOf(TBuff));
                if (Application.Terminated) then
                   break;
-                  
+
                if (i > 0) then
+               begin
                   while (not fSpeaker.Play(@b, i)) do
                   begin
                      if (checkZerro(@b, i) or Application.Terminated) then
                         break;
                      sleep(1);
                   end;
+               end;
             end;
          except
          end;
          fSoundSocket.Close;
-         if (Application.Terminated) then break;
       end;
    finally
       fSoundSocket.Free;
@@ -1147,11 +1161,6 @@ begin
    ts1.Time := VlcForm.playPos * 1000;
    ts2.Time := VlcForm.playLen * 1000;
    TimeLabel.Caption := TimeToStr(TimeStampToDateTime(ts1)) + ' / ' + TimeToStr(TimeStampToDateTime(ts2));
-end;
-
-procedure TMainForm.N4Click(Sender: TObject);
-begin
-   VlcForm.Show;
 end;
 
 procedure TMainForm.TimePanelResize(Sender: TObject);
@@ -1331,6 +1340,7 @@ var
    k: integer;
 begin
    Application.ProcessMessages;
+   if (not SocketMeta.Active) then exit;
    SocketMeta.Socket.SendText(pack_name + chr(1) + pack_data + chr(2));
    s := '';
    for k:= 1 to 10000 do
@@ -1344,33 +1354,6 @@ begin
       end;
    end;
    Application.ProcessMessages;
-end;
-
-procedure TMainForm.PopupMenu1Popup(Sender: TObject);
-var
-   k: integer;
-   mi: TMenuItem;
-begin
-   N6.Clear;
-   for k:= 0 to Length(fSessions) - 1 do
-   begin
-      if ((fSessions[k][2] <> 'None') and (fSessions[k][0] <> IntToStr(fAppID))) then
-      begin
-         mi:= TMenuItem.Create(nil);
-         mi.Caption := fSessions[k][1];
-         mi.Tag := StrToInt(fSessions[k][0]);
-         mi.OnClick := transferMedia;
-         N6.Add(mi);
-      end;
-   end;
-
-   if (N6.Count = 0) then
-   begin
-      mi:= TMenuItem.Create(nil);
-      mi.Caption := 'Пусто';
-      mi.Enabled := false;
-      N6.Add(mi);
-   end;
 end;
 
 procedure TMainForm.transferMedia(Sender: TObject);
@@ -1451,7 +1434,10 @@ begin
       end
       else
          if (not blockWarning) then
+         begin
+            comm := metaQuery('get app info', IntToStr(om.app_id))[0][0];
             MessageDlg('Источник "' + comm + '" не включен. Включите источник "' + comm + '" и повторите операцию.', mtWarning, [mbOk], 0);
+         end;
    end;
 end;
 
@@ -1546,16 +1532,16 @@ procedure TMainForm.startLoad;
 var
    res: TDataRec;
    k: integer;
-   o: TItemListItem;
+   o: TVarListItem;
    om: TMediaListItem;
 begin
    addToMetaLog('start LOAD');
-   itemListClear;
+   clearList(fItemList);
 
    res := metaQuery('load variables', IntToStr(fAppID));
    for k := 0 to Length(res) - 1 do
    begin
-      o:= TItemListItem.Create;
+      o:= TVarListItem.Create;
       o.id := StrToInt(res[k][0]);
       o.name := res[k][1];
       o.comm := res[k][2];
@@ -1578,7 +1564,7 @@ begin
    // ------------------------------------------
 
    addToMetaLog('start MEDIA PACK');
-   mediaListClear;
+   clearList(fMediaList);
    setLength(res, 0);   
    res := metaQuery('get media list', '');
    for k := 0 to Length(res) - 1 do
@@ -1596,6 +1582,10 @@ begin
    PropertysForm.scanMediaLib;
    addToMetaLog('finish SCAN MEDIA LIB');
    setStatusText('');
+
+   // ------------------------------------
+
+   schedLoad();
 end;
 
 procedure TMainForm.syncLoad;
@@ -1675,11 +1665,11 @@ begin
    begin
       for i:= 0 to fItemList.Count - 1 do
       begin
-         if (TItemListItem(fItemList[i]).id = StrToInt(res[k][1])) then
+         if (TVarListItem(fItemList[i]).id = StrToInt(res[k][1])) then
          begin
             if (res[k][2] = 'None') then
                res[k][2] := '-9999';
-            TItemListItem(fItemList[i]).value := StrToFloat(StringReplace(res[k][2], '.', ',', [rfReplaceAll]));
+            TVarListItem(fItemList[i]).value := StrToFloat(StringReplace(res[k][2], '.', ',', [rfReplaceAll]));
          end;
       end;
    end;
@@ -1714,6 +1704,405 @@ begin
    setVolume();
 
    IdHTTPServer1.Active := true;
+end;
+
+procedure TMainForm.VarPopupItemClick(Sender: TObject);
+var
+   o: TVarListItem;
+   s: string;
+begin
+   if (VarList.ItemIndex = -1) then exit;
+
+   o:= TVarListItem(VarList.Items.Objects[VarList.ItemIndex]);
+
+   case TMenuItem(Sender).Tag of
+      10: sendVarValue(o.id, 1);
+      11:
+      begin
+         if InputQuery('Включить позже', 'Через (минут):', s) then
+         begin
+            if (s <> '') then
+               SchedDialog.fastInsert('Включить "' + o.comm + '" через ' + s + ' минут', 'on("' + o.name + '")', IncMinute(Now(), StrToInt(s)), o.id)
+            else
+               SchedDialog.fastInsert('', '', Now(), o.id);
+            schedLoad;
+         end;
+      end;
+      12:
+      begin
+         if InputQuery('Включить временно', 'На (минут):', s) then
+         begin
+            if (s <> '') then
+            begin
+               if (o.value = 0) then
+                  sendVarValue(o.id, 1);
+               SchedDialog.fastInsert('Выключить "' + o.comm + '" через ' + s + ' минут', 'off("' + o.name + '")', IncMinute(Now(), StrToInt(s)), o.id);
+            end
+            else
+               SchedDialog.fastInsert('', '', Now(), o.id);
+            schedLoad;
+         end;
+      end;
+      20: sendVarValue(o.id, 0);
+      21:
+      begin
+         if InputQuery('Выключить позже', 'Через (минут):', s) then
+         begin
+            if (s <> '') then
+            begin
+               SchedDialog.fastInsert('Выключить "' + o.comm + '" через ' + s + ' минут', 'off("' + o.name + '")', IncMinute(Now(), StrToInt(s)), o.id);
+            end
+            else
+               SchedDialog.fastInsert('', '', Now(), o.id);
+            schedLoad;
+         end;
+      end;
+      22:
+      begin
+         if InputQuery('Выключить временно', 'На (минут):', s) then
+         begin
+            if (s <> '') then
+            begin
+               if (o.value = 1) then
+                  sendVarValue(o.id, 0);
+               SchedDialog.fastInsert('Включить "' + o.comm + '" через ' + s + ' минут', 'on("' + o.name + '")', IncMinute(Now(), StrToInt(s)), o.id);
+            end
+            else
+               SchedDialog.fastInsert('', '', Now(), o.id);
+            schedLoad;
+         end;
+      end;
+
+      30:
+      begin
+         SchedDialog.fastInsert('', '', Now(), o.id);
+         schedLoad;
+      end;
+   end;
+end;
+
+procedure TMainForm.schedLoad;
+
+   function strToDate(s: string):TDateTime;
+   var
+      y, m, d, hh, mm, ss: integer; 
+   begin
+      if s = 'None' then
+      begin
+         Result := 0;
+         exit;
+      end;
+
+      y := StrToInt(Copy(s, 1, 4));
+      m := StrToInt(Copy(s, 6, 2));
+      d := StrToInt(Copy(s, 9, 2));
+      hh := StrToInt(Copy(s, 12, 2));
+      mm := StrToInt(Copy(s, 15, 2));
+      ss := StrToInt(Copy(s, 18, 2));
+
+      Result := EncodeDateTime(y, m, d, hh, mm, ss, 0);
+   end;
+
+var
+   res: TDataRec;
+   k: integer;
+   os: TSchedListItem;
+   t: integer;
+begin
+   t := SchedList.TopIndex;
+   if (SchedList.ItemIndex > -1) then
+      SchedList.Tag := TSchedListItem(SchedList.Items.Objects[SchedList.ItemIndex]).id
+   else
+      SchedList.Tag := -1;
+
+   SchedList.Items.BeginUpdate;
+   SchedList.Clear;
+   res := metaQuery('get scheduler list', '');
+   for k:= 0 to Length(res) - 1 do
+   begin
+      os:= TSchedListItem.Create;
+      os.id := StrToInt(res[k][0]);
+      os.comm := res[k][1];
+      os.action := res[k][2];
+      os.datetime := strToDate(res[k][3]);
+      os.timeOfDay := res[k][4];
+      os.dayOfType := res[k][5];
+      os.typ := StrToInt(res[k][6]);
+      os.variable := StrToInt(res[k][7]);
+      SchedList.AddItem(os.comm, os);
+      if (os.id = SchedList.Tag) then
+         SchedList.ItemIndex := SchedList.Count - 1;  
+   end;
+   SchedList.TopIndex := t;
+   SchedList.Items.EndUpdate;
+   VarList.Repaint;   
+end;
+
+procedure TMainForm.clearList(ls: TList);
+var
+   k: integer;
+begin
+   for k:= 0 to ls.Count - 1 do
+   begin
+      TObject(ls[k]).Free;
+      ls[k] := nil;
+   end;
+   ls.Clear;
+end;
+
+procedure TMainForm.SchedListDrawItem(Control: TWinControl; Index: Integer; Rect: TRect; State: TOwnerDrawState);
+var
+   os: TSchedListItem;
+   itemBmp: TBitmap;
+   k: integer;
+   b: boolean;
+   tl, tr, d_w, t_w: integer;
+   d_s, t_s: string;
+begin
+   os := TSchedListItem(SchedList.Items.Objects[index]);
+
+   itemBmp:= TBitmap.Create;
+   try
+      itemBmp.Width := Rect.Right - Rect.Left;
+      itemBmp.Height := Rect.Bottom - Rect.Top;
+      with itemBmp.Canvas do
+      begin
+         if (odSelected in State) then
+         begin
+            Brush.Color := $00777777;
+            Font.Color := clWhite;
+         end
+         else
+         begin
+            Brush.Color := clWhite;
+            Font.Color := clBlack;
+         end;
+
+         Pen.Color := Brush.Color;
+         Rectangle(0, 0, itemBmp.Width, itemBmp.Height);
+
+         tl := 5 + 18;
+         tr := 5;
+
+         Font.Name := 'Arial';
+         Font.Size := 7;
+
+         if (os.datetime > 0) then
+         begin
+            d_s := DateToStr(os.datetime);
+            t_s := TimeToStr(os.datetime);
+         end;
+
+         d_w := TextWidth(d_s);
+         t_w := TextWidth(t_s);
+
+         tr := tr + d_w;
+
+         TextOut(itemBmp.Width - tr, 11, d_s);
+         TextOut(itemBmp.Width - tr + (d_w - t_w) div 2, 21, t_s);
+
+         TextOut(tl, 19, trimText(itemBmp.Canvas, (itemBmp.Width - tl - tr), os.timeOfDay));
+         TextOut(tl, 29, trimText(itemBmp.Canvas, (itemBmp.Width - tl - tr), os.dayOfType));
+
+         Font.Name := 'MS Sans Serif';
+         Font.Size := 8;
+
+         tr := tr + 3;
+
+         drawIcon(itemBmp.Canvas, ImageList3, (odSelected in State), 3, 5, os.typ);
+         TextOut(tl, 5, trimText(itemBmp.Canvas, (itemBmp.Width - tl - tr), os.comm));
+      end;
+
+      SchedList.Canvas.Draw(Rect.Left, Rect.Top, itemBmp);
+   finally
+      itemBmp.Free;
+   end;
+end;
+
+function TMainForm.trimText(canvas: TCanvas; w: integer; s: string): string;
+var
+   w_points: integer;
+   k: integer;
+begin
+   Result := s;
+   if (canvas.TextWidth(s) <= w) then exit;
+
+   w_points := canvas.TextWidth('...');
+   for k:= Length(s) downto 1 do
+   begin
+      if (canvas.TextWidth(Result) + w_points <= w) then
+      begin
+         Result := Result + '...';
+         exit;
+      end;
+      delete(Result, k, 1);
+   end;
+end;
+
+procedure TMainForm.drawIcon(canvas: TCanvas; imageList: TImageList; isSel:Boolean; x, y, index, color_no_sel, color_sel: integer);
+var
+   icoInv: TBitmap;
+   c: integer;
+begin
+   c := color_no_sel;
+   if isSel then
+   begin
+      c := $00feffff;
+      if (color_sel > -1) then
+         c := color_sel;
+   end;
+
+   icoInv := TBitmap.Create;
+   try
+      icoInv.Transparent := true;
+      imageList.GetBitmap(index, icoInv);
+      if (c > -1) then
+         inverIcon(icoInv, c);
+      canvas.Draw(x, y, icoInv);
+   finally
+      icoInv.Free;
+   end;
+end;
+
+procedure TMainForm.inverIcon(bmp: TBitmap; toColor: integer);
+var
+   kx, ky: integer;
+begin
+   for ky:= 0 to bmp.Height - 1 do
+      for kx:= 0 to bmp.Width - 1 do
+         if (bmp.Canvas.Pixels[kx, ky] = 0) then
+            bmp.Canvas.Pixels[kx, ky] := toColor;
+end;
+
+procedure TMainForm.N15Click(Sender: TObject);
+begin
+   if (SchedDialog.showDialog(nil)) then
+      schedLoad;
+end;
+
+procedure TMainForm.N7Click(Sender: TObject);
+begin
+   if (SchedList.ItemIndex = -1) then exit;
+
+   if (SchedDialog.showDialog(TSchedListItem(SchedList.Items.Objects[SchedList.ItemIndex]))) then
+      schedLoad;
+end;
+
+procedure TMainForm.N14Click(Sender: TObject);
+begin
+   if (SchedList.ItemIndex = -1) then exit;
+
+   SchedDialog.Tag := TSchedListItem(SchedList.Items.Objects[SchedList.ItemIndex]).id;
+   SchedDialog.Button1Click(nil);
+end;
+
+procedure TMainForm.Timer2Timer(Sender: TObject);
+begin
+   schedLoad;
+end;
+
+procedure TMainForm.N18Click(Sender: TObject);
+begin
+   if (SchedList.ItemIndex = -1) then exit;
+
+   SchedDialog.Memo2.Text := TSchedListItem(SchedList.Items.Objects[SchedList.ItemIndex]).action;
+   SchedDialog.SpeedButton1Click(nil);
+end;
+
+procedure TMainForm.VarPopupMenuPopup(Sender: TObject);
+var
+   o: TVarListItem;
+begin
+   if (VarList.ItemIndex = -1) then
+   begin
+      VarPopupItem1.Enabled := false;
+      VarPopupItem2.Enabled := false;
+      VarPopupItem3.Enabled := false;
+
+      VarPopupItem4.Enabled := false;
+      VarPopupItem5.Enabled := false;
+      VarPopupItem6.Enabled := false;
+      exit;
+   end;
+   o := TVarListItem(VarList.Items.Objects[VarList.ItemIndex]);
+
+   VarPopupItem1.Enabled := (o.value = 0);
+   VarPopupItem2.Enabled := (o.value = 0);
+   VarPopupItem3.Enabled := (o.value = 0);
+
+   VarPopupItem4.Enabled := (o.value = 1);
+   VarPopupItem5.Enabled := (o.value = 1);
+   VarPopupItem6.Enabled := (o.value = 1);
+end;
+
+procedure TMainForm.SchedListMouseDown(Sender: TObject;
+  Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+var
+   i: integer;
+begin
+   i := SchedList.ItemAtPos(Point(X, Y), false);
+   if (i > -1) then
+      SchedList.ItemIndex := i;
+end;
+
+procedure TMainForm.MediaListMouseDown(Sender: TObject;
+  Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+var
+   i: integer;
+begin
+   i := MediaList.ItemAtPos(Point(X, Y), false);
+   if (i > -1) then
+      MediaList.ItemIndex := i;
+end;
+
+procedure TMainForm.VLC1Click(Sender: TObject);
+begin
+   VlcForm.Show;
+end;
+
+procedure TMainForm.N4Click(Sender: TObject);
+begin
+   PropertysForm.SpeedButton6Click(nil);
+end;
+
+procedure TMainForm.N8Click(Sender: TObject);
+begin
+   CoolTrayIcon1Click(nil);
+end;
+
+procedure TMainForm.CoolTrayIcon1Click(Sender: TObject);
+begin
+   if (MainForm.Visible) then
+      CoolTrayIcon1.HideMainForm
+   else
+      CoolTrayIcon1.ShowMainForm;
+end;
+
+procedure TMainForm.PopupMenu3Popup(Sender: TObject);
+var
+   k: integer;
+   mi: TMenuItem;
+begin
+   TransferMenu.Clear;
+   for k:= 0 to Length(fSessions) - 1 do
+   begin
+      if ((fSessions[k][2] <> 'None') and (fSessions[k][0] <> IntToStr(fAppID))) then
+      begin
+         mi:= TMenuItem.Create(nil);
+         mi.Caption := fSessions[k][1];
+         mi.Tag := StrToInt(fSessions[k][0]);
+         mi.OnClick := transferMedia;
+         TransferMenu.Add(mi);
+      end;
+   end;
+
+   if (TransferMenu.Count = 0) then
+   begin
+      mi:= TMenuItem.Create(nil);
+      mi.Caption := 'Пусто';
+      mi.Enabled := false;
+      TransferMenu.Add(mi);
+   end;
 end;
 
 end.

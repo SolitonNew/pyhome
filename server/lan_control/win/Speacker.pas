@@ -5,11 +5,10 @@ interface
 uses Windows, Messages, SysUtils, Classes, MMSystem, SyncObjs, Math;
 
 const
-  MaxBuffersCount = 10;
+  MaxBuffersCount = 20;
 
 type
   TPcmBuffer = array[$1..$500] of Smallint;
-  //TPcmBuffer = array[1..4000] of Smallint;
 
   TBuff = array[1..1024] of Smallint;
   PBuff = ^TBuff;

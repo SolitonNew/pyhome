@@ -73,6 +73,8 @@ class MetaThread(threading.Thread):
                             self.db.IUD("insert into app_controls (COMM) values ('%s')" % (a[1]))
                             self.db.commit()
                             self.senddata([[self.db.last_insert_id()]])
+                        elif a[0] == "apps list":
+                            self.sendcursor("select ID, COMM from app_controls order by 2")
                         elif a[0] == "name":
                             self.db.IUD("update app_controls "
                                         "   set COMM = '%s'"

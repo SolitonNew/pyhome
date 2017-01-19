@@ -50,9 +50,9 @@ class Main():
             if termostats_time_step == 0:
                 termostats_time_step = round(5 * 60 / 0.2)
                 for t in self.termostats:
-                    if t[1] > t[3] + 0.5: # Перегрели
+                    if t[3] > t[1] + 0.5: # Перегрели
                         self._add_command('speech("%s жарко")' % (t[4]))
-                    elif t[1] < t[3] + 0.5: # Переостудили
+                    elif t[3] < t[1] - 0.5: # Переостудили
                         self._add_command('speech("%s холодно")' % (t[4]))
             termostats_time_step -= 1
             time.sleep(0.2)

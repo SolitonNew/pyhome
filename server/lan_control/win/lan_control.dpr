@@ -1,7 +1,7 @@
 program lan_control;
 
 uses
-  FastMM4, 
+  FastMM4,
   ExceptionLog,
   Forms,
   Windows,
@@ -11,7 +11,8 @@ uses
   Mcs_Unit in 'Mcs_Unit.pas',
   RegForm_Unit in 'RegForm_Unit.pas' {RegForm},
   TerminalForm_Unit in 'TerminalForm_Unit.pas' {TerminalForm},
-  Vlc_Unit in 'Vlc_Unit.pas' {VlcForm};
+  Vlc_Unit in 'Vlc_Unit.pas' {VlcForm},
+  SchedDialog_Unit in 'SchedDialog_Unit.pas' {SchedDialog};
 
 {$R *.res}
 
@@ -33,6 +34,7 @@ begin
   Application.CreateForm(TRegForm, RegForm);
   Application.CreateForm(TTerminalForm, TerminalForm);
   Application.CreateForm(TVlcForm, VlcForm);
+  Application.CreateForm(TSchedDialog, SchedDialog);
   Application.Run;
 
   ReleaseMutex(mutex);

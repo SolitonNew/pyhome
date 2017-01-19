@@ -7,9 +7,14 @@ import time
 class Main():
     def __init__(self):
         self.db = DBConnector()
+        self.termostats = []
+        self._add_termostat(50, 49, "В спальне 3") #Спальня №3
+        self._add_termostat(60, 59, "В гостинной") #Гостинная
+        
         self.run()
         
     def run(self):
+        termostats_time_step = 0
         while True:
             relIds = []
             for keys in self.db.select("select CORE_GET_LAST_CHANGE_ID()"):
@@ -18,6 +23,14 @@ class Main():
                     for row in self.db.variable_changes():
                         if row[3] == 1: # Слежение за светом
                             relIds += [str(row[1]), ","]
+                        elif row[3] == 4: #Термометры
+                            for r in self.termostats:
+                                if r[2] == row[1]:
+                                    r[3] = row[2]
+                        elif row[3] == 5: #Термостаты
+                            for r in self.termostats:
+                                if r[0] == row[1]:
+                                    r[1] = row[2]
 
                     if len(relIds) > 0:
                         for row in self.db.select("select v.APP_CONTROL, c.NAME, p.NAME, v.VALUE "
@@ -33,7 +46,25 @@ class Main():
                                 s += ["выключен"]
                                 
                             self._add_command('speech("%s")' % "".join(s).lower())
+
+            if termostats_time_step == 0:
+                termostats_time_step = round(5 * 60 / 0.2)
+                for t in self.termostats:
+                    if t[1] > t[3] + 0.5: # Перегрели
+                        self._add_command('speech("%s жарко")' % (t[4]))
+                    elif t[1] < t[3] + 0.5: # Переостудили
+                        self._add_command('speech("%s холодно")' % (t[4]))
+            termostats_time_step -= 1
             time.sleep(0.2)
+
+    def _add_termostat(self, tst_id, trm_id, title):
+        # Зачитка стартовых значений
+        for rec in self.db.select("select VALUE from core_variables where ID = %s" % (tst_id)):
+            tst_val = rec[0]
+        for rec in self.db.select("select VALUE from core_variables where ID = %s" % (trm_id)):
+            trm_val = rec[0]
+        # ---------------------------
+        self.termostats += [[tst_id, tst_val, trm_id, trm_val, title]]
             
     def _add_command(self, command):
         print("[%s] %s" % (time.strftime("%d-%m-%Y %H:%M"), command))

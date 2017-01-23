@@ -15,6 +15,7 @@ class OneWire(object):
     CMD_SKIPROM = 0xcc
 
     def __init__(self, pinId):
+        self.num_errors = 0
         self.roms = []
         self.pin = pyb.Pin(pinId)
         self.pin.init(self.pin.IN, self.pin.PULL_UP)
@@ -198,5 +199,9 @@ class OneWire(object):
                 crc = (crc >> 1) & 0x7f
                 if fb_bit == 0x01:
                     crc = crc | 0x80
-                byte = byte >> 1                
+                byte = byte >> 1
+        
+        if crc:
+            self.num_errors += 1
+        
         return crc

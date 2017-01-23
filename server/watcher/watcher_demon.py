@@ -27,6 +27,12 @@ class Main():
                             for r in self.termostats:
                                 if r[2] == row[1]:
                                     r[3] = row[2]
+                            # критические температуры
+                            if row[1] == 95 and row[2] > 55: # Дымоход
+                                self._add_command("Температура дымохода %s градусов" % (row[2]))
+                            if row[1] == 93 and row[2] > 55: # Подача котла
+                                self._add_command("Температура котла %s градусов" % (row[2]))
+                            # -----------------------
                         elif row[3] == 5: #Термостаты
                             for r in self.termostats:
                                 if r[0] == row[1]:

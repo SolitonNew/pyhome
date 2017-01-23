@@ -83,7 +83,7 @@ while True:
             if pack[1] == PACK_SYNC:
                 if IS_START:
                     rs485.send_pack(PACK_SYNC, "RESET")
-                    IS_START = False;
+                    IS_START = False
                 else:
                     variables.set_sync_change_variables(pack[2])
                     pack_data = variables.get_sync_change_variables()
@@ -115,3 +115,5 @@ while True:
 
     onewire_alarms()
     onewire_termometrs()
+
+    

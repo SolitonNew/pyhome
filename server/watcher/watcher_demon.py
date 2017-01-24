@@ -29,10 +29,10 @@ class Main():
                                     r[3] = row[2]
                             # критические температуры
                             if row[1] == 95 and row[2] > 55: # Дымоход
-                                self._add_command('speech("Температура дымохода %s градусов")' % (row[2]))
+                                self._add_command('speech("Температура дымохода %s градусов")' % (round(row[2])))
                             if row[1] == 93:
                                 if row[2] > 55: # Подача котла
-                                    self._add_command('speech("Температура котла %s градусов")' % (row[2]))
+                                    self._add_command('speech("Температура котла %s градусов")' % (round(row[2])))
                                 elif row[2] >= 45 and row[2] <= 48:
                                     self._add_command('speech("Котел холодный")')
                             # -----------------------

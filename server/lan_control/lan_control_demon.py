@@ -10,6 +10,7 @@ import numpy
 
 class MetaThread(threading.Thread):
     def __init__(self, accept, owner):
+        self.media_exts = [["AVI", "MP4", "MKV"], ["MP3", "WAV"], ["JPG", "TIFF", "PSD"]]
         threading.Thread.__init__(self)
         self.acceptData = accept
         self.conn = accept[0]
@@ -94,6 +95,12 @@ class MetaThread(threading.Thread):
                         elif a[0] == "media transfer":
                             self._add_to_queue(10, a[2], a[3], int(a[1]))
                             self.senddata([["OK"]])
+                        elif a[0] == "get media exts":
+                            s = ""
+                            for re in self.media_exts:
+                                for ec in re:
+                                    s += ec + ';'
+                            self.senddata([[s[:-1:]]])
                         elif a[0] == "get media folders":
                             self.sendcursor("select SEARCH_FOLDERS "
                                             "  from app_controls where ID = %s" % (self.app_id))
@@ -104,25 +111,39 @@ class MetaThread(threading.Thread):
                             self.db.commit()
                             self.senddata([["OK"]])
                         elif a[0] == "get media list":
-                            l = self.sendcursor("select ID, APP_CONTROL_ID, TITLE, FILE_NAME "
+                            l = self.sendcursor("select ID, APP_CONTROL_ID, TITLE, FILE_NAME, FILE_TYPE "
                                                 "  from media_lib "
                                                 "order by ID")
                             self._print("    media lib pack [%s bytes]" % (l))
                         elif a[0] == "add media files":
                             for f in a[1:-1:]:
-                                title = f.split('\\')[-1::][0]
-                                f = f.replace("'", "\\'")
+                                title = self._parse_media_title(f)
                                 title = title.replace("'", "\\'")
+                                f = f.replace("\\", "\\\\")
+                                f = f.replace("'", "\\'")
                                 try:
-                                    sql = "insert into media_lib (APP_CONTROL_ID, TITLE, FILE_NAME) values (%s, '%s', '%s')" % (self.app_id, title, f)
+                                    # Добавляем запись в библиотеку
+                                    sql = ("insert into media_lib "
+                                           "   (APP_CONTROL_ID, TITLE, FILE_NAME, FILE_TYPE) "
+                                           "values "
+                                           "   (%s, '%s', '%s', %s)") % (self.app_id, title, f, self._parse_media_type(f))
                                     self.db.IUD(sql)
+                                    # Регистрируем изменения в очереди
                                     self._add_to_queue(0, self.db.last_insert_id())
                                 except Exception as e:
                                     self._print("ADD " + str(e))
                             self.db.commit()
                             self.senddata([["OK"]])
+                        elif a[0] == "edit media file":
+                            self.db.IUD(("update media_lib"
+                                         "   set TITLE = '%s'"
+                                         " where ID = %s") % (a[2], a[1]))
+                            self.db.commit()
+                            self._add_to_queue(1, a[1])
+                            self.senddata([["OK"]])
                         elif a[0] == "del media files":
                             try:
+                                self.db.IUD("delete from media_lib_2_group where LIB_ID in (%s)" % (a[1]))
                                 self.db.IUD("delete from media_lib where ID in (%s)" % (a[1]))
                                 for i in a[1].split(","):
                                     self._add_to_queue(2, i)
@@ -165,6 +186,46 @@ class MetaThread(threading.Thread):
                             self.sendcursor(("select COMM "
                                              "  from app_controls "
                                              "where ID = %s") % (a[1]))
+                        elif a[0] == "get groups list":
+                            self.sendcursor("select ID, TYP, COMM "
+                                            "  from media_groups "
+                                            "order by TYP, COMM")
+                        elif a[0] == "edit groups list":
+                            if a[1] == "-1":
+                                self.db.IUD("insert into media_groups (TYP, COMM) values (1, '%s')" % (a[2]))
+                                row_id = self.db.last_insert_id()
+                            else:
+                                self.db.IUD("update media_groups set COMM = '%s' where ID = %s" % (a[2], a[1]))
+                                row_id = -1
+                            self.db.commit()
+                            self.senddata([["%s" % (row_id)]])
+                            self._add_to_queue(20, row_id)
+                        elif a[0] == "del groups list":
+                            self.db.IUD("delete from media_groups where ID = %s" % (a[1]))
+                            self.db.IUD("delete from media_lib_2_group where GROUP_ID = %s" % (a[1]))
+                            self.db.commit()
+                            self.senddata([["OK"]])
+                            self._add_to_queue(20, -1)
+                        elif a[0] == "get groups cross":
+                            if a[1] == "-1":
+                                self.sendcursor("select l.ID "
+                                                "  from media_lib l "
+                                                " where not exists (select 1 from media_lib_2_group g where g.LIB_ID = l.ID)")
+                            else:
+                                self.sendcursor(("select LIB_ID "
+                                                 "  from media_lib_2_group "
+                                                 " where GROUP_ID = %s") % (a[1]))
+                        elif a[0] == "add groups cross":
+                            self.db.IUD("delete from media_lib_2_group where LIB_ID = %s and GROUP_ID = %s" % (a[1], a[2]))
+                            self.db.IUD("insert into media_lib_2_group (LIB_ID, GROUP_ID) values (%s, %s)" % (a[1], a[2]))
+                            self.db.commit()
+                            self.senddata([["OK"]])
+                            self._add_to_queue(21, a[2])
+                        elif a[0] == "del groups cross":
+                            self.db.IUD("delete from media_lib_2_group where LIB_ID = %s and GROUP_ID = %s" % (a[1], a[2]))
+                            self.db.commit()
+                            self.senddata([["OK"]])
+                            self._add_to_queue(21, a[2])
                         else:
                             self.senddata([["OK"]])
                             self._print(a)
@@ -226,16 +287,16 @@ class MetaThread(threading.Thread):
             self.senddata(self.app_sessions)
 
     def _media_queue(self):
-        queueSql = ("select q.ID, q.TYP, q.VALUE, q.VALUE_2, m.APP_CONTROL_ID, m.TITLE, m.FILE_NAME"
+        queueSql = ("select q.ID, q.TYP, q.VALUE, q.VALUE_2, m.APP_CONTROL_ID, m.TITLE, m.FILE_NAME, m.FILE_TYPE"
                     "  from app_control_queue q, media_lib m "
                     " where q.VALUE = m.ID"
                     "   and q.APP_CONTROL_ID = %s"
                     "   and q.TYP in (0, 1) "
                     "union all "
-                    "select q.ID, q.TYP, q.VALUE, q.VALUE_2, q.APP_CONTROL_ID, '' TITLE, '' FILE_NAME"
+                    "select q.ID, q.TYP, q.VALUE, q.VALUE_2, q.APP_CONTROL_ID, '' TITLE, '' FILE_NAME, 0 FILE_TYPE"
                     "  from app_control_queue q"
                     " where q.APP_CONTROL_ID = %s"
-                    "   and q.TYP in (2, 10) "
+                    "   and q.TYP in (2, 10, 20, 21) "
                     "order by 1" % (self.app_id, self.app_id))
         queue = self.db.select(queueSql)
         self.senddata(queue)
@@ -243,7 +304,30 @@ class MetaThread(threading.Thread):
             self.db.IUD("delete from app_control_queue "
                         " where APP_CONTROL_ID = %s"
                         "   and ID <= %s"% (self.app_id, queue[-1::][0][0]))
-            self.db.commit()                
+            self.db.commit()
+
+    def _parse_media_type(self, file_name):
+        ext = file_name.split(".")[-1::][0].upper()
+        for i in range(len(self.media_exts)):
+            try:
+                self.media_exts[i].index(ext)
+                return i + 1
+            except:
+                pass
+        return 0
+
+    def _parse_media_title(self, file_name):
+        f = file_name.split("\\")
+        title = f[-1::][0]
+        try:
+            title = f[-2::][0] + " - " + title
+        except:
+            pass
+        try:
+            title = f[-3::][0] + " - " + title
+        except:
+            pass
+        return title
 
     def _print(self, text):
         print("[%s] %s" % (time.strftime("%d-%m-%Y %H:%M:%S"), text))

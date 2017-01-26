@@ -80,11 +80,12 @@ class Info():
                 minute = ", %s" % minute
 
             #t_in = self._get_temp(db, "49,59", False)
-            t_in = self._get_temp(db, "59", False)
+            #t_in = self._get_temp(db, "59", False)
             t_out = self._get_temp(db, "124", True)
             
             #text = "%s %s. Температура по дому %s. Температура на улице %s." % (hours[d], minute, t_in, t_out)
-            text = "%s %s. Температура в гостинной %s. Температура на улице %s." % (hours[d], minute, t_in, t_out)
+            #text = "%s %s. Температура в гостинной %s. Температура на улице %s." % (hours[d], minute, t_in, t_out)
+            text = "%s %s. Температура на улице %s." % (hours[d], minute, t_out)
 
             print(text)
 

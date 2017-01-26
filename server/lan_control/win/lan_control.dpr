@@ -12,7 +12,8 @@ uses
   RegForm_Unit in 'RegForm_Unit.pas' {RegForm},
   TerminalForm_Unit in 'TerminalForm_Unit.pas' {TerminalForm},
   Vlc_Unit in 'Vlc_Unit.pas' {VlcForm},
-  SchedDialog_Unit in 'SchedDialog_Unit.pas' {SchedDialog};
+  SchedDialog_Unit in 'SchedDialog_Unit.pas' {SchedDialog},
+  MediaInfoDialog_Unit in 'MediaInfoDialog_Unit.pas' {MediaInfoDialog};
 
 {$R *.res}
 
@@ -35,6 +36,7 @@ begin
   Application.CreateForm(TTerminalForm, TerminalForm);
   Application.CreateForm(TVlcForm, VlcForm);
   Application.CreateForm(TSchedDialog, SchedDialog);
+  Application.CreateForm(TMediaInfoDialog, MediaInfoDialog);
   Application.Run;
 
   ReleaseMutex(mutex);

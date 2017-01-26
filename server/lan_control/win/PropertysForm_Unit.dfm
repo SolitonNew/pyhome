@@ -24,7 +24,7 @@ object PropertysForm: TPropertysForm
     Top = 8
     Width = 521
     Height = 281
-    ActivePage = TabSheet2
+    ActivePage = TabSheet4
     TabOrder = 0
     object TabSheet3: TTabSheet
       Caption = #1054#1073#1097#1080#1077
@@ -86,6 +86,15 @@ object PropertysForm: TPropertysForm
         Height = 25
         Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1073#1080#1073#1083#1080#1086#1090#1077#1082#1091
         OnClick = SpeedButton6Click
+      end
+      object Label1: TLabel
+        Left = 184
+        Top = 216
+        Width = 321
+        Height = 33
+        AutoSize = False
+        Caption = 'Label1'
+        WordWrap = True
       end
       object GroupBox1: TGroupBox
         Left = 8
@@ -159,11 +168,19 @@ object PropertysForm: TPropertysForm
     object TabSheet4: TTabSheet
       Caption = #1051#1086#1075' '#1084#1077#1090#1072#1076#1072#1085#1085#1099#1093
       ImageIndex = 3
+      object SpeedButton7: TSpeedButton
+        Left = 8
+        Top = 216
+        Width = 73
+        Height = 25
+        Caption = #1054#1095#1080#1089#1090#1080#1090#1100
+        OnClick = SpeedButton7Click
+      end
       object ListBox2: TListBox
         Left = 8
         Top = 8
         Width = 497
-        Height = 233
+        Height = 201
         ItemHeight = 13
         TabOrder = 0
       end

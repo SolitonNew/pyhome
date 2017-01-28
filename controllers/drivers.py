@@ -2,6 +2,7 @@ from ds18b20 import DS18B20
 from homesensor import HomeSensor
 from fancontrol import FanControl
 from pincontrol import PinControl
+from dht11 import DHT11
 from tc_new import TcNew
 from pyb import Pin
 
@@ -97,6 +98,24 @@ class Pins(PinControl):
                 return {'P1':self.data[0], 'P2':self.data[1], 'P3':self.data[2], 'P4':self.data[3]}
             
             return None
+
+class Dht11(DHT11):
+       
+    def __init__(self, ow, rom):
+        super().__init__(ow)
+        self.rom = rom
+    
+    def value(self, val = None, channel = ''):
+        if val == None:
+            resH = 0
+            resT = 0
+            
+            d = self.get_data(self.rom)
+
+            if d != None:
+                resH = d[0]
+                resT = d[1]
+            return {'H':resH, 'T':resT}
 
 class Pyboard(object):
     def __init__(self):

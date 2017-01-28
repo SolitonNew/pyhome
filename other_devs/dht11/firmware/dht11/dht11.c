@@ -10,23 +10,22 @@
 #include <avr/interrupt.h>
 #include "util/delay.h"
 
-//#define DEBUG_ON PORTB |= (1<<3)|(1<<4)
-//#define DEBUG_OFF PORTB &= ~((1<<3)|(1<<4))
-
 #define SPIN(data, pin) (data |= (1<<pin))
 #define CPIN(data, pin) (data &= ~(1<<pin))
 #define GPIN(data, pin) (data & (1<<pin))
 
 #define DHT_DDR DDRB
-#define DHT_BIT 2
+#define DHT_BIT 3
 #define DHT_PIN PINB
 #define DHT_PORT PORTB
 
+#define DHT_LED_BIT 0
+
 #define DHT_IS_LOW ((DHT_PIN & (1<<DHT_BIT)) == 0)
 #define DHT_IS_HIGH (DHT_PIN & (1<<DHT_BIT))
-#define DHT_WAIT_COUNT 1000
-#define DHT_WAIT_FOR_LOW for (int i = 0; i < DHT_WAIT_COUNT && DHT_IS_HIGH; i++) _delay_us(1)
-#define DHT_WAIT_FOR_HIGH for (int i = 0; i < DHT_WAIT_COUNT && DHT_IS_LOW; i++) _delay_us(1)
+#define DHT_WAIT_COUNT 100
+#define DHT_WAIT_FOR_LOW for (unsigned char i = 0; i < DHT_WAIT_COUNT && DHT_IS_HIGH; i++) _delay_us(1)
+#define DHT_WAIT_FOR_HIGH for (unsigned char i = 0; i < DHT_WAIT_COUNT && DHT_IS_LOW; i++) _delay_us(1)
 
 #define OW_DDR DDRB
 #define OW_READ PINB
@@ -46,7 +45,7 @@
 #define WAIT_FOR_LOW for (int i = 0; i < WAIT_COUNT && IS_HIGH; i++)
 #define WAIT_FOR_HIGH for (int i = 0; i < WAIT_COUNT && IS_LOW; i++)
 
-unsigned char data[2] = {0, 0}; // Температура, Влажность
+unsigned char sensor_data[2]; // Температура, Влажность
 unsigned char isChange = 0;
 
 unsigned char ROM[8] = {0xF3,0x00,0x00,0x00,0x00,0x00,0x01,0x0};
@@ -162,8 +161,8 @@ void one_wire_action()
 					isChange = 0;
 					crc = 0;
 					for (i = 0; i < 2; i++) {
-						OW_writeByte(data[i]);
-						crc = crc_table(crc ^ data[i]);
+						OW_writeByte(sensor_data[i]);
+						crc = crc_table(crc ^ sensor_data[i]);
 					}
 					OW_writeByte(crc);
 					break;
@@ -198,10 +197,10 @@ ISR (TIM0_OVF_vect)
 	one_wire_action();
 }
 
-unsigned char readDHT11()
-{
-	unsigned char tmp[5] = {0, 0, 0, 0, 0};
-	
+unsigned char tmp[5];
+
+void readDHT11()
+{	
 	SPIN(DHT_DDR, DHT_BIT);
 	CPIN(DHT_PORT, DHT_BIT);
 	_delay_ms(18);
@@ -210,35 +209,33 @@ unsigned char readDHT11()
 	CPIN(DHT_DDR, DHT_BIT);
 	_delay_us(40); // Подождем шо скажет термометр
 	if DHT_IS_HIGH {
-		return 0;
+		return;
 	}	
 	_delay_us(80);
 	if DHT_IS_LOW {
-		return 0;
-	}
+		return;
+	}	
+	
 	DHT_WAIT_FOR_LOW;
 	for (unsigned char i = 0; i < 5; i++) {
-		//tmp[i] = 0;
+		tmp[i] = 0;
 		for (unsigned char k = 0; k < 8; k++) {
 			DHT_WAIT_FOR_HIGH;
 			_delay_us(40); // 0 = 28; 1 = 70
 			if (DHT_IS_HIGH) {
-				data[i] |= 1<<(7 - k);
+				tmp[i] |= 1<<(7 - k);
 			}			
 			DHT_WAIT_FOR_LOW;
 		}
 	}
 	
 	if ((tmp[0] + tmp[2] == tmp[4]) && (tmp[4] != 0)) {
-		if (tmp[0] != data[0] || tmp[2] != data[1]) {
-			data[0] = tmp[0];
-			data[1] = tmp[2];
+		if (tmp[0] != sensor_data[0] || tmp[2] != sensor_data[1]) {
+			sensor_data[0] = tmp[0];
+			sensor_data[1] = tmp[2];
 			isChange = 1;
 		}
-		return 1;	
-	} else {
-		return 0;
-	}	
+	}
 }
 
 int main(void)
@@ -247,6 +244,8 @@ int main(void)
 	for (unsigned char i = 0; i < 7; i++)
 		crc = (crc_table(crc ^ ROM[i]));
 	ROM[7] = crc;
+	
+	DDRB = 0xff;
 			
 	// Шина
 	CPIN(OW_DDR, OW_PIN);
@@ -256,13 +255,15 @@ int main(void)
 	MCUCR = (1<<ISC01); //Сброс ISC00 - прерывание по \__
 	GIMSK |= (1<<INT0);
 	
-	sei();
+	_delay_ms(10);
 		
     while(1)
     {
 		cli();
+		SPIN(PORTB, DHT_LED_BIT);
 		readDHT11();
+		CPIN(PORTB, DHT_LED_BIT);
 		sei();
-		_delay_ms(5000);
+		_delay_ms(60000);
     }
 }

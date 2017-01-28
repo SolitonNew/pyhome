@@ -6,10 +6,6 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, DlgMessagesRU, ExtCtrls, ComCtrls, StdCtrls, Registry, FileCtrl, Buttons;
 
-const
-   extVideo = '.AVI;.MP4;.MKV';
-   extAudio = '.MP3;.WAV';
-
 type
   TPropertysForm = class(TForm)
     PageControl1: TPageControl;
@@ -34,6 +30,8 @@ type
     SpeedButton6: TSpeedButton;
     TabSheet4: TTabSheet;
     ListBox2: TListBox;
+    Label1: TLabel;
+    SpeedButton7: TSpeedButton;
     procedure Button1Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
@@ -44,6 +42,7 @@ type
     procedure SpeedButton6Click(Sender: TObject);
     procedure SpeedButton3Click(Sender: TObject);
     procedure SpeedButton2Click(Sender: TObject);
+    procedure SpeedButton7Click(Sender: TObject);
   private
     fScanList:TList;
     fAddCount, fDelCount: integer;
@@ -52,10 +51,13 @@ type
     procedure compareMediaLists;    
   public
     procedure scanMediaLib;
+    procedure updateStatistics();
   end;
 
 var
-  PropertysForm: TPropertysForm;
+   PropertysForm: TPropertysForm;
+   MediaExts: string;
+
 
 procedure addToMetaLog(s: string);
 function loadProp(name:string):string;
@@ -156,16 +158,22 @@ var
 
 var
    k: integer;
+   s: string;
 begin
    scanListClear;
    exts := TStringList.Create;
    try
       exts.Delimiter := ';';
-      exts.DelimitedText := extVideo + ';' + extAudio;
+      exts.DelimitedText := MediaExts;
+      for k:= 0 to exts.Count - 1 do
+         exts[k] := '.' + exts[k];
       file_count := 0;
       for k:= 0 to ListBox1.Count - 1 do
       begin
-         FindChild(ListBox1.Items[k] + '\');
+         s := ListBox1.Items[k];
+         if (s[Length(s)] <> '\') then
+            s := s + '\';
+         FindChild(s);
       end;
    finally
       exts.Free;
@@ -226,7 +234,8 @@ begin
       if (o1 <> nil) then
       begin
          //add
-         s_add := s_add + StringReplace(o1.file_name, '\', '\\', [rfReplaceAll]) + chr(1);
+         //s_add := s_add + StringReplace(o1.file_name, '\', '\\', [rfReplaceAll]) + chr(1);
+         s_add := s_add + o1.file_name + chr(1);
          inc(fAddCount);
       end;
       Application.ProcessMessages();
@@ -286,6 +295,7 @@ begin
    end;
 
    Edit3.Text := loadProp('IP');
+   updateStatistics();
 end;
 
 procedure TPropertysForm.SpeedButton4Click(Sender: TObject);
@@ -324,6 +334,8 @@ begin
    s := s + 'Добавлено в библиотеку: ' + IntToStr(fAddCount) + chr(13);
    s := s + 'Удалено из библиотеки: ' + IntToStr(fDelCount) + chr(13);
 
+   updateStatistics();
+
    MessageDlg(s, mtInformation, [mbOk], 0);
 end;
 
@@ -338,6 +350,24 @@ end;
 procedure TPropertysForm.SpeedButton2Click(Sender: TObject);
 begin
    MainForm.metaQuery('name', Edit2.Text);
+end;
+
+procedure TPropertysForm.updateStatistics;
+var
+   k, n: integer;
+begin
+   n := 0;
+   for k:= 0 to MainForm.fMediaList.Count - 1 do
+   begin
+      if (TMediaListItem(MainForm.fMediaList[k]).app_id = MainForm.fAppID) then
+         inc(n);
+   end;
+   Label1.Caption := 'Всего в библиотеке ' + IntToStr(MainForm.fMediaList.Count) + ' записей.' + chr(13) + 'Из них с этого клиента ' + IntToStr(n) + '.';
+end;
+
+procedure TPropertysForm.SpeedButton7Click(Sender: TObject);
+begin
+   ListBox2.Clear;
 end;
 
 end.

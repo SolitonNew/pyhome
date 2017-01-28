@@ -41,15 +41,18 @@ type
     fPlayFile: string;
     fPlayTitle: string;
     fPlayFileID: integer;
+    fPlayFileTYP: integer;
     fPlayWithPause: boolean;
     fPlaySeek: integer;
 
     fNextPlayFile: string;
     fNextPlayTitle: string;
-    fNextPlayFileID: integer;    
+    fNextPlayFileID: integer;
+    fNextPlayFileTYP: integer;    
     fNextPlayWithPause: boolean;
     fNextPlaySeek: integer;
     // -------------------------
+    fPrevForegroundWindow:cardinal;
     fPlayLen, fPlayPos: integer;
     fPlayState: integer;
     fVlcHandler: cardinal;
@@ -58,7 +61,6 @@ type
     fOnChange: TNotifyEvent;
     fonPlayPosEvent: TPlayPosEvent;
     fOnStopEvent: TNotifyEvent;
-    //function sendVlcComm(s: string): boolean;
     procedure setPlayPos(const Value: integer);
     procedure setVolume(const Value: integer);
     procedure doChange();
@@ -70,7 +72,7 @@ type
     procedure hideVlc;
   public
     fVlcExe:string;
-    procedure play(id: integer; s, title: string; withPause:boolean = false; seek: integer = 0);
+    procedure play(id, typ: integer; s, title: string; withPause:boolean = false; seek: integer = 0);
     procedure pause();
     procedure stop();
     property playLen: integer read fPlayLen;
@@ -106,9 +108,8 @@ begin
    sleep(100);
    PostMessage(Handle, VLC_COMMAND, 2, 0); //sendVlcComm('play');
    fPostPlayTitle := AnsiToUtf8(fPlayTitle);
-   //PostMessage(Handle, VLC_COMMAND, 12, 0); //title
-   PostMessage(Handle, VLC_COMMAND, 20, fVolume); //sendVlcComm('volume ' + IntToStr(fVolume));   
-   PostMessage(Handle, VLC_COMMAND, 30, 0); //sendVlcComm('get_length');
+   //PostMessage(Handle, VLC_COMMAND, 20, fVolume); //sendVlcComm('volume ' + IntToStr(fVolume));
+   //PostMessage(Handle, VLC_COMMAND, 30, 0); //sendVlcComm('get_length');
 end;
 
 procedure TVlcForm.ClientSocket1Disconnect(Sender: TObject;
@@ -136,7 +137,7 @@ begin
    ErrorCode := 0;
    Memo1.Lines.Add('ERROR');
    setState(4);
-   play(fPlayFileID, fPlayFile, fPlayTitle);
+   play(fPlayFileID, fPlayFileTYP, fPlayFile, fPlayTitle);
 end;
 
 procedure TVlcForm.ClientSocket1Read(Sender: TObject;
@@ -203,11 +204,16 @@ begin
             PostMessage(Handle, VLC_COMMAND, 11, 0); //sendVlcComm('quit');
          end
          else
+         if (Pos('status change: ( new input:', line) > 0) then
+         begin
+            //
+         end
+         else
          //status change: ( audio volume: 192 )
          if (Pos(volume_str, line) > 0) then
          begin
             v := StrToInt(Copy(line, Length(volume_str), Length(line) - Length(volume_str) - 1));
-            if (v > 0) then
+            if ((v > 0) and (fStartPlayOK)) then
             begin
                if (fVolume <> v) then
                begin
@@ -223,6 +229,19 @@ begin
             begin
                fPlayLen := StrToInt(line);
                fStartPlayOK := (fPlayLen > 0);
+
+               if (fPlaySeek > 0) then
+               begin
+                  PostMessage(Handle, VLC_COMMAND, 21, fPlaySeek); //seek
+                  fPlayPos := fPlaySeek;
+                  fPlaySeek := 0;
+               end;
+
+               if (fPlayWithPause) then
+               begin
+                  PostMessage(Handle, VLC_COMMAND, 3, 0); //pause
+                  fPlayWithPause := false;
+               end;
             end
             else
             begin
@@ -237,7 +256,7 @@ begin
    end;
 end;
 
-procedure TVlcForm.play(id: integer; s, title: string; withPause:boolean = false; seek: integer = 0);
+procedure TVlcForm.play(id, typ: integer; s, title: string; withPause:boolean = false; seek: integer = 0);
 var
    cif: STARTUPINFO;
    pi: PROCESS_INFORMATION;
@@ -248,6 +267,7 @@ begin
       fPlayFile := s;
       fPlayTitle := title;
       fPlayFileID := id;
+      fPlayFileTYP := typ;
       fPlayWithPause := withPause;
       fPlaySeek := seek;
       if (not ClientSocket1.Active) then
@@ -259,6 +279,7 @@ begin
          cif.dwFlags := STARTF_USESHOWWINDOW;
          cif.wShowWindow := SW_HIDE;
          fVlcHandler := 0;
+         fPrevForegroundWindow := GetForegroundWindow;
          if (CreateProcess(PAnsiChar(fVlcExe),
                            PAnsiChar(' --control=rc --network-caching=20000 --rc-host 127.0.0.1:' + IntToStr(ClientSocket1.Port)),
                            nil, nil, False, 0, nil, nil, cif, pi)) then
@@ -279,6 +300,7 @@ begin
       fNextPlayFile := s;
       fNextPlayTitle := title;
       fNextPlayFileID := id;
+      fNextPlayFileTYP := typ;
       fNextPlayWithPause := withPause;
       fNextPlaySeek := seek;
       PostMessage(Handle, VLC_COMMAND, 11, 0); //sendVlcComm('quit');
@@ -296,35 +318,24 @@ begin
    PostMessage(Handle, VLC_COMMAND, 11, 0); //sendVlcComm('quit');
 end;
 
-{function TVlcForm.sendVlcComm(s: string): boolean;
-begin
-   Result := false;
-   if ((ClientSocket1.Active) and (fVlcHandler > 0)) then
-   begin
-      ClientSocket1.Socket.SendText(s + chr(13));
-      sleep(10);
-      Result := true;
-   end;
-end;}
-
 procedure TVlcForm.Timer1Timer(Sender: TObject);
 begin
    if ((fPlayState = 4) and (fNextPlayFile <> '')) then
    begin
-      play(fNextPlayFileID, fNextPlayFile, fNextPlayTitle, fNextPlayWithPause, fNextPlaySeek);
+      play(fNextPlayFileID, fNextPlayFileTYP, fNextPlayFile, fNextPlayTitle, fNextPlayWithPause, fNextPlaySeek);
       fNextPlayFile := '';
    end
    else
    begin
       if ((fPlayState <> 4) and (fStartPlayOK)) then
       begin
-         if (fPlaySeek > 0) then
+         {if (fPlaySeek > 0) then
          begin
             PostMessage(Handle, VLC_COMMAND, 21, fPlaySeek);
             fPlaySeek := 0;
-            
-            {if (sendVlcComm('seek ' + IntToStr(fPlaySeek))) then
-               fPlaySeek := 0;}            
+
+            //if (sendVlcComm('seek ' + IntToStr(fPlaySeek))) then
+            //   fPlaySeek := 0;
          end;
 
          if (fPlayWithPause) then
@@ -332,15 +343,18 @@ begin
             PostMessage(Handle, VLC_COMMAND, 3, 0);
             fPlayWithPause := false;
 
-            {if (sendVlcComm('pause')) then
-               fPlayWithPause := false;}
-         end;
+            //if (sendVlcComm('pause')) then
+            //   fPlayWithPause := false;
+         end;}
          
          if (fPlayState <> 3) then
             PostMessage(Handle, VLC_COMMAND, 31, 0); //sendVlcComm('get_time');
       end
       else
+      begin
+         PostMessage(Handle, VLC_COMMAND, 20, fVolume); //sendVlcComm('volume ' + IntToStr(fVolume));
          PostMessage(Handle, VLC_COMMAND, 30, 0); //sendVlcComm('get_length');
+      end;
    end;
    Label1.Caption := IntToStr(fPlayPos);
    Label2.Caption := IntToStr(fPlayLen);
@@ -443,32 +457,30 @@ var
    h: cardinal;
    b: array[0..255] of char;
    l: string;
-   sl: TStringList;
    vlcHide: boolean;
 begin
+   //exit;
+
    if (fPlayState = 4) then exit;
 
    vlcHide := false;
 
-   sl := TStringList.Create;
-   try
-      sl.Delimiter := ';';
-      sl.DelimitedText := extAudio;
-      if (sl.IndexOf(WideUpperCase(ExtractFileExt(fPlayTitle))) > -1) then
-         vlcHide := true;
-   finally
-      sl.Free;
-   end;
+   if (fPlayFileTYP = 2) then
+      vlcHide := true;
 
    if (not vlcHide) then exit;
 
-   h:= FindWindow(0, 0);
+   {if (fPrevForegroundWindow > 0) then
+      SetForegroundWindow(fPrevForegroundWindow);}
+
+   h:= FindWindow(nil, nil);
    while (h <> 0) do
    begin
       GetWindowText(h, b, 255);
       l := WideUpperCase(string(b));
       if ((Pos('VLC', l) > 0) and (Pos('ÌÅÄÈÀ', l) > 0)) then
       begin
+         fPrevForegroundWindow := 0;
          ShowWindow(h, SW_HIDE);
          //break;
       end;

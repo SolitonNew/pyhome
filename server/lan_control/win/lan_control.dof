@@ -137,7 +137,7 @@ Comments=
 [Exception Log]
 EurekaLog Version=6101
 Activate=1
-Activate Handle=1
+Activate Handle=0
 Save Log File=0
 Foreground Tab=0
 Freeze Activate=0
@@ -175,7 +175,7 @@ HTMLLine11="      %3C/tr%3E"
 HTMLLine12="    %3C/table%3E"
 HTMLLine13="  %3C/body%3E"
 HTMLLine14="%3C/html%3E"
-AutoCrashOperation=2
+AutoCrashOperation=0
 AutoCrashNumber=10
 AutoCrashMinutes=1
 WebURL=

@@ -20,7 +20,7 @@ class Index(BaseForm):
         tab.add_tab("Переменные", "page1")
         tab.add_tab("Скрипты", "page2")
         tab.add_tab("Локация", "page3")
-        tab.add_tab("Консоли", "page4")
+        #tab.add_tab("Консоли", "page4")
         tab.add_tab("Статистика", "page5")
         tab.add_tab("Расписание", "page6")
         tab.add_tab("Схема", "page7")

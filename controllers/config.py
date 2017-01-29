@@ -3,7 +3,7 @@ from variables import Variable
 # Variables
 DATE_TIME = Variable(-100, 100, 0, 'variable', '')
 TERM_1 = Variable(1, 2, 0, '', '')
-TERM_2 = Variable(2, 2, 0, '', '')
+ATTIC_TERM = Variable(2, 1, 0, [0x28, 0x70, 0x17, 0x75, 0x05, 0x00, 0x00, 0xb7], '')
 LIVING_S = Variable(3, 1, 0, [0xf0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x1a], 'LEFT')
 BOILER_S = Variable(5, 1, 0, [0xf0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0xa6], 'LEFT')
 BACK_DOOR_S = Variable(6, 1, 0, [0xf0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0xa6], 'RIGHT')
@@ -52,7 +52,7 @@ BEDROOM_2_TERM_R = Variable(48, 2, 1, '', '')
 BEDROOM_3_TERM_S = Variable(49, 1, 0, [0x28, 0x40, 0x11, 0x75, 0x05, 0x00, 0x00, 0xc6], '')
 BEDROOM_3_TERM_V = Variable(50, 1, 1, 'variable', '')
 BEDROOM_3_TERM_R = Variable(51, 1, 1, '', '')
-HALL_2_TERM_S = Variable(56, 2, 0, '', '')
+HALL_2_TERM_S = Variable(56, 1, 0, '', '')
 HALL_2_TERM_V = Variable(57, 2, 1, 'variable', '')
 HALL_2_TERM_R = Variable(58, 2, 1, '', '')
 LIVING_TERM_S = Variable(59, 1, 0, [0x28, 0xdf, 0x76, 0x75, 0x05, 0x00, 0x00, 0x13], '')
@@ -78,7 +78,7 @@ LIVING_SOCKET_2 = Variable(78, 1, 1, 'pyb', '')
 LIVING_SOCKET_3 = Variable(79, 1, 1, 'pyb', '')
 GAME_ROOM_SWITCH_1 = Variable(80, 1, 1, 'pyb', '')
 GAME_ROOM_SWITCH_2 = Variable(81, 1, 1, 'pyb', '')
-BOILER_SWITCH = Variable(82, 1, 1, 'pyb', 'Y1')
+BOILER_SWITCH = Variable(82, 1, 1, 'pyb', 'X9')
 DINING_SOCKET = Variable(83, 2, 1, 'pyb', '')
 COOK_SWITCH = Variable(84, 2, 1, 'pyb', '')
 HALL_1_SWITCH = Variable(85, 2, 1, 'pyb', '')
@@ -89,11 +89,8 @@ PODVAL_R = Variable(89, 1, 1, 'pyb', 'Y5')
 GAME_ROOM_S = Variable(90, 1, 0, [0xf0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x1a], 'RIGHT')
 BACK_DOOR_TERM_IN_S = Variable(91, 1, 0, [0x28, 0xd7, 0x69, 0x76, 0x05, 0x00, 0x00, 0x29], '')
 BEDROOM_3_WC_TERM = Variable(92, 1, 0, [0x28, 0x65, 0xb3, 0x75, 0x05, 0x00, 0x00, 0x2b], '')
-HEATING_MAIN_OUT = Variable(93, 1, 0, '', 'T2')
-HEATING_MAIN_IN = Variable(94, 1, 0, '', 'T3')
-HEATING_CHIMNEY = Variable(95, 1, 0, '', 'T1')
-HEATING_TP_IN = Variable(96, 1, 0, '', 'T5')
-HEATING_TP_OUT = Variable(97, 1, 0, '', 'T4')
+HEATING_MAIN_OUT = Variable(93, 1, 0, [0x28, 0x29, 0xc9, 0x75, 0x05, 0x00, 0x00, 0xf3], '')
+HEATING_CHIMNEY = Variable(95, 1, 0, [0x28, 0x6e, 0x24, 0x76, 0x05, 0x00, 0x00, 0xbd], '')
 DEBUG_RIGHT = Variable(100, 1, 1, 'variable', '')
 WC_1_FAN = Variable(103, 1, 1, [0xf1, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x27], 'F3')
 WC_2_FAN = Variable(104, 1, 1, [0xf1, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x27], 'F1')
@@ -106,17 +103,16 @@ PODVAL_COOK_FAN = Variable(110, 2, 1, '', '')
 WC_PRESENCE = Variable(111, 2, 0, '', 'P1')
 WC_2_PRESENCE = Variable(112, 2, 0, '', 'P2')
 SHOWER_2_PRESNCE = Variable(113, 2, 0, '', 'P3')
-STAIRS_PRESENCE = Variable(114, 1, 0, [0xf2, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x60], 'P1')
-STAIRS_R = Variable(115, 1, 1, 'pyb', '')
+STAIRS_PRESENCE = Variable(114, 1, 0, '', 'P1')
+STAIRS_R = Variable(115, 1, 1, 'pyb', 'Y1')
 DEMO = Variable(116, 1, 1, 'variable', '')
-HEATING_MAIN_PUMP = Variable(117, 1, 0, '', 'R2')
-HEATING_TP_PUMP = Variable(118, 1, 0, '', 'R3')
-HEATING_LONG_CIRCLE = Variable(119, 1, 0, '', 'R1')
-HEATING_SIGNAL_1 = Variable(120, 1, 0, '', 'S1')
-HEATING_SIGNAL_2 = Variable(121, 1, 0, '', 'S2')
-HEATING_SIGNAL_3 = Variable(122, 1, 0, '', 'S3')
 QUIET_TIME = Variable(123, 100, 1, 'variable', '')
 BACK_DOOR_TERM_OUT_S = Variable(124, 1, 0, [0x28, 0x9b, 0xf3, 0x75, 0x05, 0x00, 0x00, 0xa3], '')
+BOILER_PRESENCE = Variable(125, 1, 0, [0xf2, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x60], 'P1')
+DAYLIGHT = Variable(126, 100, 1, 'variable', '')
+BOILER_PRESENCE_OUT = Variable(127, 1, 0, [0xf2, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x60], 'P2')
+STAIRS_TEMP = Variable(130, 1, 0, [0xf3, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x5d], 'T')
+STAIRS_HUMIDITY = Variable(131, 1, 0, [0xf3, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x5d], 'H')
 
 # Scripts
 def script_1():
@@ -170,12 +166,11 @@ def script_26():
 def script_27():
     import time
     
+    #System Time of system
     sys_time = time.localtime(DATE_TIME.value())
     
-    #Значение часов с минутами в виде числа с плавающей запятой
     tm = sys_time[3] + sys_time[4] / 60
     
-    #Условие для вкл/выкл бойлера по таймингу
     #BOILER_SWITCH.value(tm >= BOILER_ON_HOUR.value() and tm <= BOILER_OFF_HOUR.value())
 
 def script_28():
@@ -249,7 +244,7 @@ def script_45():
     if SHOWER_FAN.value():
         c += 1
     
-    MASTER_FAN.value(c + 6)
+    MASTER_FAN.value(c + 3)
 
 def script_46():
     if BEDROOM_3_WC_R.value():
@@ -267,10 +262,20 @@ def script_48():
     pass
 
 def script_49():
-    if STAIRS_PRESENCE.value():
-        DEMO.value(1)
+    pass
+
+def script_50():
+    import variables
+    
+    for var in variables.variableList:
+        var.value()
+
+def script_51():
+    if BOILER_PRESENCE.value() or BOILER_PRESENCE_OUT.value():
+        if not DAYLIGHT.value():
+            BOILER_R.value(1)
     else:
-        DEMO.value(0, 100)
+        BOILER_R.value(0, 200)
 
 
 # Links
@@ -304,3 +309,5 @@ WC_2_FAN.set_change_script(script_45)
 BEDROOM_3_WC_R.set_change_script(script_46)
 SHOWER_2_R.set_change_script(script_47)
 STAIRS_PRESENCE.set_change_script(script_49)
+BOILER_PRESENCE.set_change_script(script_51)
+BOILER_PRESENCE_OUT.set_change_script(script_51)

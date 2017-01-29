@@ -80,8 +80,5 @@ def generate_config_file(db):
     res += generate_var_2_script_list(db)
     return "".join(res)
 
-"""
-f = open('config', 'w')
-f.write(generate_config_file(DBConnector()))
-f.close()
-"""
+
+#print(generate_config_file(DBConnector()))

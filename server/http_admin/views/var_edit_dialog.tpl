@@ -12,7 +12,9 @@
         if ($('#VAR_TYPE').val() == 'ow')
             $('#ow_row').css('display', 'table-row');
         else
-            $('#ow_row').css('display', 'none');        
+            $('#ow_row').css('display', 'none');
+
+        reload_channels();
     }
 
     function del_var() {
@@ -25,14 +27,28 @@
     }
 
     function reload_ow_devs() {
-        var contr = $('#VAR_CONTROLLER').val();
+        var var_type = $('#TYPE_LIST').val();
         var ow_key = $('#VAR_OW_KEY').val();
         $.ajax({url:'var_edit_dialog?FORM_QUERY=reload_ow_devs&ow_key=' + ow_key + '&controller=' + contr}).done(function (data) {
             $('#VAR_OW').html(data);
         });
     }
 
-    function save_ow_key() {        
+    function reload_channels() {
+        var channel = $('#CHANNEL_KEY').val();
+        var var_type = $('#VAR_TYPE').val();
+        var ow_key = $('#VAR_OW').val();
+        $.ajax({url:'var_edit_dialog?FORM_QUERY=reload_channels&channel=' + channel + '&var_type=' + var_type + '&ow_key=' + ow_key}).done(function (data) {
+            $('#VAR_CHANNEL').html(data);
+            if (data == '') {
+                $('#channel_row').css('display', 'none');
+            } else {
+                $('#channel_row').css('display', 'table-row');
+            }
+        });
+    }
+
+    function save_ow_key() {
         $('#VAR_OW_KEY').val($('#VAR_OW').val());
     }
 
@@ -85,7 +101,7 @@
         <TD valign="top">OW устройство:</TD>
         <TD>
             <input id="VAR_OW_KEY" name="VAR_OW_KEY" type="hidden" value="@VAR_OW_KEY@">
-            <select id="VAR_OW" name="VAR_OW" style="width:100%;" onChange="save_ow_key();">
+            <select id="VAR_OW" name="VAR_OW" style="width:100%;" onChange="reload_channels();save_ow_key();">
                 @OW_LIST@
             </select>
         </TD>
@@ -112,9 +128,14 @@
         <TD>Значение:</TD>
         <TD><input id="VAR_VALUE" name="VAR_VALUE" type="text" value="@VALUE@"/></TD>
     </TR>
-    <TR>
+    <TR id="channel_row">
         <TD>Канал:</TD>
-        <TD><input id="VAR_CHANNEL" name="VAR_CHANNEL" type="text" value="@CHANNEL@"/></TD>
+        <TD>
+            <input id="CHANNEL_KEY" type="hidden" value="@CHANNEL_KEY@"/>
+            <select id="VAR_CHANNEL" name="VAR_CHANNEL" style="width:80px">
+                @CHANNEL@
+            </select>
+        </TD>
     </TR>
     <TR>
         <TD>Группа:</TD>

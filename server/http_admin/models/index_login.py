@@ -16,7 +16,9 @@ class IndexLogin(BaseForm):
         if query_type == "login":
             # Логин/Пароль в отдельном файле, который не синхронится в гите
             f = open("models/pass", "r")            
-            a = f.read().split(";")
+            s = f.read()
+            s = s.replace("\n", "")
+            a = s.split(";")
             adm_log = a[0]
             adm_pass = a[1]
             f.close()

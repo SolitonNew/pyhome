@@ -167,6 +167,11 @@ class HttpProcessor(BaseHTTPRequestHandler):
                 if path in ("index", "index_login"):
                     path = "index_login"
                 else:
+                    self.send_response(200)
+                    self.send_header('content-type', "text/html")
+                    self.send_header('charset', 'UTF8')
+                    self.end_headers()
+                    self.flush_headers()
                     s = "<script language=\"javascript\">window.location.href = \"index\";</script>"
                     self.wfile.write(s.encode("utf-8"))
                     return

@@ -39,7 +39,8 @@ class VarEditDialog(BaseForm):
         self.add_widget(TextField("NAME", NAME))
         self.add_widget(TextField("COMM", COMM))
         self.add_widget(TextField("VALUE", VALUE))
-        self.add_widget(TextField("CHANNEL", CHANNEL))
+        self.add_widget(TextField("CHANNEL_KEY", CHANNEL))
+        self.add_widget(ListField("CHANNEL", 0, 0, CHANNEL, self._load_channels(ROM, OW_ID)))
         self.add_widget(TreeField("VAR_GROUP_TREE", 0, 1, 2, GROUP_ID, self.db.select("select ID, PARENT_ID, NAME from plan_parts order by ORDER_NUM")))
         self.add_widget(ListField("VAR_CONTROL", 0, 1, CONTROL, [(0, "--//--")] + self.db.select("select ID, NAME from core_variable_controls order by ID")))
 
@@ -47,7 +48,7 @@ class VarEditDialog(BaseForm):
         data = self.db.select("select ID, ROM_1, ROM_2, ROM_3, ROM_4, ROM_5, ROM_6, ROM_7, ROM_8 "
                               "  from core_ow_devs "
                               " where CONTROLLER_ID = %s "
-                              "order by ID" % controller_id)
+                              "order by 2, 3, 4, 5, 6, 7, 8" % controller_id)
         ow_list = [[-1, "-- нет --"]]
         for row in data:
             u = self.db.select("select count(*) c from core_variables where OW_ID = %s" % row[0])
@@ -65,7 +66,27 @@ class VarEditDialog(BaseForm):
             del rom[len(rom) - 1]
                 
             ow_list += [[row[0], "".join(rom)]]
-        return ow_list    
+        return ow_list
+
+    def _load_channels(self, var_type, ow_key):
+        if var_type == "ow":
+            data = []
+            for r in self.db.select("select t.CHANNELS "
+                                    "  from core_ow_devs d, core_ow_types t"
+                                    " where d.ROM_1 = t.CODE"
+                                    "   and d.ID = %s" % (ow_key)):
+                for c in r[0].decode("utf-8").split(","):
+                    if len(c) > 0:
+                        data += [[c]]
+        elif var_type == "pyb":
+            data = []
+            for i in range(12):
+                data += [["X%s" % (i + 1)]]
+            for i in range(8):
+                data += [["Y%s" % (i + 1)]]
+        else:
+            data = []
+        return data
 
     def query(self, query_type):
         if query_type == "update":
@@ -139,5 +160,19 @@ class VarEditDialog(BaseForm):
                 return "ERROR: {}".format(e.args)
             
         elif query_type == "reload_ow_devs":
-            lf = ListField("OW_LIST", 0, 1, int(self.param("ow_key")), self._load_ow_devs(self.param("controller")))            
+            try:
+                n = int(self.param("ow_key"))
+            except:
+                n = -1
+            lf = ListField("OW_LIST", 0, 0, n, self._load_ow_devs(self.param("controller")))
+            
+            return lf.html()
+
+        elif query_type == "reload_channels":
+            try:
+                n = int(self.param("ow_key"))
+            except:
+                n = -1
+            lf = ListField("CHANNEL", 0, 0, self.param("channel"), self._load_channels(self.param("var_type"), self.param("ow_key")))
+            
             return lf.html()

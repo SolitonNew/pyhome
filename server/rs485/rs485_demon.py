@@ -195,8 +195,9 @@ class Main():
                     pack_data = generate_config_file(self.db)
                     self._command_info(str(len(pack_data)) + ' bytes.')
 
-                    #bts = 512
-                    bts = 1024
+                    bts = 512
+                    #bts = 128
+                    #bts = 1024
                     cou = math.ceil(len(pack_data) / bts)
                     is_ok = False
                     c_pack = self.send_pack(dev[0], self.PACK_COMMAND, ["SET_CONFIG_FILE", cou, False], False)

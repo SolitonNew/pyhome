@@ -47,7 +47,7 @@ type
 
    TSoundSocket = class (TThread)
    private
-      fSoundSocket: TClientSocket;
+      fSocket: TClientSocket;
    protected
       fHost: string;
       fPort: integer;
@@ -248,7 +248,7 @@ type
     fMediaGroupCross: array of integer;
 
     procedure setStatusText(text:String);
-    procedure refreshItemList();
+    procedure refreshVarList();
     procedure refreshMediaList();
     function currView:integer;
     procedure sendVarValue(id:integer; val:Double);
@@ -383,6 +383,7 @@ begin
 
    try
       fSoundSocket.Terminate;
+      fSoundSocket.WaitFor;
       fSoundSocket.Free;
    except
    end;
@@ -450,7 +451,7 @@ begin
    SocketMeta.Close;
 end;
 
-procedure TMainForm.refreshItemList;
+procedure TMainForm.refreshVarList;
 var
    k, t, i: integer;
    lb: string;
@@ -465,7 +466,7 @@ begin
       o := TVarListItem(fItemList[k]);
       lb := o.comm + ' [' + FloatToStr(o.value) + ']';
 
-      if (o.typ = t) then
+      if (o.typ = t) or ((t = 4) and (o.typ = 10)) or ((t = 7) and (o.typ = 11)) then
       begin
          if (i < VarList.Items.Count) then
          begin
@@ -505,7 +506,7 @@ begin
    case t of
       0:
       begin
-         refreshItemList();
+         refreshVarList();
          if (MainForm.Visible) then
             VarList.SetFocus;
       end;
@@ -628,25 +629,41 @@ begin
                end;
             end;
 
-            4, 5:
+            4, 5, 10, 11:
             begin
                if (o.value <> -9999) then
                begin
                   Font.Style := [fsBold];
                   Font.Size := 11;
-                  if (o.typ = 4) then
-                  begin
-                     v := IntToStr(round(o.value * 10));
-                     if (abs(o.value) >= 1) then
-                        insert('.', v, Length(v))
-                     else
-                        insert('0.', v, Length(v));
-                     v := v + '°C';
-                  end
-                  else
-                     v := IntToStr(trunc(o.value)) + '°C';
-                  if (o.typ = 5) then
-                     v := '<' + v + '>';
+                  case o.typ of
+                     4:
+                     begin
+                        v := IntToStr(round(o.value * 10));
+                        if (abs(o.value) >= 1) then
+                           insert('.', v, Length(v))
+                        else
+                           insert('0.', v, Length(v));
+                        v := v + '°C';
+                     end;
+                     5:
+                     begin
+                        v := IntToStr(trunc(o.value)) + '°C';
+                        v := '<' + v + '>';
+                     end;
+                     10:
+                     begin
+                        v := IntToStr(trunc(o.value)) + '%';
+                     end;
+                     11:
+                     begin
+                        v := IntToStr(round(o.value * 10));
+                        if (abs(o.value) >= 1) then
+                           insert('.', v, Length(v))
+                        else
+                           insert('0.', v, Length(v));
+                        v := v + 'ppm';
+                     end;
+                  end;
                   TextOut(itemBmp.Width - 5 - TextWidth(v), 3, v);
                end;
             end;
@@ -671,7 +688,10 @@ begin
 
          Font.Size := 8;
          Font.Style := [];
+         if (o.typ = 10) then
+            Font.Style := [fsItalic];
          TextOut(tl, 5, trimText(itemBmp.Canvas, itemBmp.Width - tl - tr, o.comm));
+         Font.Style := [];
       end;
 
       VarList.Canvas.Draw(Rect.Left, Rect.Top, itemBmp);
@@ -1123,12 +1143,14 @@ begin
    fHost := host;
    fPOrt := port;
    fSpeaker:= TSpeakerThread.Create(0);
-   FreeOnTerminate := True;
+   FreeOnTerminate := False;
    Resume;
 end;
 
 destructor TSoundSocket.Destroy;
 begin
+   fSpeaker.Terminate;
+   fSpeaker.WaitFor;
    fSpeaker.Free;
    inherited;
 end;
@@ -1156,20 +1178,20 @@ var
    b: TBuff;
    i, k: integer;
 begin
-   fSoundSocket := TClientSocket.Create(nil);
+   fSocket := TClientSocket.Create(nil);
    try
-      fSoundSocket.Host := fHost;
-      fSoundSocket.Port := fPort;
-      fSoundSocket.ClientType := ctBlocking;
+      fSocket.Host := fHost;
+      fSocket.Port := fPort;
+      fSocket.ClientType := ctBlocking;
 
       while not Terminated do
       begin
          try
-            fSoundSocket.Open;
-            while (fSoundSocket.Active and (not Terminated)) do
+            fSocket.Open;
+            while (fSocket.Active and (not Terminated)) do
             begin                              
-               fSoundSocket.Socket.SendText('ping');
-               i := fSoundSocket.Socket.ReceiveBuf(b, SizeOf(TBuff));
+               fSocket.Socket.SendText('ping');
+               i := fSocket.Socket.ReceiveBuf(b, SizeOf(TBuff));
 
                if (i > 0) then
                begin
@@ -1183,11 +1205,11 @@ begin
             end;
          except
          end;
-         fSoundSocket.Close;
+         fSocket.Close;
       end;
    finally
-      fSoundSocket.Close;
-      fSoundSocket.Free;
+      fSocket.Close;
+      fSocket.Free;
    end;
 end;
 
@@ -1720,7 +1742,7 @@ begin
       o.value := StrToFloat(StringReplace(res[k][4], '.', ',', [rfReplaceAll]));
       fItemList.Add(o);
    end;
-   refreshItemList();
+   refreshVarList();
    addToMetaLog('finish LOAD');
 
    // ------------------------------------------
@@ -1774,7 +1796,7 @@ begin
       begin
          for k:= 0 to ComboBox1.Items.Count - 1 do
          begin
-            if (TMediaGroupItem(ComboBox1.Items.Objects[k]).id = i) then
+            if ((ComboBox1.Items.Objects[k] <> nil) and (TMediaGroupItem(ComboBox1.Items.Objects[k]).id = i)) then
             begin
                ComboBox1.ItemIndex := k;
                break;
@@ -1889,7 +1911,7 @@ begin
       end;
    end;
    if (Length(res) > 0) then
-      refreshItemList();
+      refreshVarList();
 end;
 
 procedure TMainForm.firstRun;
@@ -2555,7 +2577,12 @@ end;
 procedure TMainForm.ActionSelAllExecute(Sender: TObject);
 begin
    case currView of
-      100: MediaList.SelectAll;
+      100:
+      begin
+         MediaList.Items.BeginUpdate;
+         MediaList.SelectAll;
+         MediaList.Items.EndUpdate;
+      end;
    end;
 end;
 

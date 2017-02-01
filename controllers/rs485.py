@@ -22,7 +22,6 @@ class RS485(object):
         res = []
         uart = self.uart
         try:
-            
             buf = uart.readall()            
             if buf:
                 buf = buf.decode("utf-8")

@@ -1,9 +1,9 @@
 ﻿/*
- * dht11.c
+ * mq7.c
  *
- * Created: 28.01.2017 14:02:05
+ * Created: 30.01.2017 18:09:46
  *  Author: Александр
- */ 
+ */
 
 #define F_CPU 9600000UL
 #include "avr/io.h"
@@ -14,18 +14,7 @@
 #define CPIN(data, pin) (data &= ~(1<<pin))
 #define GPIN(data, pin) (data & (1<<pin))
 
-#define DHT_DDR DDRB
-#define DHT_BIT 3
-#define DHT_PIN PINB
-#define DHT_PORT PORTB
-
-#define DHT_LED_BIT 0
-
-#define DHT_IS_LOW ((DHT_PIN & (1<<DHT_BIT)) == 0)
-#define DHT_IS_HIGH (DHT_PIN & (1<<DHT_BIT))
-#define DHT_WAIT_COUNT 100
-#define DHT_WAIT_FOR_LOW for (unsigned char i = 0; i < DHT_WAIT_COUNT && DHT_IS_HIGH; i++) _delay_us(1)
-#define DHT_WAIT_FOR_HIGH for (unsigned char i = 0; i < DHT_WAIT_COUNT && DHT_IS_LOW; i++) _delay_us(1)
+#define MQ7_HEAT 0
 
 #define OW_DDR DDRB
 #define OW_READ PINB
@@ -45,10 +34,10 @@
 #define WAIT_FOR_LOW for (int i = 0; i < WAIT_COUNT && IS_HIGH; i++)
 #define WAIT_FOR_HIGH for (int i = 0; i < WAIT_COUNT && IS_LOW; i++)
 
-unsigned char sensor_data[2]; // Температура, Влажность
+unsigned char sensor_data[2]; // Значение датчика MQ-7
 unsigned char isChange = 0;
 
-unsigned char ROM[8] = {0xF3,0x00,0x00,0x00,0x00,0x00,0x03,0x0};
+unsigned char ROM[8] = {0xF4,0x00,0x00,0x00,0x00,0x00,0x01,0x0};
 	
 unsigned char crc_table(unsigned char data)
 {
@@ -160,10 +149,10 @@ void one_wire_action()
 				case READ_DATA: // Чтение данных	
 					isChange = 0;
 					crc = 0;
-					for (i = 0; i < 2; i++) {
+					for (unsigned char i = 0; i < 2; i++) {
 						OW_writeByte(sensor_data[i]);
 						crc = crc_table(crc ^ sensor_data[i]);
-					}
+					}					
 					OW_writeByte(crc);
 					break;
 			}			
@@ -197,47 +186,6 @@ ISR (TIM0_OVF_vect)
 	one_wire_action();
 }
 
-unsigned char tmp[5];
-
-void readDHT11()
-{	
-	SPIN(DHT_DDR, DHT_BIT);
-	CPIN(DHT_PORT, DHT_BIT);
-	_delay_ms(18);
-	SPIN(DHT_PORT, DHT_BIT);
-	_delay_us(40);
-	CPIN(DHT_DDR, DHT_BIT);
-	_delay_us(40); // Подождем шо скажет термометр
-	if DHT_IS_HIGH {
-		return;
-	}	
-	_delay_us(80);
-	if DHT_IS_LOW {
-		return;
-	}	
-	
-	DHT_WAIT_FOR_LOW;
-	for (unsigned char i = 0; i < 5; i++) {
-		tmp[i] = 0;
-		for (unsigned char k = 0; k < 8; k++) {
-			DHT_WAIT_FOR_HIGH;
-			_delay_us(40); // 0 = 28; 1 = 70
-			if (DHT_IS_HIGH) {
-				tmp[i] |= 1<<(7 - k);
-			}			
-			DHT_WAIT_FOR_LOW;
-		}
-	}
-	
-	if ((tmp[0] + tmp[2] == tmp[4]) && (tmp[4] != 0)) {
-		if (tmp[0] != sensor_data[0] || tmp[2] != sensor_data[1]) {
-			sensor_data[0] = tmp[0];
-			sensor_data[1] = tmp[2];
-			isChange = 1;
-		}
-	}
-}
-
 int main(void)
 {
 	unsigned char crc = 0;
@@ -245,8 +193,14 @@ int main(void)
 		crc = (crc_table(crc ^ ROM[i]));
 	ROM[7] = crc;
 	
+	// Сбросим все ноги
 	DDRB = 0xff;
-			
+	CPIN(DDRB, 2); // Переключаем ногу мерялки
+	
+	// Активируем АЦП 64
+	ADCSRA |= (1<<ADEN)|(1<<ADSC)|(1<<ADPS2)|(1<<ADPS1)|(1<<ADPS0);
+	ADMUX = 1; // | (1<<ADLAR);
+	
 	// Шина
 	CPIN(OW_DDR, OW_PIN);
 		
@@ -254,16 +208,36 @@ int main(void)
 	GIFR |= 1<<INTF0;
 	MCUCR = (1<<ISC01); //Сброс ISC00 - прерывание по \__
 	GIMSK |= (1<<INT0);
+	sei();
 	
-	_delay_ms(10);
-		
-    while(1)
+	unsigned char L;
+	unsigned char H;
+	unsigned int HL;
+	
+	while(1)
     {
-		cli();
-		SPIN(PORTB, DHT_LED_BIT);
-		readDHT11();
-		CPIN(PORTB, DHT_LED_BIT);
-		sei();
-		_delay_ms(60000);
+		// Греем 60 секунд при 5В
+		SPIN(PORTB, MQ7_HEAT);
+		_delay_ms(55000); // 60 sec
+		
+		// Быстренько меряем сопротивение
+		ADCSRA |= (1<<ADSC); // Стартуем измерение		
+		while (ADCSRA & (1<<ADSC)); // Ждем пока померяет
+		L = ADCL;
+		H = ADCH;
+		sensor_data[0] = H;
+		sensor_data[1] = L;
+		isChange = 1;
+		
+		// Греем 90 секунд при 1.4В
+		for (unsigned long int t = 0; t < 90000; t++) { // 90 sec
+			for (unsigned char i = 0; i < 100; i++) {
+				if (i < 26)
+					SPIN(PORTB, MQ7_HEAT);
+				else
+					CPIN(PORTB, MQ7_HEAT);
+				_delay_us(8);
+			}			
+		}
     }
 }

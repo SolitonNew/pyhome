@@ -484,7 +484,7 @@ class Page5_1(BaseForm):
                     if is_first:
                         ctx.move_to(x, y)
                     else:
-                        if row[0] - prevX > 10000:
+                        if row[0] - prevX > 100000:
                             ctx.move_to(x, y)
                         else:
                             ctx.line_to(x, y)

@@ -3,6 +3,7 @@ from homesensor import HomeSensor
 from fancontrol import FanControl
 from pincontrol import PinControl
 from dht11 import DHT11
+from mq7 import MQ7
 from tc_new import TcNew
 from pyb import Pin
 
@@ -116,6 +117,16 @@ class Dht11(DHT11):
                 resH = d[0]
                 resT = d[1]
             return {'H':resH, 'T':resT}
+
+class Mq7(MQ7):
+       
+    def __init__(self, ow, rom):
+        super().__init__(ow)
+        self.rom = rom
+    
+    def value(self, val = None, channel = ''):
+        if val == None:
+            return self.get_data(self.rom)
 
 class Pyboard(object):
     def __init__(self):

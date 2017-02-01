@@ -77,10 +77,13 @@ def onewire_termometrs():
 
 switch = pyb.Switch().callback(lambda: pyb.LED(4).off())
 
+read_config_file = False
+
 while True:
     for pack in rs485.check_lan():
         if pack:
             if pack[1] == PACK_SYNC:
+                read_config_file = False
                 if IS_START:
                     rs485.send_pack(PACK_SYNC, "RESET")
                     IS_START = False
@@ -89,6 +92,7 @@ while True:
                     pack_data = variables.get_sync_change_variables()
                     rs485.send_pack(PACK_SYNC, pack_data)
             elif pack[1] == PACK_COMMAND:
+                read_config_file = False
                 comm_data = pack[2]
                 if comm_data[0] == "SCAN_ONE_WIRE":
                     pyb.LED(3).on()
@@ -104,6 +108,7 @@ while True:
                     rs485.send_pack(PACK_COMMAND, [comm_data[0], roms])
                     pyb.LED(3).off()
                 elif comm_data[0] == "SET_CONFIG_FILE":
+                    read_config_file = True
                     #pyb.LED(3).toggle()
                     rs485.send_pack(PACK_COMMAND, [comm_data[0], rs485.file_parts_i])
                 elif comm_data[0] == "REBOOT_CONTROLLER":
@@ -112,8 +117,7 @@ while True:
             elif pack[1] == PACK_ERROR:
                 rs485.send_pack(PACK_ERROR, [rs485.error])
                 rs485.error = []
-
-    onewire_alarms()
-    onewire_termometrs()
-
     
+    if not read_config_file:
+        onewire_alarms()
+        onewire_termometrs()

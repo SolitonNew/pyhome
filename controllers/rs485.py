@@ -1,7 +1,6 @@
 from pyb import UART
 from pyb import Pin
 from pyb import LED
-from pyb import disable_irq, enable_irq
 from ujson import loads, dumps
 from os import remove
 
@@ -20,7 +19,6 @@ class RS485(object):
         self.file_is_open = False
 
     def check_lan(self):
-        disable_irq()
         res = []
         uart = self.uart
         try:
@@ -71,7 +69,6 @@ class RS485(object):
             res = [[self.dev_id, 3]]
             self.error += ["Error 2 {}".format(e.args)]
             LED(4).on()
-        enable_irq()
         return res
 
     def send_pack(self, pack_type, pack_data):

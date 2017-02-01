@@ -35,6 +35,8 @@ def set_variable_drivers(ow, dev_id):
                         driver = drivers.Pins(ow, var.rom)
                     elif var.rom[0] == 0xf3:
                         driver = drivers.Dht11(ow, var.rom)
+                    elif var.rom[0] == 0xf4:
+                        driver = drivers.Mq7(ow, var.rom)
 
                 driverList += [driver]
                 

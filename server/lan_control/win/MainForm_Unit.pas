@@ -308,6 +308,8 @@ var
    s: string;
    b: boolean;
 begin
+   Randomize;
+
    //saveProp('ID', '');
    InfoPanel.Align := alClient;
    

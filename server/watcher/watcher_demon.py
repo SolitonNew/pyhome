@@ -29,10 +29,10 @@ class Main():
                                     r[3] = row[2]
                             # критические температуры
                             if row[1] == 95 and row[2] > 55: # Дымоход
-                                self._add_command('speech("Температура дымохода %s градусов")' % (round(row[2])))
+                                self._add_command('speech("Температура дымохода %s градусов")' % (round(row[2])), True)
                             if row[1] == 93:
                                 if row[2] > 55: # Подача котла
-                                    self._add_command('speech("Температура котла %s градусов")' % (round(row[2])))
+                                    self._add_command('speech("Температура котла %s градусов")' % (round(row[2])), True)
                                 elif row[2] >= 45 and row[2] <= 48:
                                     self._add_command('speech("Котел холодный")')
                             # -----------------------
@@ -75,14 +75,14 @@ class Main():
         # ---------------------------
         self.termostats += [[tst_id, tst_val, trm_id, trm_val, title]]
             
-    def _add_command(self, command):
+    def _add_command(self, command, alarm = False):
         print("[%s] %s" % (time.strftime("%d-%m-%Y %H:%M"), command))
         """
         for row in self.db.select("select ID from core_execute where COMMAND = '%s'" % command):
             self.db.IUD("delete from core_execute where ID = %s" % row[0])
             self.db.commit()
         """
-        if self.get_quiet_time():
+        if self.get_quiet_time() and alarm == False:
             try:
                 command.index("speech(")
                 command = "speech(\"\")"

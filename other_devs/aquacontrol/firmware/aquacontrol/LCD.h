@@ -311,7 +311,7 @@ void LCD_init()
 	LCD_write(0x0C); // LCD in normal mode.        
 	SPIN(LCD_PORT, LCD_DC);
 	
-	LCD_contrast(3); // 0-5
+	LCD_contrast(2); // 0-5
 	//LCD_clear();
 	//LCD_show();
 }

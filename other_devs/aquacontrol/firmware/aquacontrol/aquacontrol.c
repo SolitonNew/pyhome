@@ -30,7 +30,7 @@
 #define BTN_DDR DDRC
 #define BTN_PORT PORTC
 #define BTN_PIN PINC
-#define BTN_PAUSE 10
+#define BTN_PAUSE 5
 
 #define BTN_IN 7
 #define BTN_UP 6
@@ -42,10 +42,12 @@
 #define GPIN(port, pin) port & (1<<pin)
 
 #define NUM_2_CHAR(num) num + 48;
-#define TIME_STEP 1200 
+#define TIME_STEP 600 
 #define TEMP_STEP 5
 #define MAX_TIME 172800 - 1
 #define LED_TIMEOUT 120
+
+#define TRUNC_TIME(t) trunc(t / 120) * 120
 
 char *menu[3] = {"Температура",
                  "Подсветка",
@@ -233,7 +235,7 @@ char check_btn(unsigned char b_pin, unsigned char b_num)
 		btn_states[b_num] = 0;
 	} else {
 		if (btn_states[b_num] > BTN_PAUSE) {
-			_delay_ms(50);
+			_delay_ms(10);
 			res = 2; // Длинное нажатие
 		} else {
 			btn_states[b_num]++;
@@ -321,6 +323,8 @@ void save_props() {
 	eeprom_update_block(&time, &eep_time, sizeof(time));
 }
 
+unsigned char LCD_invalidate = 0;
+
 int main(void)
 {
 	load_props();
@@ -358,13 +362,13 @@ int main(void)
 			switch (_view_menu) {
 				case 100:
 					_view_menu = 0;
-					redrawLCD();
+					LCD_invalidate = 1;
 					break;
 				case 0:
 					_sel_menu--;
 					if (_sel_menu < 0)
 						_sel_menu = 2;
-					redrawLCD();
+					LCD_invalidate = 1;
 					break;
 				case 1:
 					break;
@@ -375,31 +379,33 @@ int main(void)
 						set_temp += TEMP_STEP;
 					if (set_temp > 400)
 						set_temp = 100;
-					redrawLCD();
+					LCD_invalidate = 1;
 					break;
 				case 2:
 					_sel_menu--;
 					if (_sel_menu < 0)
 						_sel_menu = 1;
-					redrawLCD();
+					LCD_invalidate = 1;
 					break;
 				case 21:
 					if (cb == 1)
 						on_time += 120;
 					else
 						on_time += TIME_STEP;
+					on_time = TRUNC_TIME(on_time);
 					if (on_time > MAX_TIME)
 						on_time = 0;
-					redrawLCD();
+					LCD_invalidate = 1;
 					break;
 				case 22:
 					if (cb == 1)
 						off_time += 120;
 					else
 						off_time += TIME_STEP;
+					off_time = TRUNC_TIME(off_time);
 					if (off_time > MAX_TIME)
 						off_time = 0;
-					redrawLCD();
+					LCD_invalidate = 1;
 					break;
 				case 3:
 					break;
@@ -408,9 +414,10 @@ int main(void)
 						time += 120;
 					else
 						time += TIME_STEP;
+					time = TRUNC_TIME(time);
 					if (time > MAX_TIME)
 						time = 0;
-					redrawLCD();
+					LCD_invalidate = 1;
 					break;
 			}
 		}
@@ -420,13 +427,13 @@ int main(void)
 			switch (_view_menu) {
 				case 100:
 					_view_menu = 0;
-					redrawLCD();
+					LCD_invalidate = 1;
 					break;
 				case 0:
 					_sel_menu++;
 					if (_sel_menu > 2)
 						_sel_menu = 0;
-					redrawLCD();
+					LCD_invalidate = 1;
 					break;
 				case 1:
 					break;
@@ -437,31 +444,33 @@ int main(void)
 						set_temp -= TEMP_STEP;
 					if (set_temp < 100)
 						set_temp = 400;
-					redrawLCD();
+					LCD_invalidate = 1;
 					break;
 				case 2:
 					_sel_menu++;
 					if (_sel_menu > 1)
 						_sel_menu = 0;
-					redrawLCD();
+					LCD_invalidate = 1;
 					break;
 				case 21:
 					if (cb == 1)
 						on_time -= 120;
 					else
 						on_time -= TIME_STEP;
+					on_time = TRUNC_TIME(on_time);
 					if (on_time < 0)
 						on_time = MAX_TIME;
-					redrawLCD();
+					LCD_invalidate = 1;
 					break;
 				case 22:
 					if (cb == 1)
 						off_time -= 120;
 					else
 						off_time -= TIME_STEP;
+					off_time = TRUNC_TIME(off_time);
 					if (off_time < 0)
 						off_time = MAX_TIME;
-					redrawLCD();
+					LCD_invalidate = 1;
 					break;
 				case 3:
 					break;
@@ -470,9 +479,10 @@ int main(void)
 						time -= 120;
 					else
 						time -= TIME_STEP;
+					time = TRUNC_TIME(time);
 					if (time < 0)
 						time = MAX_TIME;
-					redrawLCD();
+					LCD_invalidate = 1;
 					break;
 			}
 		}
@@ -483,29 +493,29 @@ int main(void)
 				case 100:
 					_view_menu = 0;
 					_sel_menu = 0;
-					redrawLCD();
+					LCD_invalidate = 1;
 					break;
 				case 0:
 					_view_menu = _sel_menu + 1;
 					_sel_menu = 0;
-					redrawLCD();
+					LCD_invalidate = 1;
 					break;
 				case 1:
 					_view_menu = 11;
 					_sel_menu = 0;
-					redrawLCD();
+					LCD_invalidate = 1;
 					break;
 					
 				case 2:
 					_view_menu = 20 + _sel_menu + 1;
 					_sel_menu = 0;
-					redrawLCD();
+					LCD_invalidate = 1;
 					break;
 					
 				case 3:
 					_view_menu = 31;
 					_sel_menu = 0;
-					redrawLCD();
+					LCD_invalidate = 1;
 					break;
 			}
 		}
@@ -516,57 +526,57 @@ int main(void)
 				case 100:
 					_view_menu = 0;
 					_sel_menu = 0;
-					redrawLCD();
+					LCD_invalidate = 1;
 					break;
 				case 0:
 					_view_menu = 100;
 					_sel_menu = 0;
-					redrawLCD();
+					LCD_invalidate = 1;
 					break;
 					
 				case 1:
 					_view_menu = 0;
 					_sel_menu = 0;
-					redrawLCD();
+					LCD_invalidate = 1;
 					break;
 					
 				case 11:
 					_view_menu = 1;
 					_sel_menu = 0;
-					redrawLCD();
+					LCD_invalidate = 1;
 					save_props();
 					break;
 					
 				case 2:
 					_view_menu = 0;
 					_sel_menu = 1;
-					redrawLCD();
+					LCD_invalidate = 1;
 					break;
 					
 				case 21:
 					_view_menu = 2;
 					_sel_menu = 0;
-					redrawLCD();
+					LCD_invalidate = 1;
 					save_props();
 					break;
 					
 				case 22:
 					_view_menu = 2;
 					_sel_menu = 1;
-					redrawLCD();
+					LCD_invalidate = 1;
 					save_props();
 					break;
 					
 				case 3:
 					_view_menu = 0;
 					_sel_menu = 2;
-					redrawLCD();
+					LCD_invalidate = 1;
 					break;
 					
 				case 31:
 					_view_menu = 3;
 					_sel_menu = 0;
-					redrawLCD();
+					LCD_invalidate = 1;
 					save_props();
 					break;				
 			}
@@ -580,7 +590,7 @@ int main(void)
 				case 11:
 				case 3:
 				case 31:
-					redrawLCD();
+					LCD_invalidate = 1;
 					break;
 			}			
 			checkTimeAction();
@@ -600,7 +610,7 @@ int main(void)
 			if (lcd_led_timeout == LED_TIMEOUT && _view_menu != 100) {
 				_view_menu = 100;
 				save_props();
-				redrawLCD();
+				LCD_invalidate = 1;
 			}
 		
 			// Управляем подсветкой экрана
@@ -611,7 +621,10 @@ int main(void)
 			}
 			
 		}
+		
+		if (LCD_invalidate)
+			redrawLCD();
 
-        _delay_ms(50);
+        _delay_ms(20);
     }
 }

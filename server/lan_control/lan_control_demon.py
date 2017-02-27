@@ -411,7 +411,7 @@ class ThreadManager(threading.Thread):
             try:
                 self.sock = socket.socket()
                 self.sock.bind(("", self.port))
-                print("binding for port %s OK" % (self.port))
+                print("binding for port %s OK " % (self.port))
                 self.sock.listen(32)
 
                 while True:
@@ -436,7 +436,7 @@ class ThreadManager(threading.Thread):
                     print("error: sock.close()")
             except:
                 time.sleep(5)
-                print("binding error for port: %s" % (self.port))
+                print("binding error for port: %s " % (self.port))
 
     def _close_threads(self):
         for t in self.threads:

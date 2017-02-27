@@ -2802,24 +2802,6 @@ object MainForm: TMainForm
       FFFFFBFFFFFFFFFFFFFFFFFFFFFFFFFF00000000000000000000000000000000
       000000000000}
   end
-  object IdHTTPServer1: TIdHTTPServer
-    Bindings = <>
-    CommandHandlers = <>
-    DefaultPort = 8093
-    Greeting.NumericCode = 0
-    IOHandler = IdServerIOHandlerSocket1
-    MaxConnectionReply.NumericCode = 0
-    ReplyExceptionCode = 0
-    ReplyTexts = <>
-    ReplyUnknownCommand.NumericCode = 0
-    OnCommandGet = IdHTTPServer1CommandGet
-    Left = 136
-    Top = 472
-  end
-  object IdServerIOHandlerSocket1: TIdServerIOHandlerSocket
-    Left = 168
-    Top = 472
-  end
   object VarPopupMenu: TPopupMenu
     OnPopup = VarPopupMenuPopup
     Left = 40
@@ -3385,5 +3367,18 @@ object MainForm: TMainForm
       ShortCut = 16449
       OnExecute = ActionSelAllExecute
     end
+  end
+  object IdHTTPServer1: TIdHTTPServer
+    Bindings = <>
+    CommandHandlers = <>
+    DefaultPort = 8093
+    Greeting.NumericCode = 0
+    MaxConnectionReply.NumericCode = 0
+    ReplyExceptionCode = 0
+    ReplyTexts = <>
+    ReplyUnknownCommand.NumericCode = 0
+    OnCommandGet = IdHTTPServer1CommandGet
+    Left = 136
+    Top = 472
   end
 end

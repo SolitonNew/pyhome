@@ -20,7 +20,7 @@ PACK_ERROR = 3
 # Инициализация шин
 ow = OneWire('Y12')
 DS18B20(ow).start_measure()
-rs485 = RS485(3, 'Y11', dev_id=1)
+rs485 = RS485(3, 'Y11', dev_id=2)
 
 # Создаем драйвера для переменных сети OneWire и передаем им экземпляр OW.
 variables.set_variable_drivers(ow, rs485.dev_id)

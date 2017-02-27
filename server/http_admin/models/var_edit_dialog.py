@@ -164,7 +164,7 @@ class VarEditDialog(BaseForm):
                 n = int(self.param("ow_key"))
             except:
                 n = -1
-            lf = ListField("OW_LIST", 0, 0, n, self._load_ow_devs(self.param("controller")))
+            lf = ListField("OW_LIST", 0, 1, n, self._load_ow_devs(self.param("controller")))
             
             return lf.html()
 

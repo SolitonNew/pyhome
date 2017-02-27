@@ -283,13 +283,12 @@ class Main():
             else:
                 if stateChange:
                     print("Синхронизация остановлена")
+                time.sleep(0.1)
 
             self.SYNC_STATE = SYNC_STATE
 
             # Рассылаем системные комманды, если требуется
             self._send_commands()
-            
-            time.sleep(0.1)
 
 print(
 "=============================================================================\n"

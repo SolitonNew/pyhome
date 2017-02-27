@@ -46,7 +46,7 @@
 unsigned char sensor_data = 0;
 unsigned char isChange = 0;
 
-unsigned char ROM[8] = {0xF0,0x00,0x00,0x00,0x00,0x00,0x05,0x0};
+unsigned char ROM[8] = {0xF0,0x00,0x00,0x00,0x00,0x00,0x04,0x0};
 	
 unsigned char crc_table(unsigned char data)
 {
@@ -195,9 +195,6 @@ void shutdownSensor(unsigned char pin)
 	DDRB |= (1<<pin);
 	PORTB &= ~(1<<pin);
 	_delay_ms(2);
-	//for (unsigned char i = 0; (i < 255); i++) 
-	//	if (PINB & (1<<pin) == 0)
-	//		return ;	
 }
 
 unsigned char checkSensor(unsigned char pin)
@@ -207,8 +204,9 @@ unsigned char checkSensor(unsigned char pin)
 	/*
 	8 - большая чувствительность
 	9 - для мест с проводкой в подрозетнике
+	7 - для новой ыерсии платы
 	*/
-	for (unsigned char i = 0; i < 9; i++)
+	for (unsigned char i = 0; i < 8; i++)
 		if (PINB & (1<<pin))
 			b = 0;
 	return b;

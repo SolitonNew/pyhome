@@ -398,7 +398,7 @@ Disassembly of section .text:
  2bc:	80 95       	com	r24
  2be:	89 23       	and	r24, r25
  2c0:	87 bb       	out	0x17, r24	; 23
- 2c2:	99 e0       	ldi	r25, 0x09	; 9
+ 2c2:	98 e0       	ldi	r25, 0x08	; 8
  2c4:	81 e0       	ldi	r24, 0x01	; 1
  2c6:	46 b3       	in	r20, 0x16	; 22
  2c8:	50 e0       	ldi	r21, 0x00	; 0

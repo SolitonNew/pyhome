@@ -13,7 +13,8 @@ uses
   TerminalForm_Unit in 'TerminalForm_Unit.pas' {TerminalForm},
   Vlc_Unit in 'Vlc_Unit.pas' {VlcForm},
   SchedDialog_Unit in 'SchedDialog_Unit.pas' {SchedDialog},
-  MediaInfoDialog_Unit in 'MediaInfoDialog_Unit.pas' {MediaInfoDialog};
+  MediaInfoDialog_Unit in 'MediaInfoDialog_Unit.pas' {MediaInfoDialog},
+  AlertForm_Unit in 'AlertForm_Unit.pas' {AlertForm};
 
 {$R *.res}
 

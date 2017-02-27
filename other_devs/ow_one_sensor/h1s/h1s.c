@@ -1,7 +1,7 @@
 ﻿/*
- * hs.c
+ * h1s.c
  *
- * Created: 25.11.2015 8:16:25
+ * Created: 22.02.2017 22:09:25
  *  Author: Александр
  */ 
 
@@ -15,9 +15,11 @@
 #define GPIN(data, pin) (data & (1<<pin))
 
 #define LED_L 2
-#define LED_R 0
+#define LED_R 4
 #define SENSOR_L 3
-#define SENSOR_R 4
+#define SENSOR_R 0
+#define SENSOR_D_L 3
+#define SENSOR_D_R 4
 #define SENSOR_LONG_L 5
 #define SENSOR_LONG_R 6
 
@@ -39,14 +41,14 @@
 #define WAIT_FOR_LOW for (int i = 0; i < WAIT_COUNT && IS_HIGH; i++)
 #define WAIT_FOR_HIGH for (int i = 0; i < WAIT_COUNT && IS_LOW; i++)
 
-#define GAIN 15
+#define GAIN 15 // 15/45
 #define MAX_GAIN 45
 #define LONG_COUNT 800
 
 unsigned char sensor_data = 0;
 unsigned char isChange = 0;
 
-unsigned char ROM[8] = {0xF0,0x00,0x00,0x00,0x00,0x00,0x04,0x0};
+unsigned char ROM[8] = {0xF0,0x00,0x00,0x00,0x01,0x00,0x06,0x0};
 	
 unsigned char crc_table(unsigned char data)
 {
@@ -195,18 +197,16 @@ void shutdownSensor(unsigned char pin)
 	DDRB |= (1<<pin);
 	PORTB &= ~(1<<pin);
 	_delay_ms(2);
+	//for (unsigned char i = 0; (i < 255); i++) 
+	//	if (PINB & (1<<pin) == 0)
+	//		return ;	
 }
 
-unsigned char checkSensor(unsigned char pin)
+unsigned char checkSensor(unsigned char pin, unsigned char c)
 {
 	unsigned char b = 1;
 	DDRB &= ~(1<<pin);
-	/*
-	8 - большая чувствительность
-	9 - для мест с проводкой в подрозетнике
-	7 - для новой ыерсии платы
-	*/
-	for (unsigned char i = 0; i < 8; i++)
+	for (unsigned char i = 0; i < c; i++)
 		if (PINB & (1<<pin))
 			b = 0;
 	return b;
@@ -220,9 +220,9 @@ int main(void)
 	ROM[7] = crc;
 	
 	// Сенсор	
-	DDRB |= (1<<SENSOR_L)|(1<<SENSOR_R); //|(1<<LED_L)|(1<<LED_R);
+	DDRB |= (1<<SENSOR_L)|(1<<SENSOR_R)|(1<<LED_R);
 	SPIN(PORTB, LED_L);
-	SPIN(PORTB, LED_R);
+	CPIN(PORTB, LED_R);
 	
 	// Шина
 	CPIN(OW_DDR, OW_PIN);
@@ -244,7 +244,7 @@ int main(void)
     while(1)
     {
 		shutdownSensor(SENSOR_L);
-		if (checkSensor(SENSOR_L)) {
+		if (checkSensor(SENSOR_L, 8)) {
 			if (on_l < MAX_GAIN)
 				on_l++;
 		} else {
@@ -252,7 +252,7 @@ int main(void)
 		}
 		
 		shutdownSensor(SENSOR_R);
-		if (checkSensor(SENSOR_R)) {
+		if (checkSensor(SENSOR_R, 14)) { // 14, 15
 			if (on_r < MAX_GAIN)
 				on_r++;
 		} else {
@@ -261,7 +261,7 @@ int main(void)
 		
 		data = 0;		
 		if (on_l > GAIN) {
-			SPIN(data, SENSOR_L);			
+			SPIN(data, SENSOR_D_L);			
 			if (long_l > LONG_COUNT) {
 				SPIN(data, SENSOR_LONG_L);
 				if (long_indicate > 127)
@@ -279,20 +279,20 @@ int main(void)
 		}		
 			
 		if (on_r > GAIN) {
-			SPIN(data, SENSOR_R);			
+			SPIN(data, SENSOR_D_R);
 			if (long_r > LONG_COUNT) {
 				SPIN(data, SENSOR_LONG_R);
 				if (long_indicate > 127)
-					SPIN(DDRB, LED_R);
+					SPIN(PORTB, LED_R);
 				else
-					CPIN(DDRB, LED_R);
+					CPIN(PORTB, LED_R);
 			} else {
 				long_r++;
-				SPIN(DDRB, LED_R);
+				SPIN(PORTB, LED_R);
 			}						
 		} else 
 		if (on_r == 0) {
-			CPIN(DDRB, LED_R);
+			CPIN(PORTB, LED_R);
 			long_r = 0;
 		}
 				

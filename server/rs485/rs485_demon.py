@@ -129,6 +129,7 @@ class Main():
                 else:
                     print("ERROR\n")
                     self.sync_error_counter += [[dev[0], 30]]
+            time.sleep(0.1)
 
     def _reset_pack(self):
         return self.db.all_variables();

@@ -128,7 +128,7 @@ class Main():
                             print("   << ", res_pack[2], "\n")
                 else:
                     print("ERROR\n")
-                    self.sync_error_counter += [[dev[0], 30]]
+                    self.sync_error_counter += [[dev[0], 3]]
             time.sleep(0.1)
 
     def _reset_pack(self):

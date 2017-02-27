@@ -27,7 +27,7 @@
     }
 
     function reload_ow_devs() {
-        var var_type = $('#TYPE_LIST').val();
+        var contr = $('#VAR_CONTROLLER').val();
         var ow_key = $('#VAR_OW_KEY').val();
         $.ajax({url:'var_edit_dialog?FORM_QUERY=reload_ow_devs&ow_key=' + ow_key + '&controller=' + contr}).done(function (data) {
             $('#VAR_OW').html(data);

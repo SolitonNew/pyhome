@@ -92,8 +92,6 @@ type
     ComboBox1: TComboBox;
     ImageList2: TImageList;
     PauseButton: TSpeedButton;
-    IdHTTPServer1: TIdHTTPServer;
-    IdServerIOHandlerSocket1: TIdServerIOHandlerSocket;
     TimePanel: TPanel;
     TimeShape: TShape;
     TimeLabel: TLabel;
@@ -148,6 +146,7 @@ type
     ActionList1: TActionList;
     ActionSelAll: TAction;
     SpeedButton8: TSpeedButton;
+    IdHTTPServer1: TIdHTTPServer;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
@@ -286,6 +285,7 @@ type
     fMediaList: TList;
     fSessions:TDataRec;
     function metaQuery(pack_name, pack_data: string; blokMessages: boolean = false): TDataRec;
+    procedure freeDataRec(dr:TDataRec);
 
     procedure sendMediaState(state: string; id, time: integer);
     procedure playMediaPlayAt(index: integer; blockWarning: boolean = false);
@@ -372,6 +372,8 @@ end;
 
 procedure TMainForm.FormDestroy(Sender: TObject);
 begin
+   IdHTTPServer1.Active := false;
+
    Timer1.Enabled := false;
    SocketMeta.Close;
 
@@ -1191,7 +1193,7 @@ begin
          try
             fSocket.Open;
             while (fSocket.Active and (not Terminated)) do
-            begin                              
+            begin
                fSocket.Socket.SendText('ping');
                i := fSocket.Socket.ReceiveBuf(b, SizeOf(TBuff));
 
@@ -1256,7 +1258,10 @@ begin
          AResponseInfo.WriteHeader;
          if not AnsiSameText(ARequestInfo.Command, 'HEAD') then
          begin
-            AThread.Connection.WriteStream(FileStream, false, false, AResponseInfo.ContentLength);
+            try
+               AThread.Connection.WriteStream(FileStream, false, false, AResponseInfo.ContentLength);
+            except
+            end;
          end;
       finally
          IdMimeTable.Free;
@@ -1744,6 +1749,7 @@ begin
       o.value := StrToFloat(StringReplace(res[k][4], '.', ',', [rfReplaceAll]));
       fItemList.Add(o);
    end;
+   freeDataRec(res);
    refreshVarList();
    addToMetaLog('finish LOAD');
 
@@ -1894,6 +1900,7 @@ begin
       end;
       refreshMediaList();
    end;
+   freeDataRec(res);
 end;
 
 procedure TMainForm.syncPack(res: TDataRec);
@@ -2072,6 +2079,7 @@ begin
       if (os.id = SchedList.Tag) then
          SchedList.ItemIndex := SchedList.Count - 1;  
    end;
+   freeDataRec(res);
    SchedList.TopIndex := t;
    SchedList.Items.EndUpdate;
    VarList.Repaint;   
@@ -2426,6 +2434,7 @@ begin
    SetLength(fMediaGroupCross, Length(res));
    for k:= 0 to Length(res) - 1 do
       fMediaGroupCross[k] := StrToInt(res[k][0]);
+   freeDataRec(res);
 end;
 
 procedure TMainForm.MediaGroupAddClick(Sender: TObject);
@@ -2505,6 +2514,7 @@ begin
       if (mg.id = id) then
          i := ComboBox1.Items.Count - 1;
    end;
+   freeDataRec(res);
    if (i > -1) then
       ComboBox1.ItemIndex := i
    else
@@ -2636,6 +2646,15 @@ end;
 procedure TMainForm.SpeedButton8Click(Sender: TObject);
 begin
    playMediaNextItem;
+end;
+
+procedure TMainForm.freeDataRec(dr: TDataRec);
+var
+   k: integer;
+begin
+   for k:= 0 to Length(dr) - 1 do
+      SetLength(dr[k], 0);
+   SetLength(dr, 0);
 end;
 
 end.

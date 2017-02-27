@@ -84,6 +84,9 @@ class Main():
         var_data = self.db.variable_changes()
         recv_valid = False
 
+        # Шлем посылку никому, чтобы контроллеры приготовились принимать
+        self.send_pack(0, self.PACK_SYNC, [])
+        time.sleep(0.01)
         # Рассылаем изменения в БД и паралельно читаем обновления
         for dev in self.db.controllers:
             for rep in range(3): # 3 попытки отослать пакет

@@ -119,10 +119,11 @@ class Main():
                             recv_valid = True
                 else:
                     print("ERROR\n")
+
+                time.sleep(0.01)
                 
                 if recv_valid: # Обмен прошел успешно повторы не требуются
                     break
-            time.sleep(0.05)
 
     def _reset_pack(self):
         return self.db.all_variables();

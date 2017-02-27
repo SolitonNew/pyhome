@@ -86,7 +86,7 @@ class Main():
 
         # Шлем посылку никому, чтобы контроллеры приготовились принимать
         self.send_pack(0, self.PACK_SYNC, [])
-        time.sleep(0.01)
+        time.sleep(0.02)
         # Рассылаем изменения в БД и паралельно читаем обновления
         for dev in self.db.controllers:
             for rep in range(3): # 3 попытки отослать пакет
@@ -123,7 +123,7 @@ class Main():
                 else:
                     print("ERROR\n")
 
-                time.sleep(0.01)
+                time.sleep(0.02)
                 
                 if recv_valid: # Обмен прошел успешно повторы не требуются
                     break

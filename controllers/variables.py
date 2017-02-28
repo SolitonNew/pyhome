@@ -198,6 +198,7 @@ class Variable(object):
             
             # Убеждаемся, что переменная принадлежит текущему контроллеру
             # или является системной
+            """
             if self.dev_id == self.curr_dev_id or self.dev_id == 100:
                 if self.val != val:
                     self.val = val
@@ -206,6 +207,17 @@ class Variable(object):
                     self.isChange = True
                     if self.changeScript:
                         self.changeScript()
+            """
+            if self.val != val:
+                self.val = val
+                try:
+                    if self.driver:
+                        self.driver.value(val, self.channel)
+                except:
+                    pass
+                self.isChange = True
+                if self.changeScript and (self.dev_id == self.curr_dev_id or self.dev_id == 100):
+                    self.changeScript()
 
     def load_value(self):
         b = self.isChange

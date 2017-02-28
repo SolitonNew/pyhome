@@ -20,7 +20,7 @@ PACK_ERROR = 3
 # Инициализация шин
 ow = OneWire('Y12')
 DS18B20(ow).start_measure()
-rs485 = RS485(3, 'Y11', dev_id=2)
+rs485 = RS485(3, 'Y11', dev_id=1)
 
 # Создаем драйвера для переменных сети OneWire и передаем им экземпляр OW.
 variables.set_variable_drivers(ow, rs485.dev_id)
@@ -75,7 +75,11 @@ def onewire_termometrs():
             curr_termometr_index = 0
         variables.check_driver_value(termometrs[curr_termometr_index].rom)
 
-switch = pyb.Switch().callback(lambda: pyb.LED(4).off())
+def swch():
+    pyb.LED(1).off()
+    pyb.LED(4).off()
+
+switch = pyb.Switch().callback(swch)
 
 read_config_file = False
 

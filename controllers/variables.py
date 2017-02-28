@@ -1,3 +1,4 @@
+from pyb import LED
 import drivers
 
 driverList = []
@@ -93,6 +94,7 @@ def set_sync_change_variables(data):
     for var in data:
         for vl in variableList:
             if vl.id == var[0]:
+                """
                 try:
                     if vl.dev_id == 100:
                         vl.system_value(var[1])
@@ -102,6 +104,15 @@ def set_sync_change_variables(data):
                                 check_delays()
                     else:
                         vl.silent_value(var[1])
+                except:
+                    pass
+                """
+                try:
+                    vl.value(var[1], changeFlag=False)
+                    if vl.id == -100:
+                        if DATE_TIME != vl.value():
+                            DATE_TIME = vl.value()
+                            check_delays()
                 except:
                     pass
 
@@ -140,7 +151,7 @@ class Variable(object):
         self.channel = channel
         self.val = False
         self.isChange = False
-        self.changeScript = False
+        self.changeScripts = []
         self.delayTime = False
         self.delayValue = None
 
@@ -150,6 +161,7 @@ class Variable(object):
         else:
             self.value(value)
 
+    """
     def silent_value(self, val):
         if val == None:
             return
@@ -166,8 +178,9 @@ class Variable(object):
             self.val = val
             if self.changeScript:
                 self.changeScript()
+    """
 
-    def value(self, val=None, delay=0):
+    def value(self, val=None, delay=0, changeFlag=True):
         """
         Метод назначения/получения данных переменной.
         Параметры:
@@ -180,6 +193,8 @@ class Variable(object):
                    выполнения. Если значение равно 0, то предыдущие задержки
                    будут анулированы до их истечения и присваивание нового
                    значения будет выполнено немедленно.
+           changeFlag - Значение, которое устанавливается переменной если была
+                        смена значения. По умолчанию True.
         """
         if val == None:
             return self.val
@@ -215,13 +230,17 @@ class Variable(object):
                         self.driver.value(val, self.channel)
                 except:
                     pass
-                self.isChange = True
-                if self.changeScript and (self.dev_id == self.curr_dev_id or self.dev_id == 100):
-                    self.changeScript()
+                self.isChange = changeFlag
+                if self.dev_id == self.curr_dev_id or self.dev_id == 100:
+                    for script in self.changeScripts:
+                        try:
+                            script()
+                        except:
+                            LED(1).on()
 
     def load_value(self):
         b = self.isChange
         return (b, self.val)
 
     def set_change_script(self, script):
-        self.changeScript = script
+        self.changeScripts += [script]

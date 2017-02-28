@@ -26,7 +26,7 @@ class EventList(BaseForm):
                 val = utils.decode_variable_value(str(row[3], "utf-8"), round(row[2], 1))
                 dim = str(row[5], "utf-8")
                 res += "<div style=\"color:#fff;padding:3px 15px;\">"
-                res += "<span style=\"color:#777;\">[%s]</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'%s'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%s&nbsp;%s" % (d, lab, val, dim)
+                res += "<span style=\"color:#777;\">[%s]</span>&nbsp;&nbsp;'%s'&nbsp;&nbsp;%s&nbsp;%s" % (d, lab, val, dim)
                 res += "</div>"
 
             return "".join(res)

@@ -186,7 +186,7 @@ class Main():
                     self._command_info(error_text)
             elif command == "CONFIG_UPDATE":
                 self.serialPort.timeout = 2
-                time.sleep(1)
+                time.sleep(0.1)
                 try:
                     self._command_info("CONFIG FILE UPLOAD '%s'..." % dev[1])
                     #pack_data = self._str_to_hex(generate_config_file(self.db))

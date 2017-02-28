@@ -2,54 +2,54 @@ from variables import Variable
 
 # Variables
 DATE_TIME = Variable(-100, 100, 0, 'variable', '')
-TERM_1 = Variable(1, 2, 0, '', '')
+PODVAL_TERM = Variable(1, 1, 0, [0xf3, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0xe1], 'T')
 ATTIC_TERM = Variable(2, 1, 0, [0x28, 0x70, 0x17, 0x75, 0x05, 0x00, 0x00, 0xb7], '')
 LIVING_S = Variable(3, 1, 0, [0xf0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x1a], 'LEFT')
 BOILER_S = Variable(5, 1, 0, [0xf0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0xa6], 'LEFT')
 BACK_DOOR_S = Variable(6, 1, 0, [0xf0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0xa6], 'RIGHT')
-PORTAL_S = Variable(7, 2, 0, '', 'LEFT')
-PORCH_S = Variable(8, 2, 0, '', 'RIGHT')
-COOK_S = Variable(9, 2, 0, '', 'LEFT')
-DINING_S = Variable(10, 2, 0, '', 'RIGHT')
+PORTAL_S = Variable(7, 2, 0, [0xf0, 0x00, 0x00, 0x00, 0x01, 0x00, 0x02, 0x53], 'LEFT')
+PORCH_S = Variable(8, 2, 0, [0xf0, 0x00, 0x00, 0x00, 0x01, 0x00, 0x02, 0x53], 'RIGHT')
+COOK_S = Variable(9, 2, 0, [0xf0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x04, 0x25], 'RIGHT')
+DINING_S = Variable(10, 2, 0, [0xf0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x04, 0x25], 'LEFT')
 HALL_1_S = Variable(11, 2, 0, '', 'LEFT')
-WC_1_S = Variable(12, 2, 0, '', 'LEFT')
-BEDROOM_1_MAIN_S = Variable(13, 2, 0, '', 'LEFT')
-BEDROOM_1_SECOND_S = Variable(14, 2, 0, '', 'RIGHT')
-BEDROOM_2_MAIN_S = Variable(15, 2, 0, '', 'LEFT')
-BEDROOM_2_SECOND_S = Variable(16, 2, 0, '', 'RIGHT')
-BEDROOM_3_MAIN_S = Variable(17, 1, 0, [0xf0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x05, 0x7b], 'RIGHT')
-BEDROOM_3_SECOND_S = Variable(18, 1, 0, [0xf0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x05, 0x7b], 'LEFT')
-WC_2_S = Variable(19, 2, 0, '', 'LEFT')
-SHOWER_2_S = Variable(20, 2, 0, '', 'RIGHT')
-BEDROOM_3_WC_S = Variable(21, 1, 0, '', 'LEFT')
-HALL_2_S = Variable(22, 2, 0, '', 'LEFT')
+WC_1_S = Variable(12, 2, 0, [0xf0, 0x00, 0x00, 0x00, 0x01, 0x00, 0x04, 0x8e], 'LEFT')
+BEDROOM_1_MAIN_S = Variable(13, 2, 0, [0xf0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0xa6], 'LEFT')
+BEDROOM_1_SECOND_S = Variable(14, 2, 0, [0xf0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0xa6], 'RIGHT')
+BEDROOM_2_MAIN_S = Variable(15, 2, 0, [0xf0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x05, 0x7b], 'RIGHT')
+BEDROOM_2_SECOND_S = Variable(16, 2, 0, [0xf0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x05, 0x7b], 'LEFT')
+BEDROOM_3_MAIN_S = Variable(17, 1, 0, [0xf0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xf8], 'RIGHT')
+BEDROOM_3_SECOND_S = Variable(18, 1, 0, [0xf0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xf8], 'LEFT')
+WC_2_S = Variable(19, 2, 0, [0xf0, 0x00, 0x00, 0x00, 0x01, 0x00, 0x06, 0x32], 'LEFT')
+SHOWER_2_S = Variable(20, 2, 0, [0xf0, 0x00, 0x00, 0x00, 0x01, 0x00, 0x05, 0xd0], 'LEFT')
+BEDROOM_3_WC_S = Variable(21, 1, 0, [0xf0, 0x00, 0x00, 0x00, 0x01, 0x00, 0x01, 0xb1], 'LEFT')
+HALL_2_S = Variable(22, 2, 0, [0xf0, 0x00, 0x00, 0x00, 0x01, 0x00, 0x03, 0x0d], 'LEFT')
 LIVING_R = Variable(23, 1, 1, 'pyb', 'X7')
 GAME_ROOM_R = Variable(24, 1, 1, 'pyb', 'Y7')
 BOILER_R = Variable(25, 1, 1, 'pyb', 'X6')
 BACK_DOOR_R = Variable(26, 1, 1, 'pyb', 'X5')
-PORTAL_R = Variable(27, 2, 1, 'pyb', 'X1')
-PORCH_R = Variable(28, 2, 1, 'pyb', 'X2')
-COOK_R = Variable(29, 2, 1, 'pyb', 'X3')
-DINING_R = Variable(30, 2, 1, 'pyb', 'X4')
-HALL_1_R = Variable(31, 2, 1, 'pyb', 'X5')
-WC_1_R = Variable(32, 2, 1, 'pyb', 'X6')
-BEDROOM_1_MAIN_R = Variable(33, 2, 1, 'pyb', 'X7')
+PORTAL_R = Variable(27, 2, 1, 'pyb', 'Y4')
+PORCH_R = Variable(28, 2, 1, 'pyb', 'X12')
+COOK_R = Variable(29, 2, 1, 'pyb', 'Y3')
+DINING_R = Variable(30, 2, 1, 'pyb', 'Y2')
+HALL_1_R = Variable(31, 2, 1, 'pyb', 'X9')
+WC_1_R = Variable(32, 2, 1, 'pyb', 'X5')
+BEDROOM_1_MAIN_R = Variable(33, 2, 1, 'pyb', 'X11')
 BEDROOM_1_SECOND_R = Variable(34, 2, 1, 'pyb', 'X8')
-BEDROOM_2_MAIN_R = Variable(35, 2, 1, 'pyb', 'Y1')
-BEDROOM_2_SECOND_R = Variable(36, 2, 1, 'pyb', 'Y2')
+BEDROOM_2_MAIN_R = Variable(35, 2, 1, 'pyb', 'X7')
+BEDROOM_2_SECOND_R = Variable(36, 2, 1, 'pyb', 'Y1')
 BEDROOM_3_MAIN_R = Variable(37, 1, 1, 'pyb', 'Y8')
 BEDROOM_3_SECOND_R = Variable(38, 1, 1, 'pyb', 'Y6')
-WC_2_R = Variable(39, 2, 1, 'pyb', 'Y3')
-SHOWER_2_R = Variable(40, 2, 1, 'pyb', 'Y4')
+WC_2_R = Variable(39, 2, 1, 'pyb', 'X1')
+SHOWER_2_R = Variable(40, 2, 1, 'pyb', 'X6')
 BEDROOM_3_WC_R = Variable(41, 1, 1, 'pyb', 'X8')
-HALL_2_R = Variable(42, 2, 1, 'pyb', 'Y5')
-BEDROOM_1_TERM_S = Variable(43, 2, 0, '', '')
+HALL_2_R = Variable(42, 2, 1, 'pyb', 'X10')
+BEDROOM_1_TERM_S = Variable(43, 2, 0, [0x28, 0xd7, 0x69, 0x76, 0x05, 0x00, 0x00, 0x29], '')
 BEDROOM_1_TERM_V = Variable(44, 2, 1, 'variable', '')
 BEDROOM_1_TERM_R = Variable(45, 2, 1, '', '')
-BEDROOM_2_TERM_S = Variable(46, 2, 0, '', '')
+BEDROOM_2_TERM_S = Variable(46, 2, 0, [0x28, 0x40, 0x11, 0x75, 0x05, 0x00, 0x00, 0xc6], '')
 BEDROOM_2_TERM_V = Variable(47, 2, 1, 'variable', '')
 BEDROOM_2_TERM_R = Variable(48, 2, 1, '', '')
-BEDROOM_3_TERM_S = Variable(49, 1, 0, [0x28, 0x40, 0x11, 0x75, 0x05, 0x00, 0x00, 0xc6], '')
+BEDROOM_3_TERM_S = Variable(49, 1, 0, [0xf3, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xbf], 'T')
 BEDROOM_3_TERM_V = Variable(50, 1, 1, 'variable', '')
 BEDROOM_3_TERM_R = Variable(51, 1, 1, '', '')
 HALL_2_TERM_S = Variable(56, 1, 0, '', '')
@@ -61,7 +61,7 @@ LIVING_TERM_R = Variable(61, 1, 0, '', '')
 GAME_ROOM_TERM_S = Variable(62, 1, 0, '', '')
 GAME_ROOM_TERM_V = Variable(63, 1, 1, 'variable', '')
 GAME_ROOM_TERM_R = Variable(64, 1, 0, '', '')
-DINING_TERM_S = Variable(65, 2, 0, '', '')
+DINING_TERM_S = Variable(65, 2, 0, [0x28, 0x4d, 0x0a, 0x76, 0x05, 0x00, 0x00, 0x08], '')
 DINING_TERM_V = Variable(66, 2, 1, 'variable', '')
 DINING_TERM_R = Variable(67, 2, 0, '', '')
 HALL_1_TERM_S = Variable(68, 2, 0, '', '')
@@ -113,8 +113,18 @@ DAYLIGHT = Variable(126, 100, 1, 'variable', '')
 BOILER_PRESENCE_OUT = Variable(127, 1, 0, [0xf2, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x60], 'P2')
 STAIRS_TEMP = Variable(130, 1, 0, [0xf3, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x5d], 'T')
 STAIRS_HUMIDITY = Variable(131, 1, 0, [0xf3, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x5d], 'H')
-BEDROOM_3_TERM_S2 = Variable(132, 1, 0, [0xf3, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xbf], 'T')
-BEDROOM_3_HUMINITY_S2 = Variable(133, 1, 0, [0xf3, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xbf], 'H')
+BEDROOM_3_HUMIDITY_S2 = Variable(133, 1, 0, [0xf3, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xbf], 'H')
+PODVAL_HUMIDITY = Variable(134, 1, 0, [0xf3, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0xe1], 'H')
+BOILER_CO = Variable(135, 1, 0, [0xf4, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0xee], '')
+BEDROOM_3_CUPBOARD = Variable(136, 1, 0, [0xf0, 0x00, 0x00, 0x00, 0x01, 0x00, 0x01, 0xb1], 'RIGHT')
+PODVAL_S = Variable(137, 2, 0, [0xf0, 0x00, 0x00, 0x00, 0x01, 0x00, 0x04, 0x8e], 'RIGHT')
+PORCH_TERM = Variable(138, 2, 0, '', '')
+DOORBELL = Variable(139, 2, 0, '', '')
+DOORBELL_2 = Variable(140, 2, 0, '', '')
+WC_2_FAN_MIN = Variable(141, 100, 1, 'variable', '')
+SHOWER_FAN_MIN = Variable(142, 100, 1, 'variable', '')
+BEDROOM_3_WC_FAN_MIN = Variable(143, 100, 1, 'variable', '')
+WC_1_FAN_MIN = Variable(144, 100, 1, 'variable', '')
 
 # Scripts
 def script_1():
@@ -136,8 +146,8 @@ def script_3():
         BOILER_R.value(not BOILER_R.value())
 
 def script_4():
-    if BEDROOM_3_WC_S.value():
-        BEDROOM_3_WC_R.value(not BEDROOM_WC_3_R.value())
+    if BEDROOM_3_WC_S.value() == 1:
+        BEDROOM_3_WC_R.value(not BEDROOM_3_WC_R.value())
 
 def script_21():
     if WC_2_S.value():
@@ -202,6 +212,8 @@ def script_33():
 def script_34():
     if DINING_S.value():
         DINING_R.value(not DINING_R.value())
+    
+    HALL_1_R.value(DINING_R.value())
 
 def script_35():
     if HALL_1_S.value():
@@ -221,44 +233,57 @@ def script_40():
 
 def script_43():
     if WC_2_R.value():
-        WC_2_FAN.value(6)
+        WC_2_FAN.value(10, 120)
     else:
-        WC_2_FAN.value(0, 60)
+        WC_2_FAN.value(WC_2_FAN_MIN.value(), 180)
 
 def script_44():
+    print("1")
+    
     if WC_1_R.value():
-        WC_1_FAN.value(6)
+        WC_1_FAN.value(10, 1)
     else:
-        WC_1_FAN.value(0, 60)
+        WC_1_FAN.value(WC_1_FAN_MIN.value(), 1)
+        
+    print("2")
 
 def script_45():
-    c = 0
+    print("3")
     
-    if WC_1_FAN.value():
-        c += 1
+    c = 4
     
-    if WC_2_FAN.value():
-        c += 1
+    if WC_1_FAN.value() > WC_1_FAN_MIN.value():
+        c += 2
     
-    if BEDROOM_3_WC_FAN.value():
-        c += 1
+    if WC_2_FAN.value() > WC_2_FAN_MIN.value():
+        c += 2
     
-    if SHOWER_FAN.value():
-        c += 1
+    if BEDROOM_3_WC_FAN.value() > BEDROOM_3_WC_FAN_MIN.value():
+        c += 2
     
-    MASTER_FAN.value(c + 3)
+    if SHOWER_FAN.value() > SHOWER_FAN_MIN.value():
+        c += 2
+    
+    if c > 4:
+        MASTER_FAN.value(c)
+    else:
+        MASTER_FAN.value(c, 30)
+        
+    print("4")
 
 def script_46():
     if BEDROOM_3_WC_R.value():
-        BEDROOM_3_WC_FAN.value(6)
+        BEDROOM_3_WC_FAN.value(10, 120)
     else:
-        BEDROOM_3_WC_FAN.value(0, 60)
+        BEDROOM_3_WC_FAN.value(0, 180)
 
 def script_47():
+    """
     if SHOWER_2_R.value():
         SHOWER_FAN.value(6)
     else:
-        SHOWER_FAN.value(0, 60)
+        SHOWER_FAN.value(SHOWER_FAN_MIN.value(), 60)
+    """
 
 def script_48():
     pass
@@ -278,6 +303,10 @@ def script_51():
             BOILER_R.value(1)
     else:
         BOILER_R.value(0, 200)
+
+def script_52():
+    if PODVAL_S.value() == 2:
+        PODVAL_R.value(not PODVAL_R.value())
 
 
 # Links
@@ -313,3 +342,4 @@ SHOWER_2_R.set_change_script(script_47)
 STAIRS_PRESENCE.set_change_script(script_49)
 BOILER_PRESENCE.set_change_script(script_51)
 BOILER_PRESENCE_OUT.set_change_script(script_51)
+PODVAL_S.set_change_script(script_52)

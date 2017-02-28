@@ -17,6 +17,8 @@ class Termometr(DS18B20):
         if val == None:
             if self.is_started:
                 res = self.get_temp(self.rom)
+                if res:
+                    res = ((res * 10)//1)/10
             else:
                 res = None
             self.start_measure()

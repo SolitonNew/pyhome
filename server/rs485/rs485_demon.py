@@ -38,7 +38,7 @@ class Main():
         buf = json.dumps([dev_id, pack_type, pack_data]).encode("utf-8")
         buf += bytearray([0x0])
 
-        c = 5
+        c = 10 #5
         for err in range(c):
             self.serialPort.write(buf)
             if flush:

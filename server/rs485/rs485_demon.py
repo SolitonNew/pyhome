@@ -18,7 +18,7 @@ class Main():
     PACK_ERROR = 3
 
     def __init__(self):
-        self.fast_timeput = 0.05
+        self.fast_timeput = 0.1 #0.05
         self.check_lan_error = False
         
         # Connect to serial port
@@ -38,7 +38,7 @@ class Main():
         buf = json.dumps([dev_id, pack_type, pack_data]).encode("utf-8")
         buf += bytearray([0x0])
 
-        c = 10 #5
+        c = 5
         for err in range(c):
             self.serialPort.write(buf)
             if flush:

@@ -8,7 +8,9 @@ class Main():
     def __init__(self):
         self.db = DBConnector()
         self.termostats = []
-        self._add_termostat(50, 49, "В спальне 3") #Спальня №3
+        self._add_termostat(50, 49, "В хозяйской спальне") #Спальня №3
+        self._add_termostat(47, 46, "В детской спальне") #Спальня №2
+        self._add_termostat(44, 43, "В гостевой спальне") #Спальня №1
         self._add_termostat(60, 59, "В гостинной") #Гостинная
         
         self.run()

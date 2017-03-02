@@ -128,7 +128,10 @@ class Mq7(MQ7):
     
     def value(self, val = None, channel = ''):
         if val == None:
-            return self.get_data(self.rom)
+            res = self.get_data(self.rom)
+            if res:
+                res = ((res * 10)//1)/10
+            return res
 
 class Pyboard(object):
     def __init__(self):

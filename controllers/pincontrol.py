@@ -33,7 +33,7 @@ class PinControl(object):
             return False
 
         res = bytearray(4)
-        ii = [4, 3, 0, 2]
+        ii = [4, 3, 2, 0]
         for i in range(4):
             if buff[0] & (1<<ii[i]):
                 res[i] = 1

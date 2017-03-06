@@ -172,11 +172,12 @@ class BMP280(object):
 
     def write_byte(self, adr, byte):
         i2c.open(self.address)
-        i2c.write([byte])
+        i2c.write([adr, byte])
         i2c.close()
 
     def read_byte_data(self, adr):
         i2c.open(self.address)
+        i2c.write([adr])
         res = i2c.read(1)[0]
         i2c.close()
         return res

@@ -94,7 +94,6 @@ class Main():
             res = self.bmp280_drv.get_data()
             t = res["t"]
             p = res["p"]
-            print(res)
 
             for var in self.BMP280_VARS:
                 if var[2] != res[var[1]]:

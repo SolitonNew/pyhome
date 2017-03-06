@@ -135,10 +135,10 @@ SHOWER_2_DOOR = Variable('SHOWER_2_DOOR', 1.0)
 WC_2_PRESENCE_DELAY = Variable('WC_2_PRESENCE_DELAY', 0.0)
 WC_1_PRESENCE_DELAY = Variable('WC_1_PRESENCE_DELAY', 0.0)
 
-if WC_1_PRESENCE_DELAY.value() == 0:
-    if WC_1_PRESENCE.value():
-        WC_1_R.value(1)
+if WC_2_PRESENCE_DELAY.value() == 0:
+    if WC_2_PRESENCE.value():
+        WC_2_R.value(1)
     else:
-        WC_1_R.value(0, 90)
+        WC_2_R.value(0, 90)
 printInput()
 printChanges()

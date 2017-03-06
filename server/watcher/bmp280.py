@@ -1,7 +1,7 @@
 from pyA20 import i2c
 
 # BME280 default address.
-BME280_I2CADDR           = 0x76
+BME280_I2CADDR           = 0x77
 
 # BME280 Registers
 BME280_CONTROL_MEAS      = 0xF4
@@ -174,7 +174,7 @@ class BMP280(object):
 
     def write_byte(self, adr, byte):
         i2c.open(self.address)
-        i2c.write(byte)
+        i2c.write([byte])
         i2c.close()
 
     def read_byte_data(self, adr):

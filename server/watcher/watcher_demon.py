@@ -3,6 +3,7 @@
 
 from db_connector import DBConnector
 import time
+from bmp280 import BMP280
 
 class Main():
     def __init__(self):
@@ -12,11 +13,16 @@ class Main():
         self._add_termostat(47, 46, "В детской спальне") #Спальня №2
         self._add_termostat(44, 43, "В гостевой спальне") #Спальня №1
         self._add_termostat(60, 59, "В гостинной") #Гостинная
+
+        # ID, CHANNEL, VALUE
+        self.BMP280_VARS = [[150, "t", None], [151, "p", None]]
+        self.bmp280_drv = BMP280()
         
         self.run()
         
     def run(self):
         termostats_time_step = 0
+        bmp280_time_step = 0
         while True:
             relIds = []
             for keys in self.db.select("select CORE_GET_LAST_CHANGE_ID()"):
@@ -66,6 +72,12 @@ class Main():
                     elif t[3] < t[1] - 0.2 and t[3] > t[1] - 1: # Переостудили
                         self._add_command('speech("%s холодно")' % (t[4]))
             termostats_time_step -= 1
+
+            if bmp280_time_step == 0:
+                bmp280_time_step = round(30 / 0.2)
+                self._check_bmp280()
+            bmp280_time_step -= 1
+            
             time.sleep(0.2)
 
     def _add_termostat(self, tst_id, trm_id, title):
@@ -76,6 +88,20 @@ class Main():
             trm_val = rec[0]
         # ---------------------------
         self.termostats += [[tst_id, tst_val, trm_id, trm_val, title]]
+
+    def _check_bmp280(self):
+        try:
+            res = self.bmp280_drv.get_data()
+            t = res["t"]
+            p = res["p"]
+
+            for var in self.BMP280_VARS:
+                if var[2] != res[var[1]]:
+                    var[2] = res[var[1]]
+                    self.db.IUD("call CORE_SET_VARIABLE(%s, %s, null)" % (var[0], var[2]))
+                    self.db.commit()
+        except Exception as e:
+            print(e)
             
     def _add_command(self, command, alarm = False):
         print("[%s] %s" % (time.strftime("%d-%m-%Y %H:%M"), command))

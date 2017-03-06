@@ -112,8 +112,6 @@ class BMP280(object):
         self.write_byte(BME280_CONTROL_MEAS, BME280_CONTROL_MEAS_SET)
 
     def get_data(self):
-        self.bus.scan()
-        
         adc_t = self.read_adc_long(BME280_TEMP)
         adc_p = self.read_adc_long(BME280_PRESSURE)
 

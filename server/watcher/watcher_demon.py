@@ -74,7 +74,7 @@ class Main():
             termostats_time_step -= 1
 
             if bmp280_time_step == 0:
-                bmp280_time_step = round(30 / 0.2)
+                bmp280_time_step = round(5 / 0.2)
                 self._check_bmp280()
             bmp280_time_step -= 1
             
@@ -94,6 +94,7 @@ class Main():
             res = self.bmp280_drv.get_data()
             t = res["t"]
             p = res["p"]
+            print(res)
 
             for var in self.BMP280_VARS:
                 if var[2] != res[var[1]]:

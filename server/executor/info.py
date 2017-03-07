@@ -4,7 +4,7 @@ class Info():
     def __init__(self):
         pass
 
-    def check_comm(self, db, command):
+    def check_comm(self, db, id, command):
         try:
             command.index("info()")
 
@@ -85,11 +85,16 @@ class Info():
             
             #text = "%s %s. Температура по дому %s. Температура на улице %s." % (hours[d], minute, t_in, t_out)
             #text = "%s %s. Температура в гостинной %s. Температура на улице %s." % (hours[d], minute, t_in, t_out)
-            text = "%s %s. Температура на улице %s." % (hours[d], minute, t_out)
+            text1 = "%s %s." % (hours[d], minute)
+            text2 = "Температура на улице %s." % (t_out)
 
             print(text)
 
-            db.IUD("insert into core_execute (COMMAND) values ('speech(\"%s\")')" % text)
+            db.IUD("insert into core_execute (COMMAND) values ('speech(\"%s\", \"notify\")')" % text1)
+            db.IUD("insert into core_execute (COMMAND) values ('speech(\"%s\", \"notify\")')" % text2)
+            db.IUD("update core_execute "
+                   "   set PROCESSED = %s "
+                   " where ID = %s" % (1, id))
             db.commit()
 
             return True

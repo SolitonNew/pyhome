@@ -306,7 +306,7 @@ class MetaThread(threading.Thread):
     def _execute_get_audio_data(self, id):
         res = []        
         try:
-            if id == "notyfy":
+            if id == "notify":
                 f = open("/home/pyhome/server/execute/notify.wav" % id, "rb")
             elif id == "alarm":
                 f = open("/home/pyhome/server/execute/alarm.wav" % id, "rb")

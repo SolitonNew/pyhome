@@ -21,9 +21,12 @@ class Speech():
             if len(res) == 0:
                 db.IUD("insert into core_execute_audio (COMMAND) values ('%s')" % (command))
                 exe_id = db._lastID
-                subprocess.call('echo "' + text + '" | RHVoice-test -p Anna -o /var/tmp/wisehouse/audio_%s.wav' % (exe_id), shell=True)
             else:
                 exe_id = res[0][0]
+
+            f_name = "/var/tmp/wisehouse/audio_%s.wav" % (exe_id)
+            if not os.path.exists(f_name):
+                subprocess.call('echo "' + text + '" | RHVoice-test -p Anna -o /var/tmp/wisehouse/audio_%s.wav' % (exe_id), shell=True)
 
             db.IUD("update core_execute "
                    "   set AUDIO = '%s', "
@@ -32,11 +35,11 @@ class Speech():
             db.commit()
                 
             subprocess.call("aplay /home/pyhome/server/executor/notify.wav", shell=True)
-            subprocess.call("aplay /var/tmp/wisehouse/audio_%s.wav" % (exe_id), shell=True)
+            subprocess.call("aplay %s" % (f_name), shell=True)
             print("")
                 
             return True
-        except Exception as e:
+        except:
             pass
         return False
 

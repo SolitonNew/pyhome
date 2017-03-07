@@ -32,7 +32,7 @@
 #define WAIT_FOR_LOW for (int i = 0; i < WAIT_COUNT && IS_HIGH; i++)
 #define WAIT_FOR_HIGH for (int i = 0; i < WAIT_COUNT && IS_LOW; i++)
 
-unsigned char ROM[8] = {0xF2,0x00,0x00,0x00,0x00,0x00,0x01,0x0};
+unsigned char ROM[8] = {0xF2,0x00,0x00,0x00,0x00,0x00,0x05,0x0};
 	
 unsigned char isChange = 0;
 unsigned char port_prop = 0;

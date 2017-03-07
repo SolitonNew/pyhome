@@ -6,7 +6,6 @@ uses
   Forms,
   Windows,
   MainForm_Unit in 'MainForm_Unit.pas' {MainForm},
-  Speacker in 'Speacker.pas',
   PropertysForm_Unit in 'PropertysForm_Unit.pas' {PropertysForm},
   Mcs_Unit in 'Mcs_Unit.pas',
   RegForm_Unit in 'RegForm_Unit.pas' {RegForm},
@@ -14,7 +13,8 @@ uses
   Vlc_Unit in 'Vlc_Unit.pas' {VlcForm},
   SchedDialog_Unit in 'SchedDialog_Unit.pas' {SchedDialog},
   MediaInfoDialog_Unit in 'MediaInfoDialog_Unit.pas' {MediaInfoDialog},
-  AlertForm_Unit in 'AlertForm_Unit.pas' {AlertForm};
+  AlertForm_Unit in 'AlertForm_Unit.pas' {AlertForm},
+  Speach_Unit in 'Speach_Unit.pas';
 
 {$R *.res}
 

@@ -78,7 +78,11 @@ class MetaThread(threading.Thread):
                         elif a[0] == "execute queue":
                             self._execute_queue()
                         elif a[0] == "execute get audio id":
-                            self.sendcursor("select a.ID from core_execute e, core_execute_audio a where e.COMMAND = a.COMMAND and e.ID = %s" % (a[1]))
+                            try:
+                                int(a[1])
+                                self.sendcursor("select a.ID from core_execute e, core_execute_audio a where e.COMMAND = a.COMMAND and e.ID = %s" % (a[1]))
+                            except:
+                                self.senddata([[a[1]]])
                         elif a[0] == "execute get audio data":
                             self._execute_get_audio_data(a[1])
                         elif a[0] == "load variables":
@@ -287,7 +291,7 @@ class MetaThread(threading.Thread):
     def _sync(self):
         self.senddata(self.db.variable_changes())
 
-    def _execute_queue(self):
+    def _execute_queue(self):        
         res = []
         for row in self.db.select("select ID, COMMAND, AUDIO, PROCESSED "
                                   "  from core_execute where ID > %s" % (self.lastAudioID)):

@@ -31,7 +31,7 @@ class Main():
                     for c in str(row[1], "utf-8").split("\n"):
                         self.execute(row[0], c.strip())
                     self.last_processed_ID = row[0]
-                time.sleep(0.2)
+                time.sleep(0.1)
 
                 # Дергаем секундный таймер, может кому пригодится
                 for cmd in self.commans:

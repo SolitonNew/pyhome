@@ -397,10 +397,16 @@ print(
 % (port)
 )
 
-sock = socket.socket()
-sock.bind(("", port))
-print("binding for port %s OK " % (port))
-sock.listen(32)
+while True:
+    try:
+        sock = socket.socket()
+        sock.bind(("", port))
+        print("binding for port %s OK " % (port))
+        sock.listen(32)
+        break
+    except:
+        print("binding ERROR for port %s OK " % (port))
+        time.sleep(5)
 
 try:
     while True:
@@ -414,4 +420,7 @@ try:
 except:
     pass
 
-sock.close()
+try:
+    sock.close()
+except:
+    pass

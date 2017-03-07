@@ -74,7 +74,7 @@ class Main():
             termostats_time_step -= 1
 
             if bmp280_time_step == 0:
-                bmp280_time_step = round(5 / 0.2)
+                bmp280_time_step = round(60 / 0.2)
                 self._check_bmp280()
             bmp280_time_step -= 1
             

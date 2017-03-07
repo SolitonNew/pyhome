@@ -1,7 +1,7 @@
 from pyA20 import i2c
 
 # BME280 default address.
-BME280_I2CADDR           = 0x77
+BME280_I2CADDR           = 0x76
 
 # BME280 Registers
 BME280_CONTROL_MEAS      = 0xF4
@@ -136,7 +136,7 @@ class BMP280(object):
         var1 = self.dig_p9 * p * p / 2147483648.0;
         var2 = p * self.dig_p8 / 32768.0;
         pressure = round((p + (var1 + var2 + self.dig_p7) / 16.0));
-        pressure = round(pressure / 133.322)
+        pressure = round((pressure / 133.322) * 10) / 10
 
         return {'t':temperature, 'p':pressure}
 

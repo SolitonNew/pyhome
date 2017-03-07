@@ -27,7 +27,7 @@ class Main():
                                           "  from core_execute "
                                           " where ID > %s "
                                           "order by ID" % (self.last_processed_ID)):
-                    print(str(row[1], "utf-8"))
+                    print(str(row[1], "utf-8"))                    
                     for c in str(row[1], "utf-8").split("\n"):
                         self.execute(row[0], c.strip())
                     self.last_processed_ID = row[0]

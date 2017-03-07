@@ -326,7 +326,7 @@ class MetaThread(threading.Thread):
         except:
             pass
         res = "".join(res)
-        print(len(res))
+        #print(len(res))
         self.senddata([[res]])
 
     def _sess(self, nosend = False):

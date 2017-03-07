@@ -12,35 +12,38 @@ from sinoptik import Sinoptik
 
 class Main():
     def __init__(self):
-        self.commans = (Play(), Variable(), Speech(), Info(), Sinoptik())
+        self.commans = (Play(), Variable(), Speech(), Info())#, Sinoptik())
         self.db = DBConnector()
         # Очищаем список команд. Список не актуален.        
         self.db.IUD("delete from core_execute")
+        self.last_processed_ID = -1
         self.db.commit()
         self.run()
         
     def run(self):        
         while True:
             try:
-                for row in self.db.select("select * from core_execute order by ID"):
+                for row in self.db.select("select ID, COMMAND "
+                                          "  from core_execute "
+                                          " where ID > %s "
+                                          "order by ID" % (self.last_processed_ID)):
                     print(str(row[1], "utf-8"))
                     for c in str(row[1], "utf-8").split("\n"):
-                        self.execute(c.strip())
-                    self.db.IUD("delete from core_execute where ID = %s" % row[0])
-                    self.db.commit()
+                        self.execute(row[0], c.strip())
+                    self.last_processed_ID = row[0]
                 time.sleep(0.2)
 
                 # Дергаем секундный таймер, может кому пригодится
                 for cmd in self.commans:
                     cmd.time_handler()  
             except mysql.connector.Error as e:
-                self.execute('speech("пропала связь с базой")')
+                self.execute(-1, 'speech("пропала связь с базой", "alarm")')
                 time.sleep(10)
             
-    def execute(self, command):
+    def execute(self, id, command):
         print("[%s] выполняется %s" % (time.strftime("%d-%m-%Y %H:%M"), command))
         for cmd in self.commans:
-            if cmd.check_comm(self.db, command):
+            if cmd.check_comm(self.db, id, command):
                 break
 
 print(

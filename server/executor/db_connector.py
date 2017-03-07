@@ -8,6 +8,7 @@ class DBConnector(object):
     MYSQL_PASS = "wisehousepass"
     
     def __init__(self):
+        self._lastID = -1
         self.mysqlConn = mysql.connector.connect(host="localhost",
                                                  database=self.MYSQL_DB_NAME,
                                                  user=self.MYSQL_USER,
@@ -40,6 +41,7 @@ class DBConnector(object):
 
     def IUD(self, sql, vars = []):
         q = self.query(sql, vars)
+        self._lastID = q.lastrowid
         q.close()        
         
     def _last_var_change_id(self):

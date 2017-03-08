@@ -4,10 +4,10 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, DlgMessagesRU, CoolTrayIcon, ScktComp, StdCtrls, Speacker, ExtCtrls, ToolWin,
+  Dialogs, DlgMessagesRU, CoolTrayIcon, ScktComp, StdCtrls, ExtCtrls, ToolWin,
   ComCtrls, Buttons, ImgList, Menus, ShellApi, IdBaseComponent,
   IdComponent, IdTCPServer, IdCustomHTTPServer, IdHTTPServer,
-  IdServerIOHandler, IdServerIOHandlerSocket, IdGlobal, ActnList;
+  IdServerIOHandler, IdServerIOHandlerSocket, IdGlobal, ActnList, Speach_Unit;
 
 type
    TDataRec = array of array of string;
@@ -43,19 +43,6 @@ type
       dayOfType: string;
       typ: integer;
       variable: integer;
-   end;
-
-   TSoundSocket = class (TThread)
-   private
-      fSocket: TClientSocket;
-   protected
-      fHost: string;
-      fPort: integer;
-      procedure Execute; override;
-   public
-      fSpeaker: TSpeakerThread;
-      constructor Create(host:string; port:integer);
-      destructor Destroy; override;
    end;
 
   TMainForm = class(TForm)
@@ -237,7 +224,7 @@ type
       Shift: TShiftState; X, Y: Integer);
     procedure SpeedButton8Click(Sender: TObject);
   private
-    fSoundSocket: TSoundSocket;
+    fSpeach: TSpeach;
     fSocketMetaBufer: string;
     fTimePanelDown: Boolean;
 
@@ -278,7 +265,9 @@ type
     procedure loadMediaGroups(id: integer);
     procedure loadMediaCross();
 
-    procedure updatePlayLoopButtonIcon(); 
+    procedure updatePlayLoopButtonIcon();
+
+    function checkSpechData(id: string): string; 
   public
     fAppID: integer;
     fItemList: TList;
@@ -290,6 +279,8 @@ type
     procedure sendMediaState(state: string; id, time: integer);
     procedure playMediaPlayAt(index: integer; blockWarning: boolean = false);
     procedure schedLoad();
+
+    procedure syncSpeachThread();
   end;
 
 var
@@ -299,7 +290,7 @@ implementation
 
 uses StrUtils, PropertysForm_Unit, Mcs_Unit, RegForm_Unit,
   TerminalForm_Unit, Types, Vlc_Unit, DateUtils, SchedDialog_Unit,
-  MediaInfoDialog_Unit;
+  MediaInfoDialog_Unit, AlertForm_Unit;
 
 {$R *.dfm}
 
@@ -308,6 +299,8 @@ var
    s: string;
    b: boolean;
 begin
+   fSpeach:= TSpeach.Create;
+
    Randomize;
 
    //saveProp('ID', '');
@@ -381,21 +374,17 @@ begin
    saveProp('Top', IntToStr(Top));
    saveProp('Width', IntToStr(Width));
    saveProp('Height', IntToStr(Height));
-   saveProp('Volume', IntToStr(fSoundSocket.fSpeaker.fVolume));
+//   saveProp('Volume', IntToStr(fPlayer.fVolume));
    if (not SpeedButton6.Down) then
       setVlcVolume();
-
-   try
-      fSoundSocket.Terminate;
-      fSoundSocket.WaitFor;
-      fSoundSocket.Free;
-   except
-   end;
 
    clearList(fMediaList);
    fMediaList.Free;
    clearList(fItemList);
    fItemList.Free;
+
+   fSpeach.Terminate;
+   fSpeach.Free;
 end;
 
 procedure TMainForm.Timer1Timer(Sender: TObject);
@@ -812,12 +801,12 @@ begin
    v := round(VolumeShape.Width * 100 / VolumePanel.ClientWidth);
    if (v < 1) then v := 1;
    if (v > 100) then v := 100;
-   fSoundSocket.fSpeaker.fVolume := v;
+//   fPlayer.fVolume := v;
 end;
 
 procedure TMainForm.SpeedButton10Click(Sender: TObject);
 begin
-   fSoundSocket.fSpeaker.fMute := not SpeedButton10.Down;
+   fSpeach.fMute := not SpeedButton10.Down;
 end;
 
 procedure TMainForm.VarListKeyDown(Sender: TObject; var Key: Word;
@@ -1136,84 +1125,6 @@ begin
       begin
          saveProp('selGroup', IntToStr(TMediaGroupItem(ComboBox1.Items.Objects[ComboBox1.ItemIndex]).id));
       end;
-   end;
-end;
-
-{ TSoundSocket }
-
-constructor TSoundSocket.Create(host:string; port:integer);
-begin
-   Inherited Create(True);
-   fHost := host;
-   fPOrt := port;
-   fSpeaker:= TSpeakerThread.Create(0);
-   FreeOnTerminate := False;
-   Resume;
-end;
-
-destructor TSoundSocket.Destroy;
-begin
-   fSpeaker.Terminate;
-   fSpeaker.WaitFor;
-   fSpeaker.Free;
-   inherited;
-end;
-
-procedure TSoundSocket.Execute;
-
-   function checkZerro(Buffer: Pointer; samples:integer):boolean;
-   var
-      k: integer;
-      bb: PBuff;
-   begin
-      bb := Buffer;
-      Result := true;
-      for k:= 1 to samples div 2 do
-      begin
-         if (bb[k] <> 0) then
-         begin
-            Result := false;
-            exit;
-         end;
-      end;
-   end;
-
-var
-   b: TBuff;
-   i, k: integer;
-begin
-   fSocket := TClientSocket.Create(nil);
-   try
-      fSocket.Host := fHost;
-      fSocket.Port := fPort;
-      fSocket.ClientType := ctBlocking;
-
-      while not Terminated do
-      begin
-         try
-            fSocket.Open;
-            while (fSocket.Active and (not Terminated)) do
-            begin
-               fSocket.Socket.SendText('ping');
-               i := fSocket.Socket.ReceiveBuf(b, SizeOf(TBuff));
-
-               if (i > 0) then
-               begin
-                  while (not fSpeaker.Play(@b, i)) do
-                  begin
-                     if (checkZerro(@b, i) or Terminated) then
-                        break;
-                     sleep(1);
-                  end;
-               end;
-            end;
-         except
-         end;
-         fSocket.Close;
-      end;
-   finally
-      fSocket.Close;
-      fSocket.Free;
    end;
 end;
 
@@ -1747,6 +1658,8 @@ begin
       if (res[k][4] = 'None') then
          res[k][4] := '-9999';
       o.value := StrToFloat(StringReplace(res[k][4], '.', ',', [rfReplaceAll]));
+      if (o.id = 123) then // QUIET_TIME
+         fSpeach.fQuietTime := trunc(o.value);
       fItemList.Add(o);
    end;
    freeDataRec(res);
@@ -1821,11 +1734,43 @@ end;
 
 procedure TMainForm.syncLoad;
 var
-   res: TDataRec;
+   res, res2: TDataRec;
    k, i: integer;
    om: TMediaListItem;
+   s, s2, f1, f2: string;
+   sl: TStringList;
 begin
    syncPack(metaQuery('sync', ''));
+
+   // --------------------------------------------
+
+   res2 := metaQuery('execute queue', '');
+   if (Length(res2) > 0) then
+   begin
+      for k:= 0 to Length(res2) - 1 do
+      begin
+         s := res2[k][1];
+         if (Pos('speech(', s) > 0) then
+         begin
+            sl:= TStringList.Create;
+            try
+               sl.Text := StringReplace(s, '"', #13, [rfReplaceAll]);
+               s := sl[1];
+               s2 := 'notify';
+               if (sl.Count > 2) then
+                  s2 := sl[3];
+            finally
+               sl.Free;
+            end;
+
+            AlertForm_Unit.show(s);
+            f1 := checkSpechData(s2);
+            f2 := checkSpechData(res2[k][0]);
+            fSpeach.fPlayList.Add(f1 + ';' + f2);
+         end;
+      end;
+   end;
+   freeDataRec(res2);
 
    // --------------------------------------------
 
@@ -1905,13 +1850,17 @@ end;
 
 procedure TMainForm.syncPack(res: TDataRec);
 var
-   k, i: integer;
+   k, i, o_id: integer;
 begin
    for k := 0 to Length(res) - 1 do
    begin
+      o_id := StrToInt(res[k][1]);
+      if (o_id = 123) then // QUIET_TIME
+         fSpeach.fQuietTime := trunc(StrToFloat(StringReplace(res[k][2], '.', ',', [rfReplaceAll])));
+
       for i:= 0 to fItemList.Count - 1 do
       begin
-         if (TVarListItem(fItemList[i]).id = StrToInt(res[k][1])) then
+         if (TVarListItem(fItemList[i]).id = o_id) then
          begin
             if (res[k][2] = 'None') then
                res[k][2] := '-9999';
@@ -1946,7 +1895,6 @@ begin
       end;
    end;
 
-   fSoundSocket:= TSoundSocket.Create(SocketMeta.Host, SocketMeta.Port + 1);
    setVolume();
 
    IdHTTPServer1.Active := true;
@@ -2655,6 +2603,87 @@ begin
    for k:= 0 to Length(dr) - 1 do
       SetLength(dr[k], 0);
    SetLength(dr, 0);
+end;
+
+function TMainForm.checkSpechData(id: string): string;
+
+   function decodeHex(c: char): byte;
+   begin
+      case c of
+         '0': Result := 0;
+         '1': Result := 1;
+         '2': Result := 2;
+         '3': Result := 3;
+         '4': Result := 4;
+         '5': Result := 5;
+         '6': Result := 6;
+         '7': Result := 7;
+         '8': Result := 8;
+         '9': Result := 9;
+         'a': Result := 10;
+         'b': Result := 11;
+         'c': Result := 12;
+         'd': Result := 13;
+         'e': Result := 14;
+         'f': Result := 15;
+      end;
+   end;
+
+var
+   path, fileName: string;
+   res, res2: TDataRec;
+   f: TFileStream;
+   k: integer;
+   s: string;
+   i: integer;
+   b: byte;
+begin
+   path := GetEnvironmentVariable('TEMP') + '\audio';
+   if not DirectoryExists(path) then
+      CreateDir(path);
+
+   res := metaQuery('execute get audio id', id);
+   if (Length(res) = 0) then exit;
+   id := res[0][0];
+   Result := id;
+
+   fileName := path + '\' + id + '.wav';
+
+   if (not FileExists(fileName) or (FileSizeByName(fileName) = 0)) then
+   begin
+      res2 := metaQuery('execute get audio data', id);
+      if (Length(res2) > 0) then
+      begin
+         f:= TFileStream.Create(fileName, fmCreate);
+         try
+            s := res2[0][0];
+            i := 1;
+            for k:= 1 to Length(s) div 2 do
+            begin
+               b := decodeHex(s[i + 1]) + (decodeHex(s[i]) shl 4);
+               inc(i, 2);
+               f.Write(b, 1);
+            end;
+         finally
+            f.Free;
+         end;
+      end;
+   end;
+
+   freeDataRec(res);
+   freeDataRec(res2);
+end;
+
+procedure TMainForm.syncSpeachThread;
+begin
+   if ((fSpeach.fPlayList.Count > 0) and (fSpeach.fPlayFile <> '')) then
+   begin
+      fSpeach.fPlayList.Delete(0);
+      fSpeach.fPlayFile := '';
+   end;
+
+   if (fSpeach.fPlayList.Count > 0) then
+      fSpeach.fPlayFile := fSpeach.fPlayList[0];
 end;
 
 end.

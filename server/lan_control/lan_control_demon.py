@@ -22,11 +22,11 @@ class MetaThread(threading.Thread):
         self._print("    connect db")
         self.app_id = -1
         self.app_sessions = False
-        self.lastAudioID = -1
-        for r in self.db.select("select MAX(ID) from core_execute"):
-            self.lastAudioID = r[0]
-        if self.lastAudioID == None:
-            self.lastAudioID = -1
+        self.lastSpeechID = -1
+        for r in self.db.select("select MAX(ID) from app_control_speech"):
+            self.lastSpeechID = r[0]
+        if self.lastSpeechID == None:
+            self.lastSpeechID = -1
 
     def sendpack(self, pack):
         i = 0
@@ -75,16 +75,10 @@ class MetaThread(threading.Thread):
                             self._sess()
                         elif a[0] == "media queue":
                             self._media_queue()
-                        elif a[0] == "execute queue":
-                            self._execute_queue()
-                        elif a[0] == "execute get audio id":
-                            try:
-                                int(a[1])
-                                self.sendcursor("select a.ID from core_execute e, core_execute_audio a where e.COMMAND = a.COMMAND and e.ID = %s" % (a[1]))
-                            except:
-                                self.senddata([[a[1]]])
-                        elif a[0] == "execute get audio data":
-                            self._execute_get_audio_data(a[1])
+                        elif a[0] == "speech queue":
+                            self._speech_queue()
+                        elif a[0] == "speech audio data":
+                            self._speech_audio_data(a[1])
                         elif a[0] == "load variables":
                             self.init_load(a[1])
                         elif a[0] == "registration":
@@ -291,25 +285,26 @@ class MetaThread(threading.Thread):
     def _sync(self):
         self.senddata(self.db.variable_changes())
 
-    def _execute_queue(self):        
+    def _speech_queue(self):        
         res = []
-        for row in self.db.select("select ID, COMMAND, AUDIO, PROCESSED "
-                                  "  from core_execute where ID > %s" % (self.lastAudioID)):
-            if row[3] == 0:
-                break
+        for row in self.db.select("select s.ID, s.SPEECH_AUDIO_ID, s.SPEECH_TYPE, a.SPEECH "
+                                  "  from app_control_speech s, app_control_speech_audio a "
+                                  " where s.SPEECH_AUDIO_ID = a.ID "
+                                  "   and s.ID > %s" % (self.lastSpeechID)):
             res += [row]
-            self.lastAudioID = row[0]
+            self.lastSpeechID = row[0]
         if len(res) == 0:
             res = [[]]
         self.senddata(res)
 
-    def _execute_get_audio_data(self, id):
+    def _speech_audio_data(self, id):
         res = []        
         try:
-            if id == "notify" or id == "alarm":
-                f = open("/home/pyhome/server/execute/%s.wav" % id, "rb")
-            else:
+            try:
+                int(id)
                 f = open("/var/tmp/wisehouse/audio_%s.wav" % id, "rb")
+            except:
+                f = open("/home/pyhome/server/execute/%s.wav" % id, "rb")
             d = f.read()
             res = [0x0] * len(d)
             i = 0

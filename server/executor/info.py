@@ -4,7 +4,7 @@ class Info():
     def __init__(self):
         pass
 
-    def check_comm(self, db, id, command):
+    def check_comm(self, db, command):
         try:
             command.index("info()")
 
@@ -92,9 +92,6 @@ class Info():
 
             db.IUD("insert into core_execute (COMMAND) values ('speech(\"%s\", \"notify\")')" % text1)
             db.IUD("insert into core_execute (COMMAND) values ('speech(\"%s\", \"notify\")')" % text2)
-            db.IUD("update core_execute "
-                   "   set PROCESSED = %s "
-                   " where ID = %s" % (1, id))
             db.commit()
 
             return True

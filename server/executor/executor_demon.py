@@ -29,7 +29,7 @@ class Main():
                                           "order by ID" % (self.last_processed_ID)):
                     print(str(row[1], "utf-8"))                    
                     for c in str(row[1], "utf-8").split("\n"):
-                        self.execute(row[0], c.strip())
+                        self.execute(c.strip())
                     self.last_processed_ID = row[0]
                 time.sleep(0.1)
 

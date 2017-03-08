@@ -18,9 +18,8 @@ class Main():
     PACK_ERROR = 3
 
     def __init__(self):
-        self.fast_timeput = 0.05
+        self.fast_timeput = 0.1 #0.05
         self.check_lan_error = False
-        self.sync_error_counter = []
         
         # Connect to serial port
         try:
@@ -83,19 +82,14 @@ class Main():
     def _sync_variables(self):
         # Зачитываем изменения в БД
         var_data = self.db.variable_changes()
+        recv_valid = False
 
+        # Шлем посылку никому, чтобы контроллеры приготовились принимать
+        self.send_pack(0, self.PACK_SYNC, [])
+        time.sleep(0.02)
         # Рассылаем изменения в БД и паралельно читаем обновления
         for dev in self.db.controllers:
-            se_ignore = False
-            for i in range(len(self.sync_error_counter)):
-                if self.sync_error_counter[i][0] == dev[0]:
-                    self.sync_error_counter[i][1] -= 1
-                    if self.sync_error_counter[i][1] == 0:
-                        del self.sync_error_counter[i]
-                    else:
-                        se_ignore = True
-
-            if se_ignore == False:
+            for rep in range(3): # 3 попытки отослать пакет
                 pack_data = []
                 lt = time.localtime()
                 t = time.mktime((2000, 1, 1, 0, 0, 0, 0, 0, lt.tm_isdst))
@@ -115,21 +109,24 @@ class Main():
                             for r in range(30):
                                 if self.check_lan():
                                     is_ok = True
-                                    break
                             if is_ok:
                                 print("OK\n")
+                                recv_valid = True
                             else:
                                 print("ERROR\n")
-                                self.sync_error_counter += [[dev[0], 30]]
                         else:
                             self._store_variable_to_db(res_pack[0], res_pack[2])
                             print("OK")
                             print("   >> ", pack_data)
                             print("   << ", res_pack[2], "\n")
+                            recv_valid = True
                 else:
                     print("ERROR\n")
-                    self.sync_error_counter += [[dev[0], 3]]
-            time.sleep(0.05)
+
+                time.sleep(0.02)
+                
+                if recv_valid: # Обмен прошел успешно повторы не требуются
+                    break
 
     def _reset_pack(self):
         return self.db.all_variables();
@@ -189,7 +186,7 @@ class Main():
                     self._command_info(error_text)
             elif command == "CONFIG_UPDATE":
                 self.serialPort.timeout = 2
-                time.sleep(2)
+                time.sleep(0.1)
                 try:
                     self._command_info("CONFIG FILE UPLOAD '%s'..." % dev[1])
                     #pack_data = self._str_to_hex(generate_config_file(self.db))

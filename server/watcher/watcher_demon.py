@@ -3,18 +3,32 @@
 
 from db_connector import DBConnector
 import time
+try:
+    from bmp280 import BMP280
+except:
+    pass
 
 class Main():
     def __init__(self):
         self.db = DBConnector()
         self.termostats = []
-        self._add_termostat(50, 49, "В спальне 3") #Спальня №3
+        self._add_termostat(50, 49, "В хозяйской спальне") #Спальня №3
+        self._add_termostat(47, 46, "В детской спальне") #Спальня №2
+        self._add_termostat(44, 43, "В гостевой спальне") #Спальня №1
         self._add_termostat(60, 59, "В гостинной") #Гостинная
+
+        # ID, CHANNEL, VALUE
+        try:
+            self.BMP280_VARS = [[150, "t", None], [151, "p", None]]
+            self.bmp280_drv = BMP280()
+        except:
+            pass
         
         self.run()
         
     def run(self):
         termostats_time_step = 0
+        bmp280_time_step = 0
         while True:
             relIds = []
             for keys in self.db.select("select CORE_GET_LAST_CHANGE_ID()"):
@@ -29,12 +43,12 @@ class Main():
                                     r[3] = row[2]
                             # критические температуры
                             if row[1] == 95 and row[2] > 55: # Дымоход
-                                self._add_command('speech("Температура дымохода %s градусов")' % (round(row[2])), True)
+                                self._add_command('speech("Температура дымохода %s градусов", "alarm")' % (round(row[2])))
                             if row[1] == 93:
                                 if row[2] > 55: # Подача котла
-                                    self._add_command('speech("Температура котла %s градусов")' % (round(row[2])), True)
+                                    self._add_command('speech("Температура котла %s градусов", "alarm")' % (round(row[2])))
                                 elif row[2] >= 45 and row[2] <= 48:
-                                    self._add_command('speech("Котел холодный")')
+                                    self._add_command('speech("Котел холодный", "notify")')
                             # -----------------------
                         elif row[3] == 5: #Термостаты
                             for r in self.termostats:
@@ -54,16 +68,22 @@ class Main():
                             else:
                                 s += ["выключен"]
                                 
-                            self._add_command('speech("%s")' % "".join(s).lower())
+                            self._add_command('speech("%s", "notify")' % "".join(s).lower())
 
             if termostats_time_step == 0:
                 termostats_time_step = round(15 * 60 / 0.2)
                 for t in self.termostats:
                     if t[3] > t[1] + 0.2: # Перегрели
-                        self._add_command('speech("%s жарко")' % (t[4]))
+                        self._add_command('speech("%s жарко", "notify")' % (t[4]))
                     elif t[3] < t[1] - 0.2 and t[3] > t[1] - 1: # Переостудили
-                        self._add_command('speech("%s холодно")' % (t[4]))
+                        self._add_command('speech("%s холодно", "notify")' % (t[4]))
             termostats_time_step -= 1
+
+            if bmp280_time_step == 0:
+                bmp280_time_step = round(60 / 0.2)
+                self._check_bmp280()
+            bmp280_time_step -= 1
+            
             time.sleep(0.2)
 
     def _add_termostat(self, tst_id, trm_id, title):
@@ -74,13 +94,23 @@ class Main():
             trm_val = rec[0]
         # ---------------------------
         self.termostats += [[tst_id, tst_val, trm_id, trm_val, title]]
+
+    def _check_bmp280(self):
+        try:
+            res = self.bmp280_drv.get_data()
+            t = res["t"]
+            p = res["p"]
+
+            for var in self.BMP280_VARS:
+                if var[2] != res[var[1]]:
+                    var[2] = res[var[1]]
+                    self.db.IUD("call CORE_SET_VARIABLE(%s, %s, null)" % (var[0], var[2]))
+                    self.db.commit()
+        except Exception as e:
+            print(e)
             
-    def _add_command(self, command, alarm = False):
+    def _add_command(self, command):
         print("[%s] %s" % (time.strftime("%d-%m-%Y %H:%M"), command))
-        """
-        for row in self.db.select("select ID from core_execute where COMMAND = '%s'" % command):
-            self.db.IUD("delete from core_execute where ID = %s" % row[0])
-            self.db.commit()
         """
         if self.get_quiet_time() and alarm == False:
             try:
@@ -88,6 +118,7 @@ class Main():
                 command = "speech(\"\")"
             except:
                 pass
+        """
         self.db.IUD("insert into core_execute (COMMAND) values ('%s')" % command)
         self.db.commit()
 

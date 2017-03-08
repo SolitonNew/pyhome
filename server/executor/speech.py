@@ -6,29 +6,37 @@ class Speech():
     def __init__(self):
         pass
 
-    def check_comm(self, db, command):
+    def check_comm(self, db, id, command):
         try:            
             command.index("speech")
-            s = command.replace("speech", "")
-            s = s.replace("(", "")
-            s = s.replace(")", "")
-            s = s.replace("\"", "")
+            a = command.split('"')
 
-            """
-            shell_comm = "aplay /home/pyhome/server/executor/notify.wav"
-            subprocess.call(shell_comm, shell=True)
-            #time.sleep(0.5)
+            text = a[1]
+            try:
+                audio = a[3]
+            except:
+                audio = 'notify'
 
-            if len(s) > 0:
-                shell_comm = 'echo "' + s + '" | spd-say -o rhvoice -l ru -e -t female1'
-                subprocess.call(shell_comm, shell=True)
-            """
-            
-            if len(s) > 0:
-                subprocess.call('echo "' + s + '" | RHVoice-test -p Anna -o /var/tmp/speech.wav', shell=True)
-                subprocess.call("aplay /home/pyhome/server/executor/notify.wav", shell=True)
-                subprocess.call("aplay /var/tmp/speech.wav", shell=True)
-                print("")
+            res = db.select("select ID from core_execute_audio where COMMAND = '%s'" % (command))
+            if len(res) == 0:
+                db.IUD("insert into core_execute_audio (COMMAND) values ('%s')" % (command))
+                exe_id = db._lastID
+            else:
+                exe_id = res[0][0]
+
+            f_name = "/var/tmp/wisehouse/audio_%s.wav" % (exe_id)
+            if not os.path.exists(f_name):
+                subprocess.call('echo "' + text + '" | RHVoice-test -p Anna -o /var/tmp/wisehouse/audio_%s.wav' % (exe_id), shell=True)
+
+            db.IUD("update core_execute "
+                   "   set AUDIO = '%s', "
+                   "       PROCESSED = %s "
+                   " where ID = %s" % (audio, 1, id))
+            db.commit()
+                
+            subprocess.call("aplay /home/pyhome/server/executor/notify.wav", shell=True)
+            subprocess.call("aplay %s" % (f_name), shell=True)
+            print("")
                 
             return True
         except:

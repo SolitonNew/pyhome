@@ -29,7 +29,7 @@ class Play():
             except:
                 self.player = False
 
-    def check_comm(self, db, command):
+    def check_comm(self, db, id, command):
         try:            
             command.index("play")
             s = command.replace("play", "")
@@ -37,6 +37,10 @@ class Play():
             s = s.replace(")", "")
             s = s.replace("\"", "")
             args = s.split(",")
+            db.IUD("update core_execute "
+                   "   set PROCESSED = %s "
+                   " where ID = %s" % (1, id))
+            db.commit()
             self.play(args[0].strip(), args[1].strip(), args[2].strip())
             return True
         except:

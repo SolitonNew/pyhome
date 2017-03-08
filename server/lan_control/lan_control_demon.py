@@ -8,19 +8,25 @@ import time
 from db_connector import DBConnector
 import numpy
 
+threads = []
+
 class MetaThread(threading.Thread):
-    def __init__(self, accept, owner):
+    def __init__(self, accept):
         self.media_exts = [["AVI", "MP4", "MKV"], ["MP3", "WAV"], ["JPG", "TIFF", "PSD"]]
         threading.Thread.__init__(self)
         self.acceptData = accept
         self.conn = accept[0]
         self.conn.setblocking(True)
-        self.owner = owner
         self._print("CONNECT META: %s" % accept[1][0])
         self.db = DBConnector()
         self._print("    connect db")
         self.app_id = -1
         self.app_sessions = False
+        self.lastAudioID = -1
+        for r in self.db.select("select MAX(ID) from core_execute"):
+            self.lastAudioID = r[0]
+        if self.lastAudioID == None:
+            self.lastAudioID = -1
 
     def sendpack(self, pack):
         i = 0
@@ -49,8 +55,9 @@ class MetaThread(threading.Thread):
         return self.senddata(self.db.select(sql))
         
     def run(self):
+        global threads
         buf = ''
-        while self.owner.is_alive():
+        while True:
             try:
                 line = self.conn.recv(1024)
                 if line != b'':                    
@@ -68,6 +75,16 @@ class MetaThread(threading.Thread):
                             self._sess()
                         elif a[0] == "media queue":
                             self._media_queue()
+                        elif a[0] == "execute queue":
+                            self._execute_queue()
+                        elif a[0] == "execute get audio id":
+                            try:
+                                int(a[1])
+                                self.sendcursor("select a.ID from core_execute e, core_execute_audio a where e.COMMAND = a.COMMAND and e.ID = %s" % (a[1]))
+                            except:
+                                self.senddata([[a[1]]])
+                        elif a[0] == "execute get audio data":
+                            self._execute_get_audio_data(a[1])
                         elif a[0] == "load variables":
                             self.init_load(a[1])
                         elif a[0] == "registration":
@@ -248,7 +265,6 @@ class MetaThread(threading.Thread):
             self._print("ERROR 1: " + str(e))        
         self.db = False
         self._print("DISCONNECT META [%s]" % self.acceptData[1][0])
-        threads = self.owner.threads
         del(threads[threads.index(self)])
 
     def init_load(self, app_id):
@@ -274,6 +290,46 @@ class MetaThread(threading.Thread):
 
     def _sync(self):
         self.senddata(self.db.variable_changes())
+
+    def _execute_queue(self):        
+        res = []
+        for row in self.db.select("select ID, COMMAND, AUDIO, PROCESSED "
+                                  "  from core_execute where ID > %s" % (self.lastAudioID)):
+            if row[3] == 0:
+                break
+            res += [row]
+            self.lastAudioID = row[0]
+        if len(res) == 0:
+            res = [[]]
+        self.senddata(res)
+
+    def _execute_get_audio_data(self, id):
+        res = []        
+        try:
+            if id == "notify" or id == "alarm":
+                f = open("/home/pyhome/server/execute/%s.wav" % id, "rb")
+            else:
+                f = open("/var/tmp/wisehouse/audio_%s.wav" % id, "rb")
+            d = f.read()
+            res = [0x0] * len(d)
+            i = 0
+            for b in d:
+                if b <= 0xf:
+                    v = "0%s" % (hex(b)[2:3])
+                else:
+                    v = hex(b)[2:4]
+                res[i] = v
+                i += 1
+        except Exception as e:
+            print(e)
+            
+        try:
+            f.close()
+        except:
+            pass
+        res = "".join(res)
+        #print(len(res))
+        self.senddata([[res]])
 
     def _sess(self, nosend = False):
         sess = self.db.select("select c.ID, c.COMM, s.IP"
@@ -332,148 +388,41 @@ class MetaThread(threading.Thread):
     def _print(self, text):
         print("[%s] %s" % (time.strftime("%d-%m-%Y %H:%M:%S"), text))
 
-class SoundThread(threading.Thread):
-    def __init__(self, accept, owner):
-        threading.Thread.__init__(self)
-        self.acceptData = accept
-        self.conn = accept[0]
-        self.owner = owner
-        self._print("CONNECT SOUND [%s]" % accept[1][0])        
-        
-    def run(self):
-        CHUNK = 1024
-        FORMAT = pyaudio.paInt16
-        CHANNELS = 2
-        RATE = 44100
-        
-        p = pyaudio.PyAudio()
-        try:
-            stream = p.open(format=FORMAT,
-                            channels=CHANNELS,
-                            rate=RATE,
-                            input=True,
-                            frames_per_buffer=CHUNK)
-        except:
-            stream = False
-        
-        silent = 0
-        while True:
-            try:
-                """
-                data = stream.read(CHUNK)
-                a = sum(data)
-                if a == 0:
-                    silent += 1
-                else:
-                    silent = 0
-                if silent < 10:
-                    conn.send(data)
-                    conn.recv(4)
-                else:
-                    conn.send(b'\x00')
-                    conn.recv(4)
-
-                """
-                self.conn.send(stream.read(CHUNK))
-                self.conn.recv(4)
-            except Exception as e:
-                #print("sound error %s" % (e))
-                break
-
-        try:
-            self.conn.close()
-        except:
-            pass
-        
-        if stream:
-            stream.stop_stream()
-            stream.close()
-        p.terminate()
-        self._print("DISCONNECT SOUND: %s" % self.acceptData[1][0])
-        threads = self.owner.threads
-        del(threads[threads.index(self)])
-
-    def _print(self, text):
-        print("[%s] %s" % (time.strftime("%d-%m-%Y %H:%M:%S"), text))
-
-
-class ThreadManager(threading.Thread):
-    def __init__(self, threadClass, port):
-        threading.Thread.__init__(self)
-        self.isRun = True
-        self.threadClass = threadClass
-        self.port = port
-        self.threads = []
-        self.start()
-        
-    def run(self):
-        while True:
-            try:
-                self.sock = socket.socket()
-                self.sock.bind(("", self.port))
-                print("binding for port %s OK " % (self.port))
-                self.sock.listen(32)
-
-                while True:
-                    try:
-                        accept = self.sock.accept()
-                        if self.isRun: 
-                            t = self.threadClass(accept, self)
-                            self.threads += [t]
-                            t.start()
-                        else:
-                            accept[0].close()
-                            print(str(self.threadClass) + " EXIT")
-                            break
-                    except Exception as e:
-                        print(str(self.threadClass) + " THREAD ERROR")
-                        break
-        
-                self._close_threads()
-                try:
-                    self.sock.close()
-                except:
-                    print("error: sock.close()")
-            except:
-                time.sleep(5)
-                print("binding error for port: %s " % (self.port))
-
-    def _close_threads(self):
-        for t in self.threads:
-            if t:
-                try:
-                    t.conn.close()
-                except:
-                    pass
-
-    def stopDemon(self):
-        self.isRun = False
-        self._close_threads()
-        self.sock.close()
-
-port_meta = 8090
-port_sound = 8091
-
-class Main():
-    def __init__(self):
-        metaThread = ThreadManager(MetaThread, port_meta)
-        soundThread = ThreadManager(SoundThread, port_sound)
-        try:
-            while True:
-                time.sleep(1)
-        except:
-            pass
-        metaThread.stopDemon()
-        soundThread.stopDemon()
+port = 8090
 
 print(
 "=============================================================================\n"
 "               МОДУЛЬ УДАЛЕННОГО КОНТРОЛЯ И УПРАВЛЕНИЯ v0.1\n"
 "\n"
-" Порты: %s, %s \n"
+" Порт: %s \n"
 "=============================================================================\n"
-% (port_meta, port_sound)
+% (port)
 )
 
-if __name__ == "__main__":
-    Main()
+while True:
+    try:
+        sock = socket.socket()
+        sock.bind(("", port))
+        print("binding for port %s OK " % (port))
+        sock.listen(32)
+        break
+    except:
+        print("binding ERROR for port %s OK " % (port))
+        time.sleep(5)
+
+try:
+    while True:
+        try:
+            t = MetaThread(sock.accept())
+            threads += [t]
+            t.start()
+        except Exception as e:
+            print(e)
+            break
+except:
+    pass
+
+try:
+    sock.close()
+except:
+    pass

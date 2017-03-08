@@ -35,10 +35,7 @@ class Speech():
                    "   (SPEECH_AUDIO_ID, SPEECH_TYPE) "
                    "values "
                    "   (%s, '%s')" % (exe_id, speech_type))
-            db.commit()
-                
-            subprocess.call("aplay /home/pyhome/server/executor/notify.wav", shell=True)
-            subprocess.call("aplay %s" % (f_name), shell=True)
+            db.commit()                
             print("")
                 
             return True

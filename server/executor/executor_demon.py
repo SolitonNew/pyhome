@@ -43,7 +43,7 @@ class Main():
     def execute(self, command):
         print("[%s] выполняется %s" % (time.strftime("%d-%m-%Y %H:%M"), command))
         for cmd in self.commans:
-            if cmd.check_comm(self.db, id, command):
+            if cmd.check_comm(self.db, command):
                 break
 
 print(

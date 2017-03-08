@@ -1,8 +1,8 @@
-unit Speacker;
+unit Speaker;
 
 interface
 
-uses Windows, Messages, SysUtils, Classes, MMSystem, SyncObjs, Math;
+uses Windows, Messages, SysUtils, Classes, MMSystem, SyncObjs, Math, WavFiles;
 
 const
   MaxBuffersCount = 20;
@@ -10,12 +10,14 @@ const
 type
   TPcmBuffer = array[$1..$500] of Smallint;
 
-  TBuff = array[1..1024] of Smallint;
+  TBuff = array[1..160] of Smallint;
   PBuff = ^TBuff;
+
+  TAudioData = packed array[0..159] of Smallint;
 
   TSpeakerThread = class (TThread)
   private
-    FWnd: THandle ;
+    FWnd: THandle;
     FId: Integer;
     FCS: TCriticalSection;
     FHandle: THandle;
@@ -38,6 +40,22 @@ type
     destructor Destroy; override;
   end;
 
+   TPlayer = class(TThread)
+   private
+      fSpeaker: TSpeakerThread;
+      fPlayFiles: TStringList;
+      fCurrPlayFile: TWavFile;
+   protected
+      procedure Execute; override;
+   public
+      fVolume:integer;
+      fMute: Boolean;
+      constructor Create();
+      destructor Destroy; override;
+      procedure PlayWav(fileName: string);
+      procedure stopWav();
+   end;
+  
 implementation
 
 { TSpeakerThread }
@@ -88,8 +106,8 @@ Begin
          while not Terminated do
          begin
             try
-               //GetMessage(Msg, FWnd, 0, 0);
-               GetMessage(Msg, FWnd, MM_WOM_DONE, MM_WOM_DONE);
+               GetMessage(Msg, FWnd, 0, 0);
+               //GetMessage(Msg, FWnd, MM_WOM_DONE, MM_WOM_DONE);
                if not Terminated and (Msg.message = MM_WOM_DONE) then
                   HandleBufferDone(PWaveHdr(Msg.lParam))
                else
@@ -224,6 +242,65 @@ begin
 
       Move(bb[1], buf^, samples);
    end;
+end;
+
+{ TPlayer }
+
+constructor TPlayer.Create;
+begin
+   Inherited Create(True);
+   fPlayFiles := TStringList.Create;
+   fSpeaker:= TSpeakerThread.Create(0);
+   Resume;   
+end;
+
+destructor TPlayer.Destroy;
+begin
+   fSpeaker.Terminate;
+   fSpeaker.Free;
+   fPlayFiles.Free;
+   inherited;
+end;
+
+procedure TPlayer.Execute;
+var
+   bb: TBuff;
+   i: integer;
+begin
+   while not Terminated do
+   begin
+      if (fCurrPlayFile <> nil) then
+      begin
+         i := fCurrPlayFile.GetBuffer(@bb[1], SizeOf(bb));
+         if (i > 0) then
+         begin
+            while not fSpeaker.Play(@bb[1], i) do
+               sleep(1);
+         end
+         else
+         begin
+            fCurrPlayFile.Free;
+            fCurrPlayFile := nil;
+            fPlayFiles.Delete(0);
+         end;
+      end
+      else
+      begin
+         if (fPlayFiles.Count > 0) then
+            fCurrPlayFile := TWavFile.Create(fPlayFiles[0]);
+      end;
+      sleep(1);
+   end;
+end;
+
+procedure TPlayer.PlayWav(fileName: string);
+begin
+   fPlayFiles.Add(fileName);
+end;
+
+procedure TPlayer.stopWav;
+begin
+   fPlayFiles.Clear;
 end;
 
 end.

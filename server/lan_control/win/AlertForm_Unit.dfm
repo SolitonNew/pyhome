@@ -1,14 +1,13 @@
 object AlertForm: TAlertForm
   Left = 1091
-  Top = 414
+  Top = 353
   AlphaBlend = True
   AlphaBlendValue = 220
   BorderStyle = bsNone
-  ClientHeight = 90
-  ClientWidth = 308
-  Color = clPurple
-  TransparentColor = True
-  TransparentColorValue = clPurple
+  ClientHeight = 151
+  ClientWidth = 184
+  Color = clFuchsia
+  TransparentColorValue = clFuchsia
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
@@ -16,34 +15,12 @@ object AlertForm: TAlertForm
   Font.Style = []
   FormStyle = fsStayOnTop
   OldCreateOrder = False
+  OnPaint = FormPaint
   PixelsPerInch = 96
   TextHeight = 13
-  object Shape1: TShape
-    Left = 0
-    Top = 0
-    Width = 308
-    Height = 90
-    Align = alClient
-    Pen.Color = clOlive
-    Pen.Width = 2
-  end
-  object Label1: TLabel
-    Left = 8
-    Top = 8
-    Width = 213
-    Height = 19
-    Caption = '050-123-45-67'
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -16
-    Font.Name = 'Arial'
-    Font.Style = [fsBold]
-    ParentFont = False
-    Transparent = True
-  end
   object Timer1: TTimer
     OnTimer = Timer1Timer
-    Left = 128
-    Top = 48
+    Left = 24
+    Top = 24
   end
 end

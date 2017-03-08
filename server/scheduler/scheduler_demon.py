@@ -160,8 +160,9 @@ class Main():
         return None
 
     def execute(self, comm, action):
-        self.db.IUD("insert into core_execute (COMMAND) values ('%s')" % action)
-        self.db.commit()
+        for c in str(action, "utf-8").split("\n"):
+            self.db.IUD("insert into core_execute (COMMAND) values ('%s')" % c)
+            self.db.commit()
 
         print("[%s] Произошло событие \"%s\"" % (time.strftime("%d-%m-%Y %H:%M"), comm))
         print("                   и запрошена команда %s" % (action))

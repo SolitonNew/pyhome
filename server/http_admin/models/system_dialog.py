@@ -45,7 +45,7 @@ class SystemDialog(BaseForm):
                     return "OK"
             elif query_type == "SEND_COMMAND":
                 s = self.param_str("COMM_TEXT")
-                for c in str(s, "utf-8").split("\n"):
+                for c in s.split("\n"):
                     self.db.IUD("insert into core_execute (COMMAND) values ('%s')" % (c))
                 self.db.commit()
                 return "OK"

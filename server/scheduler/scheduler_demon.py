@@ -160,7 +160,7 @@ class Main():
         return None
 
     def execute(self, comm, action):
-        for c in str(action, "utf-8").split("\n"):
+        for c in action.split("\n"):
             self.db.IUD("insert into core_execute (COMMAND) values ('%s')" % c)
             self.db.commit()
 

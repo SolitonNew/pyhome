@@ -301,10 +301,9 @@ class MetaThread(threading.Thread):
         res = []        
         try:
             try:
-                int(id)
-                f = open("/var/tmp/wisehouse/audio_%s.wav" % id, "rb")
+                f = open("/var/tmp/wisehouse/audio_%s.wav" % int(id), "rb")
             except:
-                f = open("/home/pyhome/server/execute/%s.wav" % id, "rb")
+                f = open("/home/pyhome/server/executor/%s.wav" % id, "rb")
             d = f.read()
             res = [0x0] * len(d)
             i = 0

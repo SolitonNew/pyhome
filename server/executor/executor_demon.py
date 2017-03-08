@@ -37,7 +37,7 @@ class Main():
                 for cmd in self.commans:
                     cmd.time_handler()  
             except mysql.connector.Error as e:
-                self.execute(-1, 'speech("пропала связь с базой", "alarm")')
+                self.execute('speech("пропала связь с базой", "alarm")')
                 time.sleep(10)
             
     def execute(self, command):

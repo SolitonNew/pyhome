@@ -88,7 +88,7 @@ class Info():
             text1 = "%s %s." % (hours[d], minute)
             text2 = "Температура на улице %s." % (t_out)
 
-            print(text)
+            print(text1, text2)
 
             db.IUD("insert into core_execute (COMMAND) values ('speech(\"%s\", \"notify\")')" % text1)
             db.IUD("insert into core_execute (COMMAND) values ('speech(\"%s\", \"notify\")')" % text2)

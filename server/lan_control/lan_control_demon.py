@@ -307,7 +307,7 @@ class MetaThread(threading.Thread):
         res = []        
         try:
             if id == "notify" or id == "alarm":
-                f = open("/home/pyhome/server/execute/%s.wav" % id, "rb")
+                f = open("/home/pyhome/server/executor/%s.wav" % id, "rb")
             else:
                 f = open("/var/tmp/wisehouse/audio_%s.wav" % id, "rb")
             d = f.read()

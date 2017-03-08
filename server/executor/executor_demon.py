@@ -40,7 +40,7 @@ class Main():
                 self.execute(-1, 'speech("пропала связь с базой", "alarm")')
                 time.sleep(10)
             
-    def execute(self, id, command):
+    def execute(self, command):
         print("[%s] выполняется %s" % (time.strftime("%d-%m-%Y %H:%M"), command))
         for cmd in self.commans:
             if cmd.check_comm(self.db, id, command):

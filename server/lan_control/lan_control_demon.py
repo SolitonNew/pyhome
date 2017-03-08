@@ -300,8 +300,14 @@ class MetaThread(threading.Thread):
     def _speech_audio_data(self, id):
         res = []        
         try:
+<<<<<<< HEAD
             try:
                 int(id)
+=======
+            if id == "notify" or id == "alarm":
+                f = open("/home/pyhome/server/executor/%s.wav" % id, "rb")
+            else:
+>>>>>>> 565d2db0d335231a3136f0ee34c75afe61cf4640
                 f = open("/var/tmp/wisehouse/audio_%s.wav" % id, "rb")
             except:
                 f = open("/home/pyhome/server/execute/%s.wav" % id, "rb")

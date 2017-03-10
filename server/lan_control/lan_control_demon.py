@@ -393,6 +393,10 @@ print(
 % (port)
 )
 
+db = DBConnector()
+db.IUD("delete from app_control_sess")
+db.commit()
+
 while True:
     try:
         sock = socket.socket()

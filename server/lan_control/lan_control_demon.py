@@ -22,6 +22,7 @@ class MetaThread(threading.Thread):
         self._print("    connect db")
         self.app_id = -1
         self.app_sessions = False
+        self.app_cams = False
         
         self.lastExeID = -1
         for r in self.db.select("select MAX(ID) from app_control_exe_queue"):
@@ -74,6 +75,8 @@ class MetaThread(threading.Thread):
                             self._sync()
                         elif a[0] == "sessions":
                             self._sess()
+                        elif a[0] == "cams":
+                            self._cams()
                         elif a[0] == "media queue":
                             self._media_queue()
                         elif a[0] == "exe queue":
@@ -279,6 +282,7 @@ class MetaThread(threading.Thread):
                              "  from core_variables order by COMM"))
         self._print("    load pack [%s bytes]" % (l))
         self._sess(True)
+        self._cams(True)
 
     def _add_to_queue(self, typ, value, value2 = 0, target = None):
         for r in self.app_sessions:
@@ -361,6 +365,16 @@ class MetaThread(threading.Thread):
             
         if not nosend:
             self.senddata(self.app_sessions)
+
+    def _cams(self, nosend = False):
+        cams = self.db.select("select v.ID, v.NAME, v.URL, v.ORDER_NUM"
+                              "  from plan_video v "
+                              "order by v.NAME")
+        if self.app_cams != cams:
+            self.app_cams = cams
+            
+        if not nosend:
+            self.senddata(self.app_cams)
 
     def _media_queue(self):
         queueSql = ("select q.ID, q.TYP, q.VALUE, q.VALUE_2, m.APP_CONTROL_ID, m.TITLE, m.FILE_NAME, m.FILE_TYPE"

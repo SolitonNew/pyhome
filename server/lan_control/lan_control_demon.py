@@ -296,7 +296,7 @@ class MetaThread(threading.Thread):
                                   "        select s.ID, s.EXE_TYPE, s.SPEECH_AUDIO_ID, s.SPEECH_TYPE, s.EXE_DATA "
                                   "          from app_control_exe_queue s "
                                   "         where s.SPEECH_AUDIO_ID = 0 "
-                                  "        order by s.ID) ss "
+                                  "        order by 1) ss "
                                   " where ss.ID > %s " % (self.lastExeID)):
             res += [row]
             self.lastExeID = row[0]
@@ -322,7 +322,7 @@ class MetaThread(threading.Thread):
                 pass
             
         if f == None:
-            try
+            try:
                 # Запрос какого-то файла из папки трэков. Выбирается в последнююю очередь.
                 f = open("/home/pyhome/server/executor/tracks/%s" % id, "rb")
             except:

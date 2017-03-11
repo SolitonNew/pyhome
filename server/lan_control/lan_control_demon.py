@@ -82,6 +82,9 @@ class MetaThread(threading.Thread):
                             self._audio_data(a[1])
                         elif a[0] == "load variables":
                             self.init_load(a[1])
+                        elif a[0] == "load variable group":
+                            self.sendcursor("select ID, NAME, PARENT_ID, ORDER_NUM "
+                                            "  from plan_parts")
                         elif a[0] == "registration":
                             self.db.IUD("insert into app_controls (COMM) values ('%s')" % (a[1]))
                             self.db.commit()
@@ -272,7 +275,7 @@ class MetaThread(threading.Thread):
                     " (%s, '%s')" % (app_id, self.acceptData[1][0]))
         self.db.commit()
         # Packed data for client
-        l = self.sendcursor(("select ID, NAME, COMM, APP_CONTROL, VALUE "
+        l = self.sendcursor(("select ID, NAME, COMM, APP_CONTROL, VALUE, GROUP_ID "
                              "  from core_variables order by COMM"))
         self._print("    load pack [%s bytes]" % (l))
         self._sess(True)

@@ -431,7 +431,7 @@ while True:
         sock.listen(32)
         break
     except:
-        print("binding ERROR for port %s OK " % (port))
+        print("binding for port %s ERROR " % (port))
         time.sleep(5)
 
 try:

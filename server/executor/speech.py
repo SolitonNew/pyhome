@@ -31,10 +31,10 @@ class Speech():
             if not os.path.exists(f_name):
                 subprocess.call('echo "' + text + '" | RHVoice-test -p Anna -o /var/tmp/wisehouse/audio_%s.wav' % (exe_id), shell=True)
 
-            db.IUD("insert into app_control_speech "
-                   "   (SPEECH_AUDIO_ID, SPEECH_TYPE) "
+            db.IUD("insert into app_control_exe_queue "
+                   "   (SPEECH_AUDIO_ID, SPEECH_TYPE, EXE_TYPE) "
                    "values "
-                   "   (%s, '%s')" % (exe_id, speech_type))
+                   "   (%s, '%s', 'speech')" % (exe_id, speech_type))
             db.commit()                
             print("")
                 

@@ -22,11 +22,12 @@ class MetaThread(threading.Thread):
         self._print("    connect db")
         self.app_id = -1
         self.app_sessions = False
-        self.lastSpeechID = -1
-        for r in self.db.select("select MAX(ID) from app_control_speech"):
-            self.lastSpeechID = r[0]
-        if self.lastSpeechID == None:
-            self.lastSpeechID = -1
+        
+        self.lastExeID = -1
+        for r in self.db.select("select MAX(ID) from app_control_exe_queue"):
+            self.lastExeID = r[0]
+        if self.lastExeID == None:
+            self.lastExeID = -1
 
     def sendpack(self, pack):
         i = 0
@@ -75,10 +76,10 @@ class MetaThread(threading.Thread):
                             self._sess()
                         elif a[0] == "media queue":
                             self._media_queue()
-                        elif a[0] == "speech queue":
-                            self._speech_queue()
-                        elif a[0] == "speech audio data":
-                            self._speech_audio_data(a[1])
+                        elif a[0] == "exe queue":
+                            self._exe_queue()
+                        elif a[0] == "audio data":
+                            self._audio_data(a[1])
                         elif a[0] == "load variables":
                             self.init_load(a[1])
                         elif a[0] == "registration":
@@ -285,25 +286,48 @@ class MetaThread(threading.Thread):
     def _sync(self):
         self.senddata(self.db.variable_changes())
 
-    def _speech_queue(self):        
+    def _exe_queue(self):        
         res = []
-        for row in self.db.select("select s.ID, s.SPEECH_AUDIO_ID, s.SPEECH_TYPE, a.SPEECH "
-                                  "  from app_control_speech s, app_control_speech_audio a "
-                                  " where s.SPEECH_AUDIO_ID = a.ID "
-                                  "   and s.ID > %s" % (self.lastSpeechID)):
+        for row in self.db.select("select ss.* "
+                                  "  from (select s.ID, s.EXE_TYPE, s.SPEECH_AUDIO_ID, s.SPEECH_TYPE, a.SPEECH "
+                                  "          from app_control_exe_queue s, app_control_speech_audio a "
+                                  "         where s.SPEECH_AUDIO_ID = a.ID "
+                                  "        union all "
+                                  "        select s.ID, s.EXE_TYPE, s.SPEECH_AUDIO_ID, s.SPEECH_TYPE, s.EXE_DATA "
+                                  "          from app_control_exe_queue s "
+                                  "         where s.SPEECH_AUDIO_ID = 0 "
+                                  "        order by s.ID) ss "
+                                  " where ss.ID > %s " % (self.lastExeID)):
             res += [row]
-            self.lastSpeechID = row[0]
+            self.lastExeID = row[0]
         if len(res) == 0:
             res = [[]]
         self.senddata(res)
 
-    def _speech_audio_data(self, id):
-        res = []        
+    def _audio_data(self, id):
+        res = []
+        
+        f = None
         try:
+            # Запрос файла аудиотекста
+            f = open("/var/tmp/wisehouse/audio_%s.wav" % int(id), "rb")
+        except:
+            pass
+        
+        if f == None:
             try:
-                f = open("/var/tmp/wisehouse/audio_%s.wav" % int(id), "rb")
-            except:
+                # Запрос файла подзвучки текста
                 f = open("/home/pyhome/server/executor/%s.wav" % id, "rb")
+            except:
+                pass
+            
+        if f == None:
+            try
+                # Запрос какого-то файла из папки трэков. Выбирается в последнююю очередь.
+                f = open("/home/pyhome/server/executor/tracks/%s" % id, "rb")
+            except:
+                pass
+        try:
             d = f.read()
             res = [0x0] * len(d)
             i = 0
@@ -322,7 +346,6 @@ class MetaThread(threading.Thread):
         except:
             pass
         res = "".join(res)
-        #print(len(res))
         self.senddata([[res]])
 
     def _sess(self, nosend = False):

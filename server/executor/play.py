@@ -37,6 +37,13 @@ class Play():
             s = s.replace(")", "")
             s = s.replace("\"", "")
             args = s.split(",")
+
+            db.IUD("insert into app_control_exe_queue "
+                   "   (EXE_TYPE, EXE_DATA) "
+                   "values "
+                   "   ('play', '%s')" % (args[0].strip()))
+            db.commit()
+            
             self.play(args[0].strip(), args[1].strip(), args[2].strip())
             return True
         except:

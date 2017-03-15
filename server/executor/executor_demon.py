@@ -27,9 +27,9 @@ class Main():
                                           "  from core_execute "
                                           " where ID > %s "
                                           "order by ID" % (self.last_processed_ID)):
-                    print(str(row[1], "utf-8"))
+                    print(str(row[1], "utf-8"))                    
                     for c in str(row[1], "utf-8").split("\n"):
-                        self.execute(row[0], c.strip())
+                        self.execute(c.strip())
                     self.last_processed_ID = row[0]
                 time.sleep(0.1)
 
@@ -37,13 +37,13 @@ class Main():
                 for cmd in self.commans:
                     cmd.time_handler()  
             except mysql.connector.Error as e:
-                self.execute(-1, 'speech("пропала связь с базой", "alarm")')
+                self.execute('speech("пропала связь с базой", "alarm")')
                 time.sleep(10)
             
-    def execute(self, id, command):
+    def execute(self, command):
         print("[%s] выполняется %s" % (time.strftime("%d-%m-%Y %H:%M"), command))
         for cmd in self.commans:
-            if cmd.check_comm(self.db, id, command):
+            if cmd.check_comm(self.db, command):
                 break
 
 print(

@@ -56,7 +56,7 @@ class Sinoptik():
         
         return res
 
-    def check_comm(self, db, id, command):
+    def check_comm(self, db, command):
         temps = ("градусов",
                  "градус",
                  "градуса", 
@@ -97,9 +97,6 @@ class Sinoptik():
             text += self.parceStorm(content)
             
             db.IUD("insert into core_execute (COMMAND) values ('speech(\"%s\", \"notify\")')" % text)
-            db.IUD("update core_execute "
-                   "   set PROCESSED = %s "
-                   " where ID = %s" % (1, id))            
             db.commit()
             
             return True

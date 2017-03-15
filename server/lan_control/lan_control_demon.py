@@ -22,11 +22,13 @@ class MetaThread(threading.Thread):
         self._print("    connect db")
         self.app_id = -1
         self.app_sessions = False
-        self.lastAudioID = -1
-        for r in self.db.select("select MAX(ID) from core_execute"):
-            self.lastAudioID = r[0]
-        if self.lastAudioID == None:
-            self.lastAudioID = -1
+        self.app_cams = False
+        
+        self.lastExeID = -1
+        for r in self.db.select("select MAX(ID) from app_control_exe_queue"):
+            self.lastExeID = r[0]
+        if self.lastExeID == None:
+            self.lastExeID = -1
 
     def sendpack(self, pack):
         i = 0
@@ -73,20 +75,19 @@ class MetaThread(threading.Thread):
                             self._sync()
                         elif a[0] == "sessions":
                             self._sess()
+                        elif a[0] == "cams":
+                            self._cams()
                         elif a[0] == "media queue":
                             self._media_queue()
-                        elif a[0] == "execute queue":
-                            self._execute_queue()
-                        elif a[0] == "execute get audio id":
-                            try:
-                                int(a[1])
-                                self.sendcursor("select a.ID from core_execute e, core_execute_audio a where e.COMMAND = a.COMMAND and e.ID = %s" % (a[1]))
-                            except:
-                                self.senddata([[a[1]]])
-                        elif a[0] == "execute get audio data":
-                            self._execute_get_audio_data(a[1])
+                        elif a[0] == "exe queue":
+                            self._exe_queue()
+                        elif a[0] == "audio data":
+                            self._audio_data(a[1])
                         elif a[0] == "load variables":
                             self.init_load(a[1])
+                        elif a[0] == "load variable group":
+                            self.sendcursor("select ID, NAME, PARENT_ID, ORDER_NUM "
+                                            "  from plan_parts")
                         elif a[0] == "registration":
                             self.db.IUD("insert into app_controls (COMM) values ('%s')" % (a[1]))
                             self.db.commit()
@@ -277,10 +278,11 @@ class MetaThread(threading.Thread):
                     " (%s, '%s')" % (app_id, self.acceptData[1][0]))
         self.db.commit()
         # Packed data for client
-        l = self.sendcursor(("select ID, NAME, COMM, APP_CONTROL, VALUE "
+        l = self.sendcursor(("select ID, NAME, COMM, APP_CONTROL, VALUE, GROUP_ID "
                              "  from core_variables order by COMM"))
         self._print("    load pack [%s bytes]" % (l))
         self._sess(True)
+        self._cams(True)
 
     def _add_to_queue(self, typ, value, value2 = 0, target = None):
         for r in self.app_sessions:
@@ -291,25 +293,48 @@ class MetaThread(threading.Thread):
     def _sync(self):
         self.senddata(self.db.variable_changes())
 
-    def _execute_queue(self):        
+    def _exe_queue(self):        
         res = []
-        for row in self.db.select("select ID, COMMAND, AUDIO, PROCESSED "
-                                  "  from core_execute where ID > %s" % (self.lastAudioID)):
-            if row[3] == 0:
-                break
+        for row in self.db.select("select ss.* "
+                                  "  from (select s.ID, s.EXE_TYPE, s.SPEECH_AUDIO_ID, s.SPEECH_TYPE, a.SPEECH "
+                                  "          from app_control_exe_queue s, app_control_speech_audio a "
+                                  "         where s.SPEECH_AUDIO_ID = a.ID "
+                                  "        union all "
+                                  "        select s.ID, s.EXE_TYPE, s.SPEECH_AUDIO_ID, s.SPEECH_TYPE, s.EXE_DATA "
+                                  "          from app_control_exe_queue s "
+                                  "         where s.SPEECH_AUDIO_ID = 0 "
+                                  "        order by 1) ss "
+                                  " where ss.ID > %s " % (self.lastExeID)):
             res += [row]
-            self.lastAudioID = row[0]
+            self.lastExeID = row[0]
         if len(res) == 0:
             res = [[]]
         self.senddata(res)
 
-    def _execute_get_audio_data(self, id):
-        res = []        
+    def _audio_data(self, id):
+        res = []
+        
+        f = None
         try:
-            if id == "notify" or id == "alarm":
-                f = open("/home/pyhome/server/execute/%s.wav" % id, "rb")
-            else:
-                f = open("/var/tmp/wisehouse/audio_%s.wav" % id, "rb")
+            # Запрос файла аудиотекста
+            f = open("/var/tmp/wisehouse/audio_%s.wav" % int(id), "rb")
+        except:
+            pass
+        
+        if f == None:
+            try:
+                # Запрос файла подзвучки текста
+                f = open("/home/pyhome/server/executor/%s.wav" % id, "rb")
+            except:
+                pass
+            
+        if f == None:
+            try:
+                # Запрос какого-то файла из папки трэков. Выбирается в последнююю очередь.
+                f = open("/home/pyhome/server/executor/tracks/%s" % id, "rb")
+            except:
+                pass
+        try:
             d = f.read()
             res = [0x0] * len(d)
             i = 0
@@ -328,7 +353,6 @@ class MetaThread(threading.Thread):
         except:
             pass
         res = "".join(res)
-        #print(len(res))
         self.senddata([[res]])
 
     def _sess(self, nosend = False):
@@ -341,6 +365,16 @@ class MetaThread(threading.Thread):
             
         if not nosend:
             self.senddata(self.app_sessions)
+
+    def _cams(self, nosend = False):
+        cams = self.db.select("select v.ID, v.NAME, v.URL, v.ORDER_NUM"
+                              "  from plan_video v "
+                              "order by v.NAME")
+        if self.app_cams != cams:
+            self.app_cams = cams
+            
+        if not nosend:
+            self.senddata(self.app_cams)
 
     def _media_queue(self):
         queueSql = ("select q.ID, q.TYP, q.VALUE, q.VALUE_2, m.APP_CONTROL_ID, m.TITLE, m.FILE_NAME, m.FILE_TYPE"
@@ -399,6 +433,10 @@ print(
 % (port)
 )
 
+db = DBConnector()
+db.IUD("delete from app_control_sess")
+db.commit()
+
 while True:
     try:
         sock = socket.socket()
@@ -407,7 +445,7 @@ while True:
         sock.listen(32)
         break
     except:
-        print("binding ERROR for port %s OK " % (port))
+        print("binding for port %s ERROR " % (port))
         time.sleep(5)
 
 try:

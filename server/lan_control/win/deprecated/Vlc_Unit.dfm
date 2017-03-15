@@ -1,9 +1,9 @@
-object VlcForm: TVlcForm
+object VlcPlayer: TVlcPlayer
   Left = 1223
   Top = 404
   Width = 383
   Height = 473
-  Caption = 'VLC Player'
+  Caption = 'VLC '#1087#1083#1077#1077#1088
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText

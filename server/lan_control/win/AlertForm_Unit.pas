@@ -11,13 +11,16 @@ const
 
 type
    TAlertTime = class
+      fAudio: string;
       fNow: TDateTime;
    end;
 
   TAlertForm = class(TForm)
     Timer1: TTimer;
+    Timer2: TTimer;
     procedure Timer1Timer(Sender: TObject);
     procedure FormPaint(Sender: TObject);
+    procedure Timer2Timer(Sender: TObject);
   private
     fDrawBitmap: TBitmap;
     fTexts: TStringList;
@@ -27,19 +30,20 @@ type
     destructor Destroy; override;
   end;
 
-procedure show(messageText: String);
+procedure show(messageText, audio: String);
 procedure hideAlert;
+procedure setOnTop();
+
+var
+   AlertForm: TAlertForm;
 
 implementation
 
 uses DateUtils, MainForm_Unit;
 
-var
-   AlertForm: TAlertForm;
-
 {$R *.dfm}
 
-procedure show(messageText: String);
+procedure show(messageText, audio: String);
 var
    AlertTime: TAlertTime;
 begin
@@ -52,10 +56,12 @@ begin
          try
             AlertTime:= TAlertTime.Create;
             AlertTime.fNow := Now;
+            AlertTime.fAudio := audio;
             fTexts.AddObject(messageText, AlertTime);
             resizeAlert;
             Timer1.Enabled := true;
             ShowWindow(Handle, SW_SHOWNOACTIVATE);
+            setOnTop();
          except
             hideAlert;
          end;
@@ -76,6 +82,12 @@ begin
    end;
 end;
 
+procedure setOnTop();
+begin
+   if (AlertForm <> nil) then
+      SetWindowPos(AlertForm.Handle, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE or SWP_NOSIZE or SWP_NOACTIVATE);
+end;
+
 constructor TAlertForm.Create(AOwner: TComponent);
 begin
    inherited;
@@ -86,19 +98,21 @@ begin
 end;
 
 destructor TAlertForm.Destroy;
+var
+   k: integer;
 begin
-   fDrawBitmap.Free;
+   FreeAndNil(fDrawBitmap);
+   for k := 0 to fTexts.Count - 1 do
+      fTexts.Objects[k].Free; 
    fTexts.Free;
    inherited Destroy;
 end;
 
 procedure TAlertForm.resizeAlert;
 var
-   lines: TStringList;
    paddingW, paddingH: integer;
 
-
-   procedure splitTextToLines;
+   procedure splitTextToLines(text: string; lines:TStringList);
    var
       k, i: integer;
       s: string;
@@ -107,72 +121,85 @@ var
       sl:= TStringList.Create;
       try
          sl.Delimiter := ' ';
-         for k:= 0 to fTexts.Count - 1 do
+         sl.DelimitedText := text;
+         s := '';
+         for i := 0 to sl.Count - 1 do
          begin
-            sl.DelimitedText := fTexts[k];
-            s := '';
-            for i := 0 to sl.Count - 1 do
+            if (fDrawBitmap.Canvas.TextWidth(s + sl[i]) > Width - paddingW) then
             begin
-               if (fDrawBitmap.Canvas.TextWidth(s + sl[i]) > Width - paddingW) then
-               begin
-                  lines.Add(s);
-                  s := '';
-               end;
-               s := s + sl[i] + ' ';
-
-               if (i = sl.Count - 1) then
-                  lines.Add(s);
+               lines.Add(s);
+               s := '';
             end;
-            lines.Add(chr(1));
+            s := s + sl[i] + ' ';
+
+            if (i = sl.Count - 1) then
+               lines.Add(s);
          end;
       finally
          sl.Free;
       end;
+   end;
 
-      if (lines.Count > 0) then
-         lines.Delete(lines.Count - 1);
+   function drawLine(s, audio: string): integer;
+   var
+      k: integer;
+      sl: TStringList;
+      t_h: integer;
+      y: integer;
+   begin
+      t_h := fDrawBitmap.Canvas.TextHeight('W') - 2;
+      sl:= TStringList.Create;
+      try
+         splitTextToLines(s, sl);
+
+         y := fDrawBitmap.Height;
+         fDrawBitmap.Height := fDrawBitmap.Height + sl.Count * t_h + paddingH;
+
+         fDrawBitmap.Canvas.Brush.Color := clFuchsia;
+         fDrawBitmap.Canvas.Pen.Color := Brush.Color;
+         fDrawBitmap.Canvas.Rectangle(0, y, fDrawBitmap.Width, fDrawBitmap.Height);
+
+         if (audio = 'alarm') then
+         begin
+            fDrawBitmap.Canvas.Brush.Color := clRed;
+            fDrawBitmap.Canvas.Font.Color := clWhite;
+         end
+         else
+         begin
+            fDrawBitmap.Canvas.Brush.Color := $00333333;
+            fDrawBitmap.Canvas.Font.Color := clWhite;
+         end;
+         //fDrawBitmap.Canvas.Pen.Color := Brush.Color;
+         fDrawBitmap.Canvas.Rectangle(0, y, fDrawBitmap.Width, fDrawBitmap.Height);
+
+         y := y + paddingH div 2;
+
+         for k:= 0 to sl.Count - 1 do
+         begin
+            fDrawBitmap.Canvas.TextOut(paddingW div 2, y + k * t_h, sl[k]);            
+         end;
+      finally
+         sl.Free;
+      end;
    end;
 
 var
-   k, t_h, y: integer;
+   k, y, r_h: integer;
 begin
+   if (fDrawBitmap = nil) then exit; 
    Width := MainForm.ClientWidth;
 
    paddingW := 20;
    paddingH := 20;
-   lines:= TStringList.Create;
-   try
-      t_h := fDrawBitmap.Canvas.TextHeight('W') - 2;
-      fDrawBitmap.Width := Width;
-      splitTextToLines;
-      fDrawBitmap.Height := lines.Count * t_h + paddingH;
-      with fDrawBitmap.Canvas do
-      begin
-         Brush.Color := clSkyBlue;
-         Pen.Color := Brush.Color;
-         Rectangle(0, 0, fDrawBitmap.Width, fDrawBitmap.Height);
-         for k := 0 to lines.Count - 1 do
-         begin
-            y := paddingH div 2 + k * t_h;
-            if (lines[k] <> chr(1)) then
-            begin
-               TextOut(paddingW div 2, y, lines[k]);
-            end
-            else
-            begin
-               Pen.Color := clWhite;
-               MoveTo(paddingW div 2, y + t_h div 2 + 1);
-               LineTo(Width - paddingW div 2, y + t_h div 2 + 1);
-            end;
-         end;
-      end;
-   finally
-      lines.Free;
-   end;
+   fDrawBitmap.Width := Width;
+   fDrawBitmap.Height := 0;
+
+   for k := 0 to fTexts.Count - 1 do
+      drawLine(fTexts[k], TAlertTime(fTexts.Objects[k]).fAudio);
 
    Height := fDrawBitmap.Height;
    Left := MainForm.Left + (MainForm.Width - MainForm.ClientWidth) div 2;
-   Top := MainForm.Top + MainForm.Height - Height - 30;
+   Top := MainForm.Top + MainForm.Height - Height - 35;
 
    Repaint;
 end;
@@ -189,6 +216,7 @@ begin
    begin
       if nowU > DateTimeToUnix(TAlertTime(fTexts.Objects[k]).fNow) then
       begin
+         fTexts.Objects[k].Free;
          fTexts.Delete(k);
          isDel := true;
       end;
@@ -206,6 +234,11 @@ end;
 procedure TAlertForm.FormPaint(Sender: TObject);
 begin
    Canvas.Draw(0, 0, fDrawBitmap);
+end;
+
+procedure TAlertForm.Timer2Timer(Sender: TObject);
+begin
+   //setOnTop();
 end;
 
 end.

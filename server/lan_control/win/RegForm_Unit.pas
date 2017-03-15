@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls;
+  DataRec_Unit, Dialogs, StdCtrls;
 
 type
   TRegForm = class(TForm)
@@ -60,7 +60,11 @@ begin
    if (ComboBox1.ItemIndex = -1) then
    begin
       res := MainForm.metaQuery('registration', ComboBox1.Text);
-      saveProp('ID', res[0][0]);
+      try
+         saveProp('ID', res.val(0, 0));
+      finally
+         res.Free;
+      end;
    end
    else
    begin
@@ -77,11 +81,15 @@ var
 begin
    RegForm.ComboBox1.Items.Clear;
    res := MainForm.metaQuery('apps list', '');
-   SetLength(RegForm.fIDs, Length(res));
-   for k := 0 to Length(res) - 1 do
-   begin
-      RegForm.ComboBox1.Items.Add(res[k][1]);
-      RegForm.fIDs[k] := res[k][0];
+   try
+      SetLength(RegForm.fIDs, res.Count);
+      for k := 0 to res.Count - 1 do
+      begin
+         RegForm.ComboBox1.Items.Add(res.val(k, 1));
+         RegForm.fIDs[k] := res.val(k, 0);
+      end;
+   finally
+      res.Free;
    end;
 end;
 

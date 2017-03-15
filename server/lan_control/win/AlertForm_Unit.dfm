@@ -7,6 +7,7 @@ object AlertForm: TAlertForm
   ClientHeight = 151
   ClientWidth = 184
   Color = clFuchsia
+  TransparentColor = True
   TransparentColorValue = clFuchsia
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,6 +22,12 @@ object AlertForm: TAlertForm
   object Timer1: TTimer
     OnTimer = Timer1Timer
     Left = 24
+    Top = 24
+  end
+  object Timer2: TTimer
+    Interval = 50
+    OnTimer = Timer2Timer
+    Left = 56
     Top = 24
   end
 end

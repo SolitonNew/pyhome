@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, DlgMessagesRU, ExtCtrls, ComCtrls, StdCtrls, Registry, FileCtrl, Buttons;
+  DataRec_Unit, Dialogs, DlgMessagesRU, ExtCtrls, ComCtrls, StdCtrls, Registry, FileCtrl, Buttons;
 
 type
   TPropertysForm = class(TForm)
@@ -241,8 +241,8 @@ begin
       Application.ProcessMessages();
    end;
 
-   MainForm.metaQuery('del media files', s_del);
-   MainForm.metaQuery('add media files', s_add);
+   MainForm.metaQuery('del media files', s_del).Free;
+   MainForm.metaQuery('add media files', s_add).Free;
 end;
 
 procedure TPropertysForm.FormCreate(Sender: TObject);
@@ -285,11 +285,11 @@ var
    k: integer;
 begin
    PageControl1.ActivePageIndex := 0;
-   for k:= 0 to Length(MainForm.fSessions) - 1 do
+   for k:= 0 to MainForm.fSessions.Count - 1 do
    begin
-      if (MainForm.fSessions[k][0] = IntToStr(MainForm.fAppID)) then
+      if (MainForm.fSessions.val(k, 0) = IntToStr(MainForm.fAppID)) then
       begin
-         Edit2.Text := MainForm.fSessions[k][1];
+         Edit2.Text := MainForm.fSessions.val(k, 1);
          break;
       end;
    end;

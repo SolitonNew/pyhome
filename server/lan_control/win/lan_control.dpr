@@ -7,14 +7,13 @@ uses
   Windows,
   MainForm_Unit in 'MainForm_Unit.pas' {MainForm},
   PropertysForm_Unit in 'PropertysForm_Unit.pas' {PropertysForm},
-  Mcs_Unit in 'Mcs_Unit.pas',
   RegForm_Unit in 'RegForm_Unit.pas' {RegForm},
-  TerminalForm_Unit in 'TerminalForm_Unit.pas' {TerminalForm},
-  Vlc_Unit in 'Vlc_Unit.pas' {VlcForm},
   SchedDialog_Unit in 'SchedDialog_Unit.pas' {SchedDialog},
   MediaInfoDialog_Unit in 'MediaInfoDialog_Unit.pas' {MediaInfoDialog},
   AlertForm_Unit in 'AlertForm_Unit.pas' {AlertForm},
-  Speach_Unit in 'Speach_Unit.pas';
+  DataRec_Unit in 'DataRec_Unit.pas',
+  Mp3Player_Unit in 'Mp3Player_Unit.pas' {Mp3Player},
+  http in 'http.pas';
 
 {$R *.res}
 
@@ -28,16 +27,20 @@ begin
 end;
 
 begin
+  SetErrorMode(SEM_FAILCRITICALERRORS);
+  Set8087CW($133F);
+
   if (CheckExeCopy) then exit;
+
+  //ReportMemoryLeaksOnShutdown := True;
 
   Application.Initialize;
   Application.CreateForm(TMainForm, MainForm);
   Application.CreateForm(TPropertysForm, PropertysForm);
   Application.CreateForm(TRegForm, RegForm);
-  Application.CreateForm(TTerminalForm, TerminalForm);
-  Application.CreateForm(TVlcForm, VlcForm);
   Application.CreateForm(TSchedDialog, SchedDialog);
   Application.CreateForm(TMediaInfoDialog, MediaInfoDialog);
+  Application.CreateForm(TMp3Player, Mp3Player);
   Application.Run;
 
   ReleaseMutex(mutex);

@@ -69,12 +69,12 @@ begin
                if ((prevTime < Now()) or (prevAudio <> f1)) then
                   sndPlaySound(PAnsiChar(f1), SND_SYNC);
 
-               if not ((prevTime < Now()) and (prevCommand = f2)) then
+               if (prevTime < Now()) or (prevCommand <> f2) then
                   sndPlaySound(PAnsiChar(f2), SND_SYNC);
 
-               prevCommand := f2;
                prevAudio := f1;
-               prevTime := IncSecond(Now(), 5);
+               prevCommand := f2;               
+               prevTime := IncSecond(Now(), 1);
             end;
          finally
             sl.Free;
@@ -82,7 +82,7 @@ begin
       end
       else
          sleep(50);
-      Synchronize(MainForm.syncSpeachThread);
+      //Synchronize(MainForm.syncSpeachThread);
    end;
 end;
 

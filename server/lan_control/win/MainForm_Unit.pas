@@ -5,12 +5,12 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, DlgMessagesRU, CoolTrayIcon, ScktComp, StdCtrls, ExtCtrls, ToolWin,
-  ComCtrls, Buttons, ImgList, Menus, ShellApi, IdBaseComponent,
-  IdComponent, IdTCPServer, IdCustomHTTPServer, IdHTTPServer,
-  IdServerIOHandler, IdServerIOHandlerSocket, IdGlobal, ActnList, Speach_Unit;
+  DataRec_Unit, ComCtrls, Buttons, ImgList, Menus, ShellApi,
+  ACS_Classes, ACS_WinMedia, ACS_smpeg, ACS_Wave, ACS_DXAudio, ActnList,
+  OleCtrls, AXVLC_TLB, http;
 
 type
-   TDataRec = array of array of string;
+   //TDataRec = array of array of string;
 
    TVarListItem = class
       id:integer;
@@ -18,6 +18,14 @@ type
       comm:string;
       typ:integer;
       value: Double;
+      group_id: integer;      
+      link_id: integer;
+      link_value: Double;
+   end;
+
+   TVarGroupItem = class
+      id, parent_id: integer;
+      name: string;
    end;
 
    TMediaListItem = class
@@ -50,26 +58,16 @@ type
     Timer1: TTimer;
     Panel2: TPanel;
     SpeedButton1: TSpeedButton;
-    SpeedButton2: TSpeedButton;
     SocketMeta: TClientSocket;
     SpeedButton3: TSpeedButton;
-    SpeedButton4: TSpeedButton;
     SpeedButton5: TSpeedButton;
     ImageList1: TImageList;
     PopupMenu1: TPopupMenu;
     N1: TMenuItem;
     N3: TMenuItem;
     SpeedButton9: TSpeedButton;
-    Panel1: TPanel;
-    Panel4: TPanel;
-    SpeedButton10: TSpeedButton;
-    VolumePanel: TPanel;
-    VolumeShape: TShape;
     MediaPanel: TPanel;
     Panel5: TPanel;
-    PlayButton: TSpeedButton;
-    StopButton: TSpeedButton;
-    Bevel1: TBevel;
     FilterEdit: TEdit;
     VarList: TListBox;
     MediaList: TListBox;
@@ -78,15 +76,6 @@ type
     Panel6: TPanel;
     ComboBox1: TComboBox;
     ImageList2: TImageList;
-    PauseButton: TSpeedButton;
-    TimePanel: TPanel;
-    TimeShape: TShape;
-    TimeLabel: TLabel;
-    Panel3: TPanel;
-    SpeedButton6: TSpeedButton;
-    VlcVolPanel: TPanel;
-    VlcVolShape: TShape;
-    PlayLoopButton: TSpeedButton;
     N5: TMenuItem;
     VarPopupMenu: TPopupMenu;
     VarPopupItem1: TMenuItem;
@@ -109,8 +98,6 @@ type
     N18: TMenuItem;
     PopupMenu3: TPopupMenu;
     TransferMenu: TMenuItem;
-    VLC1: TMenuItem;
-    N9: TMenuItem;
     N4: TMenuItem;
     N6: TMenuItem;
     N8: TMenuItem;
@@ -132,8 +119,35 @@ type
     N12: TMenuItem;
     ActionList1: TActionList;
     ActionSelAll: TAction;
-    SpeedButton8: TSpeedButton;
-    IdHTTPServer1: TIdHTTPServer;
+    DXAudioOut1: TDXAudioOut;
+    WaveIn1: TWaveIn;
+    Timer3: TTimer;
+    MP3In1: TMP3In;
+    DXAudioOut2: TDXAudioOut;
+    SpeedButton2: TSpeedButton;
+    CamList: TScrollBox;
+    CamPanel: TPanel;
+    Panel8: TPanel;
+    Panel1: TPanel;
+    Label1: TLabel;
+    Panel4: TPanel;
+    SpeedButton10: TSpeedButton;
+    VolumePanel: TPanel;
+    VolumeShape: TShape;
+    Panel7: TPanel;
+    PlayButton: TSpeedButton;
+    PauseButton: TSpeedButton;
+    StopButton: TSpeedButton;
+    PlayNextButton: TSpeedButton;
+    PlayLoopButton: TSpeedButton;
+    Bevel1: TBevel;
+    TimePanel: TPanel;
+    TimeShape: TShape;
+    TimeLabel: TLabel;
+    Panel3: TPanel;
+    SpeedButton6: TSpeedButton;
+    MediaVolPanel: TPanel;
+    MediaVolShape: TShape;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
@@ -155,7 +169,6 @@ type
     procedure VolumePanelMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
     procedure VolumePanelMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
-    procedure SpeedButton10Click(Sender: TObject);
     procedure VarListKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -168,9 +181,6 @@ type
       Rect: TRect; State: TOwnerDrawState);
     procedure Panel6Resize(Sender: TObject);
     procedure ComboBox1Change(Sender: TObject);
-    procedure IdHTTPServer1CommandGet(AThread: TIdPeerThread;
-      ARequestInfo: TIdHTTPRequestInfo;
-      AResponseInfo: TIdHTTPResponseInfo);
     procedure TimePanelResize(Sender: TObject);
     procedure TimePanelMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
@@ -178,11 +188,11 @@ type
       Y: Integer);
     procedure TimePanelMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
-    procedure VlcVolPanelMouseDown(Sender: TObject; Button: TMouseButton;
+    procedure MediaVolPanelMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
-    procedure VlcVolPanelMouseMove(Sender: TObject; Shift: TShiftState; X,
+    procedure MediaVolPanelMouseMove(Sender: TObject; Shift: TShiftState; X,
       Y: Integer);
-    procedure VlcVolPanelMouseUp(Sender: TObject; Button: TMouseButton;
+    procedure MediaVolPanelMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
     procedure SpeedButton6Click(Sender: TObject);
     procedure StopButtonClick(Sender: TObject);
@@ -206,7 +216,6 @@ type
       Shift: TShiftState; X, Y: Integer);
     procedure MediaListMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
-    procedure VLC1Click(Sender: TObject);
     procedure N4Click(Sender: TObject);
     procedure N8Click(Sender: TObject);
     procedure CoolTrayIcon1Click(Sender: TObject);
@@ -222,16 +231,37 @@ type
     procedure ActionSelAllExecute(Sender: TObject);
     procedure PlayLoopButtonMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
-    procedure SpeedButton8Click(Sender: TObject);
+    procedure PlayNextButtonClick(Sender: TObject);
+    procedure DXAudioOut1Done(Sender: TComponent);
+    procedure Timer3Timer(Sender: TObject);
+    procedure FormActivate(Sender: TObject);
+    procedure FormDeactivate(Sender: TObject);
+    procedure DXAudioOut2Done(Sender: TComponent);
+    procedure CamListMouseWheel(Sender: TObject; Shift: TShiftState;
+      WheelDelta: Integer; MousePos: TPoint; var Handled: Boolean);
+    procedure CamListResize(Sender: TObject);
+    procedure Panel7Resize(Sender: TObject);
   private
-    fSpeach: TSpeach;
+    fHTTPServer: TTCPHttpDaemon;
+
+    fMediaPlayFileID: integer;
+    fMediaPlayFileType: integer;
+    //fSpeach: TSpeach;
+    fQuietTime: integer;
+    fSpeachList: TStringList;
     fSocketMetaBufer: string;
     fTimePanelDown: Boolean;
 
-    fSessionVlcState: integer;
-    fSessionVlcID: integer;
+    fSessionMediaState: integer;
+    fSessionMediaID: integer;
 
     fMediaGroupCross: array of integer;
+
+    fMiniPlayer: TVLCPlugin2;
+    fMiniPlayerState: integer;
+    fMiniPlayerLen: integer;
+    fMiniPlayerPos: integer;
+    fMiniPlayerFullscreen: boolean;
 
     procedure setStatusText(text:String);
     procedure refreshVarList();
@@ -239,18 +269,22 @@ type
     function currView:integer;
     procedure sendVarValue(id:integer; val:Double);
     procedure setVolume();
-    procedure setVlcVolume();
-    function getMediaAtId(id: integer): TMediaListItem;
+    procedure setMediaVolume();
     procedure timeSeek;
     function checkAppatId(id: integer):Boolean;
     procedure transferMedia(Sender:TObject);
-    procedure startVlcPlay(id: integer; withPause: boolean; seek: integer; blockWarning: boolean = false);
+    procedure startMediaPlay(id: integer; withPause: boolean; seek: integer; blockWarning: boolean = false);
+
     procedure vlcOnChange(sender:TObject);
     procedure vlcOnPlayPosEvent(sender:TObject; pos, len: integer);
+    procedure vlcOnStopEvent(Sender: TObject);
+
+    procedure mp3OnChange(sender:TObject);
+    procedure mp3OnPlayPosEvent(sender:TObject; pos, len: integer);
+    procedure mp3OnStopEvent(Sender: TObject);
+    
     procedure updateTimePanel();
-    procedure updateVlcVolume();
     procedure playMediaNextItem();
-    procedure playStopEvent(Sender: TObject);
 
     procedure startLoad();
     procedure syncLoad();
@@ -258,6 +292,7 @@ type
     procedure firstRun();
 
     procedure clearList(ls:TList);
+    procedure clearStrings(ls:TStrings);
     function trimText(canvas: TCanvas; w:integer; s: string):string;
     procedure drawIcon(canvas:TCanvas; imageList: TImageList; isSel:Boolean; x, y, index:integer; color_no_sel:integer = -1; color_sel:integer = -1);
     procedure inverIcon(bmp:TBitmap; toColor: integer);
@@ -267,20 +302,36 @@ type
 
     procedure updatePlayLoopButtonIcon();
 
-    function checkSpechData(id: string): string; 
+    function checkSpechData(id: string): Boolean;
+    procedure clearAllCamViewers;
+    procedure loadCamList;
+    procedure resizeCamList;
+
+    procedure playMiniPlayer(id, typ: integer; url: string; withPause:boolean = false; seek: integer = 0);
+    procedure pauseMiniPlayer();
+    procedure stopMiniPlayer();
+
+    procedure VLCPlugin21MediaPlayerLengthChanged(ASender: TObject; length: Integer);
+    procedure VLCPlugin21MediaPlayerPlaying(Sender: TObject);
+    procedure VLCPlugin21MediaPlayerPaused(Sender: TObject);
+    procedure VLCPlugin21MediaPlayerStopped(Sender: TObject);
+    procedure VLCPlugin21MediaPlayerTimeChanged(ASender: TObject; time: Integer);    
+  protected
+    procedure WMGetSysCommand(var message : TMessage); message WM_SYSCOMMAND;
   public
     fAppID: integer;
     fItemList: TList;
+    fVarGroupList: TList;
     fMediaList: TList;
     fSessions:TDataRec;
     function metaQuery(pack_name, pack_data: string; blokMessages: boolean = false): TDataRec;
-    procedure freeDataRec(dr:TDataRec);
+    function getMediaAtId(id: integer): TMediaListItem;
 
     procedure sendMediaState(state: string; id, time: integer);
     procedure playMediaPlayAt(index: integer; blockWarning: boolean = false);
     procedure schedLoad();
 
-    procedure syncSpeachThread();
+//    procedure syncSpeachThread();
   end;
 
 var
@@ -288,9 +339,9 @@ var
 
 implementation
 
-uses StrUtils, PropertysForm_Unit, Mcs_Unit, RegForm_Unit,
-  TerminalForm_Unit, Types, Vlc_Unit, DateUtils, SchedDialog_Unit,
-  MediaInfoDialog_Unit, AlertForm_Unit;
+uses StrUtils, PropertysForm_Unit, RegForm_Unit,
+  Types, DateUtils, SchedDialog_Unit,
+  MediaInfoDialog_Unit, AlertForm_Unit, Mp3Player_Unit, Math;
 
 {$R *.dfm}
 
@@ -299,7 +350,9 @@ var
    s: string;
    b: boolean;
 begin
-   fSpeach:= TSpeach.Create;
+   fVarGroupList := TList.Create;
+   fSpeachList:= TStringList.Create;
+   //fSpeach:= TSpeach.Create;
 
    Randomize;
 
@@ -307,13 +360,16 @@ begin
    InfoPanel.Align := alClient;
    
    MediaPanel.Align := alClient;
-   MediaList.DoubleBuffered := true;
+   //MediaList.DoubleBuffered := true;
 
    VarList.Align := alClient;
    VarList.DoubleBuffered := true;
 
    SchedList.Align := alClient;
    SchedList.DoubleBuffered := true;
+
+   CamList.Align := alClient;
+   //CamList.DoubleBuffered := true;
    
    try
       Left := StrToInt(loadProp('Left'));
@@ -342,6 +398,11 @@ begin
    except
    end;
 
+   try
+      MediaVolShape.Width := (MediaVolPanel.ClientWidth) * StrToInt(loadProp('MediaVolume')) div 100;
+   except
+   end;
+
    s := loadProp('VlcPlayLoop');
    if (s = 'loop') then
       PlayLoopButton.Tag := 1
@@ -361,11 +422,15 @@ begin
    setStatusText('Запуск');
 
    updateTimePanel;
+
+   fHTTPServer:= TTCPHttpDaemon.Create;   
 end;
 
 procedure TMainForm.FormDestroy(Sender: TObject);
+var
+   k: integer;
 begin
-   IdHTTPServer1.Active := false;
+   fHTTPServer.Terminate;
 
    Timer1.Enabled := false;
    SocketMeta.Close;
@@ -374,17 +439,38 @@ begin
    saveProp('Top', IntToStr(Top));
    saveProp('Width', IntToStr(Width));
    saveProp('Height', IntToStr(Height));
-//   saveProp('Volume', IntToStr(fPlayer.fVolume));
+   saveProp('Volume', IntToStr(VolumeShape.Width * 100 div VolumePanel.ClientWidth));
    if (not SpeedButton6.Down) then
-      setVlcVolume();
+      setMediaVolume();
 
    clearList(fMediaList);
    fMediaList.Free;
    clearList(fItemList);
    fItemList.Free;
 
-   fSpeach.Terminate;
-   fSpeach.Free;
+   clearStrings(SchedList.Items);
+   clearStrings(ComboBox1.Items);
+ 
+
+   //fSpeach.Terminate;
+   //fSpeach.Free;
+
+   fSpeachList.Free;
+
+   DXAudioOut1.Stop(true);
+   while DXAudioOut1.Status <> tosIdle do
+      Sleep(10);
+
+   DXAudioOut2.Stop(true);
+   while DXAudioOut2.Status <> tosIdle do
+      Sleep(10);
+
+   fSessions.Free;
+   clearList(fVarGroupList);
+   fVarGroupList.Free;
+
+   clearAllCamViewers;
+   stopMiniPlayer;
 end;
 
 procedure TMainForm.Timer1Timer(Sender: TObject);
@@ -411,6 +497,8 @@ begin
    finally
       Timer1.Enabled := true;
    end;
+
+   Label1.Visible := fQuietTime = 1;
 end;
 
 procedure TMainForm.setStatusText(text: String);
@@ -449,6 +537,7 @@ var
    k, t, i: integer;
    lb: string;
    o:TVarListItem;
+   ok: Boolean;
 begin
    t := currView();
 
@@ -459,7 +548,14 @@ begin
       o := TVarListItem(fItemList[k]);
       lb := o.comm + ' [' + FloatToStr(o.value) + ']';
 
-      if (o.typ = t) or ((t = 4) and (o.typ = 10)) or ((t = 7) and (o.typ = 11)) then
+      ok := False;
+      case t of
+         1: ok := (o.typ in [1, 3]); // Свет, Розетки
+         4: ok := (o.typ in [4, 5, 10]); // Термометр, Термостат, Влажнометр
+         7: ok := (o.typ in [7, 11, 13]); // Вентиляторы, Датчик СО, Атм. давление
+      end;
+
+      if (ok) or (o.id = -1) then
       begin
          if (i < VarList.Items.Count) then
          begin
@@ -486,6 +582,7 @@ begin
    case currView of
       100: t := 1;
       10: t := 2;
+      200: t := 3;
    end;
 
    if (InfoLabel.Caption <> '') then
@@ -495,6 +592,7 @@ begin
    VarList.Visible := t = 0;
    Panel5.Visible := t = 1;
    SchedList.Visible := t = 2;
+   CamList.Visible := t = 3;
 
    case t of
       0:
@@ -508,12 +606,23 @@ begin
          if (MainForm.Visible) then
             MediaList.SetFocus;
       end;
-
       2:
       begin
          if (MainForm.Visible) then
-            SchedList.SetFocus;         
+            SchedList.SetFocus;
       end;
+      3:
+      begin
+         if (MainForm.Visible) then
+            CamList.SetFocus;
+         loadCamList();
+      end;
+   end;
+
+   if (t <> 3) then
+   begin
+      Application.ProcessMessages;
+      clearAllCamViewers;
    end;
 end;
 
@@ -569,6 +678,8 @@ var
 begin
    o := TVarListItem(VarList.Items.Objects[index]);
 
+   if (o.id = -1) then State := [];
+
    itemBmp := TBitmap.Create;
    try
       itemBmp.Width := Rect.Right - Rect.Left;
@@ -622,7 +733,7 @@ begin
                end;
             end;
 
-            4, 5, 10, 11:
+            4, 5, 10, 11, 13:
             begin
                if (o.value <> -9999) then
                begin
@@ -637,6 +748,11 @@ begin
                         else
                            insert('0.', v, Length(v));
                         v := v + '°C';
+
+                        if (o.link_id > 0) then
+                        begin
+                           v := '<' + IntToStr(trunc(o.link_value)) + '>    ' + v;
+                        end;                        
                      end;
                      5:
                      begin
@@ -655,6 +771,10 @@ begin
                         else
                            insert('0.', v, Length(v));
                         v := v + 'ppm';
+                     end;
+                     13:
+                     begin
+                        v := FloatToStr(o.value) + 'mm';
                      end;
                   end;
                   TextOut(itemBmp.Width - 5 - TextWidth(v), 3, v);
@@ -677,6 +797,18 @@ begin
                   bmp.Free;
                end;
             end;
+
+            else
+               if (o.id = -1) then
+               begin
+                  Font.Color := clSilver;
+                  tl := (itemBmp.Width - TextWidth(o.comm)) div 2;
+                  Pen.Color := clSilver;
+                  MoveTo(5, 12);
+                  LineTo(tl - 10, 12);
+                  MoveTo(tl + TextWidth(o.comm) + 10, 12);
+                  LineTo(itemBmp.Width - 5, 12);
+               end;
          end;
 
          Font.Size := 8;
@@ -801,12 +933,8 @@ begin
    v := round(VolumeShape.Width * 100 / VolumePanel.ClientWidth);
    if (v < 1) then v := 1;
    if (v > 100) then v := 100;
-//   fPlayer.fVolume := v;
-end;
-
-procedure TMainForm.SpeedButton10Click(Sender: TObject);
-begin
-   fSpeach.fMute := not SpeedButton10.Down;
+   DXAudioOut1.Tag := -4000 + v * 40;
+   DXAudioOut1.Volume := DXAudioOut1.Tag;
 end;
 
 procedure TMainForm.VarListKeyDown(Sender: TObject; var Key: Word;
@@ -841,6 +969,20 @@ begin
          end;
          4:
          begin
+            if (o.link_id > 0) then
+            begin
+               v := trunc(o.link_value);
+               if (Key = 37) then
+                  dec(v);
+               if (Key = 39) then
+                  inc(v);
+               if (v < 10) then
+                  v := 10;
+               if (v > 40) then
+                  v := 40;
+               if (v <> trunc(o.link_value)) then
+                  sendVarValue(o.link_id, v);
+            end;
          end;
          5:
          begin
@@ -895,9 +1037,6 @@ end;
 procedure TMainForm.Panel5Resize(Sender: TObject);
 begin
    FilterEdit.Width := Panel5.ClientWidth;
-   TimePanel.Width := Panel5.ClientWidth - (TimePanel.Left * 2);
-   Panel3.Left := Panel5.ClientWidth - Panel3.Width;
-   updateTimePanel; 
 end;
 
 procedure TMainForm.InfoPanelResize(Sender: TObject);
@@ -927,11 +1066,13 @@ var
    om: TMediaListItem;
    c, i: integer;
    mg: TMediaGroupItem;
+   p_top: integer;
 begin
+   p_top := MediaList.TopIndex;
    i := 0;
    MediaList.Items.BeginUpdate;
    try
-      MediaList.Items.Clear;
+      MediaList.Items.Clear();
 
       if (ComboBox1.ItemIndex <> -1) then
       begin
@@ -973,12 +1114,12 @@ begin
       MediaList.Items.EndUpdate;
    end;
 
-   if (VlcForm.playFileName <> '') then
+   if (fMediaPlayFileID > -1) then
    begin
       for k := 0 to MediaList.Count - 1 do
       begin
          om := TMediaListItem(MediaList.Items.Objects[k]);
-         if (om.id = VlcForm.playFileID) then
+         if (om.id = fMediaPlayFileID) then
          begin
             i := k;
             break;
@@ -986,11 +1127,13 @@ begin
       end;
 
       c := MediaList.ClientHeight div MediaList.ItemHeight;
-      if (i > c - 1) then
+      if ((i < p_top) or (i > p_top + c - 1)) then
       begin
          i := i - c + 1;
          MediaList.TopIndex := i;
-      end;
+      end
+      else
+         MediaList.TopIndex := p_top;
    end;
 end;
 
@@ -1008,8 +1151,10 @@ var
    tl, tw: integer;
    title, gt: string;
    gt_len: integer;
+   ps: integer;
 begin
    om := TMediaListItem(MediaList.Items.Objects[index]);
+   if (om = nil) then exit;
    gt := ComboBox1.Text;
    gt_len := Length(gt);
 
@@ -1050,13 +1195,17 @@ begin
          end;
 
          Font.Size := 8;
-         if ((VlcForm.playFileName <> '') and (om.id = VlcForm.playFileID)) then
+         if (om.id = fMediaPlayFileID) then
          begin
+            case fMediaPlayFileType of
+               2: ps := Mp3Player.playState;
+               else ps := fMiniPlayerState;
+            end;
             Font.Style := [fsBold];
             tl := 5;
-            if (VlcForm.playState in [2, 3]) then
+            if (ps in [2, 3]) then
             begin
-               drawIcon(itemBmp.Canvas, ImageList2, (odSelected in State), 1, 4, VlcForm.playState - 1);
+               drawIcon(itemBmp.Canvas, ImageList2, (odSelected in State), 1, 4, ps - 1);
                tl := 5 + 14;
             end;
          end
@@ -1128,61 +1277,6 @@ begin
    end;
 end;
 
-procedure TMainForm.IdHTTPServer1CommandGet(AThread: TIdPeerThread;
-  ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
-var
-   id: integer;
-   om: TMediaListItem;
-   FileStream: TFileStream;
-   IdMimeTable: TIdMimeTable;
-begin
-   try
-      id := StrToInt(copy(ARequestInfo.Document, 2, Length(ARequestInfo.Document)));
-      om := getMediaAtId(id);
-
-      FileStream:= TFileStream.Create(om.file_name, fmOpenRead or fmShareDenyWrite);
-      IdMimeTable:= TIdMimeTable.Create(true);
-      try
-         try
-            FileStream.Position := ARequestInfo.ContentRangeStart;
-         except
-            on ERangeError do
-            begin
-               ARequestInfo.ContentRangeStart := FileStream.Position;
-               ARequestInfo.ContentRangeEnd := 0;
-            end;
-         end;
-         if ARequestInfo.ContentRangeEnd = 0 then
-            ARequestInfo.ContentRangeEnd := FileStream.Size;
-         ARequestInfo.ContentLength := ARequestInfo.ContentRangeEnd - ARequestInfo.ContentRangeStart;
-         if FileStream.Size = ARequestInfo.ContentLength then
-            AResponseInfo.ResponseNo := 200
-         else
-            AResponseInfo.ResponseNo := 206;
-
-         AResponseInfo.ContentType := IdMimeTable.GetFileMIMEType(ExtractFileName(om.file_name));
-         AResponseInfo.ContentLength := ARequestInfo.ContentLength;
-         AResponseInfo.CustomHeaders.Clear;
-         AResponseInfo.CustomHeaders.Values['Accept-Ranges'] := 'bytes';
-         AResponseInfo.CustomHeaders.Values['Content-Disposition'] := 'filename="' + om.title + '"';
-
-         AResponseInfo.WriteHeader;
-         if not AnsiSameText(ARequestInfo.Command, 'HEAD') then
-         begin
-            try
-               AThread.Connection.WriteStream(FileStream, false, false, AResponseInfo.ContentLength);
-            except
-            end;
-         end;
-      finally
-         IdMimeTable.Free;
-         FileStream.Free;
-      end;
-   except
-      AResponseInfo.ResponseNo := 206;
-   end;
-end;
-
 function TMainForm.getMediaAtId(id: integer): TMediaListItem;
 var
    k: integer;
@@ -1202,14 +1296,28 @@ end;
 procedure TMainForm.updateTimePanel;
 var
    ts1, ts2:TTimeStamp;
+   pl, pp: integer;
 begin
-   if (VlcForm = nil) then exit;
-   
+   if (Mp3Player = nil) then exit;
+
+   case fMediaPlayFileType of
+      2:
+      begin
+         pl := Mp3Player.playLen;
+         pp := Mp3Player.playPos;
+      end;
+      else
+      begin
+         pl := fMiniPlayerLen;
+         pp := fMiniPlayerPos;
+      end;
+   end;
+
    if (not fTimePanelDown) then
    begin
-      if (VlcForm.playLen > 0) then
+      if (pl > 0) then
       begin
-         TimeShape.Width := round(VlcForm.playPos * (TimePanel.ClientWidth - 2) / VlcForm.playLen);
+         TimeShape.Width := round(pp * (TimePanel.ClientWidth - 2) / pl);
       end
       else
          TimeShape.Width := 0;
@@ -1218,8 +1326,8 @@ begin
    ts1 := DateTimeToTimeStamp(Now());
    ts2 := ts1;
 
-   ts1.Time := VlcForm.playPos * 1000;
-   ts2.Time := VlcForm.playLen * 1000;
+   ts1.Time := pp * 1000;
+   ts2.Time := pl * 1000;
    TimeLabel.Caption := TimeToStr(TimeStampToDateTime(ts1)) + ' / ' + TimeToStr(TimeStampToDateTime(ts2));
 end;
 
@@ -1232,8 +1340,14 @@ procedure TMainForm.TimePanelMouseDown(Sender: TObject;
   Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 var
    mx: integer;
+   ps: integer;
 begin
-   if ((Button = mbLeft) and (VlcForm.playState in [2, 3])) then
+   case fMediaPlayFileType of
+      2: ps := Mp3Player.playState;
+      else ps := fMiniPlayerState;
+   end;
+
+   if ((Button = mbLeft) and (ps in [2, 3])) then
    begin
       mx := x;
       if ((Sender = TimeShape) or (Sender = TimeLabel)) then
@@ -1281,71 +1395,82 @@ end;
 
 procedure TMainForm.timeSeek;
 begin
-   VlcForm.playPos := round((VlcForm.playLen * TimeShape.Width) / (TimePanel.ClientWidth - 2));
+   case fMediaPlayFileType of
+      2: Mp3Player.playPos := round((Mp3Player.playLen * TimeShape.Width) / (TimePanel.ClientWidth - 2));
+      else
+         if (fMiniPlayer <> nil) then
+            fMiniPlayer.input.time := round((fMiniPlayerLen * TimeShape.Width) / (TimePanel.ClientWidth - 2)) * 1000;
+   end;
 end;
 
-procedure TMainForm.VlcVolPanelMouseDown(Sender: TObject;
+procedure TMainForm.MediaVolPanelMouseDown(Sender: TObject;
   Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
-   if (Sender = VlcVolShape) then
+   if (Sender = MediaVolShape) then
       inc(x, 2);
 
    if (ssLeft in Shift) then
    begin
-      VlcVolShape.Width := x;
-      setVlcVolume;
+      MediaVolShape.Width := x;
+      setMediaVolume;
    end;
 end;
 
-procedure TMainForm.VlcVolPanelMouseMove(Sender: TObject;
+procedure TMainForm.MediaVolPanelMouseMove(Sender: TObject;
   Shift: TShiftState; X, Y: Integer);
 begin
-   if (Sender = VlcVolShape) then
+   if (Sender = MediaVolShape) then
       inc(x, 2);
 
    if (ssLeft in Shift) then
    begin
-      VlcVolShape.Width := x;
-      setVlcVolume;
+      MediaVolShape.Width := x;
+      setMediaVolume;
    end;
 end;
 
-procedure TMainForm.VlcVolPanelMouseUp(Sender: TObject;
+procedure TMainForm.MediaVolPanelMouseUp(Sender: TObject;
   Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
-   if (Sender = VlcVolShape) then
+   if (Sender = MediaVolShape) then
       inc(x, 2);
 
    if (ssLeft in Shift) then
    begin
-      VlcVolShape.Width := x;
-      setVlcVolume;
+      MediaVolShape.Width := x;
+      setMediaVolume;
    end;
 end;
 
-procedure TMainForm.setVlcVolume;
+procedure TMainForm.setMediaVolume;
 var
    v: integer;
 begin
-   if (VlcVolShape.Width > VlcVolPanel.ClientWidth) then
-      VlcVolShape.Width := VlcVolPanel.ClientWidth;
+   if (MediaVolShape.Width > MediaVolPanel.ClientWidth) then
+      MediaVolShape.Width := MediaVolPanel.ClientWidth;
 
-   v := round(VlcVolShape.Width * 320 / VlcVolPanel.ClientWidth);
+   v := round(MediaVolShape.Width * 100 / MediaVolPanel.ClientWidth);
    if (v < 1) then v := 1;
-   if (v > 320) then v := 320;
+   if (v > 100) then v := 100;
 
-   VlcForm.volume := v;
+   if (fMiniPlayer <> nil) then
+      fMiniPlayer.audio.volume := v; 
+   Mp3Player.volume := v;
    SpeedButton6.Down := true;
 
-   saveProp('VlcVolume', IntToStr(VlcForm.volume));
+   saveProp('MediaVolume', IntToStr(v));
 end;
 
 procedure TMainForm.SpeedButton6Click(Sender: TObject);
 begin
    if (not SpeedButton6.Down) then
-      VlcForm.volume := 0
+   begin
+      Mp3Player.volume := 0;
+      if (fMiniPlayer <> nil) then
+         fMiniPlayer.audio.volume := 0;
+   end
    else
-      setVlcVolume();
+      setMediaVolume();
 end;
 
 function TMainForm.checkAppatId(id: integer): Boolean;
@@ -1355,20 +1480,23 @@ var
 begin
    Result := False;
    s_id := IntToStr(id);
-   for k:= 0 to Length(fSessions) - 1 do
+   if (fSessions <> nil) then
    begin
-      if (fSessions[k][0] = s_id) then
+      for k:= 0 to fSessions.Count - 1 do
       begin
-         if (fSessions[k][2] <> '') then
-            Result := true;
-         break;
+         if (fSessions.val(k, 0) = s_id) then
+         begin
+            if (fSessions.val(k, 2) <> '') then
+               Result := true;
+            break;
+         end;
       end;
    end;
 end;
 
 function TMainForm.metaQuery(pack_name, pack_data: string; blokMessages: boolean = false): TDataRec;
 
-   function parceTable(data:string):TDataRec;
+   {function parceTable(data:string):TDataRec;
    var
       F:integer;
       i: integer;
@@ -1393,7 +1521,7 @@ function TMainForm.metaQuery(pack_name, pack_data: string; blokMessages: boolean
             Delete(data, 1, i);
          end;
       until i < 1;
-   end;
+   end;}
 
 var
    s, b: string;
@@ -1410,7 +1538,7 @@ begin
       s := s + b;
       if (Pos(chr(2), b) > 0) then
       begin
-         Result := parceTable(s);
+         Result := TDataRec.Create(s); // parceTable(s);
          break;
       end;
    end;
@@ -1421,33 +1549,50 @@ end;
 procedure TMainForm.transferMedia(Sender: TObject);
 var
    s: string;
+   ps: integer;
+   pp: integer;
 begin
-   if (not (VlcForm.playState in [2, 3])) then
+   case fMediaPlayFileType of
+      2:
+      begin
+         ps := Mp3Player.playState;
+         pp := Mp3Player.playPos;
+      end;
+      else
+      begin
+         ps := fMiniPlayerState;
+         pp := fMiniPlayerPos;
+      end;
+   end;
+
+   if (not (ps in [2, 3])) then
    begin
       MessageDlg('У вас не запущено проигрывание. Переводить нечего.', mtWarning, [mbOk], 0);
       exit;
    end;
    
-   s := IntToStr(VlcForm.playFileID) + chr(1) + IntToStr(VlcForm.playPos);
-   metaQuery('media transfer', IntToStr(TMenuItem(Sender).Tag) + chr(1) + s);
-   if (VlcForm.playState = 2) then
+   s := IntToStr(fMediaPlayFileID) + chr(1) + IntToStr(pp);
+   metaQuery('media transfer', IntToStr(TMenuItem(Sender).Tag) + chr(1) + s).Free;
+   if (ps = 2) then
       PauseButtonClick(nil);
 end;
 
 procedure TMainForm.sendMediaState(state: string; id, time: integer);
 begin
-   metaQuery('media state', state + ';' + IntToStr(id) + ';' + IntToSTr(time));
+   metaQuery('media state', state + ';' + IntToStr(id) + ';' + IntToSTr(time)).Free;
 end;
 
 procedure TMainForm.StopButtonClick(Sender: TObject);
 begin
    StopButton.Tag := 1;
-   VlcForm.stop;
+   Mp3Player.stop;
+   stopMiniPlayer;
 end;
 
 procedure TMainForm.PauseButtonClick(Sender: TObject);
 begin
-   VlcForm.pause;
+   pauseMiniPlayer;
+   Mp3Player.pause;
 end;
 
 procedure TMainForm.PlayButtonClick(Sender: TObject);
@@ -1464,40 +1609,54 @@ begin
    begin
       TimeShape.Tag := 0;   
       id := TMediaListItem(MediaList.Items.Objects[index]).id;
-      startVlcPlay(id, false, 0, blockWarning);
+      startMediaPlay(id, false, 0, blockWarning);
    end;
 end;
 
-procedure TMainForm.startVlcPlay(id: integer; withPause: boolean; seek: integer; blockWarning: boolean = false);
+procedure TMainForm.startMediaPlay(id: integer; withPause: boolean; seek: integer; blockWarning: boolean = false);
 var
    fileName: string;
    om: TMediaListItem;
    k: integer;
    ip: string;
    comm: string;
+   q: TDataRec;
 begin
+   StopButtonClick(nil);
+
    om := getMediaAtId(id);
    if (om <> nil) then
    begin
-      for k:= 0 to Length(fSessions) - 1 do
+      for k:= 0 to fSessions.Count - 1 do
       begin
-         if (StrToInt(fSessions[k][0]) = om.app_id) then
+         if (StrToInt(fSessions.val(k, 0)) = om.app_id) then
          begin
-            comm := fSessions[k][1];
-            ip := fSessions[k][2];
+            comm := fSessions.val(k, 1);
+            ip := fSessions.val(k, 2);
             break;
          end;
       end;
       
       if (ip <> '') then
       begin
-         fileName := 'http://' + ip + ':' + IntToStr(IdHTTPServer1.DefaultPort) + '/' + IntToStr(id);
-         VlcForm.play(id, om.file_type, fileName, om.title, withPause, seek);
+         fMediaPlayFileID := id;
+         fMediaPlayFileType := om.file_type;
+         fileName := 'http://' + ip + ':' + IntToStr(http.httpPort) + '/' + IntToStr(id);
+         case om.file_type of
+            2: Mp3Player.play(id, om.file_type, fileName, om.title, withPause, seek);
+            else
+               playMiniPlayer(id, om.file_type, fileName, withPause, seek)
+         end;
       end
       else
          if (not blockWarning) then
          begin
-            comm := metaQuery('get app info', IntToStr(om.app_id))[0][0];
+            q := metaQuery('get app info', IntToStr(om.app_id));
+            try
+               comm := q.val(0, 0);
+            finally
+               q.Free;
+            end;
             MessageDlg('Источник "' + comm + '" не включен. Включите источник "' + comm + '" и повторите операцию.', mtWarning, [mbOk], 0);
          end;
    end;
@@ -1511,39 +1670,46 @@ end;
 procedure TMainForm.vlcOnChange(sender: TObject);
 begin
    MediaList.Repaint;
-   updateVlcVolume;
-   if (VlcForm.playState = 2) then
+   if (fMiniPlayerState = 2) then
+      StopButton.Tag := 0;
+
+   Panel7Resize(nil);
+end;
+
+procedure TMainForm.mp3OnChange(sender: TObject);
+begin
+   MediaList.Repaint;
+   if (Mp3Player.playState = 2) then
       StopButton.Tag := 0;
 end;
 
 procedure TMainForm.FormShow(Sender: TObject);
 begin
-   if (not Assigned(VlcForm.onChange)) then // Это проверка самого первого запуска приложения. 
+   if (not Assigned(Mp3Player.onChange)) then // Это проверка самого первого запуска приложения. 
    begin
-      VlcForm.onChange := vlcOnChange;
-      VlcForm.onPlayPosEvent := vlcOnPlayPosEvent;
-      VlcForm.onStopEvent := playStopEvent;
-      VlcForm.fVlcExe := PropertysForm.Edit1.Text;
+      Mp3Player.onChange := mp3OnChange;
+      Mp3Player.onPlayPosEvent := mp3OnPlayPosEvent;
+      Mp3Player.onStopEvent := mp3OnStopEvent;
+
       updateTimePanel();
-      try
-         VlcForm.volume := StrToInt(loadProp('VlcVolume'));
-      except
-         VlcForm.volume := 160;
-      end;
-      updateVlcVolume();
 
       SpeedButton1Click(nil);
       updatePlayLoopButtonIcon;
+
+      CoolTrayIcon1.HideTaskbarIcon;      
    end;
+
+   setMediaVolume;
 end;
 
 procedure TMainForm.vlcOnPlayPosEvent(sender: TObject; pos, len: integer);
 begin
    updateTimePanel();
-   if ((PlayLoopButton.Tag > 0) and (len > 0) and (pos >= len - 3)) then
-   begin
-      playMediaNextItem;
-   end;
+end;
+
+procedure TMainForm.mp3OnPlayPosEvent(sender: TObject; pos, len: integer);
+begin
+   updateTimePanel();
 end;
 
 procedure TMainForm.playMediaNextItem;
@@ -1556,7 +1722,7 @@ begin
    try
       for k:= 0 to MediaList.Count - 1 do
       begin
-         if (TMediaListItem(MediaList.Items.Objects[k]).id = VlcForm.playFileID) then
+         if (TMediaListItem(MediaList.Items.Objects[k]).id = fMediaPlayFileID) then
             ind := l.Count;
 
          if (checkAppatId(TMediaListItem(MediaList.Items.Objects[k]).app_id)) then
@@ -1604,24 +1770,30 @@ begin
    case i of
       0:
       begin
-         saveProp('VlcPlayLoop', '')
+         saveProp('MediaPlayLoop', '')
       end;
       1:
       begin
-         saveProp('VlcPlayLoop', 'loop')
+         saveProp('MediaPlayLoop', 'loop')
       end;
       2:
       begin
-         saveProp('VlcPlayLoop', 'shufle')
+         saveProp('MediaPlayLoop', 'shufle')
       end;
    end;
    updatePlayLoopButtonIcon;
 end;
 
-procedure TMainForm.playStopEvent(Sender: TObject);
+procedure TMainForm.vlcOnStopEvent(Sender: TObject);
 begin
-{   if ((StopButton.Tag = 0) and (PlayLoopButton.Down)) then
-      playMediaNextItem;}
+   if (PlayLoopButton.Tag > 0) then
+      playMediaNextItem;
+end;
+
+procedure TMainForm.mp3OnStopEvent(Sender: TObject);
+begin
+   if (PlayLoopButton.Tag > 0) then
+      playMediaNextItem;
 end;
 
 procedure TMainForm.MediaListKeyDown(Sender: TObject; var Key: Word;
@@ -1631,67 +1803,207 @@ begin
       PauseButtonClick(nil);
 end;
 
-procedure TMainForm.updateVlcVolume;
-begin
-   VlcVolShape.Width := round(VlcForm.volume * VlcVolPanel.ClientWidth / 320);
-end;
-
 procedure TMainForm.startLoad;
+
+   function getParentVarGroup(id: integer): integer;
+   var
+      k: integer;
+   begin
+      Result := -1;
+      for k:= 0 to fVarGroupList.Count - 1 do
+      begin
+         if (TVarGroupItem(fVarGroupList[k]).id = id) then
+         begin
+            Result := TVarGroupItem(fVarGroupList[k]).parent_id;
+            break;
+         end;
+      end;
+   end;
+
+   function getNameVarGroup(id: integer): string;
+   var
+      k: integer;
+   begin
+      Result := 'Остальное';
+      for k:= 0 to fVarGroupList.Count - 1 do
+      begin
+         if (TVarGroupItem(fVarGroupList[k]).id = id) then
+         begin
+            Result := TVarGroupItem(fVarGroupList[k]).name;
+            break;
+         end;
+      end;
+   end;
+
+   function compVarGroup(i1, i2: Pointer): integer;
+   var
+      id1, id2: integer;
+   begin
+      id1 := TVarListItem(i1).group_id;
+      id2 := TVarListItem(i2).group_id;
+      Result := 0;
+      if (id1 > id2) then
+         Result := 1
+      else
+      if (id1 < id2) then
+         Result := -1;
+   end;
+
 var
    res: TDataRec;
    k, i: integer;
-   o: TVarListItem;
+   o, o2: TVarListItem;
+   vg: TVarGroupItem;
    om: TMediaListItem;
    mg: TMediaGroupItem;
+   v: string;
 begin
    addToMetaLog('start LOAD');
-   clearList(fItemList);
 
+   clearList(fVarGroupList);
+   res := metaQuery('load variable group', '');
+   try
+      for k := 0 to res.Count - 1 do
+      begin
+         vg := TVarGroupItem.Create();
+         try
+            vg.id := StrToInt(res.val(k, 0));
+            vg.name := res.val(k, 1);
+            if (res.val(k, 2) = 'None') then
+               vg.parent_id := -1
+            else
+               vg.parent_id := StrToInt(res.val(k, 2));
+            fVarGroupList.Add(vg);
+         except
+            vg.Free;
+         end;
+      end;
+   finally
+      res.Free;
+   end;   
+
+   clearList(fItemList);
    res := metaQuery('load variables', IntToStr(fAppID));
-   for k := 0 to Length(res) - 1 do
-   begin
-      o:= TVarListItem.Create;
-      o.id := StrToInt(res[k][0]);
-      o.name := res[k][1];
-      o.comm := res[k][2];
-      o.typ := StrToInt(res[k][3]);
-      if (res[k][4] = 'None') then
-         res[k][4] := '-9999';
-      o.value := StrToFloat(StringReplace(res[k][4], '.', ',', [rfReplaceAll]));
-      if (o.id = 123) then // QUIET_TIME
-         fSpeach.fQuietTime := trunc(o.value);
-      fItemList.Add(o);
+   try
+      for k := 0 to res.Count - 1 do
+      begin
+         o:= TVarListItem.Create;
+         try
+            o.id := StrToInt(res.val(k, 0));
+            o.name := res.val(k, 1);
+            o.comm := res.val(k, 2);
+            o.typ := StrToInt(res.val(k, 3));
+            o.group_id := getParentVarGroup(StrToInt(res.val(k, 5)));
+            v := res.val(k, 4);
+            if (v = 'None') then
+               v := '-9999';
+            o.value := StrToFloat(StringReplace(v, '.', ',', [rfReplaceAll]));
+            if (o.id = 123) then // QUIET_TIME
+               fQuietTime := trunc(o.value);
+            fItemList.Add(o);
+         except
+            o.Free;
+         end;
+      end;
+   finally
+      res.Free;
    end;
-   freeDataRec(res);
+
+   // Выполняем линковку по группе и названию для термометров и темостатов
+
+   for k := fItemList.Count - 1 downto 0 do
+   begin
+      o := TVarListItem(fItemList[k]);
+      if (o.typ = 5) then // Нашли термостат
+      begin
+         for i := 0 to fItemList.Count - 1 do
+         begin
+            o2 := TVarListItem(fItemList[i]);
+            if ((o2.typ = 4) and (o2.group_id = o.group_id) and (o2.comm = o.comm)) then
+            begin
+               o2.link_id := o.id;
+               o2.link_value := o.value;
+               o.Free;
+               fItemList.Delete(k);
+               break;
+            end; 
+         end;
+      end;
+   end;
+
+   // Сортируем список переменных по группе
+
+   fItemList.Sort(@compVarGroup);
+
+   // Проставляем пустышки для индикации групп
+
+   i := -9999;   
+   for k := fItemList.Count - 1 downto 0 do
+   begin
+      o := TVarListItem(fItemList[k]);
+      if ((i <> -9999) and (i <> o.group_id)) then
+      begin
+         o2 := TVarListItem.Create;
+         try
+            o2.id := -1;
+            o2.comm := getNameVarGroup(i);
+            fItemList.Insert(k + 1, o2);
+         except
+            o2.Free;
+         end;
+      end;
+      i := o.group_id;
+   end;
+
+   // ------------------------------------
+
    refreshVarList();
    addToMetaLog('finish LOAD');
 
    // ------------------------------------------
 
-   MediaExts := metaQuery('get media exts', '')[0][0];
+   res := metaQuery('get media exts', '');
+   try
+      MediaExts := res.val(0, 0);
+   finally
+      res.Free;
+   end;
+
+
 
    // ------------------------------------------
-   setLength(res, 0);
    res := metaQuery('get media folders', '');
-   if (length(res) > 0) then
-      PropertysForm.ListBox1.Items.Text := res[0][0];
+   try
+      if (res.Count > 0) then
+         PropertysForm.ListBox1.Items.Text := res.val(0, 0);
+   finally
+      res.Free;
+   end;
    setStatusText('Загрузка списка медиафайлов');
 
    // ------------------------------------------
 
    addToMetaLog('start MEDIA PACK');
    clearList(fMediaList);
-   setLength(res, 0);
+
    res := metaQuery('get media list', '');
-   for k := 0 to Length(res) - 1 do
-   begin
-      om:= TMediaListItem.Create;
-      om.id := StrToInt(res[k][0]);
-      om.app_id := StrToInt(res[k][1]);
-      om.title := res[k][2];
-      om.file_name := res[k][3];
-      om.file_type := StrToInt(res[k][4]);
-      fMediaList.Add(om);
+   try
+      for k := 0 to res.Count - 1 do
+      begin
+         om:= TMediaListItem.Create;
+         try
+            om.id := StrToInt(res.val(k, 0));
+            om.app_id := StrToInt(res.val(k, 1));
+            om.title := res.val(k, 2);
+            om.file_name := res.val(k, 3);
+            om.file_type := StrToInt(res.val(k, 4));
+            fMediaList.Add(om);
+         except
+            om.Free;
+         end;
+      end;
+   finally
+      res.Free;
    end;
    refreshMediaList();
    addToMetaLog('finish MEDIA PACK');
@@ -1730,146 +2042,179 @@ begin
    // ------------------------------------
 
    schedLoad();
+
+   // --------------------------------------------
 end;
 
 procedure TMainForm.syncLoad;
 var
-   res, res2: TDataRec;
+   res: TDataRec;
    k, i: integer;
    om: TMediaListItem;
-   s, s2, f1, f2: string;
+   s, s2: string;
    sl: TStringList;
 begin
    syncPack(metaQuery('sync', ''));
 
    // --------------------------------------------
 
-   res2 := metaQuery('execute queue', '');
-   if (Length(res2) > 0) then
-   begin
-      for k:= 0 to Length(res2) - 1 do
+   res := metaQuery('exe queue', '');
+   try
+      if (res.Count > 0) then
       begin
-         s := res2[k][1];
-         if (Pos('speech(', s) > 0) then
+         for k:= 0 to res.Count - 1 do
          begin
-            sl:= TStringList.Create;
-            try
-               sl.Text := StringReplace(s, '"', #13, [rfReplaceAll]);
-               s := sl[1];
-               s2 := 'notify';
-               if (sl.Count > 2) then
-                  s2 := sl[3];
-            finally
-               sl.Free;
+            if (res.val(k, 1) = 'speech') then
+            begin
+               s := res.val(k, 4);
+               s2 := res.val(k, 3);
+               AlertForm_Unit.show(s, s2);
+               checkSpechData(s2);
+               checkSpechData(res.val(k, 2));
+               if ((SpeedButton10.Down) and (fQuietTime = 0)) or (s2 = 'alarm') then
+               begin
+                  fSpeachList.Add(s2);
+                  fSpeachList.Add(res.val(k, 2));
+               end;
+            end
+            else
+            if (res.val(k, 1) = 'play') then
+            begin
+               s := res.val(k, 4);
+               s2 := GetEnvironmentVariable('TEMP') + '\audio\' + s;
+               checkSpechData(s);
+               if (MP3In1.FileName = '') and (FileExists(s2)) and (ExtractFileExt(WideUpperCase(s)) = '.MP3') then
+               begin
+                  MP3In1.FileName := s2;
+                  DXAudioOut2.Run;
+               end               
             end;
-
-            AlertForm_Unit.show(s);
-            f1 := checkSpechData(s2);
-            f2 := checkSpechData(res2[k][0]);
-            fSpeach.fPlayList.Add(f1 + ';' + f2);
          end;
       end;
+   finally
+      res.Free;
    end;
-   freeDataRec(res2);
 
    // --------------------------------------------
 
+   if (fSessions <> nil) then fSessions.Free;
    fSessions := metaQuery('sessions', '');
    MediaList.Repaint;
 
    // --------------------------------------------
 
    res := metaQuery('media queue', '');
-   if (Length(res) > 0) then
-   begin
-      for k:= 0 to Length(res) - 1 do
+   try
+      if (res.Count > 0) then
       begin
-         case StrToInt(res[k][1]) of
-            0:
-            begin
-               om:= TMediaListItem.Create;
-               om.id := StrToInt(res[k][2]);
-               om.app_id := StrToInt(res[k][4]);
-               om.title := res[k][5];
-               om.file_name := res[k][6];
-               om.file_type := StrToInt(res[k][7]);
-               fMediaList.Add(om);
-            end;
-            1:
-            begin
-               for i:= 0 to fMediaList.Count - 1 do
+         for k:= 0 to res.Count - 1 do
+         begin
+            case StrToInt(res.val(k, 1)) of
+               0:
                begin
-                  om:= TMediaListItem(fMediaList[i]);
-                  if (om.id = StrToInt(res[k][2])) then
-                  begin
-                     om.id := StrToInt(res[k][2]);
-                     om.app_id := StrToInt(res[k][4]);
-                     om.title := res[k][5];
-                     om.file_name := res[k][6];
-                     om.file_type := StrToInt(res[k][7]);
-                     break;
+                  om:= TMediaListItem.Create;
+                  try
+                     om.id := StrToInt(res.val(k, 2));
+                     om.app_id := StrToInt(res.val(k, 4));
+                     om.title := res.val(k, 5);
+                     om.file_name := res.val(k, 6);
+                     om.file_type := StrToInt(res.val(k, 7));
+                     fMediaList.Add(om);
+                  except
+                     om.Free;
                   end;
                end;
-            end;
-            2:
-            begin
-               for i:= 0 to fMediaList.Count - 1 do
+               1:
                begin
-                  om:= TMediaListItem(fMediaList[i]);
-                  if (om.id = StrToInt(res[k][2])) then
+                  for i:= 0 to fMediaList.Count - 1 do
                   begin
-                     fMediaList.Delete(i);
-                     break;
+                     om:= TMediaListItem(fMediaList[i]);
+                     if (om.id = StrToInt(res.val(k, 2))) then
+                     begin
+                        om.id := StrToInt(res.val(k, 2));
+                        om.app_id := StrToInt(res.val(k, 4));
+                        om.title := res.val(k, 5);
+                        om.file_name := res.val(k, 6);
+                        om.file_type := StrToInt(res.val(k, 7));
+                        break;
+                     end;
                   end;
                end;
-            end;
+               2:
+               begin
+                  for i:= 0 to fMediaList.Count - 1 do
+                  begin
+                     om:= TMediaListItem(fMediaList[i]);
+                     if (om.id = StrToInt(res.val(k, 2))) then
+                     begin
+                        fMediaList.Delete(i);
+                        break;
+                     end;
+                  end;
+               end;
 
-            10: // Transfer media
-            begin
-               StopButton.Tag := 1;
-               startVlcPlay(StrToInt(res[k][2]), true, StrToInt(res[k][3]));
-            end;
+               10: // Transfer media
+               begin
+                  StopButton.Tag := 1;
+                  startMediaPlay(StrToInt(res.val(k, 2)), true, StrToInt(res.val(k, 3)));
+               end;
 
-            20: // Изменение списка плейлистов
-            begin
-               loadMediaGroups(-1); //StrToInt(res[k][2]));
-            end;
+               20: // Изменение списка плейлистов
+               begin
+                  loadMediaGroups(-1); //StrToInt(res[k][2]));
+               end;
 
-            21: // Изменение содиржимого плейлиста
-            begin
-               if ((ComboBox1.ItemIndex > -1) and (ComboBox1.Items.Objects[ComboBox1.ItemIndex] <> nil)) then
-                  if (TMediaGroupItem(ComboBox1.Items.Objects[ComboBox1.ItemIndex]).id = StrToInt(res[k][2])) then
-                     ComboBox1Change(nil);
+               21: // Изменение содиржимого плейлиста
+               begin
+                  if ((ComboBox1.ItemIndex > -1) and (ComboBox1.Items.Objects[ComboBox1.ItemIndex] <> nil)) then
+                     if (TMediaGroupItem(ComboBox1.Items.Objects[ComboBox1.ItemIndex]).id = StrToInt(res.val(k, 2))) then
+                        ComboBox1Change(nil);
+               end;
             end;
          end;
+         refreshMediaList();
       end;
-      refreshMediaList();
+   finally
+      res.Free;
    end;
-   freeDataRec(res);
 end;
 
 procedure TMainForm.syncPack(res: TDataRec);
 var
    k, i, o_id: integer;
+   v: string;
 begin
-   for k := 0 to Length(res) - 1 do
-   begin
-      o_id := StrToInt(res[k][1]);
-      if (o_id = 123) then // QUIET_TIME
-         fSpeach.fQuietTime := trunc(StrToFloat(StringReplace(res[k][2], '.', ',', [rfReplaceAll])));
-
-      for i:= 0 to fItemList.Count - 1 do
+   try
+      for k := 0 to res.Count - 1 do
       begin
-         if (TVarListItem(fItemList[i]).id = o_id) then
+         o_id := StrToInt(res.val(k, 1));
+         if (o_id = 123) then // QUIET_TIME
+            fQuietTime := trunc(StrToFloat(StringReplace(res.val(k, 2), '.', ',', [rfReplaceAll])));
+
+         for i:= 0 to fItemList.Count - 1 do
          begin
-            if (res[k][2] = 'None') then
-               res[k][2] := '-9999';
-            TVarListItem(fItemList[i]).value := StrToFloat(StringReplace(res[k][2], '.', ',', [rfReplaceAll]));
+            if (TVarListItem(fItemList[i]).id = o_id) then
+            begin
+               v := res.val(k, 2);
+               if (v = 'None') then
+                  v := '-9999';
+               TVarListItem(fItemList[i]).value := StrToFloat(StringReplace(v, '.', ',', [rfReplaceAll]));
+            end;
+
+            if (TVarListItem(fItemList[i]).link_id = o_id) then
+            begin
+               v := res.val(k, 2);
+               if (v = 'None') then
+                  v := '-9999';
+               TVarListItem(fItemList[i]).link_value := StrToFloat(StringReplace(v, '.', ',', [rfReplaceAll]));
+            end;
          end;
       end;
+      if (res.Count > 0) then
+         refreshVarList();
+   finally
+      res.Free;
    end;
-   if (Length(res) > 0) then
-      refreshVarList();
 end;
 
 procedure TMainForm.firstRun;
@@ -1896,8 +2241,6 @@ begin
    end;
 
    setVolume();
-
-   IdHTTPServer1.Active := true;
 end;
 
 procedure TMainForm.VarPopupItemClick(Sender: TObject);
@@ -2010,24 +2353,32 @@ begin
       SchedList.Tag := -1;
 
    SchedList.Items.BeginUpdate;
-   SchedList.Clear;
+   clearStrings(SchedList.Items);
    res := metaQuery('get scheduler list', '');
-   for k:= 0 to Length(res) - 1 do
-   begin
-      os:= TSchedListItem.Create;
-      os.id := StrToInt(res[k][0]);
-      os.comm := res[k][1];
-      os.action := res[k][2];
-      os.datetime := strToDate(res[k][3]);
-      os.timeOfDay := res[k][4];
-      os.dayOfType := res[k][5];
-      os.typ := StrToInt(res[k][6]);
-      os.variable := StrToInt(res[k][7]);
-      SchedList.AddItem(os.comm, os);
-      if (os.id = SchedList.Tag) then
-         SchedList.ItemIndex := SchedList.Count - 1;  
+   try
+      for k:= 0 to res.Count - 1 do
+      begin
+         os:= TSchedListItem.Create;
+         try
+            os.id := StrToInt(res.val(k, 0));
+            os.comm := res.val(k, 1);
+            os.action := res.val(k, 2);
+            os.datetime := strToDate(res.val(k, 3));
+            os.timeOfDay := res.val(k, 4);
+            os.dayOfType := res.val(k, 5);
+            os.typ := StrToInt(res.val(k, 6));
+            os.variable := StrToInt(res.val(k, 7));
+            SchedList.AddItem(os.comm, os);
+            if (os.id = SchedList.Tag) then
+               SchedList.ItemIndex := SchedList.Count - 1;
+         except
+            os.Free;
+         end;
+      end;
+   finally
+      res.Free;
    end;
-   freeDataRec(res);
+
    SchedList.TopIndex := t;
    SchedList.Items.EndUpdate;
    VarList.Repaint;   
@@ -2041,6 +2392,21 @@ begin
    begin
       TObject(ls[k]).Free;
       ls[k] := nil;
+   end;
+   ls.Clear;
+end;
+
+procedure TMainForm.clearStrings(ls:TStrings);
+var
+   k: integer;
+begin
+   for k:= 0 to ls.Count - 1 do
+   begin
+      if (ls.Objects[k] <> nil) then
+      begin
+         ls.Objects[k].Free;
+         ls.Objects[k] := nil;
+      end;
    end;
    ls.Clear;
 end;
@@ -2255,11 +2621,6 @@ begin
    end;
 end;
 
-procedure TMainForm.VLC1Click(Sender: TObject);
-begin
-   VlcForm.Show;
-end;
-
 procedure TMainForm.N4Click(Sender: TObject);
 begin
    PropertysForm.SpeedButton6Click(nil);
@@ -2276,6 +2637,8 @@ begin
       CoolTrayIcon1.HideMainForm
    else
       CoolTrayIcon1.ShowMainForm;
+
+   setOnTop();
 end;
 
 procedure TMainForm.PopupMenu3Popup(Sender: TObject);
@@ -2285,25 +2648,33 @@ var
    mg: TMediaGroupItem;
 begin
    TransferMenu.Clear;
-   for k:= 0 to Length(fSessions) - 1 do
+   for k:= 0 to fSessions.Count - 1 do
    begin
-      if ((fSessions[k][2] <> 'None') and (fSessions[k][0] <> IntToStr(fAppID))) then
+      if ((fSessions.val(k, 2) <> 'None') and (fSessions.val(k, 0) <> IntToStr(fAppID))) then
       //if (fSessions[k][2] <> 'None') then
       begin
          mi:= TMenuItem.Create(nil);
-         mi.Caption := fSessions[k][1];
-         mi.Tag := StrToInt(fSessions[k][0]);
-         mi.OnClick := transferMedia;
-         TransferMenu.Add(mi);
+         try
+            mi.Caption := fSessions.val(k, 1);
+            mi.Tag := StrToInt(fSessions.val(k, 0));
+            mi.OnClick := transferMedia;
+            TransferMenu.Add(mi);
+         except
+            mi.Free;
+         end;
       end;
    end;
 
    if (TransferMenu.Count = 0) then
    begin
       mi:= TMenuItem.Create(nil);
-      mi.Caption := 'Пусто';
-      mi.Enabled := false;
-      TransferMenu.Add(mi);
+      try
+         mi.Caption := 'Пусто';
+         mi.Enabled := false;
+         TransferMenu.Add(mi);
+      except
+         mi.Free;
+      end;
    end;
 
    MediaGroupAdd.Clear;
@@ -2315,10 +2686,14 @@ begin
          if (mg.typ > 0) then
          begin
             mi:= TMenuItem.Create(nil);
-            mi.Caption := mg.comm;
-            mi.Tag := mg.id;
-            mi.OnClick := MediaGroupAddClick;
-            MediaGroupAdd.Add(mi);
+            try
+               mi.Caption := mg.comm;
+               mi.Tag := mg.id;
+               mi.OnClick := MediaGroupAddClick;
+               MediaGroupAdd.Add(mi);
+            except
+               mi.Free;
+            end;
          end;
       end;
    end;  
@@ -2330,10 +2705,16 @@ procedure TMainForm.AddMediaListButtonClick(Sender: TObject);
 var
    s: string;
    id: integer;
+   res: TDataRec;
 begin
    if (InputQuery('Создание нового плейлиста', 'Название:', s)) then
    begin
-      id := StrToInt(metaQuery('edit groups list', '-1' + chr(1) + s)[0][0]);
+      res := metaQuery('edit groups list', '-1' + chr(1) + s);
+      try
+         id := StrToInt(res.val(0, 0));
+      finally
+         res.Free;
+      end;
       //loadMediaGroups(-1);
    end;
 end;
@@ -2350,7 +2731,7 @@ begin
    s := ComboBox1.Text;
    if (InputQuery('Редактирование названия плейлиста', 'Название:', s)) then
    begin
-      metaQuery('edit groups list', IntToStr(mg.id) + chr(1) + s);
+      metaQuery('edit groups list', IntToStr(mg.id) + chr(1) + s).Free;
       //loadMediaGroups(-1);
    end;
 end;
@@ -2365,7 +2746,7 @@ begin
    if (mg.id = -1) then exit;
    if (MessageDlg('Удалить плейлист "' + ComboBox1.Text + '"?', mtConfirmation, [mbYes, mbNo], 0) = mrYes) then
    begin
-      metaQuery('del groups list', IntToStr(mg.id));
+      metaQuery('del groups list', IntToStr(mg.id)).Free;
       //loadMediaGroups(-1);
    end;
 end;
@@ -2379,10 +2760,13 @@ begin
    if (ComboBox1.Items.Objects[ComboBox1.ItemIndex] = nil) then exit;
    
    res := metaQuery('get groups cross', IntToStr(TMediaGroupItem(ComboBox1.Items.Objects[ComboBox1.ItemIndex]).id));
-   SetLength(fMediaGroupCross, Length(res));
-   for k:= 0 to Length(res) - 1 do
-      fMediaGroupCross[k] := StrToInt(res[k][0]);
-   freeDataRec(res);
+   try
+      SetLength(fMediaGroupCross, res.Count);
+      for k:= 0 to res.Count - 1 do
+         fMediaGroupCross[k] := StrToInt(res.val(k, 0));
+   finally
+      res.Free;
+   end;
 end;
 
 procedure TMainForm.MediaGroupAddClick(Sender: TObject);
@@ -2395,7 +2779,7 @@ begin
       if (MediaList.Selected[k]) then
       begin
          mo := TMediaListItem(MediaList.Items.Objects[k]);
-         metaQuery('add groups cross', IntToStr(mo.id) + chr(1) + IntToStr(TMenuItem(Sender).Tag), true);
+         metaQuery('add groups cross', IntToStr(mo.id) + chr(1) + IntToStr(TMenuItem(Sender).Tag), true).Free;
       end;
    end;
 
@@ -2420,7 +2804,7 @@ begin
       if (MediaList.Selected[k]) then
       begin
          mo := TMediaListItem(MediaList.Items.Objects[k]);
-         metaQuery('del groups cross', IntToStr(mo.id) + chr(1) + IntToStr(mg.id), true);
+         metaQuery('del groups cross', IntToStr(mo.id) + chr(1) + IntToStr(mg.id), true).Free;
       end;
    end;
 end;
@@ -2438,9 +2822,8 @@ begin
    if (id = -1) then
       id := prev_id;
 
-   setLength(res, 0);
    ComboBox1.Items.BeginUpdate;
-   ComboBox1.Clear;
+   clearStrings(ComboBox1.Items);
    ComboBox1.AddItem('Вся медия', nil);
    ComboBox1.AddItem('Только видео', nil);
    ComboBox1.AddItem('Только музыка', nil);
@@ -2452,17 +2835,25 @@ begin
    ComboBox1.AddItem('Не добавленые в плейлисты', mg);
 
    res := metaQuery('get groups list', '');
-   for k := 0 to Length(res) - 1 do
-   begin
-      mg:= TMediaGroupItem.Create();
-      mg.id := StrToInt(res[k][0]);
-      mg.typ := 1;// StrToInt(res[k][1]);
-      mg.comm := res[k][2];
-      ComboBox1.AddItem(mg.comm, mg);
-      if (mg.id = id) then
-         i := ComboBox1.Items.Count - 1;
+   try
+      for k := 0 to res.Count - 1 do
+      begin
+         mg:= TMediaGroupItem.Create();
+         try
+            mg.id := StrToInt(res.val(k, 0));
+            mg.typ := 1;// StrToInt(res[k][1]);
+            mg.comm := res.val(k, 2);
+            ComboBox1.AddItem(mg.comm, mg);
+            if (mg.id = id) then
+               i := ComboBox1.Items.Count - 1;
+         except
+            mg.Free;
+         end;
+      end;
+   finally
+      res.Free;
    end;
-   freeDataRec(res);
+
    if (i > -1) then
       ComboBox1.ItemIndex := i
    else
@@ -2591,21 +2982,13 @@ begin
    updatePlayLoopButtonIcon;}
 end;
 
-procedure TMainForm.SpeedButton8Click(Sender: TObject);
+procedure TMainForm.PlayNextButtonClick(Sender: TObject);
 begin
    playMediaNextItem;
+   refreshMediaList;
 end;
 
-procedure TMainForm.freeDataRec(dr: TDataRec);
-var
-   k: integer;
-begin
-   for k:= 0 to Length(dr) - 1 do
-      SetLength(dr[k], 0);
-   SetLength(dr, 0);
-end;
-
-function TMainForm.checkSpechData(id: string): string;
+function TMainForm.checkSpechData(id: string): Boolean;
 
    function decodeHex(c: char): byte;
    begin
@@ -2629,6 +3012,19 @@ function TMainForm.checkSpechData(id: string): string;
       end;
    end;
 
+   function FileSizeByName(s: string): int64;
+   var
+      f: TFileStream;
+   begin
+      Result := 0;
+      f:= TFileStream.Create(s, fmOpenRead);
+      try
+         Result := f.Size;
+      finally
+         f.Free;
+      end;
+   end;
+
 var
    path, fileName: string;
    res, res2: TDataRec;
@@ -2638,43 +3034,43 @@ var
    i: integer;
    b: byte;
 begin
+   Result := true;
    path := GetEnvironmentVariable('TEMP') + '\audio';
    if not DirectoryExists(path) then
       CreateDir(path);
 
-   res := metaQuery('execute get audio id', id);
-   if (Length(res) = 0) then exit;
-   id := res[0][0];
-   Result := id;
-
-   fileName := path + '\' + id + '.wav';
+   if (ExtractFileExt(WideUpperCase(id)) = '.MP3') then
+      fileName := path + '\' + id
+   else
+      fileName := path + '\' + id + '.wav';
 
    if (not FileExists(fileName) or (FileSizeByName(fileName) = 0)) then
    begin
-      res2 := metaQuery('execute get audio data', id);
-      if (Length(res2) > 0) then
-      begin
-         f:= TFileStream.Create(fileName, fmCreate);
-         try
-            s := res2[0][0];
-            i := 1;
-            for k:= 1 to Length(s) div 2 do
-            begin
-               b := decodeHex(s[i + 1]) + (decodeHex(s[i]) shl 4);
-               inc(i, 2);
-               f.Write(b, 1);
+      res := metaQuery('audio data', id);
+      try
+         if (res.Count > 0) then
+         begin
+            f:= TFileStream.Create(fileName, fmCreate);
+            try
+               s := res.val(0, 0);
+               i := 1;
+               for k:= 1 to Length(s) div 2 do
+               begin
+                  b := decodeHex(s[i + 1]) + (decodeHex(s[i]) shl 4);
+                  inc(i, 2);
+                  f.Write(b, 1);
+               end;
+            finally
+               f.Free;
             end;
-         finally
-            f.Free;
          end;
+      finally
+         res.Free;
       end;
    end;
-
-   freeDataRec(res);
-   freeDataRec(res2);
 end;
 
-procedure TMainForm.syncSpeachThread;
+{procedure TMainForm.syncSpeachThread;
 begin
    if ((fSpeach.fPlayList.Count > 0) and (fSpeach.fPlayFile <> '')) then
    begin
@@ -2684,7 +3080,349 @@ begin
 
    if (fSpeach.fPlayList.Count > 0) then
       fSpeach.fPlayFile := fSpeach.fPlayList[0];
+end;}
+
+var
+   prevSpeechIdTime: TDateTime;
+   prevSpeechAllTime: TDateTime;      
+   prevSpeechType: string;
+   prevSpeechID: string;
+   
+procedure TMainForm.Timer3Timer(Sender: TObject);
+var
+   isPlay: Boolean;
+   f_key: string;
+begin
+   DXAudioOut1.Volume := DXAudioOut1.Tag;
+   if (not SpeedButton10.Down) then
+      DXAudioOut2.Volume := -10000
+   else
+      DXAudioOut2.Volume := DXAudioOut1.Tag;
+   if (fSpeachList.Count > 0) and (DXAudioOut1.Status = tosIdle) then
+   begin
+      f_key := fSpeachList[0];
+      isPlay := False;
+      if (Pos(f_key[1], '0123456789') > 0) then
+      begin
+         isPlay := (prevSpeechID <> f_key) or (prevSpeechIdTime <= Now());
+         prevSpeechID := f_key;
+      end
+      else
+      begin
+         isPlay := (prevSpeechType <> f_key) or (prevSpeechAllTime <= Now());
+         prevSpeechType := f_key;
+      end;
+
+      if isPlay then
+      begin
+         WaveIn1.FileName := GetEnvironmentVariable('TEMP') + '\audio\' + f_key + '.wav';
+         DXAudioOut1.Run;
+      end;
+      fSpeachList.Delete(0);
+   end;
 end;
+
+procedure TMainForm.DXAudioOut1Done(Sender: TComponent);
+var
+   f_key: string;
+begin
+   f_key := ExtractFileName(WaveIn1.FileName);
+   if (Length(f_key) > 0) then
+   begin
+      if (Pos(f_key[1], '0123456789') > 0) then
+         prevSpeechIdTime := IncSecond(Now(), 2);
+   end;
+   prevSpeechAllTime := IncSecond(Now(), 1);
+end;
+
+procedure TMainForm.FormActivate(Sender: TObject);
+begin
+   setOnTop();
+end;
+
+procedure TMainForm.FormDeactivate(Sender: TObject);
+begin
+   setOnTop();
+end;
+
+procedure TMainForm.WMGetSysCommand(var message: TMessage);
+begin
+   if (message.wParam = SC_MINIMIZE) then
+      CoolTrayIcon1.HideMainForm
+   else
+      inherited;
+end;
+
+procedure TMainForm.DXAudioOut2Done(Sender: TComponent);
+begin
+   while DXAudioOut2.Status <> tosIdle do
+      sleep(10);
+   MP3In1.FileName := '';
+end;
+
+procedure TMainForm.clearAllCamViewers;
+var
+   k: integer;
+begin
+   for k := CamPanel.ControlCount - 1 downto 0 do
+   begin
+      TVLCPlugin2(CamPanel.Controls[k]).playlist.stop;
+      TVLCPlugin2(CamPanel.Controls[k]).Free;      
+   end;
+end;
+
+procedure TMainForm.loadCamList;
+var
+   cw: TVLCPlugin2;
+   res: TDataRec;
+   k: integer;
+   h: integer;
+begin
+   clearAllCamViewers;
+   res := metaQuery('cams', '');
+   try
+      h := round(CamPanel.Width / 1.6);
+      for k := 0 to res.Count - 1 do
+      begin
+         cw:= TVLCPlugin2.Create(CamPanel);
+         try
+            cw.Parent := CamPanel;
+            cw.playlist.add(res.val(k, 2), NULL, NULL);
+            cw.ControlInterface.Toolbar := false;
+            cw.DefaultInterface.Toolbar := false;
+            cw.video.aspectRatio := '16:10';
+            cw.playlist.play;
+            {cw.Top := k * (h + 1);
+            cw.Left := 0;
+            cw.Width := CamPanel.Width;
+            cw.Height := h;}
+         except
+            cw.Free;
+         end;
+      end;
+   finally
+      res.Free;
+   end;
+
+   resizeCamList;
+end;
+
+procedure TMainForm.resizeCamList;
+var
+   k: integer;
+   cw: TVLCPlugin2;
+   sb: integer;
+   w, h, w1, w2, h1, h2: integer;
+begin
+   if (not CamList.Visible) then exit;
+
+   sb := GetSystemMetrics(SM_CXVSCROLL);
+
+   w1 := CamList.Width;
+   w2 := CamList.Width - sb;
+
+   h1 := round(w1 / 1.6 + 1) * CamPanel.ControlCount;
+   h2 := round(w2 / 1.6 + 1) * CamPanel.ControlCount;
+
+   if (h1 <= CamList.ClientHeight) then // Влезает без скроллера
+   begin
+      w := w1;
+      CamPanel.Height := h1;
+   end
+   else
+   begin
+      w := w2;
+      CamPanel.Height := Max(h2, CamList.ClientHeight + 1);
+   end;
+   h := round(w / 1.6 + 1);
+   CamPanel.Width := w;
+
+   for k := 0 to CamPanel.ControlCount - 1 do
+   begin
+      cw := TVLCPlugin2(CamPanel.Controls[k]);
+      cw.Left := 0;
+      cw.Top := k * (h + 1);
+      cw.Height := h;
+      cw.Width := w;
+   end;
+end;
+
+procedure TMainForm.CamListMouseWheel(Sender: TObject; Shift: TShiftState;
+  WheelDelta: Integer; MousePos: TPoint; var Handled: Boolean);
+begin
+   CamList.VertScrollBar.Position := CamList.VertScrollBar.Position - WheelDelta;
+   Handled := true;
+end;
+
+procedure TMainForm.CamListResize(Sender: TObject);
+begin
+   resizeCamList;
+end;
+
+procedure TMainForm.Panel7Resize(Sender: TObject);
+var
+   playHeight: integer;
+begin
+   playHeight := 0;
+   if (fMiniPlayer <> nil) then
+   begin
+      playHeight :=  Panel7.ClientWidth * 9 div 16 + 4;
+      fMiniPlayer.Left := 0;
+      fMiniPlayer.Top := 0;
+      fMiniPlayer.Width := Panel7.ClientWidth;
+      fMiniPlayer.Height := playHeight;
+   end;
+
+   TimePanel.Top := 4 + playHeight;
+   Panel3.Top := 23 + playHeight;
+   PlayButton.Top := 24 + playHeight;
+   PauseButton.Top := 24 + playHeight;
+   StopButton.Top := 24 + playHeight;
+   PlayNextButton.Top := 24 + playHeight;
+   PlayLoopButton.Top := 24 + playHeight;
+   TimePanel.Width := Panel7.ClientWidth - (TimePanel.Left * 2);
+   Panel3.Left := Panel7.ClientWidth - Panel3.Width;
+   updateTimePanel;
+
+   Panel8.Height := 59 + playHeight + Panel1.Height;   
+end;
+
+procedure TMainForm.playMiniPlayer(id, typ: integer; url: string;
+  withPause: boolean; seek: integer);
+begin
+   stopMiniPlayer;
+
+   fMiniPlayer := TVLCPlugin2.Create(Panel7);
+   fMiniPlayer.Parent := Panel7;
+   fMiniPlayer.video.fullscreen := fMiniPlayerFullscreen;
+   fMiniPlayer.OnMediaPlayerLengthChanged :=  VLCPlugin21MediaPlayerLengthChanged;
+   fMiniPlayer.OnMediaPlayerPlaying := VLCPlugin21MediaPlayerPlaying;
+   fMiniPlayer.OnMediaPlayerPaused := VLCPlugin21MediaPlayerPaused;
+   //fMiniPlayer.OnMediaPlayerStopped := VLCPlugin21MediaPlayerStopped;
+   fMiniPlayer.OnMediaPlayerTimeChanged := VLCPlugin21MediaPlayerTimeChanged;
+   fMiniPlayer.OnMediaPlayerEndReached := VLCPlugin21MediaPlayerStopped;
+
+   fMiniPlayer.ControlInterface.Toolbar := false;
+   fMiniPlayer.playlist.clear;
+   fMiniPlayer.playlist.add(url, NULL, NULL);
+   fMiniPlayer.playlist.play;
+   setMediaVolume;
+
+   Panel7Resize(nil);
+end;
+
+procedure TMainForm.pauseMiniPlayer;
+begin
+   if (fMiniPlayer <> nil) then
+      fMiniPlayer.playlist.togglePause;
+end;
+
+procedure TMainForm.stopMiniPlayer;
+begin
+   if (fMiniPlayer <> nil) then
+   begin
+      fMiniPlayer.playlist.stop;
+      while fMiniPlayer.playlist.isPlaying do
+         Sleep(10);
+      FreeAndNil(fMiniPlayer);
+      Panel7Resize(nil);
+      fMiniPlayerState := 4;
+      vlcOnChange(nil);
+   end;
+end;
+
+procedure TMainForm.VLCPlugin21MediaPlayerLengthChanged(ASender: TObject;
+  length: Integer);
+begin
+   fMiniPlayerLen := length div 1000;
+   vlcOnPlayPosEvent(nil, fMiniPlayerPos, fMiniPlayerLen);
+end;
+
+procedure TMainForm.VLCPlugin21MediaPlayerPaused(Sender: TObject);
+begin
+   fMiniPlayerState := 3;
+   vlcOnChange(nil);
+end;
+
+procedure TMainForm.VLCPlugin21MediaPlayerPlaying(Sender: TObject);
+begin
+   fMiniPlayerState := 2;
+   vlcOnChange(nil);
+end;
+
+procedure TMainForm.VLCPlugin21MediaPlayerStopped(Sender: TObject);
+begin
+   fMiniPlayerState := 4;
+   fMiniPlayerLen := 0;
+   fMiniPlayerPos := 0;
+   vlcOnChange(nil);
+   vlcOnPlayPosEvent(nil, fMiniPlayerPos, fMiniPlayerLen);
+   vlcOnStopEvent(nil);
+end;
+
+procedure TMainForm.VLCPlugin21MediaPlayerTimeChanged(ASender: TObject;
+  time: Integer);
+begin
+   fMiniPlayerPos := time div 1000;
+   vlcOnPlayPosEvent(nil, fMiniPlayerPos, fMiniPlayerLen);
+
+   fMiniPlayerFullscreen := fMiniPlayer.video.fullscreen;
+end;
+
+{procedure TMainForm.IdHTTPServer1CommandGet(AThread: TIdPeerThread;
+  ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
+var
+   id: integer;
+   om: TMediaListItem;
+   FileStream: TFileStream;
+   IdMimeTable: TIdMimeTable;
+begin
+   try
+      id := StrToInt(copy(ARequestInfo.Document, 2, Length(ARequestInfo.Document)));
+      om := getMediaAtId(id);
+
+      FileStream:= TFileStream.Create(om.file_name, fmOpenRead or fmShareDenyWrite);
+      IdMimeTable:= TIdMimeTable.Create(true);
+      try
+         try
+            FileStream.Position := ARequestInfo.ContentRangeStart;
+         except
+            on ERangeError do
+            begin
+               ARequestInfo.ContentRangeStart := FileStream.Position;
+               ARequestInfo.ContentRangeEnd := 0;
+            end;
+         end;
+         if ARequestInfo.ContentRangeEnd = 0 then
+            ARequestInfo.ContentRangeEnd := FileStream.Size;
+         ARequestInfo.ContentLength := int64(ARequestInfo.ContentRangeEnd - ARequestInfo.ContentRangeStart);
+         if FileStream.Size = ARequestInfo.ContentLength then
+            AResponseInfo.ResponseNo := 200
+         else
+            AResponseInfo.ResponseNo := 206;
+
+         AResponseInfo.ContentType := IdMimeTable.GetFileMIMEType(ExtractFileName(om.file_name));
+         AResponseInfo.ContentLength := ARequestInfo.ContentLength;
+         AResponseInfo.CustomHeaders.Clear;
+         AResponseInfo.CustomHeaders.Values['Accept-Ranges'] := 'bytes';
+         AResponseInfo.CustomHeaders.Values['Content-Disposition'] := 'filename="' + om.title + '"';
+
+         AResponseInfo.WriteHeader;
+         if not AnsiSameText(ARequestInfo.Command, 'HEAD') then
+         begin
+            try
+               AThread.Connection.WriteStream(FileStream, false, false, AResponseInfo.ContentLength);
+            except
+            end;
+         end;
+      finally
+         IdMimeTable.Free;
+         FileStream.Free;
+      end;
+   except
+      AResponseInfo.ResponseNo := 206;
+   end;
+end;}
 
 end.
 

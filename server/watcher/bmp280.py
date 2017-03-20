@@ -1,7 +1,7 @@
 from pyA20 import i2c
 
 # BME280 default address.
-BME280_I2CADDR           = 0x76
+BME280_I2CADDR           = 0x77
 
 # BME280 Registers
 BME280_CONTROL_MEAS      = 0xF4

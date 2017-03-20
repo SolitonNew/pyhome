@@ -33,9 +33,9 @@ class Main():
                 else:
                     addr = 0x77
                 self.bmp280_drv = BMP280(addr)
-                print("BMP280 OK: %s" % (hex(self.bmp280_drv.address)))
+                print("BMP280 OK: %s" % (hex(addr)))
             except:
-                print("BMP280 ERROR: %s" % (hex(self.bmp280_drv.address)))
+                print("BMP280 ERROR: %s" % (hex(addr)))
         
     def run(self):
         termostats_time_step = 0

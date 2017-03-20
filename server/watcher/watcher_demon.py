@@ -25,13 +25,10 @@ class Main():
         self.run()
 
     def bmp280_init(self):
+        addr = 0x76
         for i in range(2):
+            addr += i
             try:
-                addr = 0x0
-                if self.bmp280_drv == None or self.bmp280_drv.address == 0x77:
-                    addr = 0x76
-                else:
-                    addr = 0x77
                 self.bmp280_drv = BMP280(addr)
                 print("BMP280 OK: %s" % (hex(addr)))
             except:

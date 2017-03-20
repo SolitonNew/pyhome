@@ -79,7 +79,7 @@ class BMP280(object):
         i2c.init("/dev/i2c-0")
         self.address = address
 
-	# Read calibration values
+        # Read calibration values
         self.dig_t1 = self.read_word(BME280_DIG_T1)      # Unsigned
         self.dig_t2 = self.read_word_sign(BME280_DIG_T2)
         self.dig_t3 = self.read_word_sign(BME280_DIG_T3)

@@ -20,11 +20,24 @@ class Main():
         # ID, CHANNEL, VALUE
         try:
             self.BMP280_VARS = [[150, "t", None], [151, "p", None]]
-            self.bmp280_drv = BMP280()
+            self.bmp280_drv = None
+            self.bmp280_init()
         except:
             pass
         
         self.run()
+
+    def bmp280_init(self):
+        try:
+            addr = 0x0
+            if self.bmp280_drv == None or self.bmp280_drv.address == 0x77:
+                addr = 0x76
+            else:
+                addr = 0x77
+            self.bmp280_drv = BMP280(addr)
+            print("BMP280 OK: %s" % (hex(self.bmp280_drv.address)))
+        except:
+            print("BMP280 ERROR: %s" % (hex(self.bmp280_drv.address)))
         
     def run(self):
         termostats_time_step = 0
@@ -107,6 +120,7 @@ class Main():
                     self.db.IUD("call CORE_SET_VARIABLE(%s, %s, null)" % (var[0], var[2]))
                     self.db.commit()
         except Exception as e:
+            self.bmp280_init()
             print(e)
             
     def _add_command(self, command):

@@ -18,26 +18,24 @@ class Main():
         self._add_termostat(60, 59, "В гостинной") #Гостинная
 
         # ID, CHANNEL, VALUE
-        try:
-            self.BMP280_VARS = [[150, "t", None], [151, "p", None]]
-            self.bmp280_drv = None
-            self.bmp280_init()
-        except:
-            pass
+        self.BMP280_VARS = [[150, "t", None], [151, "p", None]]
+        self.bmp280_drv = None        
+        self.bmp280_init()                
         
         self.run()
 
     def bmp280_init(self):
-        try:
-            addr = 0x0
-            if self.bmp280_drv == None or self.bmp280_drv.address == 0x77:
-                addr = 0x76
-            else:
-                addr = 0x77
-            self.bmp280_drv = BMP280(addr)
-            print("BMP280 OK: %s" % (hex(self.bmp280_drv.address)))
-        except:
-            print("BMP280 ERROR: %s" % (hex(self.bmp280_drv.address)))
+        for i in range(2):
+            try:
+                addr = 0x0
+                if self.bmp280_drv == None or self.bmp280_drv.address == 0x77:
+                    addr = 0x76
+                else:
+                    addr = 0x77
+                self.bmp280_drv = BMP280(addr)
+                print("BMP280 OK: %s" % (hex(self.bmp280_drv.address)))
+            except:
+                print("BMP280 ERROR: %s" % (hex(self.bmp280_drv.address)))
         
     def run(self):
         termostats_time_step = 0

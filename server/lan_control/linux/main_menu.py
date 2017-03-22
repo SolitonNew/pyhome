@@ -2,9 +2,11 @@ from PyQt5.QtWidgets import QWidget, QLabel
 from PyQt5.QtGui import QColor, QFont, QPixmap, QPainter, QImage, QPen
 from PyQt5.QtCore import Qt, QSize, QTimer
 
-class MainMenu(QWidget):
+from base_layer import BaseLayer
+
+class MainMenu(BaseLayer):
     def __init__(self, parent):
-        super().__init__(parent)
+        super().__init__(parent)        
 
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.timerHandler)
@@ -32,10 +34,16 @@ class MainMenu(QWidget):
 
         self.redraw()
 
+        self.showFullScreen()
+
     def addItem(self, title, img):
-        img = QImage("controls/images/%s" % (img))
+        img = QImage("images/%s" % (img))
         self.items += [[img, title]]
         self.btnMaxSize = max(self.btnMaxSize, max(img.width(), img.height()))
+
+    def toTop(self):
+        self.raise_()
+        self.activateWindow()        
 
     def selIndex(self, val = None):
         if val == None:
@@ -54,9 +62,9 @@ class MainMenu(QWidget):
 
     def _calcWidth(self, large):
         if large:
-            return self.parentWidget().width() // 2
+            return self.mainForm.width() // 2
         else:
-            return self.parentWidget().width() // 4
+            return self.mainForm.width() // 4
 
     def _calcOpacity(self, large):
         if large:
@@ -129,9 +137,9 @@ class MainMenu(QWidget):
         w = self.drawWidth # self.parentWidget().width() // 2
         item_wh = w / len(self.items)
         p_w = item_wh / 20
-        self.resize(self.parentWidget().size())        
+        self.resize(self.mainForm.size())        
         self.canvas.resize(QSize(w + p_w, item_wh + p_w + p_w))
-        self.canvas.move((self.parentWidget().width() - w) / 2, item_wh / 5)
+        self.canvas.move((self.mainForm.width() - w) / 2, item_wh / 5)
         btn_size_k = item_wh / (self.btnMaxSize * 1.4);
 
         pen = QPen()
@@ -160,3 +168,5 @@ class MainMenu(QWidget):
             p.drawImage(x + (item_wh - nw) / 2, y + (item_wh - nh) / 2, img_s)
         p.end()
         self.canvas.setPixmap(pix)
+
+        

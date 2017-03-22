@@ -41,6 +41,13 @@ class Connector():
                     res[c] = row
         return res
         
+class ItemList():
+    def __init__(self, data=None, labelIndex=0):
+        self.data = data
+        if data:
+            self.LABEL = data[labelIndex]
+        else:
+            self.LABEL = ""
 
 class VarItem():
     def __init__(self, data=None):

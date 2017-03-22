@@ -3,15 +3,16 @@ from PyQt5.QtGui import (QColor, QFont, QPixmap, QPainter, QImage, QPen, QBrush,
                          QFontMetrics, QLinearGradient)
 from PyQt5.QtCore import Qt, QSize, QTimer
 
-from controls.string_list import StringList
-from controls.var_chart import VarChart
+from base_layer import BaseLayer
+from string_list import StringList
+from var_chart import VarChart
 
-class VarList(QWidget):
+class VarList(BaseLayer):
     def __init__(self, parent):
         super().__init__(parent)
-        self.setVisible(False)        
-        self.itemList = StringList(self, self.drawHandler)
-        self.varChart = VarChart(self)
+        self.itemList = StringList(self.content, self.drawHandler)
+        self.varChart = VarChart(self.content)
+        self.showFullScreen()
 
     def resizeEvent(self, event):
         size = self.size()
@@ -24,15 +25,6 @@ class VarList(QWidget):
         self.varChart.move(c_x, c_y)
         self.varChart.resize(c_w, c_h)
 
-        """
-        h_pad, v_pad = size.width() / 20, size.height() / 8
-        pw, ph = size.width() / 2.1 - h_pad, size.height() / 1.2 - v_pad
-        px, py = size.width() - pw - h_pad, (size.height() - ph) / 2
-        self.varPreview.resize(pw, ph)
-        self.varPreview.move(px, py)
-        self.varPreview.redraw()
-        """
-
     def selectedIndex(self, index=None):
         res = self.itemList.selectedIndex(index)
         if index != None:
@@ -42,7 +34,6 @@ class VarList(QWidget):
 
     def setData(self, data):
         self.itemList.setData(data)
-        self.selectedIndex(self.selectedIndex())
 
     def selectedRow(self):
         try:

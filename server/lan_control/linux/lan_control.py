@@ -6,16 +6,21 @@ from PyQt5.QtWidgets import QApplication, QWidget, QLabel
 from PyQt5.QtGui import (QPixmap, QPainter, QImage, QFontMetrics, QColor,
                          QPen, QBrush, QLinearGradient)
 from PyQt5.QtCore import Qt, QSize, QTimer
-from controls.main_menu import MainMenu
-from controls.var_list import VarList
-from controls.string_list import StringList
-from controls.cam_viewer import CamViewer
+from main_menu import MainMenu
+from var_list import VarList
+from media_list import MediaList
+from cam_viewer import CamViewer
 from connector import Connector
 from connector import VarItem
+from connector import ItemList
+
+import vlc
 
 class Main(QWidget):
     def __init__(self):
         super().__init__()
+        self.vlc_inst = vlc.Instance()        
+        
         self.varGroups = []
         self.varList = []
         self.mediaExts = ''
@@ -23,9 +28,12 @@ class Main(QWidget):
         self.mediaList = []
         
         self.conn = Connector(3)
+
+        self.selectedPage = None
         
         self.setWindowTitle('lan control v1.0')
-        self._createUI()
+        self.bgImage = QImage("images/bg.png")
+        self.bg = QLabel(self)
         self.showFullScreen()
         
         self.timer = QTimer(self)
@@ -35,27 +43,25 @@ class Main(QWidget):
         self.eventTimer = QTimer(self)
         self.eventTimer.timeout.connect(self._syncHandler)
 
-    def _createUI(self):
-        self.bgImage = QImage("bg.png")
-        self.bg = QLabel(self)
-        
-        self.page_1 = VarList(self)
-        self.page_2 = VarList(self)
-        self.page_3 = VarList(self)
-        #self.page_4 = StringList(self)
-        self.page_5 = StringList(self)
-        self.page_6 = CamViewer(self)
+        self.createChilds()
 
-        self.selectedPage = self.page_1
-        self.pages = [self.page_1,
-                      self.page_2,
-                      self.page_3,
-                      #self.page_4,
-                      self.page_5,
-                      self.page_6]
+    def createChilds(self):        
+        self.page_var_1 = VarList(self)
+        self.page_var_2 = VarList(self)
+        self.page_var_3 = VarList(self)
+        self.page_media = MediaList(self)
+        self.page_cam = CamViewer(self)
+
+        self.pages = [self.page_var_1,
+                      self.page_var_2,
+                      self.page_var_3,
+                      self.page_media,
+                      self.page_cam]
 
         self.mainMenu = MainMenu(self)
         self.mainMenu.collapse()
+
+        self.showPage()
 
     def _onTimer(self):        
         self.timer.stop()
@@ -63,12 +69,11 @@ class Main(QWidget):
         self._startLoad()
 
     def resizeEvent(self, event):
-        size = event.size()
-        self.bg.resize(size)
-        self.bg.setPixmap(QPixmap.fromImage(self.bgImage.scaled(size)))
-        self.mainMenu.redraw()
-        self.selectedPage.resize(size)
-        #self.selectedPage.redraw()
+        self.bg.resize(self.size())
+        self.bg.setPixmap(QPixmap.fromImage(self.bgImage.scaled(self.size())))
+
+        if self.selectedPage:
+            self.showPage()
 
     def keyPressEvent(self, event):
         key = event.nativeVirtualKey()
@@ -85,19 +90,23 @@ class Main(QWidget):
         elif key == 65293: # ENTER
             self.onKeyOk()
         elif key == 65479: # F10
+            self.timer.stop()
+            QApplication.closeAllWindows()
             self.conn.close()
-            self.close()
         else:
             print(key)
 
+    def showEvent(self, event):
+        pass
+
     def showPage(self):
+        if self.selectedPage:
+            self.selectedPage.off()
         page = self.pages[self.mainMenu.selIndex()]
         page.resize(self.size())
         page.redraw()
-        if self.selectedPage:
-            self.selectedPage.setVisible(False)
         self.selectedPage = page
-        self.selectedPage.setVisible(True)
+        self.selectedPage.on()
 
     # ---------------------------------------------------------------------
     #   Кнопки управления
@@ -157,6 +166,8 @@ class Main(QWidget):
                         v = None
                     if v != None and var_id > 0 and v != prev_v:
                         self._setVar(var_id, v)
+            elif type(self.selectedPage) == MediaList:
+                self.selectedPage.selectedPanel(self.selectedPage.selectedPanel() - 1)
 
     def onKeyRight(self):
         if self.mainMenu.isExpanded:
@@ -188,6 +199,8 @@ class Main(QWidget):
                         v = None
                     if v != None and var_id > 0 and v != prev_v:
                         self._setVar(var_id, v)
+            elif type(self.selectedPage) == MediaList:
+                self.selectedPage.selectedPanel(self.selectedPage.selectedPanel() + 1)
 
     def onKeyVolumeUp(self):
         pass
@@ -224,13 +237,26 @@ class Main(QWidget):
         for i in range(len(tmp)):
             self.varList[i] = VarItem(tmp[i])
         self._groupingVars()
-        self._splitVarData(self.page_1, [1, 3])
-        self._splitVarData(self.page_2, [4, 5, 10])
-        self._splitVarData(self.page_3, [7, 11, 13])
+        self._splitVarData(self.page_var_1, [1, 3])
+        self._splitVarData(self.page_var_2, [4, 5, 10])
+        self._splitVarData(self.page_var_3, [7, 11, 13])
         self.mediaExts = self.conn.query("get media exts")[0][0]
         self.mediaFolders = self.conn.query("get media folders")
-        #self.mediaList = self.conn.query("get media list")
+        
+        tmp = self.conn.query("get groups list")
+        self.mediaGroupList = [None] * len(tmp)
+        for i in range(len(tmp)):
+            self.mediaGroupList[i] = ItemList(tmp[i], 2)
+        self.page_media.setGroupData(self.mediaGroupList)
 
+        tmp = self.conn.query("get media list")
+        self.mediaTrackList = [None] * len(tmp)
+        for i in range(len(tmp)):
+            self.mediaTrackList[i] = (int(tmp[i][0]), tmp[i][2])
+        self.page_media.setTrackData(self.mediaTrackList)
+
+        #self.page_media.setTrackData([])
+            
         self.eventTimer.start(500)
 
     def _varIndexAtLabel(self, notId, typ, label):
@@ -317,5 +343,5 @@ class Main(QWidget):
     
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    form = Main()
+    mainForm = Main()
     sys.exit(app.exec_())

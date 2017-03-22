@@ -282,7 +282,7 @@ class MetaThread(threading.Thread):
                              "  from core_variables order by COMM"))
         self._print("    load pack [%s bytes]" % (l))
         self._sess(True)
-        self._cams(True)
+        #self._cams(True)
 
     def _add_to_queue(self, typ, value, value2 = 0, target = None):
         for r in self.app_sessions:

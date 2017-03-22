@@ -18,13 +18,21 @@ class Main():
         self._add_termostat(60, 59, "В гостинной") #Гостинная
 
         # ID, CHANNEL, VALUE
-        try:
-            self.BMP280_VARS = [[150, "t", None], [151, "p", None]]
-            self.bmp280_drv = BMP280()
-        except:
-            pass
+        self.BMP280_VARS = [[150, "t", None], [151, "p", None]]
+        self.bmp280_drv = None        
+        self.bmp280_init()                
         
         self.run()
+
+    def bmp280_init(self):
+        addr = 0x76
+        for i in range(2):
+            addr += i
+            try:
+                self.bmp280_drv = BMP280(addr)
+                print("BMP280 OK: %s" % (hex(addr)))
+            except:
+                print("BMP280 ERROR: %s" % (hex(addr)))
         
     def run(self):
         termostats_time_step = 0
@@ -107,6 +115,7 @@ class Main():
                     self.db.IUD("call CORE_SET_VARIABLE(%s, %s, null)" % (var[0], var[2]))
                     self.db.commit()
         except Exception as e:
+            self.bmp280_init()
             print(e)
             
     def _add_command(self, command):

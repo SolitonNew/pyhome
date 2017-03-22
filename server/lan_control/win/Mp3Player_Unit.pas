@@ -193,8 +193,12 @@ begin
 
    HTTP:= THTTPSend.Create;
    try
-      HTTP.HTTPMethod('GET', s);
-      HTTP.Document.SaveToFile(f_name);
+      HTTP.Timeout := 2000;
+      if HTTP.HTTPMethod('GET', s) then
+      begin
+         MP3In1.Reset();
+         HTTP.Document.SaveToFile(f_name);
+      end;
       is_ok := True;
    finally
       HTTP.Free;
@@ -207,6 +211,12 @@ begin
 
       playFileName := s;
       playFileID := id;
+
+      if (withPause) then
+         DXAudioOut1.Pause;
+
+      if (seek > 0) then
+         setPlayPos(seek);
 
       doChange();
    end;

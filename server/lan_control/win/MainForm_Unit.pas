@@ -789,9 +789,7 @@ begin
                   bmp.Transparent := True;
                   bmp.Width := 32;
                   bmp.Height := 13;
-                  ImageList1.Draw(bmp.Canvas, 0, -round(12 * (o.value / 2)), 1);
-                  {if (odSelected in State) then
-                     inverIcon(bmp, $00feffff);}
+                  ImageList1.Draw(bmp.Canvas, 0, -12 * trunc(o.value / 2), 1);
                   Draw(itemBmp.Width - 5 - 29, 6, bmp);
                finally
                   bmp.Free;
@@ -1642,10 +1640,13 @@ begin
          fMediaPlayFileID := id;
          fMediaPlayFileType := om.file_type;
          fileName := 'http://' + ip + ':' + IntToStr(http.httpPort) + '/' + IntToStr(id);
-         case om.file_type of
-            2: Mp3Player.play(id, om.file_type, fileName, om.title, withPause, seek);
-            else
-               playMiniPlayer(id, om.file_type, fileName, withPause, seek)
+         if (WideUpperCase(ExtractFileExt(om.file_name)) = '.MP3') then
+         begin
+            Mp3Player.play(id, om.file_type, fileName, om.title, withPause, seek);
+         end
+         else
+         begin
+            playMiniPlayer(id, om.file_type, fileName, withPause, seek)
          end;
       end
       else
@@ -1746,7 +1747,7 @@ begin
             end;
             2:
             begin
-               ind := MediaList.Items.IndexOfObject(l[round(random(l.Count - 1))]);
+               ind := MediaList.Items.IndexOfObject(l[trunc(random(l.Count))]);
                playMediaPlayAt(ind, true);
             end;
          end;
@@ -3017,11 +3018,14 @@ function TMainForm.checkSpechData(id: string): Boolean;
       f: TFileStream;
    begin
       Result := 0;
-      f:= TFileStream.Create(s, fmOpenRead);
-      try
-         Result := f.Size;
-      finally
-         f.Free;
+      if (FileExists(s)) then
+      begin
+         f:= TFileStream.Create(s, fmOpenRead or fmShareDenyWrite);
+         try
+            Result := f.Size;
+         finally
+            f.Free;
+         end;
       end;
    end;
 
@@ -3307,6 +3311,12 @@ begin
    fMiniPlayer.playlist.add(url, NULL, NULL);
    fMiniPlayer.playlist.play;
    setMediaVolume;
+
+   if (withPause) then
+      fMiniPlayer.playlist.pause;
+
+   if (seek > 0) then
+      fMiniPlayer.input.time := seek * 1000;      
 
    Panel7Resize(nil);
 end;

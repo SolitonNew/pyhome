@@ -21,6 +21,7 @@ type
     procedure Timer1Timer(Sender: TObject);
     procedure FormPaint(Sender: TObject);
     procedure Timer2Timer(Sender: TObject);
+    procedure FormClick(Sender: TObject);
   private
     fDrawBitmap: TBitmap;
     fTexts: TStringList;
@@ -239,6 +240,11 @@ end;
 procedure TAlertForm.Timer2Timer(Sender: TObject);
 begin
    //setOnTop();
+end;
+
+procedure TAlertForm.FormClick(Sender: TObject);
+begin
+   hideAlert;
 end;
 
 end.

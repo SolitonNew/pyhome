@@ -16,6 +16,7 @@ object AlertForm: TAlertForm
   Font.Style = []
   FormStyle = fsStayOnTop
   OldCreateOrder = False
+  OnClick = FormClick
   OnPaint = FormPaint
   PixelsPerInch = 96
   TextHeight = 13

@@ -20,11 +20,3 @@ class BaseLayer(QWidget):
     def off(self):
         self.content.setVisible(False)
 
-    def paintEvent(self, event):
-        return 
-        if not self.transparent:
-            p = QPainter()
-            p.begin(self)
-            p.drawImage(0, 0, self.mainForm.bgImage.scaled(self.size()))
-            p.end()
-

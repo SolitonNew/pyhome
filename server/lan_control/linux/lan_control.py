@@ -10,6 +10,7 @@ from main_menu import MainMenu
 from var_list import VarList
 from media_list import MediaList
 from cam_viewer import CamViewer
+from media_player import MediaPlayer
 from connector import Connector
 from connector import VarItem
 from connector import ItemList
@@ -28,12 +29,12 @@ class Main(QWidget):
         self.mediaList = []
         
         self.conn = Connector(3)
+        self.sessions = []
 
         self.selectedPage = None
-        
         self.setWindowTitle('lan control v1.0')
         self.bgImage = QImage("images/bg.png")
-        self.bg = QLabel(self)
+        self.player = MediaPlayer(self, self.vlc_inst)        
         self.showFullScreen()
         
         self.timer = QTimer(self)
@@ -59,7 +60,6 @@ class Main(QWidget):
                       self.page_cam]
 
         self.mainMenu = MainMenu(self)
-        self.mainMenu.collapse()
 
         self.showPage()
 
@@ -68,12 +68,16 @@ class Main(QWidget):
         self.showPage()
         self._startLoad()
 
-    def resizeEvent(self, event):
-        self.bg.resize(self.size())
-        self.bg.setPixmap(QPixmap.fromImage(self.bgImage.scaled(self.size())))
+    def paintEvent(self, event):
+        p = QPainter()
+        p.begin(self)
+        p.drawImage(0, 0, self.bgImage.scaled(self.size()))
+        p.end()
 
+    def resizeEvent(self, event):
         if self.selectedPage:
             self.showPage()
+        self.player.resize(self.size())
 
     def keyPressEvent(self, event):
         key = event.nativeVirtualKey()
@@ -85,19 +89,28 @@ class Main(QWidget):
             self.onKeyLeft()
         elif key == 65363:
             self.onKeyRight()
-        elif key == 32:    # SPACE
+        elif key == 65307: # ESC
             self.onKeyMenu()
         elif key == 65293: # ENTER
             self.onKeyOk()
-        elif key == 65479: # F10
+        elif key == 113: # q
             self.timer.stop()
             QApplication.closeAllWindows()
             self.conn.close()
+        elif key == 65477: # F8 Prev
+            self.onKeyPlayPrev()
+        elif key == 65478: # F9 Play
+            self.onKeyPlay()
+        elif key == 32: # SPACE
+            self.onKeyPause()
+        elif key == 65479: # F10 Next
+            self.onKeyPlayNext()
+        elif key == 65480: # F11 VolDown
+            self.onKeyVolumeDown()
+        elif key == 65481: # F12 VolUp
+            self.onKeyVolumeUp()
         else:
             print(key)
-
-    def showEvent(self, event):
-        pass
 
     def showPage(self):
         if self.selectedPage:
@@ -113,31 +126,37 @@ class Main(QWidget):
     # ---------------------------------------------------------------------
     
     def onKeyMenu(self):
-        if self.mainMenu.isExpanded:
+        if self.mainMenu.isExpanded():
             self.mainMenu.collapse()
         else:
             self.mainMenu.expand()
 
     def onKeyOk(self):
-        if self.mainMenu.isExpanded:
+        if self.mainMenu.isExpanded():
             self.mainMenu.collapse()
+        else:
+            if self.selectedPage == self.page_media:
+                if self.page_media.selectedPanel() == 0:
+                    self.page_media.selectedPanel(1)
+                else:
+                    self.page_media.play()
 
     def onKeyUp(self):
-        if self.mainMenu.isExpanded:
+        if self.mainMenu.isExpanded():
             pass
         else:
             if self.selectedPage:
                 self.selectedPage.selectedIndex(self.selectedPage.selectedIndex() - 1)
 
     def onKeyDown(self):
-        if self.mainMenu.isExpanded:
+        if self.mainMenu.isExpanded():
             pass
         else:
             if self.selectedPage:
                 self.selectedPage.selectedIndex(self.selectedPage.selectedIndex() + 1)
 
     def onKeyLeft(self):
-        if self.mainMenu.isExpanded:
+        if self.mainMenu.isExpanded():
             self.mainMenu.selIndex(self.mainMenu.selIndex() - 1)
             self.showPage()
         else:
@@ -170,7 +189,7 @@ class Main(QWidget):
                 self.selectedPage.selectedPanel(self.selectedPage.selectedPanel() - 1)
 
     def onKeyRight(self):
-        if self.mainMenu.isExpanded:
+        if self.mainMenu.isExpanded():
             self.mainMenu.selIndex(self.mainMenu.selIndex() + 1)
             self.showPage()
         else:
@@ -185,7 +204,6 @@ class Main(QWidget):
                 prev_v = v
                 if v != None:
                     v += 1
-                
                     if var.typ == 1 or var.typ == 3: # Свет/Розетки
                         if v > 1:
                             v = 1
@@ -203,10 +221,37 @@ class Main(QWidget):
                 self.selectedPage.selectedPanel(self.selectedPage.selectedPanel() + 1)
 
     def onKeyVolumeUp(self):
-        pass
+        v = self.player.volume() + 5
+        if v > 200:
+            v = 200
+        self.player.volume(v)
 
     def onKeyVolumeDown(self):
-        pass
+        v = self.player.volume() - 5
+        if v < 0:
+            v = 0
+        self.player.volume(v)
+
+    def onKeyMute(self):
+        self.player.mute()
+
+    def onKeyPlay(self):
+        self.player.play()
+
+    def onKeyPause(self):
+        self.player.pause()
+
+    def onKeyStop(self):
+        self.player.stop()
+
+    def onKeyPlayNext(self):
+        self.page_media.playNext()
+
+    def onKeyPlayPrev(self):
+        self.page_media.playPrev()
+
+    def onKeyInfo(self):
+        self.player.info()
 
     # ---------------------------------------------------------------------
 
@@ -226,9 +271,11 @@ class Main(QWidget):
                         var.link_value = float(row[2])
             except:
                 print("ERR: ", res)
+
+        self.sessions = self.conn.query("sessions")
                     
         if len(res) > 0:
-            self.selectedPage.redraw()
+            self.selectedPage.redraw()        
 
     def _startLoad(self):
         self.varGroups = self.conn.query("load variable group")
@@ -252,7 +299,7 @@ class Main(QWidget):
         tmp = self.conn.query("get media list")
         self.mediaTrackList = [None] * len(tmp)
         for i in range(len(tmp)):
-            self.mediaTrackList[i] = (int(tmp[i][0]), tmp[i][2])
+            self.mediaTrackList[i] = (int(tmp[i][0]), tmp[i][2], tmp[i][1])
         self.page_media.setTrackData(self.mediaTrackList)
 
         #self.page_media.setTrackData([])

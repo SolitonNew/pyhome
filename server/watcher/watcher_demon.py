@@ -3,6 +3,7 @@
 
 from db_connector import DBConnector
 import time
+import datetime
 try:
     from bmp280 import BMP280
 except:
@@ -37,6 +38,8 @@ class Main():
     def run(self):
         termostats_time_step = 0
         bmp280_time_step = 0
+        clear_db_mem_time_step = 0
+        clear_db_mem_time_ignore = False
         while True:
             relIds = []
             for keys in self.db.select("select CORE_GET_LAST_CHANGE_ID()"):
@@ -91,6 +94,19 @@ class Main():
                 bmp280_time_step = round(60 / 0.2)
                 self._check_bmp280()
             bmp280_time_step -= 1
+
+            # -------------------------------------------
+            if datetime.datetime.now().hour == 4:
+                if not clear_db_mem_time_ignore:
+                    clear_db_mem_time_ignore = True
+                    if clear_db_mem_time_step == 0:
+                        clear_db_mem_time_step = 1
+                        self.clear_mem_db()
+                    else:
+                        clear_db_mem_time_step -= 1
+            else:
+                clear_db_mem_time_ignore = False
+            # -------------------------------------------
             
             time.sleep(0.2)
 
@@ -137,6 +153,25 @@ class Main():
                 return True
         return False
 
+
+    def _clear_mem_db_table(self, table, space=100):
+        for rec in self.db.select("select MAX(ID) from %s" % (table)):
+            if rec[0]:
+                max_id = rec[0] - space
+                self.db.IUD("delete from %s where ID < %s" % (table, max_id))
+                self.db.commit()
+    
+    def clear_mem_db(self):
+        try:
+            self._clear_mem_db_table("app_control_exe_queue")
+            self._clear_mem_db_table("app_control_queue")
+            self._clear_mem_db_table("app_control_sess")
+            self._clear_mem_db_table("core_execute")
+            self._clear_mem_db_table("core_variable_changes_mem")
+            print("[%s] CLEAR MEM TABLES" % (time.strftime("%d-%m-%Y %H:%M")))
+        except Exception as e:
+            print(e)
+        
 
 print(
 "=============================================================================\n"

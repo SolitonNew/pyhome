@@ -98,17 +98,19 @@ class Main(QWidget):
             QApplication.closeAllWindows()
             self.conn.close()
         elif key == 65477: # F8 Prev
-            self.onKeyPlayPrev()
+            self.onKeyPrev()
         elif key == 65478: # F9 Play
             self.onKeyPlay()
         elif key == 32: # SPACE
             self.onKeyPause()
         elif key == 65479: # F10 Next
-            self.onKeyPlayNext()
+            self.onKeyNext()
         elif key == 65480: # F11 VolDown
             self.onKeyVolumeDown()
         elif key == 65481: # F12 VolUp
             self.onKeyVolumeUp()
+        elif key == 100: #D
+            self.onKeyDisplay()
         else:
             print(key)
 
@@ -130,6 +132,7 @@ class Main(QWidget):
             self.mainMenu.collapse()
         else:
             self.mainMenu.expand()
+            self.selectedPage.on()
 
     def onKeyOk(self):
         if self.mainMenu.isExpanded():
@@ -140,6 +143,8 @@ class Main(QWidget):
                     self.page_media.selectedPanel(1)
                 else:
                     self.page_media.play()
+                    self.mainMenu.playerPosInfo(True)
+                    self.mainMenu.showVolume()
 
     def onKeyUp(self):
         if self.mainMenu.isExpanded():
@@ -225,33 +230,52 @@ class Main(QWidget):
         if v > 200:
             v = 200
         self.player.volume(v)
+        self.mainMenu.showVolume()
 
     def onKeyVolumeDown(self):
         v = self.player.volume() - 5
         if v < 0:
             v = 0
         self.player.volume(v)
+        self.mainMenu.showVolume()
 
     def onKeyMute(self):
         self.player.mute()
 
     def onKeyPlay(self):
-        self.player.play()
+        if self.player.playState() == 3 or self.player.playState() == 4:
+            self.onKeyPause()            
+        elif self.player.playState() == 5:
+            self.page_media.play()
+        self.mainMenu.playerPosInfo(True)
+        self.mainMenu.showVolume()
 
     def onKeyPause(self):
-        self.player.pause()
+        if self.player.playState() == 3:
+            self.player.pause()
+            self.mainMenu.playerPosInfo(True, False)
+        elif self.player.playState() == 4:
+            self.player.pause()
+            self.mainMenu.playerPosInfo(True)
 
     def onKeyStop(self):
-        self.player.stop()
+        if self.player.isPlaying():
+            self.player.stop()
 
-    def onKeyPlayNext(self):
+    def onKeyNext(self):
         self.page_media.playNext()
 
-    def onKeyPlayPrev(self):
+    def onKeyPrev(self):
         self.page_media.playPrev()
 
-    def onKeyInfo(self):
-        self.player.info()
+    def onKeyDisplay(self):
+        if self.player.isPlaying() and not self.mainMenu.isExpanded():
+            if self.selectedPage.isOn():
+                self.selectedPage.off()
+                self.mainMenu.playerPosInfo(False)
+            else:
+                self.mainMenu.playerPosInfo(not self.mainMenu.playerPosInfo())
+            self.mainMenu.toolBar.setVisible(self.mainMenu.playerPosInfo())
 
     # ---------------------------------------------------------------------
 

@@ -14,6 +14,9 @@ class BaseLayer(QWidget):
     def keyPressEvent(self, event):
         self.mainForm.keyPressEvent(event)
 
+    def isOn(self):
+        return self.content.isVisible()
+
     def on(self):
         self.content.setVisible(True)
 

@@ -10,6 +10,7 @@ from connector import ItemList
 class MediaList(BaseLayer):
     def __init__(self, parent):
         super().__init__(parent)
+        self.playingData = None
         self._selectedPanel = 0
 
         self.groupListBg = QLabel(self.content)
@@ -133,6 +134,7 @@ class MediaList(BaseLayer):
                     ip = sess[2]
                     break
             url = "http://%s:8092/%s" % (ip, id)
+            self.playingData = d
             self.mainForm.player.play(url)
             self.off()
         except Exception as e:

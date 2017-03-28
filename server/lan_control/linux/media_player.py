@@ -12,7 +12,7 @@ class MediaPlayer(QWidget):
 
         self.currTime = 0
         self.currLen = 0
-        self.currVol = 0
+        self.currVol = 50
         
         self.player = inst.media_player_new()
         self.events = self.player.event_manager()
@@ -28,16 +28,15 @@ class MediaPlayer(QWidget):
         pos = self.position()
         if pos != self.currTime:
             self.currTime = pos
-            self.parentWidget().mainMenu.repaint()
+            self.parentWidget().mainMenu.playerPosPanel.update()
 
     def playLengthHandler(self, event):
         l = self.length()
         if l != self.currLen:
             self.currLen = l
-            print(l)
 
     def playVolumeHandler(self, event):
-        print(self.volume())
+        pass
 
     def showEvent(self, event):
         inst = self.inst
@@ -50,8 +49,7 @@ class MediaPlayer(QWidget):
         self.stop()
         self.player.set_media(self.inst.media_new(url))
         self.player.play()
-
-        print(url)
+        self.volume(self.volume())
 
     def stop(self):
         self.player.stop()
@@ -59,13 +57,13 @@ class MediaPlayer(QWidget):
     def pause(self):
         self.player.pause()
 
-    def info(self):
-        pass
-
     def volume(self, value=None):
         if value == None:
-            return self.player.audio_get_volume()
+            if self.currVol == None:
+                self.currVol = self.player.audio_get_volume()
+            return self.currVol
 
+        self.currVol = value
         self.player.audio_set_volume(value)
 
     def mute(self):
@@ -73,6 +71,9 @@ class MediaPlayer(QWidget):
 
     def isPlaying(self):
         return self.player.is_playing()
+
+    def playState(self):
+        return self.player.get_state()
 
     def getMediaRange(self):
         return [self.position(), self.length()]

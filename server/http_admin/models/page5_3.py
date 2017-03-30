@@ -8,11 +8,11 @@ class Page5_3(BaseForm):
     VIEW = "page5_3.tpl"
 
     def create_widgets(self):
-        tf = TextField("CONTENT", self._get_content())
-        self.add_widget(tf)
+        pass
 
     def query(self, query_type):
-        pass
+        if query_type == "refresh":
+            return self._get_content()
 
     def _get_content(self):
         min_time = datetime.now()
@@ -88,20 +88,20 @@ class Page5_3(BaseForm):
             if prev_var_value == None:
                 prev_var_value = rec[2]
 
-            if rec[2] > 0: # Включили лампочку
-                prev_var_time = rec[1]
-            else: # Лампочку выключили и щитаем сколько горела
-                #print(prev_rec, rec)
-                dt = rec[1] - prev_var_time
-                all_time += dt
-                # Определяем мощьность лампочки по ID
-                pw = 13
-                try:
-                    power_high.index(rec[0])
-                    pw = 28
-                except:
-                    pass
-                all_power += pw * (dt / 3600)
+            if prev_var_value != rec[2]:
+                if rec[2] > 0: # Включили лампочку
+                    prev_var_time = rec[1]
+                else: # Лампочку выключили и щитаем сколько горела
+                    dt = rec[1] - prev_var_time
+                    all_time += dt
+                    # Определяем мощьность лампочки по ID
+                    pw = 13
+                    try:
+                        power_high.index(rec[0])
+                        pw = 28
+                    except:
+                        pass
+                    all_power += pw * (dt / 3600)
 
             prev_var_value = rec[2]
             prev_rec = rec

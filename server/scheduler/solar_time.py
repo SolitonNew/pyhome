@@ -4,7 +4,6 @@ import datetime
 def GetDays(dat):
     y = datetime.datetime.now().year
     fe = datetime.datetime(y, 12, 31).timestamp()
-    #return (datetime.datetime.now().timestamp() - fe) / (24 * 3600)
     return (dat * 24 * 3600 - fe) / (24 * 3600)
     
 def Adjust(Value, Bounds):
@@ -13,6 +12,15 @@ def Adjust(Value, Bounds):
     while Value < 0:
         Value = Value + Bounds
     return Value
+
+def calc_tzone(date):
+    hh = date * 24 * 3600
+    local = datetime.datetime.fromtimestamp(hh)
+    utc = datetime.datetime.utcfromtimestamp(hh)
+    d = local.hour - utc.hour
+    if d < 0:
+        d = 24 + d
+    return d
 
 def GetSunTime(Dt, Latitude, Longitude, Zenith, LocalOffset, SunTime):
     # 1. first calculate the day of the year
@@ -82,28 +90,28 @@ def GetSunTime(Dt, Latitude, Longitude, Zenith, LocalOffset, SunTime):
     UT = Adjust(UT, 24)
     # ----------
     # 10. convert UT value to local time zone of latitude/longitude
-    Result = UT + LocalOffset
+    Result = UT + calc_tzone(Dt) #LocalOffset
     Result = Adjust(Result, 24)
     return Result
 
-"""
-def CalcSunTimeTwilight(date, lat, long, off):
-    return {"Sunrise":GetSunTime(date, lat, long, 90.8333333333333, off, "Sunrise"),
-            "Sunset":GetSunTime(date, lat, long, 90.8333333333333, off, "Sunset")}
 
-Dt = datetime.datetime.now().timestamp() // (24 * 3600)
-res = CalcSunTimeTwilight(Dt, 49.697287, 34.354388, 3)
+def calc_time(date, t):
+    h = trunc(t)
+    m = round((t - h) * 60)
+    res = datetime.datetime.now()
+    d = datetime.datetime(date.year, date.month, date.day).timestamp()
+    res = datetime.datetime.fromtimestamp(d + h * 3600 + m * 60)
+    return res
 
-def numToTime(n):
-    h = trunc(n)
-    m = round((n - h) * 60)
-    h = str(h)
-    if len(h) == 1:
-        h = "0" + h
-    m = str(m)
-    if len(m) == 1:
-        m = "0" + m
-    return "%s:%s" % (h, m)
+def calc_test():
+    now = datetime.datetime.utcnow()
+    date = datetime.datetime(now.year, now.month, now.day).timestamp() // (24 * 3600)
+    lat, long = 49.697287, 34.354388
+    off = 0
+    t1 = GetSunTime(date, lat, long, 90.8333333333333, off, "Sunrise")
+    t2 = GetSunTime(date, lat, long, 90.8333333333333, off, "Sunset")
 
-print("Восход %s  Закат %s" % (numToTime(res['Sunrise']), numToTime(res['Sunset'])))
-"""
+    print(calc_time(now, t1))
+    print(calc_time(now, t2))
+
+#calc_test()

@@ -47,6 +47,38 @@ class Main():
         minutes = round((st - hour) * 60)
         return (hour * 60 + minutes) * 60
 
+    def parese_sun_delta(self, comm):
+        """
+        SUNRISE - 1
+        SUNRISE - 1:03
+        SUNRISE - 1:03:02
+        """
+        s = comm
+        s = s.replace("SUNSET", "")
+        s = s.replace("SUNRISE", "")
+        s = s.replace(" ", "")
+        try:        
+            is_minus = s[0] == "-"
+        except:
+            is_minus = False
+        s = s.replace("-", "")
+        a = s.split(":")
+        h, m, s = 0, 0, 0
+        try:
+            if len(a) > 0:
+                h = int(a[0])
+            if len(a) > 1:
+                m = int(a[1])
+            if len(a) > 2:
+                s = int(a[2])
+        except:
+            pass
+
+        res = h * 3600 + m * 60 + s
+        if is_minus:
+            res = -res
+        return res
+
     def parse_time(self, action_datetime, time_of_day, day_of_type, int_type):
         if action_datetime == None:
             action_datetime = datetime.datetime.now().timestamp();
@@ -55,7 +87,7 @@ class Main():
         now = datetime.datetime(now.year, now.month, now.day)
         
         times = []
-        dates = []
+        dates = []        
 
         time_type = ""
         try:
@@ -76,11 +108,13 @@ class Main():
             Сборка даты/времени выполняется здесь отдельно и дальше код
             не пойдет.
             """
+
+            sun_delta = self.parese_sun_delta(time_of_day.upper())
             
             d1 = now.timestamp()
             d2 = now.timestamp() + 24 * 3600
-            dt = [d1 + self.calc_suntime(d1, time_type),
-                  d2 + self.calc_suntime(d2, time_type)]
+            dt = [d1 + self.calc_suntime(d1, time_type) + sun_delta,
+                  d2 + self.calc_suntime(d2, time_type) + sun_delta]
 
             dt.sort()
 

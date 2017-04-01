@@ -1,6 +1,7 @@
 from base_form import BaseForm
 
 from widgets import TextField
+from widgets import Grid
 from datetime import datetime
 
 class Page5_3(BaseForm):
@@ -8,13 +9,35 @@ class Page5_3(BaseForm):
     VIEW = "page5_3.tpl"
 
     def create_widgets(self):
-        pass
+        gr = Grid("POWER_TABLE", "ID", "select ID, CHANGE_DATE, YEAR, MONTH, LIGHT_TIME, LIGHT_POWER from web_stat_power ")
+        gr.add_column("Дата расчета", "CHANGE_DATE", 130, sort="asc")
+        gr.add_column("Месяц", "YEAR", 90, func=self._monthFunc)
+        gr.add_column("Длительность освещения (ч)", "LIGHT_TIME", 90)
+        gr.add_column("Потребление освещением (кВт/ч)", "LIGHT_POWER", 90)
+        self.add_widget(gr)
 
     def query(self, query_type):
-        if query_type == "refresh":
-            return self._get_content()
+        if query_type == "recalc_stat":
+            self.recalc_stat()
+            return "OK"
 
-    def _get_content(self):
+    def _monthFunc(self, index, row):
+        y, m = str(row[2]), str(row[3])
+        if len(m) == 1:
+            m = "0" + m
+        return "%s/%s" % (y, m)
+
+    def calc_month_interval(self, year, month):
+        time_from = datetime(year, month, 1, 5, 0, 0).timestamp()
+        if month == 12:
+            year += 1
+            month = 0
+        time_to = datetime(year, month + 1, 1, 5, 0, 0).timestamp()
+        return [time_from, time_to]
+
+    def recalc_stat(self):
+        calcs = self.db.select("select CHANGE_DATE, YEAR, MONTH from web_stat_power")
+        
         min_time = datetime.now()
         max_time = datetime.now()
         
@@ -30,24 +53,33 @@ class Page5_3(BaseForm):
 
         for y in range(year_from, year_to + 1):
             for i in range(12):
-                stat = self._calcStat(y, i + 1)
-                if stat != None:
-                    if i == 0:
-                        res += ["<hr>"]
-                    res += ["<p>"]
-                    res += ["<div><b>%s/%s</b></div>" % (y, i + 1)]
-                    res += ["<div style='padding-left:40px;'>Длительность освещения (ч): <b>%s</b></div>" % (stat[0])]
-                    res += ["<div style='padding-left:40px;'>Потребленная мощьность (кВт/ч): <b>%s</b></div>" % (stat[1])]
-                    res += ["</p>"]
-
-        return "".join(res)
+                b = True
+                for c in calcs:
+                    if c[1] == y and c[2] == (i+1):
+                        mi = self.calc_month_interval(c[1], c[2])
+                        try:
+                            ts = c[0].timestamp()
+                            if ts > mi[1]:
+                                b = False
+                                break
+                        except Exception as e:
+                            print(e)
+                if b:
+                    self.db.IUD("delete from web_stat_power "
+                                " where YEAR=%s and MONTH=%s" % (y, i + 1))
+                    stat = self._calcStat(y, i + 1)
+                    if stat != None:
+                        print("OK")
+                        self.db.IUD("insert into web_stat_power "
+                                    "   (YEAR, MONTH, LIGHT_TIME, LIGHT_POWER) "
+                                    " values "
+                                    "   (%s, %s, %s, %s)" % (y, i+1, stat[0], stat[1]))
+                    self.db.commit()
+                else:
+                    print("CANCEL")
 
     def _calcStat(self, year, month, var_id=None):
-        time_from = datetime(year, month, 1, 5).timestamp()
-        if month == 12:
-            year += 1
-            month = 0
-        time_to = datetime(year, month + 1, 1, 5).timestamp()
+        time_from, time_to = self.calc_month_interval(year, month)
         power_high = [29, 30] # Двойные лампочки
         prev_var_id = None
         prev_var_value = None
@@ -68,7 +100,7 @@ class Page5_3(BaseForm):
                                   "   and v.ID = c.VARIABLE_ID "
                                   "   and v.APP_CONTROL = 1 "
                                   "   %s "
-                                  "order by 1, 2" % (time_from, time_to, var_sql)):
+                                  "order by c.VARIABLE_ID, c.ID" % (time_from, time_to, var_sql)):
 
             if prev_rec == None:
                 prev_rec = rec

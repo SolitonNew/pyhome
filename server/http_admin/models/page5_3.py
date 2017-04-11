@@ -164,7 +164,7 @@ class Page5_3(BaseForm):
         if month == 0:
             month = 12
         if all_time > 0:
-            return [round(all_time / 3600, 1), round(all_power / 1000, 3)]
+            return [round(all_time / 3600, 2), round(all_power / 1000, 3)]
         else:
             return None
 
@@ -220,7 +220,7 @@ class Page5_3(BaseForm):
         if month == 0:
             month = 12
         if all_time > 0:
-            return [round(all_time / 3600, 1), round(all_power / 1000, 3)]
+            return [round(all_time / 3600, 2), round(all_power / 1000, 3)]
         else:
             return [0, 0]
 
@@ -258,7 +258,7 @@ class Page5_3(BaseForm):
                     prev_var_val = rec[1]
 
                 if rele_on:
-                    is_on = rec[1] <= temp_on or (rec[1] - prev_var_val) > 0.8
+                    is_on = rec[1] <= temp_on or (rec[1] - prev_var_val) > 0.25
                 else:
                     is_on = False
 
@@ -281,6 +281,6 @@ class Page5_3(BaseForm):
         if month == 0:
             month = 12
         if all_time > 0:
-            return [round(all_time / 3600, 1), round(all_power / 1000, 3)]
+            return [round(all_time / 3600, 2), round(all_power / 1000, 3)]
         else:
             return [0, 0]

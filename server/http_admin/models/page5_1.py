@@ -20,6 +20,13 @@ class Page5_1(BaseForm):
         tf = TextField("START_TIME", str(round(datetime.datetime.now().timestamp())))
         self.add_widget(tf)
 
+        """
+        try:
+            self.copy_var_changes_to_mem()
+        except Exception as e:
+            print(e)
+        """
+
     def _create_panel(self, key, name, height):
         lb1, lb2, lb3, lb4 = ["-- нет --"] * 4
         for row in self.db.select("select v.ID, CONCAT(v.COMM, ' [', v.NAME, ']'), p.SERIES_1, p.SERIES_2, p.SERIES_3, p.SERIES_4 "
@@ -576,3 +583,33 @@ class Page5_1(BaseForm):
         img.write_to_png(byt)
         byt.seek(0)
         return byt.read()
+
+    def copy_var_changes_to_mem(self):
+        min_mem = None
+        for rec in self.db.select("select MIN(ID) from core_variable_changes_mem"):
+            min_mem = rec[0]
+
+        if min_mem != None:
+            min_mem_sql = " where ID < %s " % (min_mem)
+        else:
+            min_mem_sql = ""
+
+        i = 0
+        for rec in self.db.select("select ID, VARIABLE_ID, UNIX_TIMESTAMP(CHANGE_DATE), VALUE "
+                                  "  from core_variable_changes "
+                                  " %s" % (min_mem_sql)):
+            try:
+                if rec[3] == None:
+                    rec[3] = "null"
+                self.db.IUD("insert into core_variable_changes_mem "
+                            "   (ID, VARIABLE_ID, CHANGE_DATE, VALUE) "
+                            "values "
+                            "   (%s, %s, FROM_UNIXTIME(%s), %s)" % rec)
+                if i > 100:
+                    self.db.commit()
+                    i = 0
+            except Exception as e:
+                print(e)
+                print(rec)
+            i += 1
+        self.db.commit()

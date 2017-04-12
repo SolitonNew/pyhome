@@ -85,7 +85,7 @@ class Main():
                             self._add_command('speech("%s", "notify")' % "".join(s).lower())
 
                     if len(relIds_named) > 0:
-                        for row in self.db.select("select c.COMM, v.VALUE "
+                        for row in self.db.select("select v.COMM, v.VALUE "
                                                   "  from core_variables v "
                                                   " where v.ID in (%s) "
                                                   " order by v.ID" % ("".join(relIds[:-1]),)):

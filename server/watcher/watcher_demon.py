@@ -87,8 +87,7 @@ class Main():
                     if len(relIds_named) > 0:
                         for row in self.db.select("select v.COMM, v.VALUE "
                                                   "  from core_variables v "
-                                                  " where v.ID in (%s) "
-                                                  " order by v.ID" % ("".join(relIds[:-1]),)):
+                                                  " where v.ID in (%s) " % ("".join(relIds_named[:-1]),)):
                             comm = str(row[0], "utf-8")
                             s = [comm, ". ", str(row[1], "utf-8"), " "]
                             if comm[-1::].upper() == "А":

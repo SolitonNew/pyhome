@@ -89,7 +89,7 @@ class Main():
                                                   "  from core_variables v "
                                                   " where v.ID in (%s) " % ("".join(relIds_named[:-1]),)):
                             comm = str(row[0], "utf-8")
-                            s = [comm, ". ", str(row[1], "utf-8"), " "]
+                            s = [comm, " "]
                             if comm[-1::].upper() == "А":
                                 if row[1]:
                                     s += ["включена"]

@@ -17,6 +17,7 @@ class Main():
         self._add_termostat(47, 46, "В детской спальне") #Спальня №2
         self._add_termostat(44, 43, "В гостевой спальне") #Спальня №1
         self._add_termostat(60, 59, "В гостинной") #Гостинная
+        self._add_termostat(66, 65, "В кухне") #Кухня
 
         # ID, CHANNEL, VALUE
         self.BMP280_VARS = [[150, "t", None], [151, "p", None]]
@@ -38,16 +39,18 @@ class Main():
     def run(self):
         termostats_time_step = 0
         bmp280_time_step = 0
-        clear_db_mem_time_step = 0
         clear_db_mem_time_ignore = False
         while True:
             relIds = []
+            relIds_named = []
             for keys in self.db.select("select CORE_GET_LAST_CHANGE_ID()"):
                 if keys[0] - 1 > self.db.lastVarChangeID:
                     # c.ID, c.VARIABLE_ID, c.VALUE, v.APP_CONTROL, v.GROUP_ID
                     for row in self.db.variable_changes():
                         if row[3] == 1: # Слежение за светом
                             relIds += [str(row[1]), ","]
+                        if row[3] == 3: # Слежение за розетками
+                            relIds_named += [str(row[1]), ","]
                         elif row[3] == 4: #Термометры
                             for r in self.termostats:
                                 if r[2] == row[1]:
@@ -81,6 +84,26 @@ class Main():
                                 
                             self._add_command('speech("%s", "notify")' % "".join(s).lower())
 
+                    if len(relIds_named) > 0:
+                        for row in self.db.select("select c.COMM, v.VALUE "
+                                                  "  from core_variables v "
+                                                  " where v.ID in (%s) "
+                                                  " order by v.ID" % ("".join(relIds[:-1]),)):
+                            comm = str(row[0], "utf-8")
+                            s = [comm, ". ", str(row[1], "utf-8"), " "]
+                            if comm[-1::].upper() == "А":
+                                if row[1]:
+                                    s += ["включена"]
+                                else:
+                                    s += ["выключена"]
+                            else:
+                                if row[1]:
+                                    s += ["включен"]
+                                else:
+                                    s += ["выключен"]
+                                
+                            self._add_command('speech("%s", "notify")' % "".join(s).lower())
+
             if termostats_time_step == 0:
                 termostats_time_step = round(15 * 60 / 0.2)
                 for t in self.termostats:
@@ -99,11 +122,7 @@ class Main():
             if datetime.datetime.now().hour == 4:
                 if not clear_db_mem_time_ignore:
                     clear_db_mem_time_ignore = True
-                    if clear_db_mem_time_step == 0:
-                        clear_db_mem_time_step = 1
-                        self.clear_mem_db()
-                    else:
-                        clear_db_mem_time_step -= 1
+                    self.clear_mem_db()
             else:
                 clear_db_mem_time_ignore = False
             # -------------------------------------------

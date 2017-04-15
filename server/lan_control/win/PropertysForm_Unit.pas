@@ -13,10 +13,6 @@ type
     GroupBox1: TGroupBox;
     ListBox1: TListBox;
     Button1: TButton;
-    TabSheet1: TTabSheet;
-    GroupBox2: TGroupBox;
-    Edit1: TEdit;
-    SpeedButton1: TSpeedButton;
     OpenDialog1: TOpenDialog;
     TabSheet3: TTabSheet;
     GroupBox3: TGroupBox;
@@ -35,7 +31,6 @@ type
     procedure Button1Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
-    procedure SpeedButton1Click(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure SpeedButton4Click(Sender: TObject);
     procedure SpeedButton5Click(Sender: TObject);
@@ -248,8 +243,6 @@ end;
 procedure TPropertysForm.FormCreate(Sender: TObject);
 begin
    fScanList := TList.Create;
-
-   Edit1.Text := loadProp('vlc.exe');
 end;
 
 procedure TPropertysForm.FormDestroy(Sender: TObject);
@@ -268,16 +261,6 @@ begin
       fScanList[k] := nil;
    end;
    fScanList.Clear;
-end;
-
-procedure TPropertysForm.SpeedButton1Click(Sender: TObject);
-begin
-   OpenDialog1.FileName := Edit1.Text;
-   if (OpenDialog1.Execute) then
-   begin
-      Edit1.Text := OpenDialog1.FileName;
-      saveProp('vlc.exe', Edit1.Text);
-   end;
 end;
 
 procedure TPropertysForm.FormShow(Sender: TObject);

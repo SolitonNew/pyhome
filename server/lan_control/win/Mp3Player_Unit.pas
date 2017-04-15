@@ -5,7 +5,8 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, ACS_Classes, ACS_WinMedia, ACS_smpeg, ACS_DXAudio, Buttons,
-  ComCtrls, StdCtrls, ExtCtrls, HTTPSend;
+  ComCtrls, StdCtrls, ExtCtrls, HTTPSend, IdBaseComponent, IdComponent,
+  IdTCPConnection, IdTCPClient, IdHTTP;
 
 type
   TMp3PlayPosEvent = procedure(Sender: TObject; pos, len: integer) of object;
@@ -21,6 +22,7 @@ type
     Label1: TLabel;
     Label2: TLabel;
     Timer1: TTimer;
+    IdHTTP1: TIdHTTP;
     procedure Timer1Timer(Sender: TObject);
     procedure ProgressBar1MouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
@@ -32,6 +34,7 @@ type
       Y: Integer);
     procedure DXAudioOut1Done(Sender: TComponent);
     procedure FormDestroy(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
   private
     fVolume: integer;
     fOnChange: TNotifyEvent;
@@ -183,6 +186,7 @@ var
    f_name: string;
    is_ok: Boolean;
    HTTP: THTTPSend;
+   fs: TFileStream;
 begin
    stop;
 
@@ -191,17 +195,28 @@ begin
    is_ok := False;
    f_name := GetEnvironmentVariable('TEMP') + '\lan_control.mp3';
 
-   HTTP:= THTTPSend.Create;
+
+   {HTTP:= THTTPSend.Create;
    try
-      HTTP.Timeout := 2000;
       if HTTP.HTTPMethod('GET', s) then
       begin
          MP3In1.Reset();
          HTTP.Document.SaveToFile(f_name);
+         is_ok := True;
       end;
-      is_ok := True;
    finally
       HTTP.Free;
+   end;}
+
+   fs:= TFileStream.Create(f_name, fmCreate);
+   try
+      try
+         IdHTTP1.Get(s, fs);
+         is_ok := True;
+      except
+      end;
+   finally
+      fs.Free;
    end;
 
    if (is_ok) then
@@ -219,9 +234,14 @@ begin
          setPlayPos(seek);
 
       doChange();
+   end
+   else
+   begin
+      if Assigned(fOnStopEvent) then
+         fOnStopEvent(Self);
    end;
-
-   fLockDoneMessage := False;   
+   
+   fLockDoneMessage := False;
 end;
 
 procedure TMp3Player.stop;
@@ -230,6 +250,9 @@ begin
    DXAudioOut1.Stop();
    while DXAudioOut1.Status <> tosIdle do
       Sleep(10);
+
+   fPlayLen := 0;
+   fPlayPos := 0;
 
    doChange();
 end;
@@ -255,6 +278,11 @@ begin
       MP3In1.Seek(round(MP3In1.TotalSamples / MP3In1.TotalTime * Value));
       fPlayPos := value;
    end;
+end;
+
+procedure TMp3Player.FormCreate(Sender: TObject);
+begin
+   IdHTTP1.ConnectTimeout := 200;
 end;
 
 end.

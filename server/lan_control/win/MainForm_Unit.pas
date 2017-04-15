@@ -9,6 +9,9 @@ uses
   ACS_Classes, ACS_WinMedia, ACS_smpeg, ACS_Wave, ACS_DXAudio, ActnList,
   OleCtrls, AXVLC_TLB, http;
 
+const
+   MEDIA_END = WM_USER + 1;
+
 type
    //TDataRec = array of array of string;
 
@@ -318,6 +321,7 @@ type
     procedure VLCPlugin21MediaPlayerTimeChanged(ASender: TObject; time: Integer);    
   protected
     procedure WMGetSysCommand(var message : TMessage); message WM_SYSCOMMAND;
+    procedure MEDIA_END_MESS(var Message: TMessage); message MEDIA_END;
   public
     fAppID: integer;
     fItemList: TList;
@@ -538,10 +542,12 @@ var
    lb: string;
    o:TVarListItem;
    ok: Boolean;
+   topIndex: integer;
 begin
    t := currView();
 
    VarList.Items.BeginUpdate;
+   topIndex := VarList.TopIndex;
    i := 0;
    for k:= 0 to fItemList.Count - 1 do
    begin
@@ -569,7 +575,8 @@ begin
    end;
    for k:= VarList.Items.Count - 1 downto i do
       VarList.Items.Delete(k);
-
+      
+   VarList.TopIndex := topIndex;
    VarList.Items.EndUpdate;
 end;
 
@@ -597,6 +604,8 @@ begin
    case t of
       0:
       begin
+         if (Sender <> nil) then
+            VarList.TopIndex := 0;      
          refreshVarList();
          if (MainForm.Visible) then
             VarList.SetFocus;
@@ -678,25 +687,24 @@ var
 begin
    o := TVarListItem(VarList.Items.Objects[index]);
 
-   if (o.id = -1) then State := [];
-
    itemBmp := TBitmap.Create;
    try
       itemBmp.Width := Rect.Right - Rect.Left;
       itemBmp.Height := Rect.Bottom - Rect.Top;
       with itemBmp.Canvas do
       begin
-         if (odSelected in State) then
+         if ((odSelected in State) and (o.id <> -1)) then
          begin
+            Pen.Color := $00777777;
             Brush.Color := $00777777;
             Font.Color := clWhite;
          end
          else
          begin
+            Pen.Color := clWhite;
             Brush.Color := clWhite;
             Font.Color := clBlack;
          end;
-         Pen.Color := Brush.Color;
          Rectangle(0, 0, itemBmp.Width, itemBmp.Height);
 
          tl := 5;
@@ -812,17 +820,19 @@ begin
          Font.Size := 8;
          Font.Style := [];
          if (o.typ = 10) then
-            Font.Style := [fsItalic];
+            Font.Style := Font.Style + [fsItalic];
+         if (o.id = -1) then
+            Font.Style := Font.Style + [fsBold];
          TextOut(tl, 5, trimText(itemBmp.Canvas, itemBmp.Width - tl - tr, o.comm));
          Font.Style := [];
       end;
 
       VarList.Canvas.Draw(Rect.Left, Rect.Top, itemBmp);
-      if (odFocused in State) then
-         VarList.Canvas.DrawFocusRect(Rect);
    finally
       itemBmp.Free;
    end;
+   if (odFocused in State) then
+      DrawFocusRect(VarList.Canvas.Handle, Rect);
 end;
 
 procedure TMainForm.VarListMouseDown(Sender: TObject;
@@ -1295,9 +1305,11 @@ procedure TMainForm.updateTimePanel;
 var
    ts1, ts2:TTimeStamp;
    pl, pp: integer;
+   isBuffering: Boolean;
 begin
    if (Mp3Player = nil) then exit;
 
+   isBuffering := False;
    case fMediaPlayFileType of
       2:
       begin
@@ -1326,7 +1338,10 @@ begin
 
    ts1.Time := pp * 1000;
    ts2.Time := pl * 1000;
-   TimeLabel.Caption := TimeToStr(TimeStampToDateTime(ts1)) + ' / ' + TimeToStr(TimeStampToDateTime(ts2));
+   if (pl < 1) then
+      TimeLabel.Caption := ''
+   else
+      TimeLabel.Caption := TimeToStr(TimeStampToDateTime(ts1)) + ' / ' + TimeToStr(TimeStampToDateTime(ts2));
 end;
 
 procedure TMainForm.TimePanelResize(Sender: TObject);
@@ -1594,9 +1609,23 @@ begin
 end;
 
 procedure TMainForm.PlayButtonClick(Sender: TObject);
+var
+   ps: integer;
 begin
-   StopButton.Tag := 1;
-   playMediaPlayAt(MediaList.ItemIndex);
+   case fMediaPlayFileType of
+      2: ps := Mp3Player.playState;
+      else ps := fMiniPlayerState;
+   end;
+
+   if (ps = 3) then
+   begin
+      PauseButtonClick(nil);
+   end
+   else
+   begin
+      StopButton.Tag := 1;
+      playMediaPlayAt(MediaList.ItemIndex);
+   end;
 end;
 
 procedure TMainForm.playMediaPlayAt(index: integer; blockWarning: boolean = false);
@@ -1621,6 +1650,8 @@ var
    q: TDataRec;
 begin
    StopButtonClick(nil);
+
+   Application.ProcessMessages;
 
    om := getMediaAtId(id);
    if (om <> nil) then
@@ -1697,10 +1728,10 @@ begin
       SpeedButton1Click(nil);
       updatePlayLoopButtonIcon;
 
-      CoolTrayIcon1.HideTaskbarIcon;      
-   end;
+      CoolTrayIcon1.HideTaskbarIcon;
 
-   setMediaVolume;
+      setMediaVolume;      
+   end;
 end;
 
 procedure TMainForm.vlcOnPlayPosEvent(sender: TObject; pos, len: integer);
@@ -1715,7 +1746,7 @@ end;
 
 procedure TMainForm.playMediaNextItem;
 var
-   k: integer;
+   k, i: integer;
    ind: integer;
    l: TList;
 begin
@@ -1747,7 +1778,13 @@ begin
             end;
             2:
             begin
-               ind := MediaList.Items.IndexOfObject(l[trunc(random(l.Count))]);
+               for k := 0 to 10 do
+               begin
+                  i := trunc(random(l.Count));
+                  ind := MediaList.Items.IndexOfObject(l[i]);
+                  if (TMediaListItem(l[i]).id <> fMediaPlayFileID) then
+                     break;
+               end;
                playMediaPlayAt(ind, true);
             end;
          end;
@@ -1839,14 +1876,23 @@ procedure TMainForm.startLoad;
    function compVarGroup(i1, i2: Pointer): integer;
    var
       id1, id2: integer;
+      c1, c2: string;
    begin
       id1 := TVarListItem(i1).group_id;
       id2 := TVarListItem(i2).group_id;
+      c1 := TVarListItem(i1).comm;
+      c2 := TVarListItem(i2).comm;
       Result := 0;
       if (id1 > id2) then
          Result := 1
       else
       if (id1 < id2) then
+         Result := -1
+      else
+      if (c1 > c2) then
+         Result := 1
+      else
+      if (c1 < c2) then
          Result := -1;
    end;
 
@@ -2098,8 +2144,10 @@ begin
 
    // --------------------------------------------
 
-   if (fSessions <> nil) then fSessions.Free;
-   fSessions := metaQuery('sessions', '');
+   res := metaQuery('sessions', '');
+   if (fSessions <> nil) then
+      FreeAndNil(fSessions);
+   fSessions := res;
    MediaList.Repaint;
 
    // --------------------------------------------
@@ -3291,8 +3339,7 @@ begin
    Panel8.Height := 59 + playHeight + Panel1.Height;   
 end;
 
-procedure TMainForm.playMiniPlayer(id, typ: integer; url: string;
-  withPause: boolean; seek: integer);
+procedure TMainForm.playMiniPlayer(id, typ: integer; url: string; withPause: boolean; seek: integer);
 begin
    stopMiniPlayer;
 
@@ -3316,7 +3363,7 @@ begin
       fMiniPlayer.playlist.pause;
 
    if (seek > 0) then
-      fMiniPlayer.input.time := seek * 1000;      
+      fMiniPlayer.input.time := seek * 1000;
 
    Panel7Resize(nil);
 end;
@@ -3332,9 +3379,13 @@ begin
    if (fMiniPlayer <> nil) then
    begin
       fMiniPlayer.playlist.stop;
+      Application.ProcessMessages;
       while fMiniPlayer.playlist.isPlaying do
          Sleep(10);
+      Panel7.RemoveControl(fMiniPlayer);
       FreeAndNil(fMiniPlayer);
+      fMiniPlayerLen := 0;
+      fMiniPlayerPos := 0;            
       Panel7Resize(nil);
       fMiniPlayerState := 4;
       vlcOnChange(nil);
@@ -3367,7 +3418,7 @@ begin
    fMiniPlayerPos := 0;
    vlcOnChange(nil);
    vlcOnPlayPosEvent(nil, fMiniPlayerPos, fMiniPlayerLen);
-   vlcOnStopEvent(nil);
+   PostMessage(Handle, MEDIA_END, 0, 0);
 end;
 
 procedure TMainForm.VLCPlugin21MediaPlayerTimeChanged(ASender: TObject;
@@ -3433,6 +3484,11 @@ begin
       AResponseInfo.ResponseNo := 206;
    end;
 end;}
+
+procedure TMainForm.MEDIA_END_MESS(var Message: TMessage);
+begin
+   vlcOnStopEvent(nil);
+end;
 
 end.
 

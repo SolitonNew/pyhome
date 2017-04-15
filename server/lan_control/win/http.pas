@@ -86,8 +86,8 @@ begin
    OutputData := nil;
    Sock.socket := HSock;
    FreeOnTerminate := true;
-   //Priority := tpIdle;
    inherited create(false);
+   Priority := tpIdle;
 end;
 
 Destructor TTCPHttpThrd.Destroy;

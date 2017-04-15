@@ -129,42 +129,6 @@ object PropertysForm: TPropertysForm
         end
       end
     end
-    object TabSheet1: TTabSheet
-      Caption = #1055#1083#1077#1077#1088
-      ImageIndex = 1
-      object GroupBox2: TGroupBox
-        Left = 8
-        Top = 8
-        Width = 497
-        Height = 65
-        Caption = ' '#1055#1091#1090#1100' '#1082' vlc.exe: '
-        TabOrder = 0
-        object SpeedButton1: TSpeedButton
-          Left = 456
-          Top = 23
-          Width = 23
-          Height = 22
-          Glyph.Data = {
-            F6000000424DF600000000000000760000002800000010000000100000000100
-            04000000000080000000CE0E0000C40E00001000000000000000000000000000
-            80000080000000808000800000008000800080800000C0C0C000808080000000
-            FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00777777777777
-            77777777777777777777000000000007777700333333333077770B0333333333
-            07770FB03333333330770BFB0333333333070FBFB000000000000BFBFBFBFB07
-            77770FBFBFBFBF0777770BFB0000000777777000777777770007777777777777
-            7007777777770777070777777777700077777777777777777777}
-          OnClick = SpeedButton1Click
-        end
-        object Edit1: TEdit
-          Left = 16
-          Top = 24
-          Width = 439
-          Height = 21
-          ReadOnly = True
-          TabOrder = 0
-        end
-      end
-    end
     object TabSheet4: TTabSheet
       Caption = #1051#1086#1075' '#1084#1077#1090#1072#1076#1072#1085#1085#1099#1093
       ImageIndex = 3

@@ -292,6 +292,10 @@ class MetaThread(threading.Thread):
 
     def _sync(self):
         self.senddata(self.db.variable_changes())
+        self.db.IUD("update app_control_sess "
+                    "   set LAST_QUERY_TIME = CURRENT_TIMESTAMP "
+                    " where APP_CONTROL_ID = %s " % (self.app_id))
+        self.db.commit()
 
     def _exe_queue(self):        
         res = []

@@ -10,12 +10,15 @@ from connector import ItemList
 class MediaList(BaseLayer):
     def __init__(self, parent):
         super().__init__(parent)
+        self.playingData = None
         self._selectedPanel = 0
 
         self.groupListBg = QLabel(self.content)
         
         self.groupList = StringList(self.content)
-        self.groupList.row_gradients = [[0.0, [0xff, 0xff, 0xff, 0xff]]]
+        self.groupList.row_gradients = [[0.0, [0xff, 0xff, 0xff, 0xff]],
+                                        [0.95, [0xff, 0xff, 0xff, 0xff]],
+                                        [1.0, [0xff, 0xff, 0xff, 0x0]]]
 
         self.trackList = StringList(self.content)
         self.trackList.isFocused = False
@@ -27,7 +30,7 @@ class MediaList(BaseLayer):
 
     def resizeEvent(self, event):
         size = self.size()
-        l_w = size.width() / 2.3
+        l_w = size.width() / 2.6
         self.groupList.resize(l_w, size.height())
 
         self.groupListBg.resize(l_w, size.height())
@@ -120,3 +123,25 @@ class MediaList(BaseLayer):
     def redraw(self):
         self.groupList.redraw()
         self.trackList.redraw()
+
+    def play(self):
+        try:
+            d = self.trackList.data[self.trackList.selectedIndex()].data
+            ip = ""
+            id = d[0]
+            for sess in  self.mainForm.sessions:
+                if sess[0] == d[2]:
+                    ip = sess[2]
+                    break
+            url = "http://%s:8092/%s" % (ip, id)
+            self.playingData = d
+            self.mainForm.player.play(url)
+            self.off()
+        except Exception as e:
+            print(e)
+
+    def playNext(self):
+        pass
+
+    def playPrev(self):
+        pass

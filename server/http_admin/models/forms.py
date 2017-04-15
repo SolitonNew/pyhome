@@ -8,6 +8,7 @@ from models.page4 import Page4
 from models.page5 import Page5
 from models.page5_1 import Page5_1
 from models.page5_2 import Page5_2
+from models.page5_3 import Page5_3
 from models.page6 import Page6
 from models.pageVideo import PageVideo
 from models.page7 import Page7
@@ -22,8 +23,8 @@ from models.comp_edit_dialog import CompEditDialog
 from models.scheduler_edit_dialog import SchedulerEditDialog
 
 FORMS = (Index, IndexLogin, EventList,
-         Page1, Page2, Page3, Page4, Page5, Page5_1, Page5_2, Page6, Page7,
-         PageVideo,
+         Page1, Page2, Page3, Page4, Page5, Page5_1, Page5_2, Page5_3,
+         Page6, Page7, PageVideo,
          VarEditDialog, SystemDialog, ScriptEditor, AttachEventDialog,
          StatPanelDialog, OWManager, ConsoleEditDialog, CompEditDialog,
          SchedulerEditDialog)

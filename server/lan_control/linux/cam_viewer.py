@@ -4,7 +4,6 @@ from PyQt5.QtGui import (QPixmap, QPainter, QImage, QFontMetrics, QColor,
 from PyQt5.QtCore import Qt, QTimer
 
 from base_layer import BaseLayer
-import vlc
 
 class CamViewer(BaseLayer):
     def __init__(self, parent):

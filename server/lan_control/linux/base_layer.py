@@ -14,17 +14,12 @@ class BaseLayer(QWidget):
     def keyPressEvent(self, event):
         self.mainForm.keyPressEvent(event)
 
+    def isOn(self):
+        return self.content.isVisible()
+
     def on(self):
         self.content.setVisible(True)
 
     def off(self):
         self.content.setVisible(False)
-
-    def paintEvent(self, event):
-        return 
-        if not self.transparent:
-            p = QPainter()
-            p.begin(self)
-            p.drawImage(0, 0, self.mainForm.bgImage.scaled(self.size()))
-            p.end()
 

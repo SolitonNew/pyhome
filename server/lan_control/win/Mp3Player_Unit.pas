@@ -166,7 +166,7 @@ end;
 
 procedure TMp3Player.DXAudioOut1Done(Sender: TComponent);
 begin
-   if (Assigned(fOnStopEvent) and (not fLockDoneMessage) and (fPlayLen > 0) and (fPlayPos = fPlayLen)) then
+   if (Assigned(fOnStopEvent) and (not fLockDoneMessage) and (fPlayLen > 0) and (fPlayPos > fPlayLen - 3)) then
    begin
       fOnStopEvent(Self);
    end;

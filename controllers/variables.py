@@ -38,6 +38,8 @@ def set_variable_drivers(ow, dev_id):
                         driver = drivers.Dht11(ow, var.rom)
                     elif var.rom[0] == 0xf4:
                         driver = drivers.Mq7(ow, var.rom)
+                    elif var.rom[0] == 0xf5:
+                        driver = drivers.Amp(ow, var.rom)
 
                 driverList += [driver]
                 

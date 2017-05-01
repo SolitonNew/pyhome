@@ -471,8 +471,8 @@ Disassembly of section .text:
  35c:	c2 9a       	sbi	0x18, 2	; 24
  35e:	01 c0       	rjmp	.+2      	; 0x362 <main+0x74>
  360:	c2 98       	cbi	0x18, 2	; 24
- 362:	ef e7       	ldi	r30, 0x7F	; 127
- 364:	fb eb       	ldi	r31, 0xBB	; 187
+ 362:	ef ed       	ldi	r30, 0xDF	; 223
+ 364:	fe e2       	ldi	r31, 0x2E	; 46
  366:	31 97       	sbiw	r30, 0x01	; 1
  368:	f1 f7       	brne	.-4      	; 0x366 <main+0x78>
  36a:	00 c0       	rjmp	.+0      	; 0x36c <main+0x7e>

@@ -1,7 +1,7 @@
 ﻿/*
- * fc.c
+ * ow_ampmetr.c
  *
- * Created: 10.06.2016 19:56:35
+ * Created: 28.04.2017 21:18:33
  *  Author: Александр
  */ 
 
@@ -10,11 +10,11 @@
 #include <avr/interrupt.h>
 #include "util/delay.h"
 
-unsigned char chan_v[4] = {0, 0, 0, 0};
-
 #define SPIN(data, pin) (data |= (1<<pin))
 #define CPIN(data, pin) (data &= ~(1<<pin))
 #define GPIN(data, pin) (data & (1<<pin))
+
+#define MEASURE_LED PINB3
 
 #define OW_DDR DDRB
 #define OW_READ PINB
@@ -24,7 +24,6 @@ unsigned char chan_v[4] = {0, 0, 0, 0};
 #define ALARM_SEARCH 0xEC
 #define MATCH_ROM 0x55
 #define READ_DATA 0xA0
-#define WRITE_DATA 0xB0
 
 #define OW_UP OW_DDR &= ~(1 << OW_PIN)
 #define OW_DOWN OW_DDR |= (1 << OW_PIN)
@@ -35,8 +34,11 @@ unsigned char chan_v[4] = {0, 0, 0, 0};
 #define WAIT_FOR_LOW for (int i = 0; i < WAIT_COUNT && IS_HIGH; i++)
 #define WAIT_FOR_HIGH for (int i = 0; i < WAIT_COUNT && IS_LOW; i++)
 
-unsigned char ROM[8] = {0xF1,0x00,0x00,0x00,0x00,0x00,0x02,0x0};
+unsigned char sensor_data = 0; // Значение АЦП
+unsigned char isChange = 0;
 
+unsigned char ROM[8] = {0xF5,0x00,0x00,0x00,0x00,0x00,0x01,0x0};
+	
 unsigned char crc_table(unsigned char data)
 {
 	unsigned char crc = 0x0;
@@ -108,20 +110,18 @@ void one_wire_action()
 	OW_UP;		
 	WAIT_FOR_HIGH;
 	
+	unsigned char crc = 0;
 	unsigned char i;
 	unsigned char k;
-	unsigned char count;
-	unsigned char tmp[4];
-	unsigned char crc = 0;
 	
-	unsigned char rom_cmd = OW_readByte();	
+	unsigned char rom_cmd = OW_readByte();
 
 	switch (rom_cmd)
 	{
 		case SEARCH_ROM: // Поиск устройств на шине
-		//case ALARM_SEARCH: // Поиск устройств с флагом ALARM
-			//if ((rom_cmd != SEARCH_ROM) && (isChange == 0))
-			//	return ;
+		case ALARM_SEARCH: // Поиск устройств с флагом ALARM
+			if ((rom_cmd != SEARCH_ROM) && (isChange == 0))
+				return ;
 			for (i = 0; i < 8; i++)
 			{	
 				unsigned char b = ROM[i];
@@ -136,7 +136,7 @@ void one_wire_action()
 					b >>= 1;
 				}
 			}				
-			break; 
+			break;			
 		
 		case MATCH_ROM: // Выбор устройства
 			// Проверем ключ устройства
@@ -146,25 +146,12 @@ void one_wire_action()
 												
 			switch (OW_readByte()) // Читаем комманду для этого устройства
 			{
-				case READ_DATA: // Чтение данных для мастера
+				case READ_DATA: // Чтение данных	
+					isChange = 0;
 					crc = 0;
-					for (i = 0; i < 4; i++) {
-						OW_writeByte(chan_v[i]);
-						crc = crc_table(crc ^ chan_v[i]);
-					}
+					OW_writeByte(sensor_data);
+					crc = crc_table(crc ^ sensor_data);
 					OW_writeByte(crc);
-					break;
-				
-				case WRITE_DATA: // Запись занных от мастера
-					crc = 0;
-					for (i = 0; i < 4; i++) {
-						tmp[i] = OW_readByte();
-						crc = crc_table(crc ^ tmp[i]);
-					}
-					if (OW_readByte() == crc) {
-						for (i = 0; i < 4; i++)
-							chan_v[i] = tmp[i];
-					}
 					break;
 			}			
 			break;			
@@ -197,14 +184,21 @@ ISR (TIM0_OVF_vect)
 	one_wire_action();
 }
 
-#define check_chan(i, mask) if (iter < chan_v[i]) PORTB |= (1<<mask); else PORTB &= ~(1<<mask);
-
 int main(void)
 {
 	unsigned char crc = 0;
 	for (unsigned char i = 0; i < 7; i++)
 		crc = (crc_table(crc ^ ROM[i]));
 	ROM[7] = crc;
+	
+	// Сбросим все ноги
+	DDRB = 0xff;
+	CPIN(DDRB, 4); // Переключаем ногу мерялки
+	
+	// Активируем АЦП 64
+	ADCSRA |= (1<<ADEN)|(1<<ADSC)|(1<<ADPS2)|(1<<ADPS1)|(1<<ADPS0);
+	ADMUX = 2 | (1<<REFS0) | (1<<ADLAR); // Внутренний источник напряжения и здвиг бит
+	
 	// Шина
 	CPIN(OW_DDR, OW_PIN);
 		
@@ -213,18 +207,33 @@ int main(void)
 	MCUCR = (1<<ISC01); //Сброс ISC00 - прерывание по \__
 	GIMSK |= (1<<INT0);
 	
+	_delay_ms(10);
+	
 	sei();
-
-	// ШИМ
-	DDRB = (1<<PORTB0) | (1<<PORTB2) | (1<<PORTB3) | (1<<PORTB4);
-    while(1)
+	
+	unsigned char AMP;
+	unsigned char tmp;
+	
+	while(1)
     {
-		for (unsigned char iter = 0; iter < 10; iter++) {
-	        check_chan(0, PORTB4);
-			check_chan(1, PORTB3);
-			check_chan(2, PORTB0);
-			check_chan(3, PORTB2);
-			_delay_ms(5);
+		if (GPIN(PORTB, MEASURE_LED)) {
+			CPIN(PORTB, MEASURE_LED);	
+		} else {
+			SPIN(PORTB, MEASURE_LED);	
+		}
+
+		AMP = 0;
+		for (unsigned int i = 0; i < 10000; i++) {
+			// Быстренько меряем напряжение
+			ADCSRA |= (1<<ADSC); // Стартуем измерение		
+			while (ADCSRA & (1<<ADSC)); // Ждем пока померяет			
+			tmp = ADCH;
+			if (tmp > AMP)
+				AMP = tmp;
+		}	
+		if (sensor_data != AMP) {
+			sensor_data = AMP;
+			isChange = 1;
 		}		
     }
 }

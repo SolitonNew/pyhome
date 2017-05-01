@@ -40,6 +40,7 @@ class Main():
         termostats_time_step = 0
         bmp280_time_step = 0
         clear_db_mem_time_ignore = False
+        boiler_term = None
         while True:
             relIds = []
             relIds_named = []
@@ -59,6 +60,7 @@ class Main():
                             if row[1] == 95 and row[2] > 55: # Дымоход
                                 self._add_command('speech("Температура дымохода %s градусов", "alarm")' % (round(row[2])))
                             if row[1] == 93:
+                                boiler_term = row[2]
                                 if row[2] > 55: # Подача котла
                                     self._add_command('speech("Температура котла %s градусов", "alarm")' % (round(row[2])))
                                 elif row[2] >= 45 and row[2] <= 48:
@@ -105,11 +107,12 @@ class Main():
 
             if termostats_time_step == 0:
                 termostats_time_step = round(15 * 60 / 0.2)
-                for t in self.termostats:
-                    if t[3] > t[1] + 0.2: # Перегрели
-                        self._add_command('speech("%s жарко", "notify")' % (t[4]))
-                    elif t[3] < t[1] - 0.2 and t[3] > t[1] - 1: # Переостудили
-                        self._add_command('speech("%s холодно", "notify")' % (t[4]))
+                if boiler_term != None and boiler_term > 30:
+                    for t in self.termostats:
+                        if t[3] > t[1] + 0.2: # Перегрели
+                            self._add_command('speech("%s жарко", "notify")' % (t[4]))
+                        elif t[3] < t[1] - 0.2 and t[3] > t[1] - 1: # Переостудили
+                            self._add_command('speech("%s холодно", "notify")' % (t[4]))
             termostats_time_step -= 1
 
             if bmp280_time_step == 0:

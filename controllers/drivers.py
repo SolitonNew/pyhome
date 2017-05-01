@@ -4,6 +4,7 @@ from fancontrol import FanControl
 from pincontrol import PinControl
 from dht11 import DHT11
 from mq7 import MQ7
+from ampmetr import Ampmetr
 from tc_new import TcNew
 from pyb import Pin
 
@@ -131,6 +132,17 @@ class Mq7(MQ7):
             res = self.get_data(self.rom)
             if res:
                 res = ((res * 10)//1)/10
+            return res
+
+class Amp(Ampmetr):
+       
+    def __init__(self, ow, rom):
+        super().__init__(ow)
+        self.rom = rom
+    
+    def value(self, val = None, channel = ''):
+        if val == None:
+            res = self.get_data(self.rom)
             return res
 
 class Pyboard(object):

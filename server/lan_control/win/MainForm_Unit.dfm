@@ -395,6 +395,7 @@ object MainForm: TMainForm
     Width = 228
     Height = 38
     Style = lbOwnerDrawFixed
+    ExtendedSelect = False
     ItemHeight = 24
     TabOrder = 2
     OnDrawItem = VarListDrawItem

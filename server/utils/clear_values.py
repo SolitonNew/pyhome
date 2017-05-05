@@ -9,7 +9,8 @@ for rec in db.select("select COUNT(*) from core_variable_changes"):
 print("ВСЕГО ЗАПИСЕЙ: %s" % (all_count))
 
 db.query("update core_variable_changes"
-         "   set value = ROUND(value * 10) / 10")
+         "   set value = ROUND(value * 10) / 10"
+         " where VARIABLE_ID = 153 ")
 db.commit()
 
 prev_var_id = -1
@@ -19,6 +20,7 @@ i = 0
 curr_count = 0
 for row in db.select("select ID, VALUE, VARIABLE_ID "
                      "  from core_variable_changes "
+                     " where VARIABLE_ID = 153 "
                      " order by VARIABLE_ID, CHANGE_DATE "):
     if row[2] == prev_var_id:
         if row[1] == prev_var_value:

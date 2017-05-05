@@ -143,6 +143,8 @@ class Amp(Ampmetr):
     def value(self, val = None, channel = ''):
         if val == None:
             res = self.get_data(self.rom)
+            if res:
+                res = ((res * 10)//1)/10
             return res
 
 class Pyboard(object):

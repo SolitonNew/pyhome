@@ -33,10 +33,7 @@ class DBConnector(object):
         res = []        
         q = self.query(sql, vars)
         try:
-            row = q.fetchone()
-            while row:
-                res += [row]
-                row = q.fetchone()
+            res = q.fetchall()
         except:
             pass
         q.close()

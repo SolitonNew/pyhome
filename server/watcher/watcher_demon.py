@@ -70,6 +70,8 @@ class Main():
                             for r in self.termostats:
                                 if r[0] == row[1]:
                                     r[1] = row[2]
+                        elif row[1] == 163:
+                            self._add_command('speech("Прозвенел звонок на воротах")')
 
                     if len(relIds) > 0:
                         for row in self.db.select("select v.APP_CONTROL, c.NAME, p.NAME, v.VALUE "

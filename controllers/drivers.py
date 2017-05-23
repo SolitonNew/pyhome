@@ -144,6 +144,7 @@ class Amp(Ampmetr):
         if val == None:
             res = self.get_data(self.rom)
             if res:
+                res = ((res * 2.5)//1)/2.5
                 res = ((res * 10)//1)/10
             return res
 

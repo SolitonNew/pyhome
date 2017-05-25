@@ -4,6 +4,8 @@
 from db_connector import DBConnector
 import time
 import datetime
+import subprocess
+
 try:
     from bmp280 import BMP280
 except:
@@ -127,6 +129,7 @@ class Main():
                 if not clear_db_mem_time_ignore:
                     clear_db_mem_time_ignore = True
                     self.clear_mem_db()
+                    self.clear_values()
             else:
                 clear_db_mem_time_ignore = False
             # -------------------------------------------
@@ -194,7 +197,12 @@ class Main():
             print("[%s] CLEAR MEM TABLES" % (time.strftime("%d-%m-%Y %H:%M")))
         except Exception as e:
             print(e)
-        
+
+    def clear_values(self):
+        try:
+            subprocess.call('python3 /home/pyhome/server/watcher/clear_values_15.py', shell=True)
+        except:
+            pass        
 
 print(
 "=============================================================================\n"

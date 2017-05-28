@@ -74,10 +74,23 @@
         <form id="scheduler_command_form" action="scheduler_edit_dialog" method="GET">
         <TD valign="top">Действие:</TD>
         <TD>
-            <textarea id="SCHEDULER_ACTION" name="SCHEDULER_ACTION" style="width:100%;height:60px;">@ACTION@</textarea>
-            <p align="right" style="padding:0; margin:0px;">
-                <button onClick="test_scheduler();return false;">Тест действия</button>
-            <p>
+            <table cellpadding="0" cellspacing="0" width="100%">
+            <tr>
+                <td colspan="2">
+                    <textarea id="SCHEDULER_ACTION" name="SCHEDULER_ACTION" style="width:100%;height:60px;">@ACTION@</textarea>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <select id="SCHEDULER_ENABLE" name="SCHEDULER_ENABLE">
+                        @SCHEDULER_ENABLE_LIST@
+                    </select>
+                </td>
+                <td align="right">
+                    <button onClick="test_scheduler();return false;">Тест действия</button>
+                </td>
+            </tr>
+            </table>
         </TD>
         </form>
     </TR>

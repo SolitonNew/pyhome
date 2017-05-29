@@ -9,15 +9,16 @@ class SchedulerEditDialog(BaseForm):
 
     def create_widgets(self):
         KEY = self.param_str("key")
-        COMM, ACTION, INTERVAL_TYPE, INTERVAL_TIME_OF_DAY, INTERVAL_DAY_OF_TYPE = ("", "", 0, "", "")
+        COMM, ACTION, INTERVAL_TYPE, INTERVAL_TIME_OF_DAY, INTERVAL_DAY_OF_TYPE, SCHEDULER_ENABLE = ("", "", 0, "", "", 1)
 
-        for row in self.db.select("select COMM, ACTION, INTERVAL_TYPE, INTERVAL_TIME_OF_DAY, INTERVAL_DAY_OF_TYPE "
+        for row in self.db.select("select COMM, ACTION, INTERVAL_TYPE, INTERVAL_TIME_OF_DAY, INTERVAL_DAY_OF_TYPE, ENABLE "
                                   "  from core_scheduler where ID = '%s'" % KEY):
             COMM = str(row[0], "utf-8")
             ACTION = str(row[1], "utf-8")
             INTERVAL_TYPE = row[2]
             INTERVAL_TIME_OF_DAY = str(row[3], "utf-8")
             INTERVAL_DAY_OF_TYPE = str(row[4], "utf-8")
+            SCHEDULER_ENABLE = row[5]
     
         self.add_widget(TextField("KEY", KEY))
         self.add_widget(TextField("COMM", COMM))
@@ -25,21 +26,23 @@ class SchedulerEditDialog(BaseForm):
         self.add_widget(ListField("INTERVAL_TYPE_LIST", 0, 1, INTERVAL_TYPE, [[0, "Каждый день"], [1, "Каждую неделю"], [2, "Каждый месяц"], [3, "Каждый год"]]))
         self.add_widget(TextField("INTERVAL_TIME_OF_DAY", INTERVAL_TIME_OF_DAY))
         self.add_widget(TextField("INTERVAL_DAY_OF_TYPE", INTERVAL_DAY_OF_TYPE))
+        self.add_widget(ListField("SCHEDULER_ENABLE_LIST", 0, 1, SCHEDULER_ENABLE, [[1, "Выполнять"], [0, "Не выполнять"]]))
                                                                                                                                 
     def query(self, query_type):
         if query_type == "update":
             sql = ""
             if self.param_str('SCHEDULER_KEY') == '-1':
                 sql = ("insert into core_scheduler "
-                       "   (COMM, ACTION, INTERVAL_TYPE, INTERVAL_TIME_OF_DAY, INTERVAL_DAY_OF_TYPE) "
+                       "   (COMM, ACTION, INTERVAL_TYPE, INTERVAL_TIME_OF_DAY, INTERVAL_DAY_OF_TYPE, ENABLE) "
                        "values "
-                       "   ('%s', '%s', %s, '%s', '%s')")
+                       "   ('%s', '%s', %s, '%s', '%s', %s)")
 
                 sql = sql % (self.param_str('SCHEDULER_COMM'),
                              self.param_str('SCHEDULER_ACTION'),
                              self.param_str('SCHEDULER_INTERVAL_TYPE'),
                              self.param_str('SCHEDULER_INTERVAL_TIME_OF_DAY'),
-                             self.param_str('SCHEDULER_INTERVAL_DAY_OF_TYPE'))
+                             self.param_str('SCHEDULER_INTERVAL_DAY_OF_TYPE'),
+                             self.param_str('SCHEDULER_ENABLE'))
             else:
                 sql = ("update core_scheduler "
                        "   set COMM = '%s',"
@@ -47,7 +50,8 @@ class SchedulerEditDialog(BaseForm):
                        "       INTERVAL_TYPE = %s,"
                        "       INTERVAL_TIME_OF_DAY = '%s',"
                        "       INTERVAL_DAY_OF_TYPE = '%s', "
-                       "       ACTION_DATETIME = NULL "
+                       "       ACTION_DATETIME = NULL, "
+                       "       ENABLE = %s "
                        " where ID = %s")
             
                 sql = sql % (self.param_str('SCHEDULER_COMM'),
@@ -55,6 +59,7 @@ class SchedulerEditDialog(BaseForm):
                              self.param_str('SCHEDULER_INTERVAL_TYPE'),
                              self.param_str('SCHEDULER_INTERVAL_TIME_OF_DAY'),
                              self.param_str('SCHEDULER_INTERVAL_DAY_OF_TYPE'),
+                             self.param_str('SCHEDULER_ENABLE'),
                              self.param_str('SCHEDULER_KEY'))
             try:
                 self.db.IUD(sql)

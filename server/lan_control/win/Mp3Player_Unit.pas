@@ -282,7 +282,7 @@ end;
 
 procedure TMp3Player.FormCreate(Sender: TObject);
 begin
-   IdHTTP1.ConnectTimeout := 200;
+   IdHTTP1.ConnectTimeout := 1000; //200
 end;
 
 end.

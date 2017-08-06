@@ -13,7 +13,9 @@ uses
   AlertForm_Unit in 'AlertForm_Unit.pas' {AlertForm},
   DataRec_Unit in 'DataRec_Unit.pas',
   Mp3Player_Unit in 'Mp3Player_Unit.pas' {Mp3Player},
-  http in 'http.pas';
+  http in 'http.pas',
+  CamDisplay_Unit in 'CamDisplay_Unit.pas' {CamDisplay},
+  CamAlertDiaplay_Unit in 'CamAlertDiaplay_Unit.pas' {CamAlertDiaplay};
 
 {$R *.res}
 
@@ -41,6 +43,8 @@ begin
   Application.CreateForm(TSchedDialog, SchedDialog);
   Application.CreateForm(TMediaInfoDialog, MediaInfoDialog);
   Application.CreateForm(TMp3Player, Mp3Player);
+  Application.CreateForm(TCamDisplay, CamDisplay);
+  Application.CreateForm(TCamAlertDiaplay, CamAlertDiaplay);
   Application.Run;
 
   ReleaseMutex(mutex);

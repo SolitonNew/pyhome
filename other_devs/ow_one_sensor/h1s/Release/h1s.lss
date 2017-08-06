@@ -478,7 +478,7 @@ Disassembly of section .text:
  35a:	80 e0       	ldi	r24, 0x00	; 0
  35c:	91 df       	rcall	.-222    	; 0x280 <shutdownSensor>
  35e:	80 e0       	ldi	r24, 0x00	; 0
- 360:	6e e0       	ldi	r22, 0x0E	; 14
+ 360:	6f e0       	ldi	r22, 0x0F	; 15
  362:	a3 df       	rcall	.-186    	; 0x2aa <checkSensor>
  364:	88 23       	and	r24, r24
  366:	29 f0       	breq	.+10     	; 0x372 <main+0x92>

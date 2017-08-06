@@ -46,7 +46,7 @@
 unsigned char sensor_data = 0;
 unsigned char isChange = 0;
 
-unsigned char ROM[8] = {0xF0,0x00,0x00,0x00,0x00,0x00,0x04,0x0};
+unsigned char ROM[8] = {0xF0,0x00,0x00,0x00,0x00,0x00,0x01,0x0};
 	
 unsigned char crc_table(unsigned char data)
 {
@@ -197,7 +197,7 @@ void shutdownSensor(unsigned char pin)
 	_delay_ms(2);
 }
 
-unsigned char checkSensor(unsigned char pin)
+unsigned char checkSensor(unsigned char pin, unsigned char thres)
 {
 	unsigned char b = 1;
 	DDRB &= ~(1<<pin);
@@ -206,7 +206,7 @@ unsigned char checkSensor(unsigned char pin)
 	9 - для мест с проводкой в подрозетнике
 	7 - для новой ыерсии платы
 	*/
-	for (unsigned char i = 0; i < 8; i++)
+	for (unsigned char i = 0; i < thres; i++)
 		if (PINB & (1<<pin))
 			b = 0;
 	return b;
@@ -244,7 +244,7 @@ int main(void)
     while(1)
     {
 		shutdownSensor(SENSOR_L);
-		if (checkSensor(SENSOR_L)) {
+		if (checkSensor(SENSOR_L, 9)) {
 			if (on_l < MAX_GAIN)
 				on_l++;
 		} else {
@@ -252,7 +252,7 @@ int main(void)
 		}
 		
 		shutdownSensor(SENSOR_R);
-		if (checkSensor(SENSOR_R)) {
+		if (checkSensor(SENSOR_R, 8)) {
 			if (on_r < MAX_GAIN)
 				on_r++;
 		} else {

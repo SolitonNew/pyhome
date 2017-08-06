@@ -54,6 +54,14 @@ class Main():
                             relIds += [str(row[1]), ","]
                         if row[3] == 3: # Слежение за розетками
                             relIds_named += [str(row[1]), ","]
+                        elif row[3] == 8: # Слежение за пиродатчиками (камерами)
+                            cams = [166, 167, 168, 169]
+                            try:
+                                cam_num = cams.index(row[1]) + 1
+                                if row[2] == 1:
+                                    self._add_command('speech("Замечено движение на камере %s", "notify")' % (cam_num))
+                            except:
+                                pass
                         elif row[3] == 4: #Термометры
                             for r in self.termostats:
                                 if r[2] == row[1]:

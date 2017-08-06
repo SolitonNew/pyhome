@@ -13,7 +13,8 @@ SCREENS = [["Справка", "", "", None, None, [], None],
            ["Выполнение", "executor_demon.py", "/home/pyhome/server/executor", None, None, [], None],
            ["Монитор", "watcher_demon.py", "/home/pyhome/server/watcher", None, None, [], None],
            ["Пульты", "lan_control_demon.py", "/home/pyhome/server/lan_control", None, None, [], None],
-           ["Голос", "local_control_demon.py", "/home/pyhome/server/lan_control/local_control", None, None, [], None]]
+           ["Голос", "local_control_demon.py", "/home/pyhome/server/lan_control/local_control", None, None, [], None],
+           ["Видео", "video_alerts_demon.py", "/home/pyhome/server/video_alerts", None, None, [], None]]
 
 CURRENT_SCREEN = 0
 

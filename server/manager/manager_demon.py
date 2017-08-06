@@ -11,10 +11,10 @@ SCREENS = [["Справка", "", "", None, None, [], None],
            ["Веб", "http_admin_demon.py", "/home/pyhome/server/http_admin", None, None, [], None],
            ["Расписание", "scheduler_demon.py", "/home/pyhome/server/scheduler", None, None, [], None],
            ["Выполнение", "executor_demon.py", "/home/pyhome/server/executor", None, None, [], None],
-           ["Монитор", "watcher_demon.py", "/home/pyhome/server/watcher", None, None, [], None],
-           ["Пульты", "lan_control_demon.py", "/home/pyhome/server/lan_control", None, None, [], None],
-           ["Голос", "local_control_demon.py", "/home/pyhome/server/lan_control/local_control", None, None, [], None],
-           ["Видео", "video_alerts_demon.py", "/home/pyhome/server/video_alerts", None, None, [], None]]
+           ["М", "watcher_demon.py", "/home/pyhome/server/watcher", None, None, [], None],
+           ["П", "lan_control_demon.py", "/home/pyhome/server/lan_control", None, None, [], None],
+           ["Г", "local_control_demon.py", "/home/pyhome/server/lan_control/local_control", None, None, [], None],
+           ["В", "video_alerts_demon.py", "/home/pyhome/server/video_alerts", None, None, [], None]]
 
 CURRENT_SCREEN = 0
 

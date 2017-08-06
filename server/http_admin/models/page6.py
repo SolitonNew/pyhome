@@ -21,6 +21,7 @@ class Page6(BaseForm):
         grid.add_column("Следующее действие", "ACTION_DATETIME", 90, sort="on")
         grid.add_column("Действие", "ACTION", 300, sort="on")
         grid.add_column("Переодичность", "INTERVAL_TYPE", 500, sort="on", func=self.column_interval_func)
+        grid.add_column("Включено", "ENABLE", 100, sort="on", func=self.column_enable_func)
         self.add_widget(grid)
         self.SCHEDULER_LIST = grid;
 
@@ -35,6 +36,12 @@ class Page6(BaseForm):
         elif typ in [1, 2, 3]:
             res += " день: <b>%s</b>" % str(row[fields.index("INTERVAL_DAY_OF_TYPE")], "utf-8")
         
+        return res
+
+    def column_enable_func(self, index, row):
+        fields = self.SCHEDULER_LIST.func_fields
+        v_list = ["Не выполнять", "Выполнять"]
+        res = v_list[row[fields.index("ENABLE")]]
         return res
 
     def query(self, query_type):

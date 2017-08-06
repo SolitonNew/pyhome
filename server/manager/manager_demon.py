@@ -13,7 +13,8 @@ SCREENS = [["Справка", "", "", None, None, [], None],
            ["Выполнение", "executor_demon.py", "/home/pyhome/server/executor", None, None, [], None],
            ["Монитор", "watcher_demon.py", "/home/pyhome/server/watcher", None, None, [], None],
            ["Пульты", "lan_control_demon.py", "/home/pyhome/server/lan_control", None, None, [], None],
-           ["Голос", "local_control_demon.py", "/home/pyhome/server/lan_control/local_control", None, None, [], None]]
+           ["Голос", "local_control_demon.py", "/home/pyhome/server/lan_control/local_control", None, None, [], None],
+           ["Видео", "video_alerts_demon.py", "/home/pyhome/server/video_alerts", None, None, [], None]]
 
 CURRENT_SCREEN = 0
 
@@ -129,10 +130,14 @@ while True:
                 f1.truncate()
                 f2.truncate()
         btn = " %s-%s " % (i, SCREENS[i][0])
-        if CURRENT_SCREEN == i:
-            scr.addstr(0, x, btn, c_header | curses.A_REVERSE)
-        else:
-            scr.addstr(0, x, btn, c_header | curses.A_NORMAL)
+        if x < size[1]:
+            btn_c = btn
+            if len(btn) + x >= size[1]:
+                btn_c = btn[:size[1] - x:]
+            if CURRENT_SCREEN == i:
+                scr.addstr(0, x, btn_c, c_header | curses.A_REVERSE)
+            else:
+                scr.addstr(0, x, btn_c, c_header | curses.A_NORMAL)
         x += len(btn)
 
         if CURRENT_SCREEN == i:

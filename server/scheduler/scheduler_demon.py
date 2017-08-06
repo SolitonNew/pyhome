@@ -16,22 +16,26 @@ class Main():
         self.db.commit()
         
         print("-- Предстоящие задачи --")
-        for row in self.db.select("select ID, COMM, ACTION, ACTION_DATETIME, INTERVAL_TIME_OF_DAY, INTERVAL_DAY_OF_TYPE, INTERVAL_TYPE from core_scheduler"):
+        for row in self.db.select("select ID, COMM, ACTION, ACTION_DATETIME, INTERVAL_TIME_OF_DAY, INTERVAL_DAY_OF_TYPE, INTERVAL_TYPE, ENABLE from core_scheduler"):
             next_time = self.parse_time(None, str(row[4], "utf-8"), str(row[5], "utf-8"), row[6])
-            print("[%s] %s" % (datetime.datetime.fromtimestamp(next_time), str(row[1], "utf-8")))
+            enable = ""
+            if row[7] == 0:
+                enable = "      [НЕ ВЫПОЛНЯТЬ!!!]"
+            print("[%s] %s %s" % (datetime.datetime.fromtimestamp(next_time), str(row[1], "utf-8"), enable))
         print("------------------------")
         self.check_time()
         self.run()
 
     def check_time(self):
         now = datetime.datetime.now().timestamp()
-        for row in self.db.select("select ID, COMM, ACTION, ACTION_DATETIME, INTERVAL_TIME_OF_DAY, INTERVAL_DAY_OF_TYPE, INTERVAL_TYPE from core_scheduler"):
+        for row in self.db.select("select ID, COMM, ACTION, ACTION_DATETIME, INTERVAL_TIME_OF_DAY, INTERVAL_DAY_OF_TYPE, INTERVAL_TYPE, ENABLE from core_scheduler"):
             next_time = None
             if row[3] == None: # Это обнуленная дата - будет перещитана в холостую относительно текущей
                 next_time = self.parse_time(None, str(row[4], "utf-8"), str(row[5], "utf-8"), row[6])
             elif row[3].timestamp() <= now: # Это дата, что пришла для выполнения. Выполняем и перещитываем.
                 next_time = self.parse_time(row[3].timestamp(), str(row[4], "utf-8"), str(row[5], "utf-8"), row[6])
-                self.execute(str(row[1], "utf-8"), str(row[2], "utf-8"))
+                if row[7]: # Проверка на Выполнять/Не выполнять
+                    self.execute(str(row[1], "utf-8"), str(row[2], "utf-8"))
                 if row[6] == 4: # Одноразовая задача выполнена. Удаляем ее запись.
                     self.db.IUD("delete from core_scheduler where ID = %s" % (row[0]))
                     self.db.commit()

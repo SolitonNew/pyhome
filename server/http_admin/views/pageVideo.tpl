@@ -5,14 +5,21 @@
         window.addEventListener('CAMERA_LIST_selected', function (event) {
             var key = _CAMERA_LIST_selected_key;
             if (key) {
-                
+                $.ajax({url: 'pageVideo?FORM_QUERY=URL&key=' + key}).done(function(data) {
+                    play_camera(data);
+                });
             }
         });
         
     });
 
-    function create_camera() {
-
+    function play_camera(url) {
+        var vlc = document.getElementById('vlc');
+        vlc.playlist.stop();
+        vlc.playlist.clear();
+        
+        var track = vlc.playlist.add(url, '', '');
+        vlc.playlist.play();
     }
     
 </script>
@@ -32,8 +39,10 @@
         </div>
     </td>
     <td style="position:relative;width:100%;height:100%;">
-        <img src="rtsp://192.168.40.3:554/user=admin&password=&channel=1&stream=1.sdp?real_stream--rtp-caching=1000">
-        @CAMERA_VIEW@
+        <embed type="application/x-vlc-plugin" pluginspage="http://www.videolan.org"
+        width=100%
+        height=100%
+        id="vlc"/>
     </td>
 </tr>
 </table>

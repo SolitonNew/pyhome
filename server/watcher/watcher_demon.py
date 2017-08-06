@@ -4,6 +4,8 @@
 from db_connector import DBConnector
 import time
 import datetime
+import subprocess
+
 try:
     from bmp280 import BMP280
 except:
@@ -22,7 +24,10 @@ class Main():
         # ID, CHANNEL, VALUE
         self.BMP280_VARS = [[150, "t", None], [151, "p", None]]
         self.bmp280_drv = None        
-        self.bmp280_init()                
+        self.bmp280_init()
+
+        self.cam_alerts = []
+        self._load_cam_alerts()
         
         self.run()
 
@@ -52,6 +57,13 @@ class Main():
                             relIds += [str(row[1]), ","]
                         if row[3] == 3: # Слежение за розетками
                             relIds_named += [str(row[1]), ","]
+                        elif row[3] == 8: # Слежение за пиродатчиками (камерами)
+                            try:
+                                cam_num = self.cam_alerts.index(row[1]) + 1
+                                if row[2] == 1:
+                                    self._add_command('speech("Замечено движение на камере %s", "notify")' % (cam_num))
+                            except:
+                                pass
                         elif row[3] == 4: #Термометры
                             for r in self.termostats:
                                 if r[2] == row[1]:
@@ -70,6 +82,8 @@ class Main():
                             for r in self.termostats:
                                 if r[0] == row[1]:
                                     r[1] = row[2]
+                        elif row[1] == 163 and row[2] == 1:
+                            self._add_command('speech("Прозвенел звон*ок на воротах")')
 
                     if len(relIds) > 0:
                         for row in self.db.select("select v.APP_CONTROL, c.NAME, p.NAME, v.VALUE "
@@ -125,6 +139,7 @@ class Main():
                 if not clear_db_mem_time_ignore:
                     clear_db_mem_time_ignore = True
                     self.clear_mem_db()
+                    self.clear_values()
             else:
                 clear_db_mem_time_ignore = False
             # -------------------------------------------
@@ -174,6 +189,10 @@ class Main():
                 return True
         return False
 
+    def _load_cam_alerts(self):
+        self.cam_alerts = []
+        for rec in self.db.select("select NAME, ALERT_VAR_ID from plan_video order by ORDER_NUM"):
+            self.cam_alerts += [rec[1]]
 
     def _clear_mem_db_table(self, table, space=100):
         for rec in self.db.select("select MAX(ID) from %s" % (table)):
@@ -192,7 +211,12 @@ class Main():
             print("[%s] CLEAR MEM TABLES" % (time.strftime("%d-%m-%Y %H:%M")))
         except Exception as e:
             print(e)
-        
+
+    def clear_values(self):
+        try:
+            subprocess.call('python3 /home/pyhome/server/watcher/clear_values_15.py', shell=True)
+        except:
+            pass        
 
 print(
 "=============================================================================\n"

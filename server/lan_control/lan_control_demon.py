@@ -371,7 +371,7 @@ class MetaThread(threading.Thread):
             self.senddata(self.app_sessions)
 
     def _cams(self, nosend = False):
-        cams = self.db.select("select v.ID, v.NAME, v.URL, v.ORDER_NUM"
+        cams = self.db.select("select v.ID, v.NAME, v.URL, v.ORDER_NUM, v.ALERT_VAR_ID"
                               "  from plan_video v "
                               "order by v.NAME")
         if self.app_cams != cams:

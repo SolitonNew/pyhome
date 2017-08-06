@@ -67,24 +67,8 @@ DINING_TERM_R = Variable(67, 2, 0, '', '')
 HALL_1_TERM_S = Variable(68, 2, 0, '', '')
 HALL_1_TERM_V = Variable(69, 2, 1, 'variable', '')
 HALL_1_TERM_R = Variable(70, 2, 1, '', '')
-BEDROOM_1_SOCKET = Variable(71, 2, 1, 'pyb', '')
-BEDROOM_2_SOCKET = Variable(72, 2, 1, 'pyb', '')
-BEDROOM_3_WC_SOCKET = Variable(73, 1, 1, 'pyb', '')
-BEDROOM_3_SOCKET_1 = Variable(74, 1, 1, 'pyb', '')
 CAM_1 = Variable(75, 1, 0, 'variable', '')
-BACK_DOOR_SOCKET = Variable(76, 1, 1, 'pyb', '')
-LIVING_SOCKET_1 = Variable(77, 1, 1, 'pyb', '')
-LIVING_SOCKET_2 = Variable(78, 1, 1, 'pyb', '')
-LIVING_SOCKET_3 = Variable(79, 1, 1, 'pyb', '')
-GAME_ROOM_SWITCH_1 = Variable(80, 1, 1, 'pyb', '')
-GAME_ROOM_SWITCH_2 = Variable(81, 1, 1, 'pyb', '')
 BOILER_SWITCH = Variable(82, 1, 1, 'pyb', 'X9')
-DINING_SOCKET = Variable(83, 2, 1, 'pyb', '')
-COOK_SWITCH = Variable(84, 2, 1, 'pyb', '')
-HALL_1_SWITCH = Variable(85, 2, 1, 'pyb', '')
-BEDROOM_3_SOCKET_2 = Variable(86, 1, 1, 'pyb', '')
-HALL_2_SWITCH = Variable(87, 1, 1, 'pyb', '')
-SHOWER_2_SWITCH = Variable(88, 2, 1, 'pyb', '')
 PODVAL_R = Variable(89, 1, 1, 'pyb', 'Y5')
 GAME_ROOM_S = Variable(90, 1, 0, [0xf0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x1a], 'RIGHT')
 BACK_DOOR_TERM_IN_S = Variable(91, 1, 0, [0x28, 0xd7, 0x69, 0x76, 0x05, 0x00, 0x00, 0x29], '')
@@ -100,9 +84,9 @@ MASTER_FAN = Variable(107, 1, 1, [0xf1, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x27
 COOK_FAN = Variable(108, 2, 1, '', '')
 PODVAL_MASTER_FAN = Variable(109, 2, 1, '', '')
 PODVAL_COOK_FAN = Variable(110, 2, 1, '', '')
-WC_PRESENCE = Variable(111, 2, 0, '', 'P1')
-WC_2_PRESENCE = Variable(112, 2, 0, '', 'P2')
-SHOWER_2_PRESNCE = Variable(113, 2, 0, '', 'P3')
+WC_1_PRESENCE = Variable(111, 2, 0, [0xf2, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0x82], 'P2')
+WC_2_PRESENCE = Variable(112, 2, 0, [0xf2, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0xdc], 'P1')
+SHOWER_2_PRESNCE = Variable(113, 2, 0, [0xf2, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0xdc], 'P4')
 STAIRS_PRESENCE = Variable(114, 1, 0, '', 'P1')
 STAIRS_R = Variable(115, 1, 1, 'pyb', 'Y1')
 DEMO = Variable(116, 1, 1, 'variable', '')
@@ -125,6 +109,15 @@ WC_2_FAN_MIN = Variable(141, 100, 1, 'variable', '')
 SHOWER_FAN_MIN = Variable(142, 100, 1, 'variable', '')
 BEDROOM_3_WC_FAN_MIN = Variable(143, 100, 1, 'variable', '')
 WC_1_FAN_MIN = Variable(144, 100, 1, 'variable', '')
+WC_1_DOOR = Variable(145, 2, 0, [0xf2, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0x82], 'P1')
+WC_2_DOOR = Variable(146, 2, 0, [0xf2, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0xdc], 'P2')
+SHOWER_2_DOOR = Variable(147, 2, 0, [0xf2, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0xdc], 'P3')
+WC_2_PRESENCE_DELAY = Variable(148, 2, 0, 'variable', '')
+WC_1_PRESENCE_DELAY = Variable(149, 2, 0, 'variable', '')
+BOILER_TEMP_S = Variable(150, 100, 1, 'variable', '')
+BIOLER_ATM_PRESS = Variable(151, 100, 1, 'variable', '')
+BOILER_HOT_TEMP = Variable(152, 1, 0, [0x28, 0x86, 0x91, 0x75, 0x05, 0x00, 0x00, 0x20], '')
+CURRENT = Variable(153, 2, 0, [0xf5, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0xd3], '')
 
 # Scripts
 def script_1():
@@ -152,6 +145,10 @@ def script_4():
 def script_21():
     if WC_2_S.value():
         WC_2_R.value(not WC_2_R.value())
+        
+        if WC_2_R.value() == 0:
+            WC_2_PRESENCE_DELAY.value(1)
+            WC_2_PRESENCE_DELAY.value(0, 6)
 
 def script_22():
     if SHOWER_2_S.value():
@@ -222,6 +219,10 @@ def script_35():
 def script_36():
     if WC_1_S.value():
         WC_1_R.value(not WC_1_R.value())
+        
+        if WC_1_R.value() == 0:
+            WC_1_PRESENCE_DELAY.value(1)
+            WC_1_PRESENCE_DELAY.value(0, 6)
 
 def script_39():
     if BEDROOM_2_SECOND_S.value():
@@ -232,25 +233,19 @@ def script_40():
         BEDROOM_1_SECOND_R.value(not BEDROOM_1_SECOND_R.value())
 
 def script_43():
-    if WC_2_R.value():
-        WC_2_FAN.value(10, 120)
+    if WC_2_R.value() and WC_2_DOOR.value():
+        WC_2_FAN.value(6, 180)
     else:
         WC_2_FAN.value(WC_2_FAN_MIN.value(), 180)
 
 def script_44():
-    print("1")
-    
-    if WC_1_R.value():
-        WC_1_FAN.value(10, 1)
+    if WC_1_R.value() and WC_1_DOOR.value():
+        WC_1_FAN.value(6, 180)
     else:
-        WC_1_FAN.value(WC_1_FAN_MIN.value(), 1)
-        
-    print("2")
+        WC_1_FAN.value(WC_1_FAN_MIN.value(), 180)
 
 def script_45():
-    print("3")
-    
-    c = 4
+    c = 2
     
     if WC_1_FAN.value() > WC_1_FAN_MIN.value():
         c += 2
@@ -267,15 +262,13 @@ def script_45():
     if c > 4:
         MASTER_FAN.value(c)
     else:
-        MASTER_FAN.value(c, 30)
-        
-    print("4")
+        MASTER_FAN.value(c, 2)
 
 def script_46():
     if BEDROOM_3_WC_R.value():
         BEDROOM_3_WC_FAN.value(10, 120)
     else:
-        BEDROOM_3_WC_FAN.value(0, 180)
+        BEDROOM_3_WC_FAN.value(BEDROOM_3_WC_FAN_MIN.value(), 180)
 
 def script_47():
     """
@@ -286,7 +279,11 @@ def script_47():
     """
 
 def script_48():
-    pass
+    if WC_1_PRESENCE_DELAY.value() == 0:
+        if WC_1_PRESENCE.value():
+            WC_1_R.value(1)
+        else:
+            WC_1_R.value(0, 180)
 
 def script_49():
     pass
@@ -307,6 +304,13 @@ def script_51():
 def script_52():
     if PODVAL_S.value() == 2:
         PODVAL_R.value(not PODVAL_R.value())
+
+def script_54():
+    if WC_2_PRESENCE_DELAY.value() == 0:
+        if WC_2_PRESENCE.value():
+            WC_2_R.value(1)
+        else:
+            WC_2_R.value(0, 180)
 
 
 # Links
@@ -331,7 +335,9 @@ HALL_1_S.set_change_script(script_35)
 WC_1_S.set_change_script(script_36)
 BEDROOM_2_SECOND_S.set_change_script(script_39)
 BEDROOM_1_SECOND_S.set_change_script(script_40)
+WC_2_DOOR.set_change_script(script_43)
 WC_2_R.set_change_script(script_43)
+WC_1_DOOR.set_change_script(script_44)
 WC_1_R.set_change_script(script_44)
 BEDROOM_3_WC_FAN.set_change_script(script_45)
 SHOWER_FAN.set_change_script(script_45)
@@ -339,7 +345,9 @@ WC_1_FAN.set_change_script(script_45)
 WC_2_FAN.set_change_script(script_45)
 BEDROOM_3_WC_R.set_change_script(script_46)
 SHOWER_2_R.set_change_script(script_47)
+WC_1_PRESENCE.set_change_script(script_48)
 STAIRS_PRESENCE.set_change_script(script_49)
 BOILER_PRESENCE.set_change_script(script_51)
 BOILER_PRESENCE_OUT.set_change_script(script_51)
 PODVAL_S.set_change_script(script_52)
+WC_2_PRESENCE.set_change_script(script_54)

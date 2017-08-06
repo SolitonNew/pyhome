@@ -113,15 +113,376 @@ Playing WAVE '/home/pyhome/server/executor/notify.wav' : Signed 16 bit Little En
 /var/tmp/wisehouse/audio_39.wav: No such file or directory
 Звучит: 39
 /var/tmp/wisehouse/audio_39.wav: No such file or directory
-ehouse/audio_39.wav: No such file or directory
-Звучит: 39
-/var/tmp/wisehouse/audio_39.wav: No such file or directory
-Звучит: 39
-/var/tmp/wisehouse/audio_39.wav: No such file or directory
-.wav: No such file or directory
-Звучит: 39
-/var/tmp/wisehouse/audio_39.wav: No such file or directory
-Звучит: 39
-/var/tmp/wisehouse/audio_39.wav: No such file or directory
-Звучит: 39
-/var/tmp/wisehouse/audio_39.wav: No such file or directory
+Звучит: 37
+Playing WAVE '/home/pyhome/server/executor/notify.wav' : Signed 16 bit Little Endian, Rate 44100 Hz, Stereo
+/var/tmp/wisehouse/audio_37.wav: No such file or directory
+Звучит: 37
+/var/tmp/wisehouse/audio_37.wav: No such file or directory
+Звучит: 37
+/var/tmp/wisehouse/audio_37.wav: No such file o/var/tmp/wisehouse/audio_37.wav: No such file or directory
+Звучит: 37
+/var/tmp/wisehouse/audio_37.wav: No such file or directory
+Звучит: 37
+/var/tmp/wisehouse/audio_37.wav: No such file or directory
+Звучит: 37
+/var/tmp/wisehouse/audio_37.wav: No such file or directory
+Звучит: 37
+/var/tmp/wisehouse/audio_37.wav: No such file or directory
+Звучит: 7
+/var/tmp/wisehouse/audio_7.wav: No such file or directory
+Звучит: 7
+/var/tmp/wisehouse/audio_7.wav: No such file or directory
+Звучит: 7
+/var/tmp/wisehouse/audio_7.wav: No such file or directory
+Звучит: 7
+/var/tmp/wisehouse/audio_7.wav: No such file or directory
+Звучит: 7
+/var/tmp/wisehouse/audio_7.wav: No such file or directory
+Звучит: 7
+/var/tmp/wisehouse/audio_7.wav: No such file or directory
+Звучит: 7
+/var/tmp/wisehouse/audio_7.wav: No such file or directory
+Звучит: 7
+/var/tmp/wisehouse/audio_7.wav: No such file or directory
+Звучит: 7
+/var/tmp/wisehouse/audio_7.wav: No such file or directory
+Звучит: 7
+/var/tmp/wisehouse/audio_7.wav: No such file or directory
+Звучит: 7
+/var/tmp/wisehouse/audio_7.wav: No such file or directory
+Звучит: 7
+/var/tmp/wisehouse/audio_7.wav: No such file or directory
+Звучит: 7
+/var/tmp/wisehouse/audio_7.wav: No such file or directory
+Звучит: 7
+/var/tmp/wisehouse/audio_7.wav: No such file or directory
+Звучит: 7
+/var/tmp/wisehouse/audio_7.wav: No such file or directory
+Звучит: 7
+/var/tmp/wisehouse/audio_7.wav: No such file or directory
+Звучит: 7
+/var/tmp/wisehouse/audio_7.wav: No such file or directory
+Звучит: 7
+/var/tmp/wisehouse/audio_7.wav: No such file or directory
+Звучит: 7
+/var/tmp/wisehouse/audio_7.wav: No such file or directory
+Звучит: 7
+/var/tmp/wisehouse/audio_7.wav: No such file or directory
+Звучит: 7
+/var/tmp/wisehouse/audio_7.wav: No such file or directory
+Звучит: 7
+/var/tmp/wisehouse/audio_7.wav: No such file or directory
+Звучит: 7
+/var/tmp/wisehouse/audio_7.wav: No such file or directory
+Звучит: 7
+/var/tmp/wisehouse/audio_7.wav: No such file or directory
+Звучит: 7
+/var/tmp/wisehouse/audio_7.wav: No such file or directory
+Звучит: 62
+Playing WAVE '/home/pyhome/server/executor/notify.wav' : Signed 16 bit Little Endian, Rate 44100 Hz, Stereo
+/var/tmp/wisehouse/audio_62.wav: No such file or directory
+Звучит: 62
+/var/tmp/wisehouse/audio_62.wav: No such file or directory
+Звучит: 57
+/var/tmp/wisehouse/audio_57.wav: No such file or directory
+Звучит: 57
+/var/tmp/wisehouse/audio_57.wav: No such file or directory
+Звучит: 62
+/var/tmp/wisehouse/audio_62.wav: No such file or directory
+Звучит: 57
+/var/tmp/wisehouse/audio_57.wav: No such file or directory
+Звучит: 62
+/var/tmp/wisehouse/audio_62.w/var/tmp/wisehouse/audio_57.wav: No such file or directory
+Звучит: 62
+/var/tmp/wisehouse/audio_62.wav: No such file or directory
+Звучит: 62
+/var/tmp/wisehouse/audio_62.wav: No such file or directory
+Звучит: 57
+/var/tmp/wisehouse/audio_57.wav: No such file or directory
+Звучит: 62
+/var/tmp/wisehouse/audio_62.wav: No such file or directory
+Звучит: 57
+/var/tmp/wisehouse/audio_57.wav: No such file or directory
+Звучит: 62
+/var/tmp/wisehouse/audio_62.wav: No such file or directory
+Звучит: 62
+/var/tmp/wisehouse/audio_62.wav: No such file or directory
+Звучит: 57
+/var/tmp/wisehouse/audio_57.wav: No such file or directory
+Звучит: 62
+/var/tmp/wisehouse/audio_62.wav: No such file or directory
+Звучит: 57
+/var/tmp/wisehouse/audio_57.wav: No such file or directory
+Звучит: 62
+/var/tmp/wisehouse/audio_62.wav: No such file or directory
+Звучит: 62
+/var/tmp/wisehouse/audio_62.wav: No such file or directory
+Звучит: 62
+/var/tmp/wisehouse/audio_62.wav: No such file or directory
+Звучит: 57
+/var/tmp/wisehouse/audio_57.wav: No such file or directory
+Звучит: 57
+/var/tmp/wisehouse/audio_57.wav: No such file or directory
+Звучит: 62
+/var/tmp/wisehouse/audio_62.wav: No such file or directory
+Звучит: 57
+/var/tmp/wisehouse/audio_57.wav: No such file or directory
+Звучит: 62
+/var/tmp/wisehouse/audio_62.wav: No such file or directory
+Звучит: 57
+/var/tmp/wisehouse/audio_57.wav: No such file or directory
+Звучит: 62
+/var/tmp/wisehouse/audio_62.wav: No such file or directory
+Звучит: 57
+/var/tmp/wisehouse/audio_57.wav: No such file or directory
+Звучит: 62
+/var/tmp/wisehouse/audio_62.wav: No such file or directory
+Звучит: 57
+/var/tmp/wisehouse/audio_57.wav: No such file or directory
+Звучит: 57
+/var/tmp/wisehouse/audio_57.wav: No such file or directory
+Звучит: 57
+/var/tmp/wisehouse/audio_57.wav: No such file or directory
+Звучит: 62
+/var/tmp/wisehouse/audio_62.wav: No such file or directory
+Звучит: 57
+/var/tmp/wisehouse/audio_57.wav: No such file or directory
+Звучит: 62
+/var/tmp/wisehouse/audio_62.wav: No such file or directory
+Звучит: 62
+/var/tmp/wisehouse/audio_62.wav: No such file or directory
+Звучит: 57
+/var/tmp/wisehouse/audio_57.wav: No such file or directory
+Звучит: 62
+/var/tmp/wisehouse/audio_62.wav: No such file or directory
+Звучит: 57
+/var/tmp/wisehouse/audio_57.wav: No such file or directory
+Звучит: 57
+/var/tmp/wisehouse/audio_57.wav: No such file or directory
+Звучит: 62
+/var/tmp/wisehouse/audio_62.wav: No such file or directory
+Звучит: 57
+/var/tmp/wisehouse/audio_57.wav: No such file or directory
+Звучит: 57
+/var/tmp/wisehouse/audio_57.wav: No such file or directory
+Звучит: 62
+/var/tmp/wisehouse/audio_62.wav: No such file or directory
+Звучит: 57
+/var/tmp/wisehouse/audio_57.wav: No such file or directory
+Звучит: 62
+/var/tmp/wisehouse/audio_62.wav: No such file or directory
+Звучит: 57
+/var/tmp/wisehouse/audio_57.wav: No such file or directory
+Звучит: 62
+/var/tmp/wisehouse/audio_62.wav: No such file or directory
+Звучит: 62
+/var/tmp/wisehouse/audio_62.wav: No such file or directory
+Звучит: 57
+/var/tmp/wisehouse/audio_57.waЗвучит: 63
+Playing WAVE '/home/pyhome/server/executor/notify.wav' : Signed 16 bit Little Endian, Rate 44100 Hz, Stereo
+/var/tmp/wisehouse/audio_63.wav: No such file or directory
+Звучит: 63
+/var/tmp/wisehouse/audio_63.wav: No such file or directory
+Звучит: 63
+/var/tmp/wisehouse/audio_63.wav: No such file or directory
+Звучит: 63
+/var/tmp/wisehouse/audio_63.wav: No such file or directory
+Звучит: 57
+/var/tmp/wisehouse/audio_57.wav: No such file or directory
+Звучит: 63
+/var/tmp/wisehouse/audio_63.wav: No such file or directory
+Звучит: 57
+/var/tmp/wisehouse/audio_57.wav: No such file or directory
+Звучит: 57
+/var/tmp/wisehouse/audio_57.wav: No such file or directory
+Звучит: 63
+/var/tmp/wisehouse/audio_63.wav: No such file or directory
+Звучит: 57
+/var/tmp/wisehouse/audio_57.wav: No such file or directory
+Звучит: 63
+/var/tmp/wisehouse/audio_63.wav: No such file or directory
+Звучит: 63
+/var/tmp/wisehouse/audio_63.wav: No such file or directory
+Звучит: 63
+/var/tmp/wisehouse/audio_63.wav: No such file or directory
+Звучит: 63
+/var/tmp/wisehouse/audio_63.wav: No such file or directory
+Звучит: 57
+/var/tmp/wisehouse/audio_57.wav: No such file or directory
+Звучит: 57
+/var/tmp/wisehouse/audio_57.wav: No such file or directory
+Звучит: 57
+/var/tmp/wisehouse/audio_57.wav: No such file or directory
+Звучит: 57
+/var/tmp/wisehouse/audio_57.wav: No such file or directory
+Звучит: 57
+/var/tmp/wisehouse/audio_57.wav: No such file or directory
+Звучит: 57
+/var/tmp/wisehouse/audio_57.wav: No such file or directory
+Звучит: 63
+/var/tmp/wisehouse/audio_63.wav: No such file or directory
+Звучит: 63
+/var/tmp/wisehouse/audio_63.wav: No such file or directory
+Звучит: 63
+/var/tmp/wisehouse/audio_63.wav: No such file or directory
+Звучит: 63
+/var/tmp/wisehouse/audio_63.wav: No such file or directory
+Звучит: 63
+/var/tmp/wisehouse/audio_63.wav: No such file or directory
+Звучит: 63
+/var/tmp/wisehouse/audio_63.wav: No such file or directory
+Звучит: 57
+/var/tmp/wisehouse/audio_57.wav: No such file or directory
+Звучит: 63
+/var/tmp/wisehouse/audio_63.wav: No such file or directory
+Звучит: 57
+/var/tmp/wisehouse/audio_57.wav: No such file or directory
+Звучит: 57
+/var/tmp/wisehouse/audio_57.wav: No such file or directory
+Звучит: 63
+/var/tmp/wisehouse/audio_63.wav: No such file or directory
+Звучит: 57
+/var/tmp/wisehouse/audio_57.wav: No such file or directory
+Звучит: 63
+/var/tmp/wisehouse/audio_63.wav: No such file or directory
+Звучит: 57
+/var/tmp/wisehouse/audio_57.wav: No such file or directory
+Звучит: 57
+/var/tmp/wisehouse/audio_57.wav: No such file or directory
+Звучит: 63
+/var/tmp/wisehouse/audio_63.wav: No such file or directory
+Звучит: 57
+/var/tmp/wisehouse/audio_57.wav: No such file or directory
+Звучит: 63
+/var/tmp/wisehouse/audio_63.wav: No such file or directory
+Звучит: 63
+/var/tmp/wisehouse/audio_63.wav: No such file or directory
+Звучит: 57
+/var/tmp/wisehouse/audio_57.wav: No such file or directory
+Звучит: 57
+/var/tmp/wisehouse/audio_57.wav: No such file or directory
+Звучит: 57
+/var/tmp/wisehouse/audio_57.wav: No such file or directory
+Звучит: 57
+/var/tmp/wisehouse/audio_57.wav: No such file or directory
+Звучит: 57
+/var/tmp/wisehouse/audio_57.wav: No such file or directory
+Звучит: 63
+/var/tmp/wisehouse/audio_63.wav: No such file or directory
+Звучит: 63
+/var/tmp/wisehouse/audio_63.wav: No such file or directory
+Звучит: 57
+/var/tmp/wisehouse/audio_57.wav: No such file or directory
+Звучит: 57
+/var/tmp/wisehouse/audio_57.wav: No such file or directory
+Звучит: 63
+/var/tmp/wisehouse/audio_63.wav: No such file or directory
+Звучит: 57
+/var/tmp/wisehouse/audio_57.wav: No such file or directory
+Звучит: 19
+Playing WAVE '/home/pyhome/server/executor/notify.wav' : Signed 16 bit Little Endian, Rate 44100 Hz, Stereo
+/var/tmp/wisehouse/audio_19.wav: No such file or directory
+Звучит: 19
+/var/tmp/wisehouse/audio_19.wav: No such file or directory
+Звучит: 19
+/var/tmp/wisehouse/audio_19.wav: No such file or directory
+Звучит: 19
+/var/tmp/wisehouse/audio_19.wav: No such file or directory
+Звучит: 129
+/var/tmp/wisehouse/audio_129.wav: No such file or directory
+Звучит: 19
+/var/tmp/wisehouse/audio_19.wav: No such file or directory
+Звучит: 129
+/var/tmp/wisehouse/audio_129.wav: No such file or directory
+Звучит: 129
+/var/tmp/wisehouse/audio_129.wav: No such file or directory
+Звучит: 129
+/var/tmp/wisehouse/audio_129.wav: No such file or directory
+Звучит: 129
+/var/tmp/wisehouse/audio_129.wav: No such file or directory
+Звучит: 19
+/var/tmp/wisehouse/audio_19.wav: No such file or directory
+Звучит: 129
+/var/tmp/wisehouse/audio_129.wav: No such file or directory
+Звучит: 19
+/var/tmp/wisehouse/audio_19.wav: No such file or directory
+Звучит: 19
+/var/tmp/wisehouse/audio_19.wav: No such file or directory
+Звучит: 19
+/var/tmp/wisЗвучит: 19
+/var/tmp/wisehouse/audio_19.waЗвучит: 129
+/var/tmp/wisehouse/audio_129.wav: No such file or directory
+Звучит: 19
+/var/tmp/wisehouse/audio_19.wav: No such file or directory
+Звучит: 19
+Invalid shared memory segment size
+/var/tmp/wisehouse/audio_19.wav: No such file or directory
+Звучит: 129
+/var/tmp/wisehouse/audio_129.wav: No such file or directory
+Звучит: 19
+/var/tmp/wisehouse/audio_19.wav: No such file or directory
+Звучит: 129
+/var/tmp/wisehouse/audio_129.wav: No such file or directory
+Звучит: 19
+/var/tmp/wisehouse/audio_19.wav: No such file or directory
+Звучит: 129
+/var/tmp/wisehouse/audio_129.wav: No such file or directory
+Звучит: 19
+/var/tmp/wisehouse/audio_19.wav: No such file or directory
+Звучит: 129
+/var/tmp/wisehouse/audio_129.wav: No such file or directory
+Звучит: 19
+/var/tmp/wisehouse/audio_19.wav: No such file or directory
+Звучит: 129
+/var/tmp/wisehouse/audio_129.wav: No such file or directory
+Звучит: 129
+/var/tmp/wisehouse/audio_129.wav: No such file or directory
+Звучит: 19
+/var/tmp/wisehouse/audio_19.wav: No such file or directory
+Звучит: 129
+/var/tmp/wisehouse/audio_129.wav: No such file or directory
+Звучит: 19
+/var/tmp/wisehouse/audio_19.wav: No such file or directory
+Звучит: 129
+/var/tmp/wisehouse/audio_129.wav: No such file or directory
+Звучит: 19
+/var/tmp/wisehouse/audio_19.wav: No such file or directory
+Звучит: 19
+/var/tmp/wisehouse/audio_19.wav: No such file or directory
+Звучит: 129
+/var/tmp/wisehouse/audio_129.wav: No such file or directory
+Звучит: 129
+/var/tmp/wisehouse/audio_129.wav: No such file or directory
+Звучи/var/tm/var/tmp/wisehouse/audio_19.wav: No such file or directory
+Звучи�/var/tm/var/tmp/wisehouse/audio_129.wav: No such file or directory
+Звучит: 19
+/var/tmp/wisehouse/audio_19.wav: No such file or directory
+Звучит: 129
+/var/tmp/wisehouse/audio_129.wav: No such file or directory
+Звучит: 19
+/var/tmp/wisehouse/audio_19.wav: No such file or directory
+Звучит: 129
+/var/tmp/wisehouse/audio_129.wav: No such file or directory
+Звучит: 19
+/var/tmp/wisehouse/audio_19.wav: No such file or directory
+Звучит: 129
+/var/tmp/wisehouse/audio_129.wav: No such file or directory
+Звучит: 19
+/var/tmp/wisehouse/audio_19.wav: No such file or directory
+Звучит: 129
+/var/tmp/wisehouse/audio_129.wav: No such file or directory
+Звучит: 129
+/var/tmp/wisehouse/audio_129.wav: No such file or directory
+Звучит: 129
+/var/tmp/wisehouse/audio_129.wav: No such file or directory
+Звучит: 19
+/var/tmp/wisehouse/audio_19.wav: No such file or directory
+Звучит: 129
+/var/tmp/wisehouse/audio_129.wav: No such file or directory
+ит: 129
+/var/tmp/wisehouse/audio_129.wav: No such file or directory
+
+Звучит: 19
+/var/tmp/wisehouse/audio_19.wav: No such file or directory
+Звучит: 129
+/var/tmp/wisehouse/audio_129.wav: No such file or directory

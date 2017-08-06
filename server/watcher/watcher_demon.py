@@ -24,7 +24,10 @@ class Main():
         # ID, CHANNEL, VALUE
         self.BMP280_VARS = [[150, "t", None], [151, "p", None]]
         self.bmp280_drv = None        
-        self.bmp280_init()                
+        self.bmp280_init()
+
+        self.cam_alerts = []
+        self._load_cam_alerts()
         
         self.run()
 
@@ -55,9 +58,8 @@ class Main():
                         if row[3] == 3: # Слежение за розетками
                             relIds_named += [str(row[1]), ","]
                         elif row[3] == 8: # Слежение за пиродатчиками (камерами)
-                            cams = [166, 167, 168, 169]
                             try:
-                                cam_num = cams.index(row[1]) + 1
+                                cam_num = self.cam_alerts.index(row[1]) + 1
                                 if row[2] == 1:
                                     self._add_command('speech("Замечено движение на камере %s", "notify")' % (cam_num))
                             except:
@@ -187,6 +189,10 @@ class Main():
                 return True
         return False
 
+    def _load_cam_alerts(self):
+        self.cam_alerts = []
+        for rec in self.db.select("select NAME, ALERT_VAR_ID from plan_video order by ORDER_NUM"):
+            self.cam_alerts += [rec[1]]
 
     def _clear_mem_db_table(self, table, space=100):
         for rec in self.db.select("select MAX(ID) from %s" % (table)):

@@ -183,7 +183,7 @@ begin
       if sock.lasterror <> 0 then exit;
 
       range_e := range_s + out_len;
-      while (OutputData.Position < range_e) do
+      while ((OutputData.Position < range_e) and (not Terminated)) do
       begin
          c := length(buf);
          if ((range_e - OutputData.Position) < c) then

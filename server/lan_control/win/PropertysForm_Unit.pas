@@ -28,6 +28,7 @@ type
     ListBox2: TListBox;
     Label1: TLabel;
     SpeedButton7: TSpeedButton;
+    CheckBox1: TCheckBox;
     procedure Button1Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
@@ -38,6 +39,7 @@ type
     procedure SpeedButton3Click(Sender: TObject);
     procedure SpeedButton2Click(Sender: TObject);
     procedure SpeedButton7Click(Sender: TObject);
+    procedure CheckBox1Click(Sender: TObject);
   private
     fScanList:TList;
     fAddCount, fDelCount: integer;
@@ -267,6 +269,8 @@ procedure TPropertysForm.FormShow(Sender: TObject);
 var
    k: integer;
 begin
+   CheckBox1.Checked := MainForm.fPlayOnlyVLC;
+
    PageControl1.ActivePageIndex := 0;
    for k:= 0 to MainForm.fSessions.Count - 1 do
    begin
@@ -351,6 +355,11 @@ end;
 procedure TPropertysForm.SpeedButton7Click(Sender: TObject);
 begin
    ListBox2.Clear;
+end;
+
+procedure TPropertysForm.CheckBox1Click(Sender: TObject);
+begin
+   MainForm.fPlayOnlyVLC := CheckBox1.Checked;
 end;
 
 end.

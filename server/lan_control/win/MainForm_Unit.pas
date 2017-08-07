@@ -7,13 +7,15 @@ uses
   Dialogs, DlgMessagesRU, CoolTrayIcon, ScktComp, StdCtrls, ExtCtrls, ToolWin,
   DataRec_Unit, ComCtrls, Buttons, ImgList, Menus, ShellApi,
   ACS_Classes, ACS_WinMedia, ACS_smpeg, ACS_Wave, ACS_DXAudio, ActnList,
-  OleCtrls, AXVLC_TLB, http;
+  OleCtrls, AXVLC_TLB, http, SyncObjs;
 
 const
    MEDIA_END = WM_USER + 1;
 
 type
    //TDataRec = array of array of string;
+
+   TAsincQueryHandler = procedure (res: TDataRec) of object;
 
    TVarListItem = class
       id:integer;
@@ -54,6 +56,15 @@ type
       dayOfType: string;
       typ: integer;
       variable: integer;
+   end;
+
+   TMetaAsyncThread = class(TThread)
+   protected
+      procedure Execute; override;
+   public
+      fPack_name: string;
+      fPack_data: string;
+      fHandler: TAsincQueryHandler;
    end;
 
   TMainForm = class(TForm)
@@ -151,6 +162,8 @@ type
     SpeedButton6: TSpeedButton;
     MediaVolPanel: TPanel;
     MediaVolShape: TShape;
+    CamFullScreenBtn: TPanel;
+    Image1: TImage;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
@@ -244,6 +257,7 @@ type
       WheelDelta: Integer; MousePos: TPoint; var Handled: Boolean);
     procedure CamListResize(Sender: TObject);
     procedure Panel7Resize(Sender: TObject);
+    procedure Image1Click(Sender: TObject);
   private
     fHTTPServer: TTCPHttpDaemon;
 
@@ -291,8 +305,14 @@ type
 
     procedure startLoad();
     procedure syncLoad();
+    procedure syncLoadAsync();
     procedure syncPack(res: TDataRec);
     procedure firstRun();
+
+    procedure syncHandler(res: TDataRec);
+    procedure queueHandler(res: TDataRec);
+    procedure sessionHandler(res: TDataRec);
+    procedure mediaHandler(res: TDataRec);
 
     procedure clearList(ls:TList);
     procedure clearStrings(ls:TStrings);
@@ -318,7 +338,7 @@ type
     procedure VLCPlugin21MediaPlayerPlaying(Sender: TObject);
     procedure VLCPlugin21MediaPlayerPaused(Sender: TObject);
     procedure VLCPlugin21MediaPlayerStopped(Sender: TObject);
-    procedure VLCPlugin21MediaPlayerTimeChanged(ASender: TObject; time: Integer);    
+    procedure VLCPlugin21MediaPlayerTimeChanged(ASender: TObject; time: Integer);
   protected
     procedure WMGetSysCommand(var message : TMessage); message WM_SYSCOMMAND;
     procedure MEDIA_END_MESS(var Message: TMessage); message MEDIA_END;
@@ -328,7 +348,11 @@ type
     fVarGroupList: TList;
     fMediaList: TList;
     fSessions:TDataRec;
+    fPlayOnlyVLC: boolean;
+    fCameraAlertIds: array of integer;
+
     function metaQuery(pack_name, pack_data: string; blokMessages: boolean = false): TDataRec;
+    procedure metaQueryAsinc(pack_name, pack_data: string; handler: TAsincQueryHandler);
     function getMediaAtId(id: integer): TMediaListItem;
 
     procedure sendMediaState(state: string; id, time: integer);
@@ -340,12 +364,14 @@ type
 
 var
   MainForm: TMainForm;
+  CS: TCriticalSection;
 
 implementation
 
 uses StrUtils, PropertysForm_Unit, RegForm_Unit,
   Types, DateUtils, SchedDialog_Unit,
-  MediaInfoDialog_Unit, AlertForm_Unit, Mp3Player_Unit, Math;
+  MediaInfoDialog_Unit, AlertForm_Unit, Mp3Player_Unit, Math,
+  CamDisplay_Unit, CamAlertDiaplay_Unit;
 
 {$R *.dfm}
 
@@ -354,6 +380,8 @@ var
    s: string;
    b: boolean;
 begin
+   CS:= TCriticalSection.Create;
+
    fVarGroupList := TList.Create;
    fSpeachList:= TStringList.Create;
    //fSpeach:= TSpeach.Create;
@@ -374,6 +402,7 @@ begin
 
    CamList.Align := alClient;
    //CamList.DoubleBuffered := true;
+   CamFullScreenBtn.Hide;
    
    try
       Left := StrToInt(loadProp('Left'));
@@ -407,6 +436,8 @@ begin
    except
    end;
 
+   fPlayOnlyVLC := loadProp('PlayOnlyVlc') = 'True';
+
    s := loadProp('VlcPlayLoop');
    if (s = 'loop') then
       PlayLoopButton.Tag := 1
@@ -434,11 +465,17 @@ procedure TMainForm.FormDestroy(Sender: TObject);
 var
    k: integer;
 begin
+   stopMiniPlayer;
+
    fHTTPServer.Terminate;
 
    Timer1.Enabled := false;
    SocketMeta.Close;
 
+   if fPlayOnlyVLC then
+      saveProp('PlayOnlyVlc', 'True')
+   else
+      saveProp('PlayOnlyVlc', 'False');
    saveProp('Left', IntToStr(Left));
    saveProp('Top', IntToStr(Top));
    saveProp('Width', IntToStr(Width));
@@ -454,7 +491,7 @@ begin
 
    clearStrings(SchedList.Items);
    clearStrings(ComboBox1.Items);
- 
+
 
    //fSpeach.Terminate;
    //fSpeach.Free;
@@ -474,7 +511,8 @@ begin
    fVarGroupList.Free;
 
    clearAllCamViewers;
-   stopMiniPlayer;
+
+   CS.Free;
 end;
 
 procedure TMainForm.Timer1Timer(Sender: TObject);
@@ -496,7 +534,8 @@ begin
       else
          if not InfoPanel.Visible then
          begin
-            syncLoad();
+            //syncLoad();
+            syncLoadAsync();
          end;
    finally
       Timer1.Enabled := true;
@@ -600,6 +639,7 @@ begin
    Panel5.Visible := t = 1;
    SchedList.Visible := t = 2;
    CamList.Visible := t = 3;
+   CamFullScreenBtn.Visible := CamList.Visible;
 
    case t of
       0:
@@ -624,7 +664,8 @@ begin
       begin
          if (MainForm.Visible) then
             CamList.SetFocus;
-         loadCamList();
+         if (CamDisplay.Visible = False) then
+            loadCamList();
       end;
    end;
 
@@ -1148,6 +1189,10 @@ end;
 procedure TMainForm.FilterEditChange(Sender: TObject);
 begin
    refreshMediaList;
+   if (FilterEdit.Text = '') then
+      FilterEdit.Color := clWindow
+   else
+      FilterEdit.Color := clYellow;
 end;
 
 procedure TMainForm.MediaListDrawItem(Control: TWinControl; Index: Integer; Rect: TRect; State: TOwnerDrawState);
@@ -1205,10 +1250,11 @@ begin
          Font.Size := 8;
          if (om.id = fMediaPlayFileID) then
          begin
-            case fMediaPlayFileType of
-               2: ps := Mp3Player.playState;
-               else ps := fMiniPlayerState;
-            end;
+            if (fMediaPlayFileType = 2) and not fPlayOnlyVLC then
+               ps := Mp3Player.playState
+            else
+               ps := fMiniPlayerState;
+               
             Font.Style := [fsBold];
             tl := 5;
             if (ps in [2, 3]) then
@@ -1310,17 +1356,15 @@ begin
    if (Mp3Player = nil) then exit;
 
    isBuffering := False;
-   case fMediaPlayFileType of
-      2:
-      begin
-         pl := Mp3Player.playLen;
-         pp := Mp3Player.playPos;
-      end;
-      else
-      begin
-         pl := fMiniPlayerLen;
-         pp := fMiniPlayerPos;
-      end;
+   if (fMediaPlayFileType = 2) and not fPlayOnlyVLC then
+   begin
+      pl := Mp3Player.playLen;
+      pp := Mp3Player.playPos;
+   end
+   else
+   begin
+      pl := fMiniPlayerLen;
+      pp := fMiniPlayerPos;
    end;
 
    if (not fTimePanelDown) then
@@ -1355,21 +1399,21 @@ var
    mx: integer;
    ps: integer;
 begin
-   case fMediaPlayFileType of
-      2: ps := Mp3Player.playState;
-      else ps := fMiniPlayerState;
-   end;
+   if (fMediaPlayFileType = 2) and not fPlayOnlyVLC then
+      ps := Mp3Player.playState
+   else
+      ps := fMiniPlayerState;
 
    if ((Button = mbLeft) and (ps in [2, 3])) then
    begin
       mx := x;
       if ((Sender = TimeShape) or (Sender = TimeLabel)) then
-         mx := mx + TControl(Sender).Left + TimePanel.BorderWidth; 
+         mx := mx + TControl(Sender).Left; // + TimePanel.BorderWidth; 
 
       fTimePanelDown := true;
       TimeShape.Width := mx;
       updateTimePanel;
-      timeSeek();
+      //timeSeek();
    end;
 end;
 
@@ -1382,7 +1426,7 @@ begin
    begin
       mx := x;
       if ((Sender = TimeShape) or (Sender = TimeLabel)) then
-         mx := mx + TControl(Sender).Left + TimePanel.BorderWidth;
+         mx := mx + TControl(Sender).Left;// + TimePanel.BorderWidth;
       TimeShape.Width := mx;
       updateTimePanel;
       //timeSeek();
@@ -1398,21 +1442,29 @@ begin
    begin
       mx := x;
       if ((Sender = TimeShape) or (Sender = TimeLabel)) then
-         mx := mx + TControl(Sender).Left + TimePanel.BorderWidth;
+         mx := mx + TControl(Sender).Left; // + TimePanel.BorderWidth;
       TimeShape.Width := mx;
-      updateTimePanel;
       timeSeek();
       fTimePanelDown := false;
+      //updateTimePanel;
    end;
 end;
 
 procedure TMainForm.timeSeek;
+var
+   v: integer;
 begin
-   case fMediaPlayFileType of
-      2: Mp3Player.playPos := round((Mp3Player.playLen * TimeShape.Width) / (TimePanel.ClientWidth - 2));
-      else
-         if (fMiniPlayer <> nil) then
-            fMiniPlayer.input.time := round((fMiniPlayerLen * TimeShape.Width) / (TimePanel.ClientWidth - 2)) * 1000;
+   if (fMediaPlayFileType = 2) and not fPlayOnlyVLC then
+   begin
+      Mp3Player.playPos := round((Mp3Player.playLen * TimeShape.Width) / (TimePanel.ClientWidth - 2));
+   end
+   else
+   begin
+      if (fMiniPlayer <> nil) then
+      begin
+         v := round((fMiniPlayerLen * TimeShape.Width) / (TimePanel.ClientWidth - 2)) * 1000;
+         fMiniPlayer.input.time := v;
+      end;
    end;
 end;
 
@@ -1508,34 +1560,6 @@ begin
 end;
 
 function TMainForm.metaQuery(pack_name, pack_data: string; blokMessages: boolean = false): TDataRec;
-
-   {function parceTable(data:string):TDataRec;
-   var
-      F:integer;
-      i: integer;
-      cols:integer;
-   begin
-      i := Pos(chr(1), data);
-      cols := StrToInt(copy(data, 1, i - 1));
-      Delete(data, 1, i);
-      F := cols - 1;
-      repeat
-         i := Pos(chr(1), data);
-         if (i > 0) then
-         begin
-            inc(F);
-            if F > cols - 1 then
-            begin
-               SetLength(Result, Length(Result) + 1);
-               SetLength(Result[Length(Result) - 1], F);
-               F := 0;
-            end;
-            Result[Length(Result) - 1][F] := copy(data, 1, i - 1);
-            Delete(data, 1, i);
-         end;
-      until i < 1;
-   end;}
-
 var
    s, b: string;
    k: integer;
@@ -1565,17 +1589,15 @@ var
    ps: integer;
    pp: integer;
 begin
-   case fMediaPlayFileType of
-      2:
-      begin
-         ps := Mp3Player.playState;
-         pp := Mp3Player.playPos;
-      end;
-      else
-      begin
-         ps := fMiniPlayerState;
-         pp := fMiniPlayerPos;
-      end;
+   if (fMediaPlayFileType = 2) and not fPlayOnlyVLC then
+   begin
+      ps := Mp3Player.playState;
+      pp := Mp3Player.playPos;
+   end
+   else
+   begin
+      ps := fMiniPlayerState;
+      pp := fMiniPlayerPos;
    end;
 
    if (not (ps in [2, 3])) then
@@ -1612,10 +1634,10 @@ procedure TMainForm.PlayButtonClick(Sender: TObject);
 var
    ps: integer;
 begin
-   case fMediaPlayFileType of
-      2: ps := Mp3Player.playState;
-      else ps := fMiniPlayerState;
-   end;
+   if (fMediaPlayFileType = 2) and not fPlayOnlyVLC then
+      ps := Mp3Player.playState
+   else
+      ps := fMiniPlayerState;
 
    if (ps = 3) then
    begin
@@ -1671,7 +1693,7 @@ begin
          fMediaPlayFileID := id;
          fMediaPlayFileType := om.file_type;
          fileName := 'http://' + ip + ':' + IntToStr(http.httpPort) + '/' + IntToStr(id);
-         if (WideUpperCase(ExtractFileExt(om.file_name)) = '.MP3') then
+         if ((WideUpperCase(ExtractFileExt(om.file_name)) = '.MP3') and not fPlayOnlyVLC) then
          begin
             Mp3Player.play(id, om.file_type, fileName, om.title, withPause, seek);
          end
@@ -1696,6 +1718,7 @@ end;
 
 procedure TMainForm.MediaListDblClick(Sender: TObject);
 begin
+   StopButtonClick(nil);
    PlayButtonClick(nil);
 end;
 
@@ -1706,6 +1729,7 @@ begin
       StopButton.Tag := 0;
 
    Panel7Resize(nil);
+   AlphaBlend := (fMiniPlayer <> nil) and fMiniPlayer.video.fullscreen and (fMiniPlayerState = 2);
 end;
 
 procedure TMainForm.mp3OnChange(sender: TObject);
@@ -1826,6 +1850,7 @@ procedure TMainForm.vlcOnStopEvent(Sender: TObject);
 begin
    if (PlayLoopButton.Tag > 0) then
       playMediaNextItem;
+   Panel7Resize(nil);
 end;
 
 procedure TMainForm.mp3OnStopEvent(Sender: TObject);
@@ -2239,6 +2264,10 @@ begin
          o_id := StrToInt(res.val(k, 1));
          if (o_id = 123) then // QUIET_TIME
             fQuietTime := trunc(StrToFloat(StringReplace(res.val(k, 2), '.', ',', [rfReplaceAll])));
+
+         case (o_id) of
+            166, 167, 168, 169: CamAlertDiaplay.ShowForAlertId(o_id);
+         end;
 
          for i:= 0 to fItemList.Count - 1 do
          begin
@@ -3219,7 +3248,7 @@ begin
    for k := CamPanel.ControlCount - 1 downto 0 do
    begin
       TVLCPlugin2(CamPanel.Controls[k]).playlist.stop;
-      TVLCPlugin2(CamPanel.Controls[k]).Free;      
+      TVLCPlugin2(CamPanel.Controls[k]).Free;
    end;
 end;
 
@@ -3233,7 +3262,7 @@ begin
    clearAllCamViewers;
    res := metaQuery('cams', '');
    try
-      h := round(CamPanel.Width / 1.6);
+      h := round(CamPanel.Width / 1.78);
       for k := 0 to res.Count - 1 do
       begin
          cw:= TVLCPlugin2.Create(CamPanel);
@@ -3242,7 +3271,7 @@ begin
             cw.playlist.add(res.val(k, 2), NULL, NULL);
             cw.ControlInterface.Toolbar := false;
             cw.DefaultInterface.Toolbar := false;
-            cw.video.aspectRatio := '16:10';
+            cw.video.aspectRatio := '16:9';
             cw.playlist.play;
             {cw.Top := k * (h + 1);
             cw.Left := 0;
@@ -3257,7 +3286,7 @@ begin
    end;
 
    resizeCamList;
-end;
+end;                                                               
 
 procedure TMainForm.resizeCamList;
 var
@@ -3266,15 +3295,15 @@ var
    sb: integer;
    w, h, w1, w2, h1, h2: integer;
 begin
-   if (not CamList.Visible) then exit;
-
    sb := GetSystemMetrics(SM_CXVSCROLL);
+
+   if (not CamList.Visible) then exit;
 
    w1 := CamList.Width;
    w2 := CamList.Width - sb;
 
-   h1 := round(w1 / 1.6 + 1) * CamPanel.ControlCount;
-   h2 := round(w2 / 1.6 + 1) * CamPanel.ControlCount;
+   h1 := round(w1 / 1.78 + 1) * CamPanel.ControlCount;
+   h2 := round(w2 / 1.78 + 1) * CamPanel.ControlCount;
 
    if (h1 <= CamList.ClientHeight) then // Влезает без скроллера
    begin
@@ -3286,7 +3315,7 @@ begin
       w := w2;
       CamPanel.Height := Max(h2, CamList.ClientHeight + 1);
    end;
-   h := round(w / 1.6 + 1);
+   h := round(w / 1.78 + 1);
    CamPanel.Width := w;
 
    for k := 0 to CamPanel.ControlCount - 1 do
@@ -3296,6 +3325,22 @@ begin
       cw.Top := k * (h + 1);
       cw.Height := h;
       cw.Width := w;
+   end;
+
+   CamFullScreenBtn.Left := 4;
+   CamFullScreenBtn.Top := Panel2.Height + 4;
+
+   if (CamDisplay.Visible) then
+   begin
+      w := ClientWidth - 8;
+      h := round(w * 17 / 21);
+      CamFullScreenBtn.Width := w;
+      CamFullScreenBtn.Height := h;
+   end
+   else
+   begin
+      CamFullScreenBtn.Width := 21;
+      CamFullScreenBtn.Height := 17;
    end;
 end;
 
@@ -3319,6 +3364,8 @@ begin
    if (fMiniPlayer <> nil) then
    begin
       playHeight :=  Panel7.ClientWidth * 9 div 16 + 4;
+      if (fMediaPlayFileType = 2) then
+         playHeight := 0;
       fMiniPlayer.Left := 0;
       fMiniPlayer.Top := 0;
       fMiniPlayer.Width := Panel7.ClientWidth;
@@ -3345,7 +3392,8 @@ begin
 
    fMiniPlayer := TVLCPlugin2.Create(Panel7);
    fMiniPlayer.Parent := Panel7;
-   fMiniPlayer.video.fullscreen := fMiniPlayerFullscreen;
+   fMiniPlayer.Height := 0;
+   fMiniPlayer.video.fullscreen := fMiniPlayerFullscreen and (typ <> 2);
    fMiniPlayer.OnMediaPlayerLengthChanged :=  VLCPlugin21MediaPlayerLengthChanged;
    fMiniPlayer.OnMediaPlayerPlaying := VLCPlugin21MediaPlayerPlaying;
    fMiniPlayer.OnMediaPlayerPaused := VLCPlugin21MediaPlayerPaused;
@@ -3378,6 +3426,8 @@ procedure TMainForm.stopMiniPlayer;
 begin
    if (fMiniPlayer <> nil) then
    begin
+      fMiniPlayer.video.fullscreen := False;
+      Application.ProcessMessages;
       fMiniPlayer.playlist.stop;
       Application.ProcessMessages;
       while fMiniPlayer.playlist.isPlaying do
@@ -3395,8 +3445,11 @@ end;
 procedure TMainForm.VLCPlugin21MediaPlayerLengthChanged(ASender: TObject;
   length: Integer);
 begin
-   fMiniPlayerLen := length div 1000;
-   vlcOnPlayPosEvent(nil, fMiniPlayerPos, fMiniPlayerLen);
+   if (fMiniPlayerLen = 0) then
+   begin
+      fMiniPlayerLen := length div 1000;
+      vlcOnPlayPosEvent(nil, fMiniPlayerPos, fMiniPlayerLen);
+   end;
 end;
 
 procedure TMainForm.VLCPlugin21MediaPlayerPaused(Sender: TObject);
@@ -3413,6 +3466,8 @@ end;
 
 procedure TMainForm.VLCPlugin21MediaPlayerStopped(Sender: TObject);
 begin
+   fMiniPlayer.video.fullscreen := False;
+   AlphaBlend := False;
    fMiniPlayerState := 4;
    fMiniPlayerLen := 0;
    fMiniPlayerPos := 0;
@@ -3426,69 +3481,227 @@ procedure TMainForm.VLCPlugin21MediaPlayerTimeChanged(ASender: TObject;
 begin
    fMiniPlayerPos := time div 1000;
    vlcOnPlayPosEvent(nil, fMiniPlayerPos, fMiniPlayerLen);
-
-   fMiniPlayerFullscreen := fMiniPlayer.video.fullscreen;
+   if (fMediaPlayFileType <> 2) then
+      fMiniPlayerFullscreen := fMiniPlayer.video.fullscreen;
+   AlphaBlend := fMiniPlayer.video.fullscreen and (fMiniPlayerState = 2);
+   if fMiniPlayer.video.fullscreen then
+      SetForegroundWindow(Handle);
 end;
-
-{procedure TMainForm.IdHTTPServer1CommandGet(AThread: TIdPeerThread;
-  ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
-var
-   id: integer;
-   om: TMediaListItem;
-   FileStream: TFileStream;
-   IdMimeTable: TIdMimeTable;
-begin
-   try
-      id := StrToInt(copy(ARequestInfo.Document, 2, Length(ARequestInfo.Document)));
-      om := getMediaAtId(id);
-
-      FileStream:= TFileStream.Create(om.file_name, fmOpenRead or fmShareDenyWrite);
-      IdMimeTable:= TIdMimeTable.Create(true);
-      try
-         try
-            FileStream.Position := ARequestInfo.ContentRangeStart;
-         except
-            on ERangeError do
-            begin
-               ARequestInfo.ContentRangeStart := FileStream.Position;
-               ARequestInfo.ContentRangeEnd := 0;
-            end;
-         end;
-         if ARequestInfo.ContentRangeEnd = 0 then
-            ARequestInfo.ContentRangeEnd := FileStream.Size;
-         ARequestInfo.ContentLength := int64(ARequestInfo.ContentRangeEnd - ARequestInfo.ContentRangeStart);
-         if FileStream.Size = ARequestInfo.ContentLength then
-            AResponseInfo.ResponseNo := 200
-         else
-            AResponseInfo.ResponseNo := 206;
-
-         AResponseInfo.ContentType := IdMimeTable.GetFileMIMEType(ExtractFileName(om.file_name));
-         AResponseInfo.ContentLength := ARequestInfo.ContentLength;
-         AResponseInfo.CustomHeaders.Clear;
-         AResponseInfo.CustomHeaders.Values['Accept-Ranges'] := 'bytes';
-         AResponseInfo.CustomHeaders.Values['Content-Disposition'] := 'filename="' + om.title + '"';
-
-         AResponseInfo.WriteHeader;
-         if not AnsiSameText(ARequestInfo.Command, 'HEAD') then
-         begin
-            try
-               AThread.Connection.WriteStream(FileStream, false, false, AResponseInfo.ContentLength);
-            except
-            end;
-         end;
-      finally
-         IdMimeTable.Free;
-         FileStream.Free;
-      end;
-   except
-      AResponseInfo.ResponseNo := 206;
-   end;
-end;}
 
 procedure TMainForm.MEDIA_END_MESS(var Message: TMessage);
 begin
    vlcOnStopEvent(nil);
 end;
 
+procedure TMainForm.Image1Click(Sender: TObject);
+begin
+   clearAllCamViewers;
+   CamDisplay.Show;
+   resizeCamList;   
+end;
+
+procedure TMainForm.syncLoadAsync;
+begin
+   metaQueryAsinc('sync', '', syncHandler);
+   metaQueryAsinc('exe queue', '', queueHandler);
+   metaQueryAsinc('sessions', '', sessionHandler);
+   metaQueryAsinc('media queue', '', mediaHandler);
+end;
+
+procedure TMainForm.syncHandler(res: TDataRec);
+begin
+   syncPack(res);
+end;
+
+procedure TMainForm.queueHandler(res: TDataRec);
+var
+   k: integer;
+   s, s2: string;
+begin
+   try
+      if (res.Count > 0) then
+      begin
+         for k:= 0 to res.Count - 1 do
+         begin
+            if (res.val(k, 1) = 'speech') then
+            begin
+               s := res.val(k, 4);
+               s2 := res.val(k, 3);
+               AlertForm_Unit.show(s, s2);
+               checkSpechData(s2);
+               checkSpechData(res.val(k, 2));
+               if ((SpeedButton10.Down) and (fQuietTime = 0)) or (s2 = 'alarm') then
+               begin
+                  fSpeachList.Add(s2);
+                  fSpeachList.Add(res.val(k, 2));
+               end;
+            end
+            else
+            if (res.val(k, 1) = 'play') then
+            begin
+               s := res.val(k, 4);
+               s2 := GetEnvironmentVariable('TEMP') + '\audio\' + s;
+               checkSpechData(s);
+               if (MP3In1.FileName = '') and (FileExists(s2)) and (ExtractFileExt(WideUpperCase(s)) = '.MP3') then
+               begin
+                  MP3In1.FileName := s2;
+                  DXAudioOut2.Run;
+               end               
+            end;
+         end;
+      end;
+   finally
+      res.Free;
+   end;
+end;
+
+procedure TMainForm.sessionHandler(res: TDataRec);
+begin
+   if (fSessions <> nil) then
+      FreeAndNil(fSessions);
+   fSessions := res;
+   MediaList.Repaint;
+end;
+
+procedure TMainForm.mediaHandler(res: TDataRec);
+var
+   k, i: integer;
+   om: TMediaListItem;
+begin
+   try
+      if (res.Count > 0) then
+      begin
+         for k:= 0 to res.Count - 1 do
+         begin
+            case StrToInt(res.val(k, 1)) of
+               0:
+               begin
+                  om:= TMediaListItem.Create;
+                  try
+                     om.id := StrToInt(res.val(k, 2));
+                     om.app_id := StrToInt(res.val(k, 4));
+                     om.title := res.val(k, 5);
+                     om.file_name := res.val(k, 6);
+                     om.file_type := StrToInt(res.val(k, 7));
+                     fMediaList.Add(om);
+                  except
+                     om.Free;
+                  end;
+               end;
+               1:
+               begin
+                  for i:= 0 to fMediaList.Count - 1 do
+                  begin
+                     om:= TMediaListItem(fMediaList[i]);
+                     if (om.id = StrToInt(res.val(k, 2))) then
+                     begin
+                        om.id := StrToInt(res.val(k, 2));
+                        om.app_id := StrToInt(res.val(k, 4));
+                        om.title := res.val(k, 5);
+                        om.file_name := res.val(k, 6);
+                        om.file_type := StrToInt(res.val(k, 7));
+                        break;
+                     end;
+                  end;
+               end;
+               2:
+               begin
+                  for i:= 0 to fMediaList.Count - 1 do
+                  begin
+                     om:= TMediaListItem(fMediaList[i]);
+                     if (om.id = StrToInt(res.val(k, 2))) then
+                     begin
+                        fMediaList.Delete(i);
+                        break;
+                     end;
+                  end;
+               end;
+
+               10: // Transfer media
+               begin
+                  StopButton.Tag := 1;
+                  startMediaPlay(StrToInt(res.val(k, 2)), true, StrToInt(res.val(k, 3)));
+               end;
+
+               20: // Изменение списка плейлистов
+               begin
+                  loadMediaGroups(-1); //StrToInt(res[k][2]));
+               end;
+
+               21: // Изменение содиржимого плейлиста
+               begin
+                  if ((ComboBox1.ItemIndex > -1) and (ComboBox1.Items.Objects[ComboBox1.ItemIndex] <> nil)) then
+                     if (TMediaGroupItem(ComboBox1.Items.Objects[ComboBox1.ItemIndex]).id = StrToInt(res.val(k, 2))) then
+                        ComboBox1Change(nil);
+               end;
+            end;
+         end;
+         refreshMediaList();
+      end;
+   finally
+      res.Free;
+   end;
+end;
+
+procedure TMainForm.metaQueryAsinc(pack_name, pack_data: string; handler: TAsincQueryHandler);
+var
+   a: TMetaAsyncThread;
+begin
+   handler(metaQuery(pack_name, pack_data));
+   exit;
+
+   a := TMetaAsyncThread.Create(True);
+   a.FreeOnTerminate := true;
+   a.fPack_name := pack_name;
+   a.fPack_data := pack_data;
+   a.fHandler := handler;
+   a.Resume;
+end;
+
+{ TMetaAsyncThread }
+
+procedure TMetaAsyncThread.execute;
+var
+   s, b: string;
+   k: integer;
+   socket: TClientSocket;
+   res: TDataRec;
+begin
+   socket:= TClientSocket.Create(nil);
+   try
+      socket.Host := MainForm.SocketMeta.Host;
+      socket.Port := MainForm.SocketMeta.Port;
+      socket.ClientType := ctBlocking;
+      socket.Open;
+
+      socket.Socket.SendText(fPack_name + chr(1) + fPack_data + chr(2));
+      s := '';
+      for k:= 1 to 10000 do
+      begin
+         b := socket.Socket.ReceiveText();
+         s := s + b;
+         if (Pos(chr(2), b) > 0) then
+         begin
+            res := TDataRec.Create(s);
+            break;
+         end;
+      end;
+      socket.Close;
+   finally
+      socket.Free;
+   end;
+
+   if (res <> nil) then
+   begin
+      CS.Enter;
+      try
+         fHandler(res);
+      finally
+         CS.Leave;
+      end;
+   end;
+end;
+
 end.
+
 

@@ -2,6 +2,7 @@
 <HTML>
 <HEAD>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <script type="text/javascript" src="{{ url_for('static', filename='jquery-2.1.4.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='jquery.json.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='jquery.form.js') }}"></script>    

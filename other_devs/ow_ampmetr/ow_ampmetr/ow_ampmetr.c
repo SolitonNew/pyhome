@@ -34,7 +34,7 @@
 #define WAIT_FOR_LOW for (int i = 0; i < WAIT_COUNT && IS_HIGH; i++)
 #define WAIT_FOR_HIGH for (int i = 0; i < WAIT_COUNT && IS_LOW; i++)
 
-unsigned char sensor_data = 0; // Значение АЦП
+unsigned long int sensor_data = 0; // Значение АЦП
 unsigned char isChange = 0;
 
 unsigned char ROM[8] = {0xF5,0x00,0x00,0x00,0x00,0x00,0x01,0x0};
@@ -149,8 +149,14 @@ void one_wire_action()
 				case READ_DATA: // Чтение данных	
 					isChange = 0;
 					crc = 0;
-					OW_writeByte(sensor_data);
-					crc = crc_table(crc ^ sensor_data);
+					unsigned long int data = sensor_data;
+					unsigned char b = 0;
+					for (char i = 0; i < 4; i++) {
+						b = data & 0xff;
+						OW_writeByte(b);
+						crc = crc_table(crc ^ b);
+						data = data >> 8;
+					}
 					OW_writeByte(crc);
 					break;
 			}			
@@ -211,9 +217,8 @@ int main(void)
 	
 	sei();
 	
-	unsigned char AMP;
 	unsigned char tmp;
-	
+
 	while(1)
     {
 		if (GPIN(PORTB, MEASURE_LED)) {
@@ -222,18 +227,14 @@ int main(void)
 			SPIN(PORTB, MEASURE_LED);	
 		}
 
-		AMP = 0;
+		sensor_data = 0;
 		for (unsigned int i = 0; i < 10000; i++) {
 			// Быстренько меряем напряжение
 			ADCSRA |= (1<<ADSC); // Стартуем измерение		
 			while (ADCSRA & (1<<ADSC)); // Ждем пока померяет			
 			tmp = ADCH;
-			if (tmp > AMP)
-				AMP = tmp;
-		}	
-		if (sensor_data != AMP) {
-			sensor_data = AMP;
-			isChange = 1;
-		}		
+			sensor_data += (tmp * tmp);
+		}
+		isChange = 1;
     }
 }

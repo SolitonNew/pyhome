@@ -82,7 +82,7 @@ class VideoAlerts:
     def _send_empty(self):
         data = b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\xdc\x05,\x00\x00\x00{ "Name" : "", "SessionID" : "' + self.bs + b'" }'
         self._send_pack(data)
-        print("PING")
+        #print("PING")
 
     def _decodeHex(self, s):
         if s in '0123456789':

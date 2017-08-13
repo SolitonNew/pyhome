@@ -252,7 +252,7 @@ int main(void)
 		}
 		
 		shutdownSensor(SENSOR_R);
-		if (checkSensor(SENSOR_R, 14)) { // 14, 15
+		if (checkSensor(SENSOR_R, 15)) { // 14, 15
 			if (on_r < MAX_GAIN)
 				on_r++;
 		} else {

@@ -1,6 +1,6 @@
 object PropertysForm: TPropertysForm
-  Left = 577
-  Top = 465
+  Left = 597
+  Top = 255
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsDialog
   Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1080
@@ -24,7 +24,7 @@ object PropertysForm: TPropertysForm
     Top = 8
     Width = 521
     Height = 281
-    ActivePage = TabSheet4
+    ActivePage = TabSheet2
     TabOrder = 0
     object TabSheet3: TTabSheet
       Caption = #1054#1073#1097#1080#1077
@@ -98,9 +98,9 @@ object PropertysForm: TPropertysForm
       end
       object GroupBox1: TGroupBox
         Left = 8
-        Top = 8
+        Top = 32
         Width = 497
-        Height = 193
+        Height = 169
         Caption = ' '#1055#1072#1087#1082#1080' '#1084#1077#1076#1080#1080': '
         TabOrder = 0
         object SpeedButton4: TSpeedButton
@@ -123,10 +123,19 @@ object PropertysForm: TPropertysForm
           Left = 16
           Top = 24
           Width = 385
-          Height = 153
+          Height = 129
           ItemHeight = 13
           TabOrder = 0
         end
+      end
+      object CheckBox1: TCheckBox
+        Left = 8
+        Top = 8
+        Width = 161
+        Height = 17
+        Caption = #1055#1088#1086#1080#1075#1088#1099#1074#1072#1090#1100' '#1090#1086#1083#1100#1082#1086' '#1074' VLC'
+        TabOrder = 1
+        OnClick = CheckBox1Click
       end
     end
     object TabSheet4: TTabSheet

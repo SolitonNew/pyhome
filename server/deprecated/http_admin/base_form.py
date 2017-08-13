@@ -1,4 +1,3 @@
-from flask import render_template, request
 from urllib import parse
 
 class BaseForm(object):
@@ -6,7 +5,11 @@ class BaseForm(object):
     VIEW = "index.tpl"
     
     def __init__(self):
-        self._widgets = []
+        self.owner = False
+        self.content_type = "text/html"
+        self._widgets = []        
+        self.data_path = False
+        self.url_data = False
         self.db = False
 
     def create_widgets(self):
@@ -14,21 +17,21 @@ class BaseForm(object):
 
     def param(self, name):
         try:
-            if request.method == 'POST':
-                return request.form[name]
+            p = parse.parse_qs(self.url_data.query)
+            res = p[name][0]
+            if type(res) == bytearray:
+                res = str(res, "utf-8")
             else:
-                return request.args.get(name, '')
+                res = str(res)
+            return res
         except:
-            return ""
+            return False
 
     def param_list(self, name):
         try:
-            if request.method == "POST":
-                p = request.form.getlist(name)
-            else:
-                p = request.args.getlist(name)
+            p = parse.parse_qs(self.url_data.query)
             res = []
-            for v in p:
+            for v in p[name]:
                 if type(res) == bytearray:
                     res += [str(v, "utf-8")]
                 else:
@@ -38,7 +41,10 @@ class BaseForm(object):
             return False
         
     def param_str(self, name):
-        return self.param(name)
+        v = self.param(name)
+        if v:
+            return v
+        return ""
 
     def add_widget(self, widget):
         widget.parentForm = self        
@@ -47,23 +53,26 @@ class BaseForm(object):
     def query(self, query_type):
         return ""
 
-    def _widget_data(self, name):
-        for w in self._widgets:
-            if w.id == name:
-                return w.html()
-        return ""
-
     def get_view(self):
+        res = ""
         try:
             for w in self._widgets:
                 try:
                     s = w.query()
                     if s: return s
                 except Exception as e:
-                    print("ERROR %s " % (e.args,))
-            return render_template(self.VIEW, widget=self._widget_data)
+                    print("ERROR %s " % (e.args,))            
+            f = open(self.data_path + self.VIEW, 'r')
+            res = f.read()
+            for w in self._widgets:
+                try:
+                    res = res.replace("@%s@" % w.id, w.html())
+                except Exception as e:
+                    return "Ошибка в виджете '%s': %s" % (w.id, e.args)
+            f.close()            
         except Exception as e:
-            return "Шаблон формы не найден: %s" % e.args
+            res = "Шаблон формы не найден: %s" % e.args
+        return res
 
     def run(self):
         q = self.param('FORM_QUERY')

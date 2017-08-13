@@ -16,10 +16,7 @@ class TextField(WidgetBase):
         self.text = text
 
     def html(self):
-        if callable(self.text):
-            return self.text()
-        else:
-            return self.text
+        return self.text
 
 class ListField(WidgetBase):
     def __init__(self, id, keyIndex, labelIndex, selectedKey, data):
@@ -372,8 +369,8 @@ class Grid(WidgetBase):
             style_up = "block";
         if self.columns[index]["sort"] == "asc":
             style_down = "block";
-        res += ["<img id=\"%s_%s_up\" src=\"/static/widget_resources/sort_up.png\" style=\"display:%s;\">" % (self.id, index, style_up)]
-        res += ["<img id=\"%s_%s_down\" src=\"/static/widget_resources/sort_down.png\" style=\"display:%s;\">" % (self.id, index, style_down)]
+        res += ["<img id=\"%s_%s_up\" src=\"widget_resources/sort_up.png\" style=\"display:%s;\">" % (self.id, index, style_up)]
+        res += ["<img id=\"%s_%s_down\" src=\"widget_resources/sort_down.png\" style=\"display:%s;\">" % (self.id, index, style_down)]
         res += ["</td>"]
         res += ["</tr>"]
         res += ["</table>"]

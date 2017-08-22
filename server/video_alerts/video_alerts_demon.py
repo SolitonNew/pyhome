@@ -56,11 +56,13 @@ class VideoAlerts:
                     time.sleep(0.2)
             except Exception as e:
                 print("{}".format(e))
+
+            time.sleep(1)
             
             try:
                 self.sock.close()
             except:
-                pass
+                print('error')
 
     def _send_pack(self, data):
         s = b'\xff' + self.bbs + data + b'\n'
@@ -82,7 +84,7 @@ class VideoAlerts:
     def _send_empty(self):
         data = b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\xdc\x05,\x00\x00\x00{ "Name" : "", "SessionID" : "' + self.bs + b'" }'
         self._send_pack(data)
-        print("PING")
+        #print("PING")
 
     def _decodeHex(self, s):
         if s in '0123456789':

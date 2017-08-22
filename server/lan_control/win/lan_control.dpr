@@ -43,8 +43,6 @@ begin
   Application.CreateForm(TSchedDialog, SchedDialog);
   Application.CreateForm(TMediaInfoDialog, MediaInfoDialog);
   Application.CreateForm(TMp3Player, Mp3Player);
-  Application.CreateForm(TCamDisplay, CamDisplay);
-  Application.CreateForm(TCamAlertDiaplay, CamAlertDiaplay);
   Application.Run;
 
   ReleaseMutex(mutex);

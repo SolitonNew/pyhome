@@ -15,11 +15,13 @@ print(
 
 db = DBConnector()
 
-QUIET_TIME = 123
-BOILER_PRESENS = 125
-BOILER_PRESENS_OUT = 127
-
 def correctVolume():
+    global db
+
+    QUIET_TIME = 123
+    BOILER_PRESENS = 125
+    BOILER_PRESENS_OUT = 127
+    
     def check_vol(curr, new):
         if new < curr:
             return new
@@ -29,7 +31,7 @@ def correctVolume():
     ids = (QUIET_TIME, BOILER_PRESENS, BOILER_PRESENS_OUT)
     new_volume = 90
     for rec in db.select("select ID from core_variables "
-                         " where VALUE > 1 and ID in (%s)" %(str(ids))):
+                         " where VALUE > 1 and ID in %s" %(str(ids))):
         if rec[0] == QUIET_TIME:
             new_volume = check_vol(new_volume, 30)
             

@@ -42,7 +42,7 @@ def correctVolume(typ):
             if rec[0] == BOILER_PRESENS_OUT:
                 new_volume = check_vol(new_volume, 50)
             
-    subprocess.call("amixer set Lineout %s" % (new_volume), shell=True)
+    subprocess.call("amixer set 'Lineout volume control' %s" % (new_volume), shell=True)
 
 lastSpeechId = -1
 for rec in db.select("select MAX(ID) from app_control_exe_queue"):

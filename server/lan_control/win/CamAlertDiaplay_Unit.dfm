@@ -10,33 +10,15 @@ object CamAlertDiaplay: TCamAlertDiaplay
   Font.Height = -11
   Font.Name = 'MS Sans Serif'
   Font.Style = []
+  FormStyle = fsStayOnTop
   OldCreateOrder = False
-  Position = poScreenCenter
+  Position = poDefaultPosOnly
   OnCreate = FormCreate
+  OnDestroy = FormDestroy
   OnHide = FormHide
+  OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
-  object VLCPlugin21: TVLCPlugin2
-    Left = 0
-    Top = 0
-    Width = 594
-    Height = 370
-    Align = alClient
-    TabOrder = 0
-    ControlData = {
-      07000000280043006F0075006E007400290003000D0000000800000041007500
-      74006F004C006F006F0070000B000000080000004100750074006F0050006C00
-      610079000B00FFFF090000004200610063006B0043006F006C006F0072000300
-      00000000070000004200610073006500550052004C0008000000000008000000
-      4200720061006E00640069006E0067000B00FFFF0C0000004500780074006500
-      6E00740048006500690067006800740003003E2600000B000000450078007400
-      65006E007400570069006400740068000300643D000011000000460075006C00
-      6C00730063007200650065006E0045006E00610062006C00650064000B00FFFF
-      030000004D0052004C0008000000000009000000530074006100720074005400
-      69006D0065000300000000000700000054006F006F006C006200610072000B00
-      FFFF07000000560069007300690062006C0065000B00FFFF0600000056006F00
-      6C0075006D006500030064000000}
-  end
   object CamFullScreenBtn: TPanel
     Left = 8
     Top = 8
@@ -47,7 +29,7 @@ object CamAlertDiaplay: TCamAlertDiaplay
     Color = clWindow
     Ctl3D = False
     ParentCtl3D = False
-    TabOrder = 1
+    TabOrder = 0
     object Image1: TImage
       Left = 0
       Top = 0
@@ -103,9 +85,14 @@ object CamAlertDiaplay: TCamAlertDiaplay
   end
   object Timer1: TTimer
     Enabled = False
-    Interval = 10000
+    Interval = 30000
     OnTimer = Timer1Timer
     Left = 8
+    Top = 40
+  end
+  object Timer2: TTimer
+    OnTimer = Timer2Timer
+    Left = 40
     Top = 40
   end
 end

@@ -55,7 +55,6 @@ var
    PropertysForm: TPropertysForm;
    MediaExts: string;
 
-
 procedure addToMetaLog(s: string);
 function loadProp(name:string):string;
 procedure saveProp(name, value:string);
@@ -118,7 +117,6 @@ end;
 
 procedure TPropertysForm.scanMediaLib;
 var
-   file_count: integer;
    exts:TStringList;
 
    procedure FindChild(S: string);
@@ -164,7 +162,7 @@ begin
       exts.DelimitedText := MediaExts;
       for k:= 0 to exts.Count - 1 do
          exts[k] := '.' + exts[k];
-      file_count := 0;
+
       for k:= 0 to ListBox1.Count - 1 do
       begin
          s := ListBox1.Items[k];

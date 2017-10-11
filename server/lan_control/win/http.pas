@@ -29,7 +29,6 @@ type
     Destructor Destroy; override;
     procedure Execute; override;
     function ProcessHttpRequest(Request, URI: string; range_s, range_e: int64; var len: int64): integer;
-    procedure loadFileName;
   end;
 
 const
@@ -87,7 +86,7 @@ begin
    Sock.socket := HSock;
    FreeOnTerminate := true;
    inherited create(false);
-   Priority := tpIdle;
+   Priority := tpLowest;
 end;
 
 Destructor TTCPHttpThrd.Destroy;
@@ -112,7 +111,7 @@ var
    close: boolean;
 
    buf: array [1..100000] of byte;
-   k, c: integer;
+   c: integer;
    range_s, range_e: int64;
    out_len: int64;
 begin
@@ -194,16 +193,6 @@ begin
       
       if close then break;
    until Sock.LastError <> 0;
-end;
-
-procedure TTCPHttpThrd.loadFileName;
-var
-   om: TMediaListItem;
-begin
-   try
-
-   except
-   end;
 end;
 
 function TTCPHttpThrd.ProcessHttpRequest(Request, URI: string; range_s, range_e: int64; var len: int64): integer;

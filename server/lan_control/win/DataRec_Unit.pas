@@ -32,28 +32,14 @@ begin
 end;
 
 constructor TDataRec.Create(aTableStr: string);
-
-   {function CopyNew(s: string; i1, count: integer):string;
-   var
-      k: integer;
-   begin
-      Result := '';
-      SetLength(Result, count);
-      for k := i1 to i1 + count - 1 do
-         Result[k - i1 + 1] := s[k];
-   end;}
-
 var
    F:integer;
    i, k: integer;
    cols:integer;
-
    row: TList;
-   val: TDataValue;
-   //s: string;
 begin
    fRows:= TList.Create;
-
+   row := nil;
    try
       i := Pos(chr(1), aTableStr);
       cols := StrToInt(copy(aTableStr, 1, i - 1));
@@ -70,15 +56,9 @@ begin
                for k := 0 to F - 1 do
                   row.Add(TDataValue.Create);
                fRows.Add(row);
-               //SetLength(Result, Length(Result) + 1);
-               //SetLength(Result[Length(Result) - 1], F);
                F := 0;
             end;
-            //s := copy(aTableStr, 1, i - 1);
             TDataValue(row[F]).fValue := Copy(aTableStr, 1, i - 1);
-            //s := '';
-            //TDataValue(TList(fRows[fRows.Count - 1])[F]).fValue := copy(aTableStr, 1, i - 1);
-            //Result[Length(Result) - 1][F] := copy(data, 1, i - 1);
             Delete(aTableStr, 1, i);
          end;
       until i < 1;

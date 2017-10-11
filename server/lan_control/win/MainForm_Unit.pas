@@ -11,11 +11,12 @@ uses
 
 const
    MEDIA_END = WM_USER + 1;
+   SHOW_CAM_ALERT_MESS = WM_USER + 10;
+   HIDE_CAM_ALERT_MESS = WM_USER + 11;
+   HIDE_CAM_ALL_MESS = WM_USER + 12;
 
 type
    //TDataRec = array of array of string;
-
-   TAsincQueryHandler = procedure (res: TDataRec) of object;
 
    TVarListItem = class
       id:integer;
@@ -56,15 +57,6 @@ type
       dayOfType: string;
       typ: integer;
       variable: integer;
-   end;
-
-   TMetaAsyncThread = class(TThread)
-   protected
-      procedure Execute; override;
-   public
-      fPack_name: string;
-      fPack_data: string;
-      fHandler: TAsincQueryHandler;
    end;
 
   TMainForm = class(TForm)
@@ -139,8 +131,6 @@ type
     MP3In1: TMP3In;
     DXAudioOut2: TDXAudioOut;
     SpeedButton2: TSpeedButton;
-    CamList: TScrollBox;
-    CamPanel: TPanel;
     Panel8: TPanel;
     Panel1: TPanel;
     Label1: TLabel;
@@ -162,8 +152,7 @@ type
     SpeedButton6: TSpeedButton;
     MediaVolPanel: TPanel;
     MediaVolShape: TShape;
-    CamFullScreenBtn: TPanel;
-    Image1: TImage;
+    CamAlertBtn: TSpeedButton;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
@@ -253,11 +242,10 @@ type
     procedure FormActivate(Sender: TObject);
     procedure FormDeactivate(Sender: TObject);
     procedure DXAudioOut2Done(Sender: TComponent);
-    procedure CamListMouseWheel(Sender: TObject; Shift: TShiftState;
-      WheelDelta: Integer; MousePos: TPoint; var Handled: Boolean);
-    procedure CamListResize(Sender: TObject);
     procedure Panel7Resize(Sender: TObject);
-    procedure Image1Click(Sender: TObject);
+    procedure CamAlertBtnClick(Sender: TObject);
+    procedure SpeedButton2Click(Sender: TObject);
+    procedure Label1DblClick(Sender: TObject);
   private
     fHTTPServer: TTCPHttpDaemon;
 
@@ -304,9 +292,8 @@ type
     procedure playMediaNextItem();
 
     procedure startLoad();
-    procedure syncLoad();
+    //procedure syncLoad();
     procedure syncLoadAsync();
-    procedure syncPack(res: TDataRec);
     procedure firstRun();
 
     procedure syncHandler(res: TDataRec);
@@ -326,9 +313,6 @@ type
     procedure updatePlayLoopButtonIcon();
 
     function checkSpechData(id: string): Boolean;
-    procedure clearAllCamViewers;
-    procedure loadCamList;
-    procedure resizeCamList;
 
     procedure playMiniPlayer(id, typ: integer; url: string; withPause:boolean = false; seek: integer = 0);
     procedure pauseMiniPlayer();
@@ -342,6 +326,9 @@ type
   protected
     procedure WMGetSysCommand(var message : TMessage); message WM_SYSCOMMAND;
     procedure MEDIA_END_MESS(var Message: TMessage); message MEDIA_END;
+    procedure SHOW_CAM_ALERT(var Message: TMessage); message SHOW_CAM_ALERT_MESS;
+    procedure HIDE_CAM_ALERT(var Message: TMessage); message HIDE_CAM_ALERT_MESS;
+    procedure HIDE_CAM_ALL(var Message: TMessage); message HIDE_CAM_ALL_MESS;
   public
     fAppID: integer;
     fItemList: TList;
@@ -352,7 +339,6 @@ type
     fCameraAlertIds: array of integer;
 
     function metaQuery(pack_name, pack_data: string; blokMessages: boolean = false): TDataRec;
-    procedure metaQueryAsinc(pack_name, pack_data: string; handler: TAsincQueryHandler);
     function getMediaAtId(id: integer): TMediaListItem;
 
     procedure sendMediaState(state: string; id, time: integer);
@@ -399,10 +385,6 @@ begin
 
    SchedList.Align := alClient;
    SchedList.DoubleBuffered := true;
-
-   CamList.Align := alClient;
-   //CamList.DoubleBuffered := true;
-   CamFullScreenBtn.Hide;
    
    try
       Left := StrToInt(loadProp('Left'));
@@ -436,6 +418,8 @@ begin
    except
    end;
 
+   CamAlertBtn.Down := (loadProp('ShowCamAlert') = 'true');
+
    fPlayOnlyVLC := loadProp('PlayOnlyVlc') = 'True';
 
    s := loadProp('VlcPlayLoop');
@@ -453,6 +437,7 @@ begin
    SocketMeta.Host := loadProp('IP');
 
    Timer1.Enabled := true;
+   Timer2.Enabled := true;
 
    setStatusText('Запуск');
 
@@ -469,6 +454,7 @@ begin
 
    fHTTPServer.Terminate;
 
+   Timer2.Enabled := false;   
    Timer1.Enabled := false;
    SocketMeta.Close;
 
@@ -509,8 +495,6 @@ begin
    fSessions.Free;
    clearList(fVarGroupList);
    fVarGroupList.Free;
-
-   clearAllCamViewers;
 
    CS.Free;
 end;
@@ -638,8 +622,6 @@ begin
    VarList.Visible := t = 0;
    Panel5.Visible := t = 1;
    SchedList.Visible := t = 2;
-   CamList.Visible := t = 3;
-   CamFullScreenBtn.Visible := CamList.Visible;
 
    case t of
       0:
@@ -662,17 +644,16 @@ begin
       end;
       3:
       begin
-         if (MainForm.Visible) then
+         {if (MainForm.Visible) then
             CamList.SetFocus;
          if (CamDisplay.Visible = False) then
-            loadCamList();
+            loadCamList();}
       end;
    end;
 
    if (t <> 3) then
    begin
       Application.ProcessMessages;
-      clearAllCamViewers;
    end;
 end;
 
@@ -715,7 +696,7 @@ var
    p: string;
 begin
    p := IntToStr(id) + chr(1) + StringReplace(floatToStr(val), ',', '.', [rfReplaceAll]);
-   syncPack(metaQuery('setvar', p));
+   syncHandler(metaQuery('setvar', p));
 end;
 
 procedure TMainForm.VarListDrawItem(Control: TWinControl; Index: Integer;
@@ -1071,6 +1052,11 @@ end;
 procedure TMainForm.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
 begin
    CanClose := ((fAppID = -1) or (MessageDlg('Вы хотите выйти из програмы и потерять контроль над домом?', mtConfirmation, [mbYes, mbNo], 0) = mrYes));
+   if (CanClose) then
+   begin
+      hideAllCamAlerts;
+      hideCamAll;
+   end;
 end;
 
 procedure TMainForm.N3Click(Sender: TObject);
@@ -2118,7 +2104,7 @@ begin
    // --------------------------------------------
 end;
 
-procedure TMainForm.syncLoad;
+{procedure TMainForm.syncLoad;
 var
    res: TDataRec;
    k, i: integer;
@@ -2251,9 +2237,9 @@ begin
    finally
       res.Free;
    end;
-end;
+end;}
 
-procedure TMainForm.syncPack(res: TDataRec);
+procedure TMainForm.syncHandler(res: TDataRec);
 var
    k, i, o_id: integer;
    v: string;
@@ -2266,7 +2252,11 @@ begin
             fQuietTime := trunc(StrToFloat(StringReplace(res.val(k, 2), '.', ',', [rfReplaceAll])));
 
          case (o_id) of
-            166, 167, 168, 169: CamAlertDiaplay.ShowForAlertId(o_id);
+            166, 167, 168, 169:
+            begin
+               if ((loadProp('ShowCamAlert') = 'true') and (res.val(k, 2) = '1.0')) then
+                  SendMessage(Handle, SHOW_CAM_ALERT_MESS, o_id, 0);
+            end;
          end;
 
          for i:= 0 to fItemList.Count - 1 do
@@ -3182,22 +3172,25 @@ begin
    if (fSpeachList.Count > 0) and (DXAudioOut1.Status = tosIdle) then
    begin
       f_key := fSpeachList[0];
-      isPlay := False;
-      if (Pos(f_key[1], '0123456789') > 0) then
-      begin
-         isPlay := (prevSpeechID <> f_key) or (prevSpeechIdTime <= Now());
-         prevSpeechID := f_key;
-      end
-      else
-      begin
-         isPlay := (prevSpeechType <> f_key) or (prevSpeechAllTime <= Now());
-         prevSpeechType := f_key;
-      end;
+      try
+         isPlay := False;
+         if (Pos(f_key[1], '0123456789') > 0) then
+         begin
+            isPlay := (prevSpeechID <> f_key) or (prevSpeechIdTime <= Now());
+            prevSpeechID := f_key;
+         end
+         else
+         begin
+            isPlay := (prevSpeechType <> f_key) or (prevSpeechAllTime <= Now());
+            prevSpeechType := f_key;
+         end;
 
-      if isPlay then
-      begin
-         WaveIn1.FileName := GetEnvironmentVariable('TEMP') + '\audio\' + f_key + '.wav';
-         DXAudioOut1.Run;
+         if isPlay then
+         begin
+            WaveIn1.FileName := GetEnvironmentVariable('TEMP') + '\audio\' + f_key + '.wav';
+            DXAudioOut1.Run;
+         end;
+      except
       end;
       fSpeachList.Delete(0);
    end;
@@ -3241,121 +3234,6 @@ begin
    MP3In1.FileName := '';
 end;
 
-procedure TMainForm.clearAllCamViewers;
-var
-   k: integer;
-begin
-   for k := CamPanel.ControlCount - 1 downto 0 do
-   begin
-      TVLCPlugin2(CamPanel.Controls[k]).playlist.stop;
-      TVLCPlugin2(CamPanel.Controls[k]).Free;
-   end;
-end;
-
-procedure TMainForm.loadCamList;
-var
-   cw: TVLCPlugin2;
-   res: TDataRec;
-   k: integer;
-   h: integer;
-begin
-   clearAllCamViewers;
-   res := metaQuery('cams', '');
-   try
-      h := round(CamPanel.Width / 1.78);
-      for k := 0 to res.Count - 1 do
-      begin
-         cw:= TVLCPlugin2.Create(CamPanel);
-         try
-            cw.Parent := CamPanel;
-            cw.playlist.add(res.val(k, 2), NULL, NULL);
-            cw.ControlInterface.Toolbar := false;
-            cw.DefaultInterface.Toolbar := false;
-            cw.video.aspectRatio := '16:9';
-            cw.playlist.play;
-            {cw.Top := k * (h + 1);
-            cw.Left := 0;
-            cw.Width := CamPanel.Width;
-            cw.Height := h;}
-         except
-            cw.Free;
-         end;
-      end;
-   finally
-      res.Free;
-   end;
-
-   resizeCamList;
-end;                                                               
-
-procedure TMainForm.resizeCamList;
-var
-   k: integer;
-   cw: TVLCPlugin2;
-   sb: integer;
-   w, h, w1, w2, h1, h2: integer;
-begin
-   sb := GetSystemMetrics(SM_CXVSCROLL);
-
-   if (not CamList.Visible) then exit;
-
-   w1 := CamList.Width;
-   w2 := CamList.Width - sb;
-
-   h1 := round(w1 / 1.78 + 1) * CamPanel.ControlCount;
-   h2 := round(w2 / 1.78 + 1) * CamPanel.ControlCount;
-
-   if (h1 <= CamList.ClientHeight) then // Влезает без скроллера
-   begin
-      w := w1;
-      CamPanel.Height := h1;
-   end
-   else
-   begin
-      w := w2;
-      CamPanel.Height := Max(h2, CamList.ClientHeight + 1);
-   end;
-   h := round(w / 1.78 + 1);
-   CamPanel.Width := w;
-
-   for k := 0 to CamPanel.ControlCount - 1 do
-   begin
-      cw := TVLCPlugin2(CamPanel.Controls[k]);
-      cw.Left := 0;
-      cw.Top := k * (h + 1);
-      cw.Height := h;
-      cw.Width := w;
-   end;
-
-   CamFullScreenBtn.Left := 4;
-   CamFullScreenBtn.Top := Panel2.Height + 4;
-
-   if (CamDisplay.Visible) then
-   begin
-      w := ClientWidth - 8;
-      h := round(w * 17 / 21);
-      CamFullScreenBtn.Width := w;
-      CamFullScreenBtn.Height := h;
-   end
-   else
-   begin
-      CamFullScreenBtn.Width := 21;
-      CamFullScreenBtn.Height := 17;
-   end;
-end;
-
-procedure TMainForm.CamListMouseWheel(Sender: TObject; Shift: TShiftState;
-  WheelDelta: Integer; MousePos: TPoint; var Handled: Boolean);
-begin
-   CamList.VertScrollBar.Position := CamList.VertScrollBar.Position - WheelDelta;
-   Handled := true;
-end;
-
-procedure TMainForm.CamListResize(Sender: TObject);
-begin
-   resizeCamList;
-end;
-
 procedure TMainForm.Panel7Resize(Sender: TObject);
 var
    playHeight: integer;
@@ -3390,8 +3268,7 @@ procedure TMainForm.playMiniPlayer(id, typ: integer; url: string; withPause: boo
 begin
    stopMiniPlayer;
 
-   fMiniPlayer := TVLCPlugin2.Create(Panel7);
-   fMiniPlayer.Parent := Panel7;
+   fMiniPlayer := TVLCPlugin2.Create(nil);
    fMiniPlayer.Height := 0;
    fMiniPlayer.video.fullscreen := fMiniPlayerFullscreen and (typ <> 2);
    fMiniPlayer.OnMediaPlayerLengthChanged :=  VLCPlugin21MediaPlayerLengthChanged;
@@ -3404,6 +3281,7 @@ begin
    fMiniPlayer.ControlInterface.Toolbar := false;
    fMiniPlayer.playlist.clear;
    fMiniPlayer.playlist.add(url, NULL, NULL);
+   Panel7.InsertControl(fMiniPlayer);
    fMiniPlayer.playlist.play;
    setMediaVolume;
 
@@ -3423,15 +3301,20 @@ begin
 end;
 
 procedure TMainForm.stopMiniPlayer;
+var
+   k: integer;
 begin
    if (fMiniPlayer <> nil) then
    begin
       fMiniPlayer.video.fullscreen := False;
       Application.ProcessMessages;
       fMiniPlayer.playlist.stop;
-      Application.ProcessMessages;
-      while fMiniPlayer.playlist.isPlaying do
+      for k:= 0 to 500 do
+      begin
+         Application.ProcessMessages;
+         if (not fMiniPlayer.playlist.isPlaying) then break;
          Sleep(10);
+      end;
       Panel7.RemoveControl(fMiniPlayer);
       FreeAndNil(fMiniPlayer);
       fMiniPlayerLen := 0;
@@ -3493,24 +3376,12 @@ begin
    vlcOnStopEvent(nil);
 end;
 
-procedure TMainForm.Image1Click(Sender: TObject);
-begin
-   clearAllCamViewers;
-   CamDisplay.Show;
-   resizeCamList;   
-end;
-
 procedure TMainForm.syncLoadAsync;
 begin
-   metaQueryAsinc('sync', '', syncHandler);
-   metaQueryAsinc('exe queue', '', queueHandler);
-   metaQueryAsinc('sessions', '', sessionHandler);
-   metaQueryAsinc('media queue', '', mediaHandler);
-end;
-
-procedure TMainForm.syncHandler(res: TDataRec);
-begin
-   syncPack(res);
+   syncHandler(metaQuery('sync', ''));
+   queueHandler(metaQuery('exe queue', ''));
+   sessionHandler(metaQuery('sessions', ''));
+   mediaHandler(metaQuery('media queue', ''));
 end;
 
 procedure TMainForm.queueHandler(res: TDataRec);
@@ -3557,10 +3428,13 @@ end;
 
 procedure TMainForm.sessionHandler(res: TDataRec);
 begin
-   if (fSessions <> nil) then
-      FreeAndNil(fSessions);
-   fSessions := res;
-   MediaList.Repaint;
+   try
+      if (fSessions <> nil) then
+         FreeAndNil(fSessions);
+      fSessions := res;
+      MediaList.Repaint;
+   except
+   end;
 end;
 
 procedure TMainForm.mediaHandler(res: TDataRec);
@@ -3643,63 +3517,43 @@ begin
    end;
 end;
 
-procedure TMainForm.metaQueryAsinc(pack_name, pack_data: string; handler: TAsincQueryHandler);
-var
-   a: TMetaAsyncThread;
+procedure TMainForm.CamAlertBtnClick(Sender: TObject);
 begin
-   handler(metaQuery(pack_name, pack_data));
-   exit;
-
-   a := TMetaAsyncThread.Create(True);
-   a.FreeOnTerminate := true;
-   a.fPack_name := pack_name;
-   a.fPack_data := pack_data;
-   a.fHandler := handler;
-   a.Resume;
+   if (CamAlertBtn.Down) then
+      saveProp('ShowCamAlert', 'true')
+   else
+      saveProp('ShowCamAlert', 'false');
 end;
 
-{ TMetaAsyncThread }
-
-procedure TMetaAsyncThread.execute;
-var
-   s, b: string;
-   k: integer;
-   socket: TClientSocket;
-   res: TDataRec;
+procedure TMainForm.SHOW_CAM_ALERT(var Message: TMessage);
 begin
-   socket:= TClientSocket.Create(nil);
+   showCamAlert(Message.WParam);
+end;
+
+procedure TMainForm.HIDE_CAM_ALERT(var Message: TMessage);
+begin
    try
-      socket.Host := MainForm.SocketMeta.Host;
-      socket.Port := MainForm.SocketMeta.Port;
-      socket.ClientType := ctBlocking;
-      socket.Open;
-
-      socket.Socket.SendText(fPack_name + chr(1) + fPack_data + chr(2));
-      s := '';
-      for k:= 1 to 10000 do
-      begin
-         b := socket.Socket.ReceiveText();
-         s := s + b;
-         if (Pos(chr(2), b) > 0) then
-         begin
-            res := TDataRec.Create(s);
-            break;
-         end;
-      end;
-      socket.Close;
-   finally
-      socket.Free;
+      if (Message.WParam = 0) then
+         hideAllCamAlerts()
+      else
+         hideCamAlert(Message.LParam);
+   except
    end;
+end;
 
-   if (res <> nil) then
-   begin
-      CS.Enter;
-      try
-         fHandler(res);
-      finally
-         CS.Leave;
-      end;
-   end;
+procedure TMainForm.SpeedButton2Click(Sender: TObject);
+begin
+   showCamAll();
+end;
+
+procedure TMainForm.Label1DblClick(Sender: TObject);
+begin
+   showCamAlert(trunc(166 + random(4)));
+end;
+
+procedure TMainForm.HIDE_CAM_ALL(var Message: TMessage);
+begin
+   hideCamAll;
 end;
 
 end.

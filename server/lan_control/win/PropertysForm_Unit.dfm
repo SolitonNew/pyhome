@@ -24,7 +24,7 @@ object PropertysForm: TPropertysForm
     Top = 8
     Width = 521
     Height = 281
-    ActivePage = TabSheet2
+    ActivePage = TabSheet3
     TabOrder = 0
     object TabSheet3: TTabSheet
       Caption = #1054#1073#1097#1080#1077

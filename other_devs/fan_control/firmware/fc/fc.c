@@ -35,7 +35,7 @@ unsigned char chan_v[4] = {0, 0, 0, 0};
 #define WAIT_FOR_LOW for (int i = 0; i < WAIT_COUNT && IS_HIGH; i++)
 #define WAIT_FOR_HIGH for (int i = 0; i < WAIT_COUNT && IS_LOW; i++)
 
-unsigned char ROM[8] = {0xF1,0x00,0x00,0x00,0x00,0x00,0x02,0x0};
+unsigned char ROM[8] = {0xF1,0x00,0x00,0x00,0x00,0x00,0x01,0x0};
 
 unsigned char crc_table(unsigned char data)
 {
@@ -214,6 +214,8 @@ int main(void)
 	GIMSK |= (1<<INT0);
 	
 	sei();
+	
+	//chan_v[2] = 5;
 
 	// ШИМ
 	DDRB = (1<<PORTB0) | (1<<PORTB2) | (1<<PORTB3) | (1<<PORTB4);
@@ -224,7 +226,7 @@ int main(void)
 			check_chan(1, PORTB3);
 			check_chan(2, PORTB0);
 			check_chan(3, PORTB2);
-			_delay_ms(5);
+			_delay_ms(10);
 		}		
     }
 }

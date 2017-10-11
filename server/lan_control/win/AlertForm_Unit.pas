@@ -115,7 +115,7 @@ var
 
    procedure splitTextToLines(text: string; lines:TStringList);
    var
-      k, i: integer;
+      i: integer;
       s: string;
       sl: TStringList;
    begin
@@ -185,7 +185,7 @@ var
    end;
 
 var
-   k, y, r_h: integer;
+   k: integer;
 begin
    if (fDrawBitmap = nil) then exit; 
    Width := MainForm.ClientWidth;
@@ -211,6 +211,7 @@ var
    k: integer;
    isDel: Boolean;
 begin
+   isDel := false;
    nowU := DateTimeToUnix(Now) - 10;
 
    for k:= fTexts.Count - 1 downto 0 do

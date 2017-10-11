@@ -29,10 +29,10 @@ def correctVolume(typ):
             return curr
     
     ids = (QUIET_TIME, BOILER_PRESENS, BOILER_PRESENS_OUT)
-    new_volume = 90
-    if typ != "alarm":
+    new_volume = 80
+    if str(typ, "utf-8") != "alarm":
         for rec in db.select("select ID from core_variables "
-                             " where VALUE > 1 and ID in %s" %(str(ids))):
+                             " where VALUE > 0 and ID in %s" %(str(ids))):
             if rec[0] == QUIET_TIME:
                 new_volume = check_vol(new_volume, 30)
             
@@ -42,7 +42,7 @@ def correctVolume(typ):
             if rec[0] == BOILER_PRESENS_OUT:
                 new_volume = check_vol(new_volume, 50)
             
-    subprocess.call("amixer set 'Lineout volume control' %s" % (new_volume), shell=True)
+    subprocess.call("amixer set 'Lineout volume control' {}%".format(new_volume), shell=True)
 
 lastSpeechId = -1
 for rec in db.select("select MAX(ID) from app_control_exe_queue"):

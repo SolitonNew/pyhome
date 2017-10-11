@@ -14,6 +14,33 @@ print(
 )
 
 db = DBConnector()
+
+QUIET_TIME = 123
+BOILER_PRESENS = 125
+BOILER_PRESENS_OUT = 127
+
+def correctVolume():
+    def check_vol(curr, new):
+        if new < curr:
+            return new
+        else:
+            return curr
+    
+    ids = (QUIET_TIME, BOILER_PRESENS, BOILER_PRESENS_OUT)
+    new_volume = 90
+    for rec in db.select("select ID from core_variables "
+                         " where VALUE > 1 and ID in (%s)" %(str(ids))):
+        if rec[0] == QUIET_TIME:
+            new_volume = check_vol(new_volume, 30)
+            
+        if rec[0] == BOILER_PRESENS:
+            new_volume = check_vol(new_volume, 30)
+            
+        if rec[0] == BOILER_PRESENS_OUT:
+            new_volume = check_vol(new_volume, 50)
+            
+    subprocess.call("amixer set Master %s" % (new_volume), shell=True)
+
 lastSpeechId = -1
 for rec in db.select("select MAX(ID) from app_control_exe_queue"):
     lastSpeechId = rec[0]
@@ -28,7 +55,8 @@ while True:
                          "order by ID" % (lastSpeechId)):
         lastSpeechId = rec[0]
         if str(rec[1], "utf-8") == "speech":
-            try:                
+            try:
+                correctVolume()
                 print("Звучит: %s" % (rec[2]))
                 now = datetime.now().timestamp()
                 if now - beep_time > 5:

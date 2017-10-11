@@ -237,7 +237,7 @@ class Page5_1(BaseForm):
         prev_vals = [-9999] * 4
         chart_data = [[], [], [], []]
         
-        zoom_step = delta_x / (width * 5)
+        zoom_step = delta_x / (width)
         if zoom_step < 1 or typ != 0:
             zoom_step = 1
 

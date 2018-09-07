@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Lan Control</string>
+    <string name="title_page1">Home</string>
+    <string name="title_page2">Dashboard</string>
+    <string name="title_page3">Notifications</string>
+    <string name="appwidget_text">Lan Control</string>
+    <string name="add_widget">Add widget</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_main2">Main2Activity</string>
+</resources>

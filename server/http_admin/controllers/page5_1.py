@@ -18,7 +18,11 @@ class Page5_1(BaseForm):
     def _genStatPanels(self):
         panels_data = []
         for row in self.db.select("select ID, NAME, HEIGHT from web_stat_panels order by ID"):
-            panels_data += [self._create_panel(str(row[0]), str(row[1], "utf-8"), str(row[2]))]
+            try:
+                name = str(row[1], "utf-8")
+            except:
+                name = row[1]
+            panels_data += [self._create_panel(str(row[0]), name, str(row[2]))]
         return "".join(panels_data)
 
     def _create_panel(self, key, name, height):
@@ -31,7 +35,10 @@ class Page5_1(BaseForm):
                                   "     or p.SERIES_4 = v.ID)"
                                   "    and p.ID = %s" % (key)):
             sers = row[2:6]
-            lab = str(row[1], "utf-8")
+            try:
+                lab = str(row[1], "utf-8")
+            except:
+                lab = row[1]
             if row[0] == sers[0]:
                 lb1 = lab
             elif row[0] == sers[1]:
@@ -57,7 +64,7 @@ class Page5_1(BaseForm):
     def query(self, query_type):
         if query_type == "append_panel":
             self.db.IUD("insert into web_stat_panels (NAME) values ('%s')" % ("Новая панель"))
-            self.db.commit()            
+            self.db.commit()
             return self._create_panel(str(self.db.lastID()), "Новая панель", "200")
         elif query_type == "del_panel":
             self.db.IUD("delete from web_stat_panels where ID = %s" % (self.param("key")))

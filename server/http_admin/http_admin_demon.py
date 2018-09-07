@@ -18,6 +18,7 @@ def index(name=None):
         
     from db_connector import DBConnector
     import controllers.forms
+    res = ''
     try:
         for form in controllers.forms.FORMS:
             if form.ACTION == name:
@@ -33,8 +34,8 @@ def index(name=None):
         try:
             s = "Форма '%s' ругнулась:<br><b>%s</b>" % (path, e.args)
             self.wfile.write(s.encode("utf-8"))
-        except:
-            print("Вероятно закрылось соединение и %s" % s)
+        except Exception as e:
+            print("Вероятно закрылось соединение и %s" % e.args)
     return res
 
 try:

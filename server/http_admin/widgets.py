@@ -423,15 +423,15 @@ class Grid(WidgetBase):
         if filt:
             try:
                 self.sql.index("where ")
-                filter_data = " and %s" % filt
+                filter_data = " and %s" % (filt,)
             except:
-                filter_data = " where %s" % filt
+                filter_data = " where %s" % (filt,)
         elif self.detail:
             det = " limit 0"
 
         if det == "":
             det = " limit 1000"
-            
+        
         q = self.parentForm.db.query(self.sql + filter_data + orders + det)
         data = q.fetchall()
         fields = q.column_names
@@ -441,11 +441,14 @@ class Grid(WidgetBase):
         for row in data:
             res += "<tr id=\"%s_row_%s\" onClick=\"%s_selected('%s')\">" % (self.id, row[keyIndex], self.id, row[keyIndex])
             for i in range(len(self.columns)):
-                if self.columns[i]['visible']:                    
+                if self.columns[i]['visible']:
                     f = self.columns[i]['func']
                     field = fields.index(self.columns[i]["field"])
-                    if f:                        
-                        v = f(i, row)
+                    if f:
+                        try:
+                            v = f(i, row)
+                        except:
+                            v = ''
                     else:
                         if type(row[field]) == bytes:
                             v = str(row[field], "utf-8")
@@ -456,7 +459,7 @@ class Grid(WidgetBase):
         res += "</table>"
         return "".join(res)
 
-    def query(self):        
+    def query(self):
         q = self.parentForm.param("WIDGET_%s" % self.id)
         if q:
             return self._gen_data(self.parentForm.param("sorts"), self.parentForm.param("filter"))

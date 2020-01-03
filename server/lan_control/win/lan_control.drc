@@ -8,342 +8,547 @@
   resources were bound to the produced executable.
 */
 
-#define IdResourceStrings_RSSSLAcceptError 65040
-#define IdResourceStrings_RSSSLConnectError 65041
-#define IdResourceStrings_RSSSLSettingCipherError 65042
-#define IdResourceStrings_RSSSLCreatingContextError 65043
-#define IdResourceStrings_RSSSLLoadingRootCertError 65044
-#define IdResourceStrings_RSSSLLoadingCertError 65045
-#define IdResourceStrings_RSSSLLoadingKeyError 65046
-#define IdResourceStrings_RSSSLGetMethodError 65047
-#define IdResourceStrings_RSSSLDataBindingError 65048
-#define IdResourceStrings_RSOSSLModeNotSet 65049
-#define IdResourceStrings_RSOSSLCouldNotLoadSSLLibrary 65050
-#define IdResourceStrings_RSOSSLStatusString 65051
-#define IdResourceStrings_RSUnevenSizeInDecodeStream 65052
-#define IdResourceStrings_RSUnevenSizeInEncodeStream 65053
-#define IdResourceStrings_RSURINoProto 65054
-#define IdResourceStrings_RSURINoHost 65055
-#define IdResourceStrings_RSStackHOST_NOT_FOUND 65056
-#define IdResourceStrings_RSSocksRequestFailed 65057
-#define IdResourceStrings_RSSocksRequestServerFailed 65058
-#define IdResourceStrings_RSSocksRequestIdentFailed 65059
-#define IdResourceStrings_RSSocksUnknownError 65060
-#define IdResourceStrings_RSSocksServerRespondError 65061
-#define IdResourceStrings_RSSocksAuthMethodError 65062
-#define IdResourceStrings_RSSocksAuthError 65063
-#define IdResourceStrings_RSSocksServerGeneralError 65064
-#define IdResourceStrings_RSSocksServerPermissionError 65065
-#define IdResourceStrings_RSSocksServerNetUnreachableError 65066
-#define IdResourceStrings_RSSocksServerHostUnreachableError 65067
-#define IdResourceStrings_RSSocksServerConnectionRefusedError 65068
-#define IdResourceStrings_RSSocksServerTTLExpiredError 65069
-#define IdResourceStrings_RSSocksServerCommandError 65070
-#define IdResourceStrings_RSSocksServerAddressError 65071
-#define IdResourceStrings_RSStackENETUNREACH 65072
-#define IdResourceStrings_RSStackENETRESET 65073
-#define IdResourceStrings_RSStackECONNABORTED 65074
-#define IdResourceStrings_RSStackECONNRESET 65075
-#define IdResourceStrings_RSStackENOBUFS 65076
-#define IdResourceStrings_RSStackEISCONN 65077
-#define IdResourceStrings_RSStackENOTCONN 65078
-#define IdResourceStrings_RSStackESHUTDOWN 65079
-#define IdResourceStrings_RSStackETOOMANYREFS 65080
-#define IdResourceStrings_RSStackETIMEDOUT 65081
-#define IdResourceStrings_RSStackECONNREFUSED 65082
-#define IdResourceStrings_RSStackELOOP 65083
-#define IdResourceStrings_RSStackENAMETOOLONG 65084
-#define IdResourceStrings_RSStackEHOSTDOWN 65085
-#define IdResourceStrings_RSStackEHOSTUNREACH 65086
-#define IdResourceStrings_RSStackENOTEMPTY 65087
-#define IdResourceStrings_RSStackEWOULDBLOCK 65088
-#define IdResourceStrings_RSStackEINPROGRESS 65089
-#define IdResourceStrings_RSStackEALREADY 65090
-#define IdResourceStrings_RSStackENOTSOCK 65091
-#define IdResourceStrings_RSStackEDESTADDRREQ 65092
-#define IdResourceStrings_RSStackEMSGSIZE 65093
-#define IdResourceStrings_RSStackEPROTOTYPE 65094
-#define IdResourceStrings_RSStackENOPROTOOPT 65095
-#define IdResourceStrings_RSStackEPROTONOSUPPORT 65096
-#define IdResourceStrings_RSStackESOCKTNOSUPPORT 65097
-#define IdResourceStrings_RSStackEOPNOTSUPP 65098
-#define IdResourceStrings_RSStackEPFNOSUPPORT 65099
-#define IdResourceStrings_RSStackEAFNOSUPPORT 65100
-#define IdResourceStrings_RSStackEADDRINUSE 65101
-#define IdResourceStrings_RSStackEADDRNOTAVAIL 65102
-#define IdResourceStrings_RSStackENETDOWN 65103
-#define IdResourceStrings_RSStatusConnected 65104
-#define IdResourceStrings_RSStatusDisconnecting 65105
-#define IdResourceStrings_RSStatusDisconnected 65106
-#define IdResourceStrings_RSStatusText 65107
-#define IdResourceStrings_RSConnectTimeout 65108
-#define IdResourceStrings_RSHTTPChunkStarted 65109
-#define IdResourceStrings_RSHTTPAuthAlreadyRegistered 65110
-#define IdResourceStrings_RSInvalidServiceName 65111
-#define IdResourceStrings_RSStackError 65112
-#define IdResourceStrings_RSStackInvalidIP 65113
-#define IdResourceStrings_RSStackEINTR 65114
-#define IdResourceStrings_RSStackEBADF 65115
-#define IdResourceStrings_RSStackEACCES 65116
-#define IdResourceStrings_RSStackEFAULT 65117
-#define IdResourceStrings_RSStackEINVAL 65118
-#define IdResourceStrings_RSStackEMFILE 65119
-#define IdResourceStrings_RSNotEnoughDataInBuffer 65120
-#define IdResourceStrings_RSWinsockInitializationError 65121
-#define IdResourceStrings_RSSetSizeExceeded 65122
-#define IdResourceStrings_RSFileNotFound 65123
-#define IdResourceStrings_RSOnlyOneAntiFreeze 65124
-#define IdResourceStrings_RSIOHandlerPropInvalid 65125
-#define IdResourceStrings_RSNotConnected 65126
-#define IdResourceStrings_RSIdNoDataToRead 65127
-#define IdResourceStrings_RSCanNotBindRange 65128
-#define IdResourceStrings_RSInvalidPortRange 65129
-#define IdResourceStrings_RSReadTimeout 65130
-#define IdResourceStrings_RSReadLnMaxLineLengthExceeded 65131
-#define IdResourceStrings_RSWS2CallError 65132
-#define IdResourceStrings_RSWS2LoadError 65133
-#define IdResourceStrings_RSStatusResolving 65134
-#define IdResourceStrings_RSStatusConnecting 65135
-#define DlgMessagesRU_SDetailErrorInfo 65136
-#define ComConst_SOleError 65137
-#define ComConst_SNoMethod 65138
-#define ComConst_SVarNotObject 65139
-#define ComConst_STooManyParams 65140
-#define ComConst_SDCOMNotInstalled 65141
-#define OleConst_SCannotActivate 65142
-#define OleConst_SNoWindowHandle 65143
-#define OleConst_SInvalidLicense 65144
-#define OleConst_SNotLicensed 65145
-#define OleConst_sNoRunningObject 65146
-#define IdResourceStrings_RSAlreadyConnected 65147
-#define IdResourceStrings_RSCannotAllocateSocket 65148
-#define IdResourceStrings_RSConnectionClosedGracefully 65149
-#define IdResourceStrings_RSCouldNotBindSocket 65150
-#define IdResourceStrings_RSFailedTimeZoneInfo 65151
-#define cxExtEditConsts_scxSEditRepositoryLabelItem 65152
-#define DlgMessagesRU_SMsgDlgWarning 65153
-#define DlgMessagesRU_SMsgDlgError 65154
-#define DlgMessagesRU_SMsgDlgInformation 65155
-#define DlgMessagesRU_SMsgDlgConfirm 65156
-#define DlgMessagesRU_SMsgDlgYes 65157
-#define DlgMessagesRU_SMsgDlgNo 65158
-#define DlgMessagesRU_SMsgDlgOK 65159
-#define DlgMessagesRU_SMsgDlgCancel 65160
-#define DlgMessagesRU_SMsgDlgHelp 65161
-#define DlgMessagesRU_SMsgDlgAbort 65162
-#define DlgMessagesRU_SMsgDlgRetry 65163
-#define DlgMessagesRU_SMsgDlgIgnore 65164
-#define DlgMessagesRU_SMsgDlgAll 65165
-#define DlgMessagesRU_SMsgDlgNoToAll 65166
-#define DlgMessagesRU_SMsgDlgYesToAll 65167
-#define cxEditConsts_scxRegExprIllegalSymbol 65168
-#define cxEditConsts_scxRegExprIllegalQuantifier 65169
-#define cxEditConsts_scxRegExprIllegalIntegerValue 65170
-#define cxEditConsts_scxRegExprTooBigReferenceNumber 65171
-#define cxEditConsts_scxRegExprCantCreateEmptyEnum 65172
-#define cxEditConsts_scxRegExprSubrangeOrder 65173
-#define cxEditConsts_scxRegExprHexNumberExpected0 65174
-#define cxEditConsts_scxRegExprHexNumberExpected 65175
-#define cxEditConsts_scxRegExprMissing 65176
-#define cxEditConsts_scxRegExprUnnecessary 65177
-#define cxEditConsts_scxRegExprIncorrectSpace 65178
-#define cxEditConsts_scxRegExprNotCompiled 65179
-#define cxEditConsts_scxRegExprIncorrectParameterQuantifier 65180
-#define cxEditConsts_scxRegExprCantUseParameterQuantifier 65181
-#define cxEditConsts_scxMaskEditRegExprError 65182
-#define cxEditConsts_scxMaskEditInvalidEditValue 65183
-#define cxEditConsts_scxSCalcError 65184
-#define cxEditConsts_scxSEditRepositoryCalcItem 65185
-#define cxEditConsts_scxSEditRepositoryCheckBoxItem 65186
-#define cxEditConsts_scxSEditRepositoryComboBoxItem 65187
-#define cxEditConsts_scxSEditRepositoryMaskItem 65188
-#define cxEditConsts_scxSEditRepositoryMemoItem 65189
-#define cxEditConsts_scxSEditRepositoryPopupItem 65190
-#define cxEditConsts_scxSEditRepositoryTextItem 65191
-#define cxEditConsts_scxRegExprLine 65192
-#define cxEditConsts_scxRegExprChar 65193
-#define cxEditConsts_scxRegExprNotAssignedSourceStream 65194
-#define cxEditConsts_scxRegExprEmptySourceStream 65195
-#define cxEditConsts_scxRegExprCantUsePlusQuantifier 65196
-#define cxEditConsts_scxRegExprCantUseStarQuantifier 65197
-#define cxEditConsts_scxRegExprCantCreateEmptyAlt 65198
-#define cxEditConsts_scxRegExprCantCreateEmptyBlock 65199
-#define cxLibraryStrs_cxSDateThird 65200
-#define cxLibraryStrs_cxSDateFourth 65201
-#define cxLibraryStrs_cxSDateFifth 65202
-#define cxLibraryStrs_cxSDateSixth 65203
-#define cxLibraryStrs_cxSDateSeventh 65204
-#define cxLibraryStrs_cxSDateBOM 65205
-#define cxLibraryStrs_cxSDateEOM 65206
-#define cxLibraryStrs_cxSDateNow 65207
-#define cxEditConsts_cxSEditInvalidRepositoryItem 65208
-#define cxEditConsts_cxSEditNumericValueConvertError 65209
-#define cxEditConsts_cxSEditPopupCircularReferencingError 65210
-#define cxEditConsts_cxSEditValidateErrorText 65211
-#define cxEditConsts_cxSEditValueOutOfBounds 65212
-#define cxEditConsts_cxSEditCheckBoxChecked 65213
-#define cxEditConsts_cxSEditCheckBoxGrayed 65214
-#define cxEditConsts_cxSEditCheckBoxUnchecked 65215
-#define DBConsts_SCouldNotParseTimeStamp 65216
-#define DBConsts_SInvalidSqlTimeStamp 65217
-#define cxDataConsts_cxSDataReadError 65218
-#define cxDataConsts_cxSDataWriteError 65219
-#define cxLibraryStrs_cxSDateToday 65220
-#define cxLibraryStrs_cxSDateYesterday 65221
-#define cxLibraryStrs_cxSDateTomorrow 65222
-#define cxLibraryStrs_cxSDateSunday 65223
-#define cxLibraryStrs_cxSDateMonday 65224
-#define cxLibraryStrs_cxSDateTuesday 65225
-#define cxLibraryStrs_cxSDateWednesday 65226
-#define cxLibraryStrs_cxSDateThursday 65227
-#define cxLibraryStrs_cxSDateFriday 65228
-#define cxLibraryStrs_cxSDateSaturday 65229
-#define cxLibraryStrs_cxSDateFirst 65230
-#define cxLibraryStrs_cxSDateSecond 65231
-#define ExtCtrls_clName3DLight 65232
-#define ExtCtrls_clNameWindow 65233
-#define ExtCtrls_clNameWindowFrame 65234
-#define ExtCtrls_clNameWindowText 65235
-#define ComStrs_sTabFailClear 65236
-#define ComStrs_sTabFailDelete 65237
-#define ComStrs_sTabFailRetrieve 65238
-#define ComStrs_sTabFailGetObject 65239
-#define ComStrs_sTabFailSet 65240
-#define ComStrs_sTabFailSetObject 65241
-#define ComStrs_sTabMustBeMultiLine 65242
-#define ComStrs_sPageIndexError 65243
-#define WinHelpViewer_hNoKeyword 65244
-#define DBConsts_SBcdOverflow 65245
-#define DBConsts_SInvalidBcdValue 65246
-#define DBConsts_SInvalidFormatType 65247
-#define ExtCtrls_clNameBtnText 65248
-#define ExtCtrls_clNameCaptionText 65249
-#define ExtCtrls_clNameDefault 65250
-#define ExtCtrls_clNameGrayText 65251
-#define ExtCtrls_clNameHighlight 65252
-#define ExtCtrls_clNameHighlightText 65253
-#define ExtCtrls_clNameInactiveBorder 65254
-#define ExtCtrls_clNameInactiveCaption 65255
-#define ExtCtrls_clNameInactiveCaptionText 65256
-#define ExtCtrls_clNameInfoBk 65257
-#define ExtCtrls_clNameInfoText 65258
-#define ExtCtrls_clNameMenu 65259
-#define ExtCtrls_clNameMenuText 65260
-#define ExtCtrls_clNameNone 65261
-#define ExtCtrls_clNameScrollBar 65262
-#define ExtCtrls_clName3DDkShadow 65263
-#define ExtCtrls_clNameYellow 65264
-#define ExtCtrls_clNameBlue 65265
-#define ExtCtrls_clNameFuchsia 65266
-#define ExtCtrls_clNameAqua 65267
-#define ExtCtrls_clNameWhite 65268
-#define ExtCtrls_clNameMoneyGreen 65269
-#define ExtCtrls_clNameSkyBlue 65270
-#define ExtCtrls_clNameCream 65271
-#define ExtCtrls_clNameMedGray 65272
-#define ExtCtrls_clNameActiveBorder 65273
-#define ExtCtrls_clNameActiveCaption 65274
-#define ExtCtrls_clNameAppWorkSpace 65275
-#define ExtCtrls_clNameBackground 65276
-#define ExtCtrls_clNameBtnFace 65277
-#define ExtCtrls_clNameBtnHighlight 65278
-#define ExtCtrls_clNameBtnShadow 65279
-#define Consts_SListBoxMustBeVirtual 65280
-#define HelpIntfs_hNoTableOfContents 65281
-#define HelpIntfs_hNothingFound 65282
-#define HelpIntfs_hNoContext 65283
-#define HelpIntfs_hNoTopics 65284
-#define ExtCtrls_clNameBlack 65285
-#define ExtCtrls_clNameMaroon 65286
-#define ExtCtrls_clNameGreen 65287
-#define ExtCtrls_clNameOlive 65288
-#define ExtCtrls_clNameNavy 65289
-#define ExtCtrls_clNamePurple 65290
-#define ExtCtrls_clNameTeal 65291
-#define ExtCtrls_clNameGray 65292
-#define ExtCtrls_clNameSilver 65293
-#define ExtCtrls_clNameRed 65294
-#define ExtCtrls_clNameLime 65295
-#define Consts_SmkcDel 65296
-#define Consts_SmkcShift 65297
-#define Consts_SmkcCtrl 65298
-#define Consts_SmkcAlt 65299
-#define Consts_SOutOfRange 65300
-#define Consts_SInsertLineError 65301
-#define Consts_SInvalidClipFmt 65302
-#define Consts_SIconToClipboard 65303
-#define Consts_SCannotOpenClipboard 65304
-#define Consts_SInvalidMemoSize 65305
-#define Consts_SDuplicateMenus 65306
-#define Consts_SDockedCtlNeedsName 65307
-#define Consts_SDockTreeRemoveError 65308
-#define Consts_SDockZoneNotFound 65309
-#define Consts_SDockZoneHasNoCtl 65310
-#define Consts_SErrorSettingCount 65311
-#define Consts_SMsgDlgNoToAll 65312
-#define Consts_SMsgDlgYesToAll 65313
-#define Consts_SmkcBkSp 65314
-#define Consts_SmkcTab 65315
-#define Consts_SmkcEsc 65316
-#define Consts_SmkcEnter 65317
-#define Consts_SmkcSpace 65318
-#define Consts_SmkcPgUp 65319
-#define Consts_SmkcPgDn 65320
-#define Consts_SmkcEnd 65321
-#define Consts_SmkcHome 65322
-#define Consts_SmkcLeft 65323
-#define Consts_SmkcUp 65324
-#define Consts_SmkcRight 65325
-#define Consts_SmkcDown 65326
-#define Consts_SmkcIns 65327
-#define Consts_SVEnhMetafiles 65328
-#define Consts_SVIcons 65329
-#define Consts_SVBitmaps 65330
-#define Consts_SMsgDlgWarning 65331
-#define Consts_SMsgDlgError 65332
-#define Consts_SMsgDlgInformation 65333
-#define Consts_SMsgDlgConfirm 65334
-#define Consts_SMsgDlgYes 65335
-#define Consts_SMsgDlgNo 65336
-#define Consts_SMsgDlgOK 65337
-#define Consts_SMsgDlgCancel 65338
-#define Consts_SMsgDlgHelp 65339
-#define Consts_SMsgDlgAbort 65340
-#define Consts_SMsgDlgRetry 65341
-#define Consts_SMsgDlgIgnore 65342
-#define Consts_SMsgDlgAll 65343
-#define Consts_SNoTimers 65344
-#define Consts_SGroupIndexTooLow 65345
-#define Consts_SNoMDIForm 65346
-#define Consts_SControlParentSetToSelf 65347
-#define Consts_SOKButton 65348
-#define Consts_SCancelButton 65349
-#define Consts_SYesButton 65350
-#define Consts_SNoButton 65351
-#define Consts_SHelpButton 65352
-#define Consts_SCloseButton 65353
-#define Consts_SIgnoreButton 65354
-#define Consts_SRetryButton 65355
-#define Consts_SAbortButton 65356
-#define Consts_SAllButton 65357
-#define Consts_SCannotDragForm 65358
-#define Consts_SVMetafiles 65359
-#define Consts_SReplaceImage 65360
-#define Consts_SImageIndexError 65361
-#define Consts_SImageReadFail 65362
-#define Consts_SImageWriteFail 65363
-#define Consts_SWindowDCError 65364
-#define Consts_SWindowClass 65365
-#define Consts_SCannotFocus 65366
-#define Consts_SParentRequired 65367
-#define Consts_SMDIChildNotVisible 65368
-#define Consts_SVisibleChanged 65369
-#define Consts_SCannotShowModal 65370
-#define Consts_SScrollBarRange 65371
-#define Consts_SPropertyOutOfRange 65372
-#define Consts_SMenuIndexError 65373
-#define Consts_SMenuReinserted 65374
-#define Consts_SMenuNotFound 65375
+#define IdResourceStrings_RSSSLCreatingContextError 64832
+#define IdResourceStrings_RSSSLLoadingRootCertError 64833
+#define IdResourceStrings_RSSSLLoadingCertError 64834
+#define IdResourceStrings_RSSSLLoadingKeyError 64835
+#define IdResourceStrings_RSSSLGetMethodError 64836
+#define IdResourceStrings_RSSSLDataBindingError 64837
+#define IdResourceStrings_RSOSSLModeNotSet 64838
+#define IdResourceStrings_RSOSSLCouldNotLoadSSLLibrary 64839
+#define IdResourceStrings_RSOSSLStatusString 64840
+#define IdResourceStrings_RSUnevenSizeInDecodeStream 64841
+#define IdResourceStrings_RSUnevenSizeInEncodeStream 64842
+#define IdResourceStrings_RSURINoProto 64843
+#define IdResourceStrings_RSURINoHost 64844
+#define IdResourceStrings_RSSocksRequestIdentFailed 64848
+#define IdResourceStrings_RSSocksUnknownError 64849
+#define IdResourceStrings_RSSocksServerRespondError 64850
+#define IdResourceStrings_RSSocksAuthMethodError 64851
+#define IdResourceStrings_RSSocksAuthError 64852
+#define IdResourceStrings_RSSocksServerGeneralError 64853
+#define IdResourceStrings_RSSocksServerPermissionError 64854
+#define IdResourceStrings_RSSocksServerNetUnreachableError 64855
+#define IdResourceStrings_RSSocksServerHostUnreachableError 64856
+#define IdResourceStrings_RSSocksServerConnectionRefusedError 64857
+#define IdResourceStrings_RSSocksServerTTLExpiredError 64858
+#define IdResourceStrings_RSSocksServerCommandError 64859
+#define IdResourceStrings_RSSocksServerAddressError 64860
+#define IdResourceStrings_RSSSLAcceptError 64861
+#define IdResourceStrings_RSSSLConnectError 64862
+#define IdResourceStrings_RSSSLSettingCipherError 64863
+#define IdResourceStrings_RSStackECONNRESET 64864
+#define IdResourceStrings_RSStackENOBUFS 64865
+#define IdResourceStrings_RSStackEISCONN 64866
+#define IdResourceStrings_RSStackENOTCONN 64867
+#define IdResourceStrings_RSStackESHUTDOWN 64868
+#define IdResourceStrings_RSStackETOOMANYREFS 64869
+#define IdResourceStrings_RSStackETIMEDOUT 64870
+#define IdResourceStrings_RSStackECONNREFUSED 64871
+#define IdResourceStrings_RSStackELOOP 64872
+#define IdResourceStrings_RSStackENAMETOOLONG 64873
+#define IdResourceStrings_RSStackEHOSTDOWN 64874
+#define IdResourceStrings_RSStackEHOSTUNREACH 64875
+#define IdResourceStrings_RSStackENOTEMPTY 64876
+#define IdResourceStrings_RSStackHOST_NOT_FOUND 64877
+#define IdResourceStrings_RSSocksRequestFailed 64878
+#define IdResourceStrings_RSSocksRequestServerFailed 64879
+#define IdResourceStrings_RSStackENOTSOCK 64880
+#define IdResourceStrings_RSStackEDESTADDRREQ 64881
+#define IdResourceStrings_RSStackEMSGSIZE 64882
+#define IdResourceStrings_RSStackEPROTOTYPE 64883
+#define IdResourceStrings_RSStackENOPROTOOPT 64884
+#define IdResourceStrings_RSStackEPROTONOSUPPORT 64885
+#define IdResourceStrings_RSStackESOCKTNOSUPPORT 64886
+#define IdResourceStrings_RSStackEOPNOTSUPP 64887
+#define IdResourceStrings_RSStackEPFNOSUPPORT 64888
+#define IdResourceStrings_RSStackEAFNOSUPPORT 64889
+#define IdResourceStrings_RSStackEADDRINUSE 64890
+#define IdResourceStrings_RSStackEADDRNOTAVAIL 64891
+#define IdResourceStrings_RSStackENETDOWN 64892
+#define IdResourceStrings_RSStackENETUNREACH 64893
+#define IdResourceStrings_RSStackENETRESET 64894
+#define IdResourceStrings_RSStackECONNABORTED 64895
+#define IdResourceStrings_RSStatusText 64896
+#define IdResourceStrings_RSConnectTimeout 64897
+#define IdResourceStrings_RSHTTPChunkStarted 64898
+#define IdResourceStrings_RSHTTPAuthAlreadyRegistered 64899
+#define IdResourceStrings_RSInvalidServiceName 64900
+#define IdResourceStrings_RSStackError 64901
+#define IdResourceStrings_RSStackInvalidIP 64902
+#define IdResourceStrings_RSStackEINTR 64903
+#define IdResourceStrings_RSStackEBADF 64904
+#define IdResourceStrings_RSStackEACCES 64905
+#define IdResourceStrings_RSStackEFAULT 64906
+#define IdResourceStrings_RSStackEINVAL 64907
+#define IdResourceStrings_RSStackEMFILE 64908
+#define IdResourceStrings_RSStackEWOULDBLOCK 64909
+#define IdResourceStrings_RSStackEINPROGRESS 64910
+#define IdResourceStrings_RSStackEALREADY 64911
+#define IdResourceStrings_RSOnlyOneAntiFreeze 64912
+#define IdResourceStrings_RSInterceptCircularLink 64913
+#define IdResourceStrings_RSIOHandlerPropInvalid 64914
+#define IdResourceStrings_RSNotConnected 64915
+#define IdResourceStrings_RSIdNoDataToRead 64916
+#define IdResourceStrings_RSCanNotBindRange 64917
+#define IdResourceStrings_RSInvalidPortRange 64918
+#define IdResourceStrings_RSReadTimeout 64919
+#define IdResourceStrings_RSReadLnMaxLineLengthExceeded 64920
+#define IdResourceStrings_RSWS2CallError 64921
+#define IdResourceStrings_RSWS2LoadError 64922
+#define IdResourceStrings_RSStatusResolving 64923
+#define IdResourceStrings_RSStatusConnecting 64924
+#define IdResourceStrings_RSStatusConnected 64925
+#define IdResourceStrings_RSStatusDisconnecting 64926
+#define IdResourceStrings_RSStatusDisconnected 64927
+#define ComConst_STooManyParams 64928
+#define ComConst_SDCOMNotInstalled 64929
+#define OleConst_SCannotActivate 64930
+#define OleConst_SNoWindowHandle 64931
+#define OleConst_SInvalidLicense 64932
+#define OleConst_SNotLicensed 64933
+#define OleConst_sNoRunningObject 64934
+#define IdResourceStrings_RSAlreadyConnected 64935
+#define IdResourceStrings_RSCannotAllocateSocket 64936
+#define IdResourceStrings_RSConnectionClosedGracefully 64937
+#define IdResourceStrings_RSCouldNotBindSocket 64938
+#define IdResourceStrings_RSFailedTimeZoneInfo 64939
+#define IdResourceStrings_RSNotEnoughDataInBuffer 64940
+#define IdResourceStrings_RSWinsockInitializationError 64941
+#define IdResourceStrings_RSSetSizeExceeded 64942
+#define IdResourceStrings_RSFileNotFound 64943
+#define DlgMessagesRU_SMsgDlgConfirm 64944
+#define DlgMessagesRU_SMsgDlgYes 64945
+#define DlgMessagesRU_SMsgDlgNo 64946
+#define DlgMessagesRU_SMsgDlgOK 64947
+#define DlgMessagesRU_SMsgDlgCancel 64948
+#define DlgMessagesRU_SMsgDlgHelp 64949
+#define DlgMessagesRU_SMsgDlgAbort 64950
+#define DlgMessagesRU_SMsgDlgRetry 64951
+#define DlgMessagesRU_SMsgDlgIgnore 64952
+#define DlgMessagesRU_SMsgDlgAll 64953
+#define DlgMessagesRU_SMsgDlgNoToAll 64954
+#define DlgMessagesRU_SMsgDlgYesToAll 64955
+#define DlgMessagesRU_SDetailErrorInfo 64956
+#define ComConst_SOleError 64957
+#define ComConst_SNoMethod 64958
+#define ComConst_SVarNotObject 64959
+#define cxExtEditConsts_cxSEditRichEditSaveFail 64960
+#define cxExtEditConsts_cxSEditRichEditSelectionSaveFail 64961
+#define cxExtEditConsts_cxSEditRichEditOleInterfaceFail 64962
+#define cxExtEditConsts_cxSEditRichEditCallBackFail 64963
+#define cxExtEditConsts_cxSEditRichEditLinkFail 64964
+#define cxExtEditConsts_scxSEditRepositoryRichEditItem 64965
+#define cxExtEditConsts_cxSEditRichEditUndoCaption 64966
+#define cxExtEditConsts_cxSEditRichEditRedoCaption 64967
+#define cxExtEditConsts_cxSEditRichEditCutCaption 64968
+#define cxExtEditConsts_cxSEditRichEditCopyCaption 64969
+#define cxExtEditConsts_cxSEditRichEditPasteCaption 64970
+#define cxExtEditConsts_cxSEditRichEditDeleteCaption 64971
+#define cxExtEditConsts_cxSEditRichEditSelectAllCaption 64972
+#define DlgMessagesRU_SMsgDlgWarning 64973
+#define DlgMessagesRU_SMsgDlgError 64974
+#define DlgMessagesRU_SMsgDlgInformation 64975
+#define cxExtEditConsts_scxHotZoneStyleXPTaskBar 64976
+#define cxExtEditConsts_scxHotZoneStyleSimple 64977
+#define cxExtEditConsts_scxLoadingFonts 64978
+#define cxExtEditConsts_cxSEditCheckGroupCaptionStateDelimiter 64979
+#define cxExtEditConsts_cxSEditCheckGroupFilterColumnSeparator 64980
+#define cxExtEditConsts_cxSEditCheckGroupChecked 64981
+#define cxExtEditConsts_cxSEditCheckGroupGrayed 64982
+#define cxExtEditConsts_cxSEditCheckGroupUnchecked 64983
+#define cxExtEditConsts_cxSCheckComboBoxStatesItemsPropertyDlgCaption 64984
+#define cxExtEditConsts_cxSCheckGroupStatesItemsPropertyDlgCaption 64985
+#define cxExtEditConsts_cxSCheckComboBoxEmptySelectionText 64986
+#define cxExtEditConsts_cxSCheckControlIncorrectItemCount 64987
+#define cxExtEditConsts_cxSColorComboBoxDefaultDescription 64988
+#define cxExtEditConsts_cxSEditRichEditLibraryError 64989
+#define cxExtEditConsts_cxSEditRichEditLineInsertionError 64990
+#define cxExtEditConsts_cxSEditRichEditLoadFail 64991
+#define cxFilterControlStrs_cxSFilterControlDialogActionOkCaption 64992
+#define cxFilterControlStrs_cxSFilterControlDialogActionCancelCaption 64993
+#define cxFilterControlStrs_cxSFilterControlDialogFileExt 64994
+#define cxFilterControlStrs_cxSFilterControlDialogFileFilter 64995
+#define cxExtEditConsts_scxSEditRepositoryColorComboBoxItem 64996
+#define cxExtEditConsts_scxSEditRepositoryFontNameComboBoxItem 64997
+#define cxExtEditConsts_scxSEditRepositoryLabelItem 64998
+#define cxExtEditConsts_scxSEditRepositoryProgressBarItem 64999
+#define cxExtEditConsts_scxSEditRepositoryTrackBarItem 65000
+#define cxExtEditConsts_scxSEditRepositorySpinButtonItem 65001
+#define cxExtEditConsts_scxSEditRepositoryCheckComboBox 65002
+#define cxExtEditConsts_scxSEditRepositoryShellComboBoxItem 65003
+#define cxExtEditConsts_scxSEditRepositoryCheckGroupItem 65004
+#define cxExtEditConsts_scxUDAssociated 65005
+#define cxExtEditConsts_scxHotZoneStyleMediaPlayer9 65006
+#define cxExtEditConsts_scxHotZoneStyleMediaPlayer8 65007
+#define cxFilterControlStrs_cxSFilterDialogInvalidValue 65008
+#define cxFilterControlStrs_cxSFilterDialogUse 65009
+#define cxFilterControlStrs_cxSFilterDialogSingleCharacter 65010
+#define cxFilterControlStrs_cxSFilterDialogCharactersSeries 65011
+#define cxFilterControlStrs_cxSFilterDialogOperationAnd 65012
+#define cxFilterControlStrs_cxSFilterDialogOperationOr 65013
+#define cxFilterControlStrs_cxSFilterDialogRows 65014
+#define cxFilterControlStrs_cxSFilterControlDialogCaption 65015
+#define cxFilterControlStrs_cxSFilterControlDialogNewFile 65016
+#define cxFilterControlStrs_cxSFilterControlDialogOpenDialogCaption 65017
+#define cxFilterControlStrs_cxSFilterControlDialogSaveDialogCaption 65018
+#define cxFilterControlStrs_cxSFilterControlDialogActionSaveCaption 65019
+#define cxFilterControlStrs_cxSFilterControlDialogActionSaveHint 65020
+#define cxFilterControlStrs_cxSFilterControlDialogActionOpenCaption 65021
+#define cxFilterControlStrs_cxSFilterControlDialogActionOpenHint 65022
+#define cxFilterControlStrs_cxSFilterControlDialogActionApplyCaption 65023
+#define cxLibraryStrs_cxSDateNow 65024
+#define cxFilterControlStrs_cxSFilterBoolOperatorAnd 65025
+#define cxFilterControlStrs_cxSFilterBoolOperatorOr 65026
+#define cxFilterControlStrs_cxSFilterBoolOperatorNotAnd 65027
+#define cxFilterControlStrs_cxSFilterBoolOperatorNotOr 65028
+#define cxFilterControlStrs_cxSFilterRootButtonCaption 65029
+#define cxFilterControlStrs_cxSFilterAddCondition 65030
+#define cxFilterControlStrs_cxSFilterAddGroup 65031
+#define cxFilterControlStrs_cxSFilterRemoveRow 65032
+#define cxFilterControlStrs_cxSFilterClearAll 65033
+#define cxFilterControlStrs_cxSFilterFooterAddCondition 65034
+#define cxFilterControlStrs_cxSFilterGroupCaption 65035
+#define cxFilterControlStrs_cxSFilterRootGroupCaption 65036
+#define cxFilterControlStrs_cxSFilterControlNullString 65037
+#define cxFilterControlStrs_cxSFilterErrorBuilding 65038
+#define cxFilterControlStrs_cxSFilterDialogCaption 65039
+#define cxLibraryStrs_cxSDateSunday 65040
+#define cxLibraryStrs_cxSDateMonday 65041
+#define cxLibraryStrs_cxSDateTuesday 65042
+#define cxLibraryStrs_cxSDateWednesday 65043
+#define cxLibraryStrs_cxSDateThursday 65044
+#define cxLibraryStrs_cxSDateFriday 65045
+#define cxLibraryStrs_cxSDateSaturday 65046
+#define cxLibraryStrs_cxSDateFirst 65047
+#define cxLibraryStrs_cxSDateSecond 65048
+#define cxLibraryStrs_cxSDateThird 65049
+#define cxLibraryStrs_cxSDateFourth 65050
+#define cxLibraryStrs_cxSDateFifth 65051
+#define cxLibraryStrs_cxSDateSixth 65052
+#define cxLibraryStrs_cxSDateSeventh 65053
+#define cxLibraryStrs_cxSDateBOM 65054
+#define cxLibraryStrs_cxSDateEOM 65055
+#define cxEditConsts_scxRegExprIncorrectParameterQuantifier 65056
+#define cxEditConsts_scxRegExprCantUseParameterQuantifier 65057
+#define cxEditConsts_scxMaskEditRegExprError 65058
+#define cxEditConsts_scxMaskEditInvalidEditValue 65059
+#define cxEditConsts_scxMaskEditNoMask 65060
+#define cxEditConsts_scxMaskEditIllegalFileFormat 65061
+#define cxEditConsts_scxMaskEditEmptyMaskCollectionFile 65062
+#define cxEditConsts_scxMaskEditMaskCollectionFiles 65063
+#define cxEditConsts_cxSSpinEditInvalidNumericValue 65064
+#define cxLibraryStrs_scxCantCreateRegistryKey 65065
+#define cxLibraryStrs_scxCantOpenRegistryKey 65066
+#define cxLibraryStrs_scxErrorStoreObject 65067
+#define cxLibraryStrs_scxConverterCantCreateStyleRepository 65068
+#define cxLibraryStrs_cxSDateToday 65069
+#define cxLibraryStrs_cxSDateYesterday 65070
+#define cxLibraryStrs_cxSDateTomorrow 65071
+#define cxEditConsts_scxRegExprCantUseStarQuantifier 65072
+#define cxEditConsts_scxRegExprCantCreateEmptyAlt 65073
+#define cxEditConsts_scxRegExprCantCreateEmptyBlock 65074
+#define cxEditConsts_scxRegExprIllegalSymbol 65075
+#define cxEditConsts_scxRegExprIllegalQuantifier 65076
+#define cxEditConsts_scxRegExprNotSupportQuantifier 65077
+#define cxEditConsts_scxRegExprIllegalIntegerValue 65078
+#define cxEditConsts_scxRegExprTooBigReferenceNumber 65079
+#define cxEditConsts_scxRegExprCantCreateEmptyEnum 65080
+#define cxEditConsts_scxRegExprSubrangeOrder 65081
+#define cxEditConsts_scxRegExprHexNumberExpected0 65082
+#define cxEditConsts_scxRegExprHexNumberExpected 65083
+#define cxEditConsts_scxRegExprMissing 65084
+#define cxEditConsts_scxRegExprUnnecessary 65085
+#define cxEditConsts_scxRegExprIncorrectSpace 65086
+#define cxEditConsts_scxRegExprNotCompiled 65087
+#define cxEditConsts_scxSEditRepositoryImageComboBoxItem 65088
+#define cxEditConsts_scxSEditRepositoryImageItem 65089
+#define cxEditConsts_scxSEditRepositoryLookupComboBoxItem 65090
+#define cxEditConsts_scxSEditRepositoryMaskItem 65091
+#define cxEditConsts_scxSEditRepositoryMemoItem 65092
+#define cxEditConsts_scxSEditRepositoryMRUItem 65093
+#define cxEditConsts_scxSEditRepositoryPopupItem 65094
+#define cxEditConsts_scxSEditRepositorySpinItem 65095
+#define cxEditConsts_scxSEditRepositoryRadioGroupItem 65096
+#define cxEditConsts_scxSEditRepositoryTextItem 65097
+#define cxEditConsts_scxSEditRepositoryTimeItem 65098
+#define cxEditConsts_scxRegExprLine 65099
+#define cxEditConsts_scxRegExprChar 65100
+#define cxEditConsts_scxRegExprNotAssignedSourceStream 65101
+#define cxEditConsts_scxRegExprEmptySourceStream 65102
+#define cxEditConsts_scxRegExprCantUsePlusQuantifier 65103
+#define cxEditConsts_cxNavigatorHint_Edit 65104
+#define cxEditConsts_cxNavigatorHint_Post 65105
+#define cxEditConsts_cxNavigatorHint_Cancel 65106
+#define cxEditConsts_cxNavigatorHint_Refresh 65107
+#define cxEditConsts_cxNavigatorHint_SaveBookmark 65108
+#define cxEditConsts_cxNavigatorHint_GotoBookmark 65109
+#define cxEditConsts_cxNavigatorHint_Filter 65110
+#define cxEditConsts_cxNavigator_DeleteRecordQuestion 65111
+#define cxEditConsts_scxSEditRepositoryBlobItem 65112
+#define cxEditConsts_scxSEditRepositoryButtonItem 65113
+#define cxEditConsts_scxSEditRepositoryCalcItem 65114
+#define cxEditConsts_scxSEditRepositoryCheckBoxItem 65115
+#define cxEditConsts_scxSEditRepositoryComboBoxItem 65116
+#define cxEditConsts_scxSEditRepositoryCurrencyItem 65117
+#define cxEditConsts_scxSEditRepositoryDateItem 65118
+#define cxEditConsts_scxSEditRepositoryHyperLinkItem 65119
+#define cxEditConsts_cxSDatePopupNow 65120
+#define cxEditConsts_cxSDatePopupOK 65121
+#define cxEditConsts_cxSDatePopupToday 65122
+#define cxEditConsts_cxSDateError 65123
+#define cxEditConsts_scxSCalcError 65124
+#define cxEditConsts_scxSHyperLinkPrefix 65125
+#define cxEditConsts_scxSHyperLinkDoubleSlash 65126
+#define cxEditConsts_cxNavigatorHint_First 65127
+#define cxEditConsts_cxNavigatorHint_Prior 65128
+#define cxEditConsts_cxNavigatorHint_PriorPage 65129
+#define cxEditConsts_cxNavigatorHint_Next 65130
+#define cxEditConsts_cxNavigatorHint_NextPage 65131
+#define cxEditConsts_cxNavigatorHint_Last 65132
+#define cxEditConsts_cxNavigatorHint_Insert 65133
+#define cxEditConsts_cxNavigatorHint_Append 65134
+#define cxEditConsts_cxNavigatorHint_Delete 65135
+#define cxEditConsts_cxSTextTrue 65136
+#define cxEditConsts_cxSTextFalse 65137
+#define cxEditConsts_cxSBlobButtonOK 65138
+#define cxEditConsts_cxSBlobButtonCancel 65139
+#define cxEditConsts_cxSBlobButtonClose 65140
+#define cxEditConsts_cxSBlobMemo 65141
+#define cxEditConsts_cxSBlobMemoEmpty 65142
+#define cxEditConsts_cxSBlobPicture 65143
+#define cxEditConsts_cxSBlobPictureEmpty 65144
+#define cxEditConsts_cxSMenuItemCaptionCut 65145
+#define cxEditConsts_cxSMenuItemCaptionCopy 65146
+#define cxEditConsts_cxSMenuItemCaptionPaste 65147
+#define cxEditConsts_cxSMenuItemCaptionDelete 65148
+#define cxEditConsts_cxSMenuItemCaptionLoad 65149
+#define cxEditConsts_cxSMenuItemCaptionSave 65150
+#define cxEditConsts_cxSDatePopupClear 65151
+#define ComStrs_sPageIndexError 65152
+#define dxGDIPlusAPI_scxGdipInvalidOperation 65153
+#define cxEditConsts_cxSEditButtonCancel 65154
+#define cxEditConsts_cxSEditButtonOK 65155
+#define cxEditConsts_cxSEditDateConvertError 65156
+#define cxEditConsts_cxSEditInvalidRepositoryItem 65157
+#define cxEditConsts_cxSEditNumericValueConvertError 65158
+#define cxEditConsts_cxSEditPopupCircularReferencingError 65159
+#define cxEditConsts_cxSEditPostError 65160
+#define cxEditConsts_cxSEditTimeConvertError 65161
+#define cxEditConsts_cxSEditValidateErrorText 65162
+#define cxEditConsts_cxSEditValueOutOfBounds 65163
+#define cxEditConsts_cxSEditCheckBoxChecked 65164
+#define cxEditConsts_cxSEditCheckBoxGrayed 65165
+#define cxEditConsts_cxSEditCheckBoxUnchecked 65166
+#define cxEditConsts_cxSRadioGroupDefaultCaption 65167
+#define cxDataConsts_cxSDataCustomDataSourceInvalidCompare 65168
+#define cxDataConsts_cxSDBDetailFilterControllerNotFound 65169
+#define cxDataConsts_cxSDBNotInGridMode 65170
+#define cxDataConsts_cxSDBKeyFieldNotFound 65171
+#define DBConsts_SBcdOverflow 65172
+#define DBConsts_SInvalidBcdValue 65173
+#define DBConsts_SInvalidFormatType 65174
+#define DBConsts_SCouldNotParseTimeStamp 65175
+#define DBConsts_SInvalidSqlTimeStamp 65176
+#define ComStrs_sTabFailClear 65177
+#define ComStrs_sTabFailDelete 65178
+#define ComStrs_sTabFailRetrieve 65179
+#define ComStrs_sTabFailGetObject 65180
+#define ComStrs_sTabFailSet 65181
+#define ComStrs_sTabFailSetObject 65182
+#define ComStrs_sTabMustBeMultiLine 65183
+#define cxFilterConsts_cxSFilterOperatorEndsWith 65184
+#define cxFilterConsts_cxSFilterOperatorDoesNotEndWith 65185
+#define cxFilterConsts_cxSFilterOperatorContains 65186
+#define cxFilterConsts_cxSFilterOperatorDoesNotContain 65187
+#define cxFilterConsts_cxSFilterBoxAllCaption 65188
+#define cxFilterConsts_cxSFilterBoxCustomCaption 65189
+#define cxFilterConsts_cxSFilterBoxBlanksCaption 65190
+#define cxFilterConsts_cxSFilterBoxNonBlanksCaption 65191
+#define cxDataConsts_cxSDataReadError 65192
+#define cxDataConsts_cxSDataWriteError 65193
+#define cxDataConsts_cxSDataItemExistError 65194
+#define cxDataConsts_cxSDataRecordIndexError 65195
+#define cxDataConsts_cxSDataItemIndexError 65196
+#define cxDataConsts_cxSDataProviderModeError 65197
+#define cxDataConsts_cxSDataInvalidStreamFormat 65198
+#define cxDataConsts_cxSDataRowIndexError 65199
+#define cxFilterConsts_cxSFilterOperatorNext7Days 65200
+#define cxFilterConsts_cxSFilterOperatorNextWeek 65201
+#define cxFilterConsts_cxSFilterOperatorNext14Days 65202
+#define cxFilterConsts_cxSFilterOperatorNextTwoWeeks 65203
+#define cxFilterConsts_cxSFilterOperatorNext30Days 65204
+#define cxFilterConsts_cxSFilterOperatorNextMonth 65205
+#define cxFilterConsts_cxSFilterOperatorNextYear 65206
+#define cxFilterConsts_cxSFilterOperatorFuture 65207
+#define cxFilterConsts_cxSFilterAndCaption 65208
+#define cxFilterConsts_cxSFilterOrCaption 65209
+#define cxFilterConsts_cxSFilterNotCaption 65210
+#define cxFilterConsts_cxSFilterBlankCaption 65211
+#define cxFilterConsts_cxSFilterOperatorIsNull 65212
+#define cxFilterConsts_cxSFilterOperatorIsNotNull 65213
+#define cxFilterConsts_cxSFilterOperatorBeginsWith 65214
+#define cxFilterConsts_cxSFilterOperatorDoesNotBeginWith 65215
+#define cxFilterConsts_cxSFilterOperatorInList 65216
+#define cxFilterConsts_cxSFilterOperatorNotInList 65217
+#define cxFilterConsts_cxSFilterOperatorYesterday 65218
+#define cxFilterConsts_cxSFilterOperatorToday 65219
+#define cxFilterConsts_cxSFilterOperatorTomorrow 65220
+#define cxFilterConsts_cxSFilterOperatorLast7Days 65221
+#define cxFilterConsts_cxSFilterOperatorLastWeek 65222
+#define cxFilterConsts_cxSFilterOperatorLast14Days 65223
+#define cxFilterConsts_cxSFilterOperatorLastTwoWeeks 65224
+#define cxFilterConsts_cxSFilterOperatorLast30Days 65225
+#define cxFilterConsts_cxSFilterOperatorLastMonth 65226
+#define cxFilterConsts_cxSFilterOperatorLastYear 65227
+#define cxFilterConsts_cxSFilterOperatorPast 65228
+#define cxFilterConsts_cxSFilterOperatorThisWeek 65229
+#define cxFilterConsts_cxSFilterOperatorThisMonth 65230
+#define cxFilterConsts_cxSFilterOperatorThisYear 65231
+#define ExtCtrls_clName3DDkShadow 65232
+#define ExtCtrls_clName3DLight 65233
+#define ExtCtrls_clNameWindow 65234
+#define ExtCtrls_clNameWindowFrame 65235
+#define ExtCtrls_clNameWindowText 65236
+#define WinHelpViewer_hNoKeyword 65237
+#define cxFilterConsts_cxSFilterOperatorEqual 65238
+#define cxFilterConsts_cxSFilterOperatorNotEqual 65239
+#define cxFilterConsts_cxSFilterOperatorLess 65240
+#define cxFilterConsts_cxSFilterOperatorLessEqual 65241
+#define cxFilterConsts_cxSFilterOperatorGreater 65242
+#define cxFilterConsts_cxSFilterOperatorGreaterEqual 65243
+#define cxFilterConsts_cxSFilterOperatorLike 65244
+#define cxFilterConsts_cxSFilterOperatorNotLike 65245
+#define cxFilterConsts_cxSFilterOperatorBetween 65246
+#define cxFilterConsts_cxSFilterOperatorNotBetween 65247
+#define ExtCtrls_clNameBtnShadow 65248
+#define ExtCtrls_clNameBtnText 65249
+#define ExtCtrls_clNameCaptionText 65250
+#define ExtCtrls_clNameDefault 65251
+#define ExtCtrls_clNameGrayText 65252
+#define ExtCtrls_clNameHighlight 65253
+#define ExtCtrls_clNameHighlightText 65254
+#define ExtCtrls_clNameInactiveBorder 65255
+#define ExtCtrls_clNameInactiveCaption 65256
+#define ExtCtrls_clNameInactiveCaptionText 65257
+#define ExtCtrls_clNameInfoBk 65258
+#define ExtCtrls_clNameInfoText 65259
+#define ExtCtrls_clNameMenu 65260
+#define ExtCtrls_clNameMenuText 65261
+#define ExtCtrls_clNameNone 65262
+#define ExtCtrls_clNameScrollBar 65263
+#define ExtCtrls_clNameLime 65264
+#define ExtCtrls_clNameYellow 65265
+#define ExtCtrls_clNameBlue 65266
+#define ExtCtrls_clNameFuchsia 65267
+#define ExtCtrls_clNameAqua 65268
+#define ExtCtrls_clNameWhite 65269
+#define ExtCtrls_clNameMoneyGreen 65270
+#define ExtCtrls_clNameSkyBlue 65271
+#define ExtCtrls_clNameCream 65272
+#define ExtCtrls_clNameMedGray 65273
+#define ExtCtrls_clNameActiveBorder 65274
+#define ExtCtrls_clNameActiveCaption 65275
+#define ExtCtrls_clNameAppWorkSpace 65276
+#define ExtCtrls_clNameBackground 65277
+#define ExtCtrls_clNameBtnFace 65278
+#define ExtCtrls_clNameBtnHighlight 65279
+#define Consts_SErrorSettingCount 65280
+#define Consts_SListBoxMustBeVirtual 65281
+#define HelpIntfs_hNoTableOfContents 65282
+#define HelpIntfs_hNothingFound 65283
+#define HelpIntfs_hNoContext 65284
+#define HelpIntfs_hNoTopics 65285
+#define ExtCtrls_clNameBlack 65286
+#define ExtCtrls_clNameMaroon 65287
+#define ExtCtrls_clNameGreen 65288
+#define ExtCtrls_clNameOlive 65289
+#define ExtCtrls_clNameNavy 65290
+#define ExtCtrls_clNamePurple 65291
+#define ExtCtrls_clNameTeal 65292
+#define ExtCtrls_clNameGray 65293
+#define ExtCtrls_clNameSilver 65294
+#define ExtCtrls_clNameRed 65295
+#define Consts_SmkcIns 65296
+#define Consts_SmkcDel 65297
+#define Consts_SmkcShift 65298
+#define Consts_SmkcCtrl 65299
+#define Consts_SmkcAlt 65300
+#define Consts_SOutOfRange 65301
+#define Consts_SInsertLineError 65302
+#define Consts_SInvalidClipFmt 65303
+#define Consts_SIconToClipboard 65304
+#define Consts_SCannotOpenClipboard 65305
+#define Consts_SInvalidMemoSize 65306
+#define Consts_SDuplicateMenus 65307
+#define Consts_SDockedCtlNeedsName 65308
+#define Consts_SDockTreeRemoveError 65309
+#define Consts_SDockZoneNotFound 65310
+#define Consts_SDockZoneHasNoCtl 65311
+#define Consts_SMsgDlgAll 65312
+#define Consts_SMsgDlgNoToAll 65313
+#define Consts_SMsgDlgYesToAll 65314
+#define Consts_SmkcBkSp 65315
+#define Consts_SmkcTab 65316
+#define Consts_SmkcEsc 65317
+#define Consts_SmkcEnter 65318
+#define Consts_SmkcSpace 65319
+#define Consts_SmkcPgUp 65320
+#define Consts_SmkcPgDn 65321
+#define Consts_SmkcEnd 65322
+#define Consts_SmkcHome 65323
+#define Consts_SmkcLeft 65324
+#define Consts_SmkcUp 65325
+#define Consts_SmkcRight 65326
+#define Consts_SmkcDown 65327
+#define Consts_SVMetafiles 65328
+#define Consts_SVEnhMetafiles 65329
+#define Consts_SVIcons 65330
+#define Consts_SVBitmaps 65331
+#define Consts_SMsgDlgWarning 65332
+#define Consts_SMsgDlgError 65333
+#define Consts_SMsgDlgInformation 65334
+#define Consts_SMsgDlgConfirm 65335
+#define Consts_SMsgDlgYes 65336
+#define Consts_SMsgDlgNo 65337
+#define Consts_SMsgDlgOK 65338
+#define Consts_SMsgDlgCancel 65339
+#define Consts_SMsgDlgHelp 65340
+#define Consts_SMsgDlgAbort 65341
+#define Consts_SMsgDlgRetry 65342
+#define Consts_SMsgDlgIgnore 65343
+#define Consts_SMenuNotFound 65344
+#define Consts_SNoTimers 65345
+#define Consts_SGroupIndexTooLow 65346
+#define Consts_SNoMDIForm 65347
+#define Consts_SControlParentSetToSelf 65348
+#define Consts_SOKButton 65349
+#define Consts_SCancelButton 65350
+#define Consts_SYesButton 65351
+#define Consts_SNoButton 65352
+#define Consts_SHelpButton 65353
+#define Consts_SCloseButton 65354
+#define Consts_SIgnoreButton 65355
+#define Consts_SRetryButton 65356
+#define Consts_SAbortButton 65357
+#define Consts_SAllButton 65358
+#define Consts_SCannotDragForm 65359
+#define Consts_SInvalidImageList 65360
+#define Consts_SReplaceImage 65361
+#define Consts_SImageIndexError 65362
+#define Consts_SImageReadFail 65363
+#define Consts_SImageWriteFail 65364
+#define Consts_SWindowDCError 65365
+#define Consts_SWindowClass 65366
+#define Consts_SCannotFocus 65367
+#define Consts_SParentRequired 65368
+#define Consts_SMDIChildNotVisible 65369
+#define Consts_SVisibleChanged 65370
+#define Consts_SCannotShowModal 65371
+#define Consts_SScrollBarRange 65372
+#define Consts_SPropertyOutOfRange 65373
+#define Consts_SMenuIndexError 65374
+#define Consts_SMenuReinserted 65375
 #define RTLConsts_sSocketAlreadyOpen 65376
 #define RTLConsts_sCantChangeWhileActive 65377
 #define RTLConsts_SInvalidDateTime 65378
@@ -353,13 +558,13 @@
 #define Consts_SInvalidIcon 65382
 #define Consts_SInvalidMetafile 65383
 #define Consts_SInvalidPixelFormat 65384
-#define Consts_SChangeIconSize 65385
-#define Consts_SOleGraphic 65386
-#define Consts_SUnknownClipboardFormat 65387
-#define Consts_SOutOfResources 65388
-#define Consts_SNoCanvasHandle 65389
-#define Consts_SInvalidImageSize 65390
-#define Consts_SInvalidImageList 65391
+#define Consts_SScanLine 65385
+#define Consts_SChangeIconSize 65386
+#define Consts_SOleGraphic 65387
+#define Consts_SUnknownClipboardFormat 65388
+#define Consts_SOutOfResources 65389
+#define Consts_SNoCanvasHandle 65390
+#define Consts_SInvalidImageSize 65391
 #define RTLConsts_SReadOnlyProperty 65392
 #define RTLConsts_SRegGetDataFailed 65393
 #define RTLConsts_SRegSetDataFailed 65394
@@ -506,9 +711,6 @@
 #define SysConst_SRangeError 65535
 STRINGTABLE
 BEGIN
-	IdResourceStrings_RSSSLAcceptError,	"Error accepting connection with SSL."
-	IdResourceStrings_RSSSLConnectError,	"Error connecting with SSL."
-	IdResourceStrings_RSSSLSettingCipherError,	"SetCipher failed."
 	IdResourceStrings_RSSSLCreatingContextError,	"Error creating SSL context."
 	IdResourceStrings_RSSSLLoadingRootCertError,	"Could not load root certificate."
 	IdResourceStrings_RSSSLLoadingCertError,	"Could not load certificate."
@@ -522,9 +724,6 @@ BEGIN
 	IdResourceStrings_RSUnevenSizeInEncodeStream,	"Uneven size in Encode."
 	IdResourceStrings_RSURINoProto,	"Protocol field is empty"
 	IdResourceStrings_RSURINoHost,	"Host field is empty"
-	IdResourceStrings_RSStackHOST_NOT_FOUND,	"Host not found."
-	IdResourceStrings_RSSocksRequestFailed,	"Request rejected or failed."
-	IdResourceStrings_RSSocksRequestServerFailed,	"Request rejected because SOCKS server cannot connect."
 	IdResourceStrings_RSSocksRequestIdentFailed,	"Request rejected because the client program and identd report different user-ids."
 	IdResourceStrings_RSSocksUnknownError,	"Unknown socks error."
 	IdResourceStrings_RSSocksServerRespondError,	"Socks server did not respond."
@@ -538,9 +737,9 @@ BEGIN
 	IdResourceStrings_RSSocksServerTTLExpiredError,	"TTL expired."
 	IdResourceStrings_RSSocksServerCommandError,	"Command not supported."
 	IdResourceStrings_RSSocksServerAddressError,	"Address type not supported."
-	IdResourceStrings_RSStackENETUNREACH,	"Network is unreachable."
-	IdResourceStrings_RSStackENETRESET,	"Net dropped connection or reset."
-	IdResourceStrings_RSStackECONNABORTED,	"Software caused connection abort."
+	IdResourceStrings_RSSSLAcceptError,	"Error accepting connection with SSL."
+	IdResourceStrings_RSSSLConnectError,	"Error connecting with SSL."
+	IdResourceStrings_RSSSLSettingCipherError,	"SetCipher failed."
 	IdResourceStrings_RSStackECONNRESET,	"Connection reset by peer."
 	IdResourceStrings_RSStackENOBUFS,	"No buffer space available."
 	IdResourceStrings_RSStackEISCONN,	"Socket is already connected."
@@ -554,9 +753,9 @@ BEGIN
 	IdResourceStrings_RSStackEHOSTDOWN,	"Host is down."
 	IdResourceStrings_RSStackEHOSTUNREACH,	"No route to host."
 	IdResourceStrings_RSStackENOTEMPTY,	"Directory not empty"
-	IdResourceStrings_RSStackEWOULDBLOCK,	"Operation would block. "
-	IdResourceStrings_RSStackEINPROGRESS,	"Operation now in progress."
-	IdResourceStrings_RSStackEALREADY,	"Operation already in progress."
+	IdResourceStrings_RSStackHOST_NOT_FOUND,	"Host not found."
+	IdResourceStrings_RSSocksRequestFailed,	"Request rejected or failed."
+	IdResourceStrings_RSSocksRequestServerFailed,	"Request rejected because SOCKS server cannot connect."
 	IdResourceStrings_RSStackENOTSOCK,	"Socket operation on non-socket."
 	IdResourceStrings_RSStackEDESTADDRREQ,	"Destination address required."
 	IdResourceStrings_RSStackEMSGSIZE,	"Message too long."
@@ -570,9 +769,9 @@ BEGIN
 	IdResourceStrings_RSStackEADDRINUSE,	"Address already in use."
 	IdResourceStrings_RSStackEADDRNOTAVAIL,	"Cannot assign requested address."
 	IdResourceStrings_RSStackENETDOWN,	"Network is down."
-	IdResourceStrings_RSStatusConnected,	"Connected."
-	IdResourceStrings_RSStatusDisconnecting,	"Disconnecting."
-	IdResourceStrings_RSStatusDisconnected,	"Disconnected."
+	IdResourceStrings_RSStackENETUNREACH,	"Network is unreachable."
+	IdResourceStrings_RSStackENETRESET,	"Net dropped connection or reset."
+	IdResourceStrings_RSStackECONNABORTED,	"Software caused connection abort."
 	IdResourceStrings_RSStatusText,	"%s"
 	IdResourceStrings_RSConnectTimeout,	"Connect timed out."
 	IdResourceStrings_RSHTTPChunkStarted,	"Chunk Started"
@@ -586,11 +785,11 @@ BEGIN
 	IdResourceStrings_RSStackEFAULT,	"Bad address."
 	IdResourceStrings_RSStackEINVAL,	"Invalid argument."
 	IdResourceStrings_RSStackEMFILE,	"Too many open files."
-	IdResourceStrings_RSNotEnoughDataInBuffer,	"Not enough data in buffer."
-	IdResourceStrings_RSWinsockInitializationError,	"Winsock Initialization Error."
-	IdResourceStrings_RSSetSizeExceeded,	"Set Size Exceeded."
-	IdResourceStrings_RSFileNotFound,	"File \"%s\" not found"
+	IdResourceStrings_RSStackEWOULDBLOCK,	"Operation would block. "
+	IdResourceStrings_RSStackEINPROGRESS,	"Operation now in progress."
+	IdResourceStrings_RSStackEALREADY,	"Operation already in progress."
 	IdResourceStrings_RSOnlyOneAntiFreeze,	"Only one TIdAntiFreeze can exist per application."
+	IdResourceStrings_RSInterceptCircularLink,	"%d: Circular links are not allowed"
 	IdResourceStrings_RSIOHandlerPropInvalid,	"IOHandler value is not valid"
 	IdResourceStrings_RSNotConnected,	"Not Connected"
 	IdResourceStrings_RSIdNoDataToRead,	"No data to read."
@@ -602,10 +801,9 @@ BEGIN
 	IdResourceStrings_RSWS2LoadError,	"Error on loading Winsock2 library (%s)"
 	IdResourceStrings_RSStatusResolving,	"Resolving hostname %s."
 	IdResourceStrings_RSStatusConnecting,	"Connecting to %s."
-	DlgMessagesRU_SDetailErrorInfo,	"Детально >>"
-	ComConst_SOleError,	"OLE error %.8x"
-	ComConst_SNoMethod,	"Method '%s' not supported by automation object"
-	ComConst_SVarNotObject,	"Variant does not reference an automation object"
+	IdResourceStrings_RSStatusConnected,	"Connected."
+	IdResourceStrings_RSStatusDisconnecting,	"Disconnecting."
+	IdResourceStrings_RSStatusDisconnected,	"Disconnected."
 	ComConst_STooManyParams,	"Dispatch methods do not support more than 64 parameters"
 	ComConst_SDCOMNotInstalled,	"DCOM not installed"
 	OleConst_SCannotActivate,	"OLE control activation failed"
@@ -618,10 +816,10 @@ BEGIN
 	IdResourceStrings_RSConnectionClosedGracefully,	"Connection Closed Gracefully."
 	IdResourceStrings_RSCouldNotBindSocket,	"Could not bind socket. Address and port are already in use."
 	IdResourceStrings_RSFailedTimeZoneInfo,	"Failed attempting to retrieve time zone information."
-	cxExtEditConsts_scxSEditRepositoryLabelItem,	"Label|Represents a Label"
-	DlgMessagesRU_SMsgDlgWarning,	"Внимание"
-	DlgMessagesRU_SMsgDlgError,	"Ошибка"
-	DlgMessagesRU_SMsgDlgInformation,	"Информация"
+	IdResourceStrings_RSNotEnoughDataInBuffer,	"Not enough data in buffer."
+	IdResourceStrings_RSWinsockInitializationError,	"Winsock Initialization Error."
+	IdResourceStrings_RSSetSizeExceeded,	"Set Size Exceeded."
+	IdResourceStrings_RSFileNotFound,	"File \"%s\" not found"
 	DlgMessagesRU_SMsgDlgConfirm,	"Подтверждение"
 	DlgMessagesRU_SMsgDlgYes,	"&Да"
 	DlgMessagesRU_SMsgDlgNo,	"&Нет"
@@ -634,61 +832,90 @@ BEGIN
 	DlgMessagesRU_SMsgDlgAll,	"&Все"
 	DlgMessagesRU_SMsgDlgNoToAll,	"Н&ет для всех"
 	DlgMessagesRU_SMsgDlgYesToAll,	"Д&а для всех"
-	cxEditConsts_scxRegExprIllegalSymbol,	"Неверное '%s'"
-	cxEditConsts_scxRegExprIllegalQuantifier,	"Неверный квантификатор '%s'"
-	cxEditConsts_scxRegExprIllegalIntegerValue,	"Неверное целое значение"
-	cxEditConsts_scxRegExprTooBigReferenceNumber,	"Слишком большое число ссылки"
-	cxEditConsts_scxRegExprCantCreateEmptyEnum,	"Невозможно создать пустое перечисление"
-	cxEditConsts_scxRegExprSubrangeOrder,	"Начальный символ поддиапазона должен быть меньше конечного"
-	cxEditConsts_scxRegExprHexNumberExpected0,	"Ожидается шестнадцатеричное число"
-	cxEditConsts_scxRegExprHexNumberExpected,	"Ожидается шестнадцатеричное число вместо '%s'"
-	cxEditConsts_scxRegExprMissing,	"Пропущен '%s'"
-	cxEditConsts_scxRegExprUnnecessary,	"Излишний '%s'"
-	cxEditConsts_scxRegExprIncorrectSpace,	"Неверный пробел после '\\'"
-	cxEditConsts_scxRegExprNotCompiled,	"Регулярное выражение не компилируется"
-	cxEditConsts_scxRegExprIncorrectParameterQuantifier,	"Неверный параметр квалификатора"
-	cxEditConsts_scxRegExprCantUseParameterQuantifier,	"Данный квалификатор нельзя применять здесь"
-	cxEditConsts_scxMaskEditRegExprError,	"Ошибка регулярного выражения:"
-	cxEditConsts_scxMaskEditInvalidEditValue,	"Редактируемое значение неправильное"
-	cxEditConsts_scxSCalcError,	"ОШИБКА"
-	cxEditConsts_scxSEditRepositoryCalcItem,	"CalcEdit|Represents an edit control with a dropdown calculator window"
-	cxEditConsts_scxSEditRepositoryCheckBoxItem,	"CheckBox|Represents a check box control that allows selecting an option"
-	cxEditConsts_scxSEditRepositoryComboBoxItem,	"ComboBox|Represents the combo box editor"
-	cxEditConsts_scxSEditRepositoryMaskItem,	"MaskEdit|Represents a generic masked edit control."
-	cxEditConsts_scxSEditRepositoryMemoItem,	"Memo|Represents an edit control that allows editing memo data"
-	cxEditConsts_scxSEditRepositoryPopupItem,	"PopupEdit|Represents an edit control with a dropdown list"
-	cxEditConsts_scxSEditRepositoryTextItem,	"TextEdit|Represents a single line text editor"
-	cxEditConsts_scxRegExprLine,	"Линия"
-	cxEditConsts_scxRegExprChar,	"Символ"
-	cxEditConsts_scxRegExprNotAssignedSourceStream,	"Исходный поток не присвоен"
-	cxEditConsts_scxRegExprEmptySourceStream,	"Исходный поток пуст"
-	cxEditConsts_scxRegExprCantUsePlusQuantifier,	"Квалификатор '+' нельзя использовать здесь"
-	cxEditConsts_scxRegExprCantUseStarQuantifier,	"Квалификатор '*' нельзя использовать здесь"
-	cxEditConsts_scxRegExprCantCreateEmptyAlt,	"Альтернатива не должна быть пуста"
-	cxEditConsts_scxRegExprCantCreateEmptyBlock,	"Блок не должен быть пуст"
-	cxLibraryStrs_cxSDateThird,	"third"
-	cxLibraryStrs_cxSDateFourth,	"fourth"
-	cxLibraryStrs_cxSDateFifth,	"fifth"
-	cxLibraryStrs_cxSDateSixth,	"sixth"
-	cxLibraryStrs_cxSDateSeventh,	"seventh"
-	cxLibraryStrs_cxSDateBOM,	"bom"
-	cxLibraryStrs_cxSDateEOM,	"eom"
+	DlgMessagesRU_SDetailErrorInfo,	"Детально >>"
+	ComConst_SOleError,	"OLE error %.8x"
+	ComConst_SNoMethod,	"Method '%s' not supported by automation object"
+	ComConst_SVarNotObject,	"Variant does not reference an automation object"
+	cxExtEditConsts_cxSEditRichEditSaveFail,	"Failed to Save Stream"
+	cxExtEditConsts_cxSEditRichEditSelectionSaveFail,	"Failed to selection Save Stream"
+	cxExtEditConsts_cxSEditRichEditOleInterfaceFail,	"RichEdit: failed to get IRichEditOle interface"
+	cxExtEditConsts_cxSEditRichEditCallBackFail,	"RichEdit: failed to set callback"
+	cxExtEditConsts_cxSEditRichEditLinkFail,	"RichEdit: cannot link to an invalid source"
+	cxExtEditConsts_scxSEditRepositoryRichEditItem,	"RichEdit|RichEdit control"
+	cxExtEditConsts_cxSEditRichEditUndoCaption,	"&Undo"
+	cxExtEditConsts_cxSEditRichEditRedoCaption,	"&Redo"
+	cxExtEditConsts_cxSEditRichEditCutCaption,	"Cu&t"
+	cxExtEditConsts_cxSEditRichEditCopyCaption,	"&Copy"
+	cxExtEditConsts_cxSEditRichEditPasteCaption,	"&Paste"
+	cxExtEditConsts_cxSEditRichEditDeleteCaption,	"&Delete"
+	cxExtEditConsts_cxSEditRichEditSelectAllCaption,	"Select &All"
+	DlgMessagesRU_SMsgDlgWarning,	"Внимание"
+	DlgMessagesRU_SMsgDlgError,	"Ошибка"
+	DlgMessagesRU_SMsgDlgInformation,	"Информация"
+	cxExtEditConsts_scxHotZoneStyleXPTaskBar,	"XPTaskBar"
+	cxExtEditConsts_scxHotZoneStyleSimple,	"Simple"
+	cxExtEditConsts_scxLoadingFonts,	"Loading ..."
+	cxExtEditConsts_cxSEditCheckGroupCaptionStateDelimiter,	": "
+	cxExtEditConsts_cxSEditCheckGroupFilterColumnSeparator,	"; "
+	cxExtEditConsts_cxSEditCheckGroupChecked,	"Checked"
+	cxExtEditConsts_cxSEditCheckGroupGrayed,	"Grayed"
+	cxExtEditConsts_cxSEditCheckGroupUnchecked,	"Unchecked"
+	cxExtEditConsts_cxSCheckComboBoxStatesItemsPropertyDlgCaption,	"cxCheckComboBox - CheckStates editor"
+	cxExtEditConsts_cxSCheckGroupStatesItemsPropertyDlgCaption,	"cxCheckGroup - CheckStates editor"
+	cxExtEditConsts_cxSCheckComboBoxEmptySelectionText,	"None selected"
+	cxExtEditConsts_cxSCheckControlIncorrectItemCount,	"The number of items cannot be greater than 64, if the EditValueFormat is cvfInteger"
+	cxExtEditConsts_cxSColorComboBoxDefaultDescription,	"Color not selected"
+	cxExtEditConsts_cxSEditRichEditLibraryError,	"Cannot load a RichEdit library"
+	cxExtEditConsts_cxSEditRichEditLineInsertionError,	"RichEdit line insertion error"
+	cxExtEditConsts_cxSEditRichEditLoadFail,	"Failed to Load Stream"
+	cxFilterControlStrs_cxSFilterControlDialogActionOkCaption,	"OK"
+	cxFilterControlStrs_cxSFilterControlDialogActionCancelCaption,	"Cancel"
+	cxFilterControlStrs_cxSFilterControlDialogFileExt,	"flt"
+	cxFilterControlStrs_cxSFilterControlDialogFileFilter,	"Filters (*.flt)|*.flt"
+	cxExtEditConsts_scxSEditRepositoryColorComboBoxItem,	"ColorComboBox |Represents a editor with color functionality"
+	cxExtEditConsts_scxSEditRepositoryFontNameComboBoxItem,	"FontNameComboBox |Represents a editor with font functionality"
+	cxExtEditConsts_scxSEditRepositoryLabelItem,	"Label|Represents a Label"
+	cxExtEditConsts_scxSEditRepositoryProgressBarItem,	"ProgressBar|Represents a ProgressBar"
+	cxExtEditConsts_scxSEditRepositoryTrackBarItem,	"TrackBar|Represents a TrackBar"
+	cxExtEditConsts_scxSEditRepositorySpinButtonItem,	"SpinButton|Represents a SpinButton"
+	cxExtEditConsts_scxSEditRepositoryCheckComboBox,	"CheckComboBox|Represents a CheckComboBox"
+	cxExtEditConsts_scxSEditRepositoryShellComboBoxItem,	"ShellComboBox|Represents a combo box with a dropdown shell tree view"
+	cxExtEditConsts_scxSEditRepositoryCheckGroupItem,	"CheckGroup|Represents a group of check boxes"
+	cxExtEditConsts_scxUDAssociated,	" is already associated with "
+	cxExtEditConsts_scxHotZoneStyleMediaPlayer9,	"MediaPlayer9"
+	cxExtEditConsts_scxHotZoneStyleMediaPlayer8,	"MediaPlayer8"
+	cxFilterControlStrs_cxSFilterDialogInvalidValue,	"Invalid value"
+	cxFilterControlStrs_cxSFilterDialogUse,	"Use"
+	cxFilterControlStrs_cxSFilterDialogSingleCharacter,	"to represent any single character"
+	cxFilterControlStrs_cxSFilterDialogCharactersSeries,	"to represent any series of characters"
+	cxFilterControlStrs_cxSFilterDialogOperationAnd,	"AND"
+	cxFilterControlStrs_cxSFilterDialogOperationOr,	"OR"
+	cxFilterControlStrs_cxSFilterDialogRows,	"Show rows where:"
+	cxFilterControlStrs_cxSFilterControlDialogCaption,	"Filter builder"
+	cxFilterControlStrs_cxSFilterControlDialogNewFile,	"untitled.flt"
+	cxFilterControlStrs_cxSFilterControlDialogOpenDialogCaption,	"Open an existing filter"
+	cxFilterControlStrs_cxSFilterControlDialogSaveDialogCaption,	"Save the active filter to file"
+	cxFilterControlStrs_cxSFilterControlDialogActionSaveCaption,	"&Save As..."
+	cxFilterControlStrs_cxSFilterControlDialogActionSaveHint,	"Save As|Saves the active filter with a new name"
+	cxFilterControlStrs_cxSFilterControlDialogActionOpenCaption,	"&Open..."
+	cxFilterControlStrs_cxSFilterControlDialogActionOpenHint,	"Open|Opens an existing filter"
+	cxFilterControlStrs_cxSFilterControlDialogActionApplyCaption,	"&Apply"
 	cxLibraryStrs_cxSDateNow,	"now"
-	cxEditConsts_cxSEditInvalidRepositoryItem,	"Пункт репозитория не доступен"
-	cxEditConsts_cxSEditNumericValueConvertError,	"Преобразование в числовое значение невозможно"
-	cxEditConsts_cxSEditPopupCircularReferencingError,	"Кольцевые ссылки запрещены"
-	cxEditConsts_cxSEditValidateErrorText,	"Введено недопустимое значение. Используйте клавишу ESC, чтобы отказаться от изменений"
-	cxEditConsts_cxSEditValueOutOfBounds,	"Значение выходит за границы"
-	cxEditConsts_cxSEditCheckBoxChecked,	"Да"
-	cxEditConsts_cxSEditCheckBoxGrayed,	""
-	cxEditConsts_cxSEditCheckBoxUnchecked,	"Нет"
-	DBConsts_SCouldNotParseTimeStamp,	"Could not parse SQL TimeStamp string"
-	DBConsts_SInvalidSqlTimeStamp,	"Invalid SQL date/time values"
-	cxDataConsts_cxSDataReadError,	"Ошибка чтения потока"
-	cxDataConsts_cxSDataWriteError,	"Ошибка записи потока"
-	cxLibraryStrs_cxSDateToday,	"today"
-	cxLibraryStrs_cxSDateYesterday,	"yesterday"
-	cxLibraryStrs_cxSDateTomorrow,	"tomorrow"
+	cxFilterControlStrs_cxSFilterBoolOperatorAnd,	"AND"
+	cxFilterControlStrs_cxSFilterBoolOperatorOr,	"OR"
+	cxFilterControlStrs_cxSFilterBoolOperatorNotAnd,	"NOT AND"
+	cxFilterControlStrs_cxSFilterBoolOperatorNotOr,	"NOT OR"
+	cxFilterControlStrs_cxSFilterRootButtonCaption,	"Filter"
+	cxFilterControlStrs_cxSFilterAddCondition,	"Add &Condition"
+	cxFilterControlStrs_cxSFilterAddGroup,	"Add &Group"
+	cxFilterControlStrs_cxSFilterRemoveRow,	"&Remove Row"
+	cxFilterControlStrs_cxSFilterClearAll,	"Clear &All"
+	cxFilterControlStrs_cxSFilterFooterAddCondition,	"press the button to add a new condition"
+	cxFilterControlStrs_cxSFilterGroupCaption,	"applies to the following conditions"
+	cxFilterControlStrs_cxSFilterRootGroupCaption,	"<root>"
+	cxFilterControlStrs_cxSFilterControlNullString,	"<empty>"
+	cxFilterControlStrs_cxSFilterErrorBuilding,	"Can't build filter from source"
+	cxFilterControlStrs_cxSFilterDialogCaption,	"Custom Filter"
 	cxLibraryStrs_cxSDateSunday,	"Sunday"
 	cxLibraryStrs_cxSDateMonday,	"Monday"
 	cxLibraryStrs_cxSDateTuesday,	"Tuesday"
@@ -698,10 +925,134 @@ BEGIN
 	cxLibraryStrs_cxSDateSaturday,	"Saturday"
 	cxLibraryStrs_cxSDateFirst,	"first"
 	cxLibraryStrs_cxSDateSecond,	"second"
-	ExtCtrls_clName3DLight,	"3D Light"
-	ExtCtrls_clNameWindow,	"Window Background"
-	ExtCtrls_clNameWindowFrame,	"Window Frame"
-	ExtCtrls_clNameWindowText,	"Window Text"
+	cxLibraryStrs_cxSDateThird,	"third"
+	cxLibraryStrs_cxSDateFourth,	"fourth"
+	cxLibraryStrs_cxSDateFifth,	"fifth"
+	cxLibraryStrs_cxSDateSixth,	"sixth"
+	cxLibraryStrs_cxSDateSeventh,	"seventh"
+	cxLibraryStrs_cxSDateBOM,	"bom"
+	cxLibraryStrs_cxSDateEOM,	"eom"
+	cxEditConsts_scxRegExprIncorrectParameterQuantifier,	"Incorrect parameter quantifier"
+	cxEditConsts_scxRegExprCantUseParameterQuantifier,	"The parameter quantifier cannot be applied here"
+	cxEditConsts_scxMaskEditRegExprError,	"Regular expression errors:"
+	cxEditConsts_scxMaskEditInvalidEditValue,	"The edit value is invalid"
+	cxEditConsts_scxMaskEditNoMask,	"None"
+	cxEditConsts_scxMaskEditIllegalFileFormat,	"Illegal file format"
+	cxEditConsts_scxMaskEditEmptyMaskCollectionFile,	"The mask collection file is empty"
+	cxEditConsts_scxMaskEditMaskCollectionFiles,	"Mask collection files"
+	cxEditConsts_cxSSpinEditInvalidNumericValue,	"Invalid numeric value"
+	cxLibraryStrs_scxCantCreateRegistryKey,	"Can't create the registry key: \\%s"
+	cxLibraryStrs_scxCantOpenRegistryKey,	"Can't open the registry key: \\%s"
+	cxLibraryStrs_scxErrorStoreObject,	"Error store %s object"
+	cxLibraryStrs_scxConverterCantCreateStyleRepository,	"Can't create the Style Repository"
+	cxLibraryStrs_cxSDateToday,	"today"
+	cxLibraryStrs_cxSDateYesterday,	"yesterday"
+	cxLibraryStrs_cxSDateTomorrow,	"tomorrow"
+	cxEditConsts_scxRegExprCantUseStarQuantifier,	"The '*' quantifier cannot be applied here"
+	cxEditConsts_scxRegExprCantCreateEmptyAlt,	"The alternative should not be empty"
+	cxEditConsts_scxRegExprCantCreateEmptyBlock,	"The block should not be empty"
+	cxEditConsts_scxRegExprIllegalSymbol,	"Illegal '%s'"
+	cxEditConsts_scxRegExprIllegalQuantifier,	"Illegal quantifier '%s'"
+	cxEditConsts_scxRegExprNotSupportQuantifier,	"The parameter quantifiers are not supported"
+	cxEditConsts_scxRegExprIllegalIntegerValue,	"Illegal integer value"
+	cxEditConsts_scxRegExprTooBigReferenceNumber,	"Too big reference number"
+	cxEditConsts_scxRegExprCantCreateEmptyEnum,	"Can't create empty enumeration"
+	cxEditConsts_scxRegExprSubrangeOrder,	"The starting character of the subrange must be less than the finishing one"
+	cxEditConsts_scxRegExprHexNumberExpected0,	"Hexadecimal number expected"
+	cxEditConsts_scxRegExprHexNumberExpected,	"Hexadecimal number expected but '%s' found"
+	cxEditConsts_scxRegExprMissing,	"Missing '%s'"
+	cxEditConsts_scxRegExprUnnecessary,	"Unnecessary '%s'"
+	cxEditConsts_scxRegExprIncorrectSpace,	"The space character is not allowed after '\\'"
+	cxEditConsts_scxRegExprNotCompiled,	"Regular expression is not compiled"
+	cxEditConsts_scxSEditRepositoryImageComboBoxItem,	"ImageComboBox|Represents an editor displaying the list of images and text strings within the dropdown window"
+	cxEditConsts_scxSEditRepositoryImageItem,	"Image|Represents an image editor"
+	cxEditConsts_scxSEditRepositoryLookupComboBoxItem,	"LookupComboBox|Represents a lookup combo box control"
+	cxEditConsts_scxSEditRepositoryMaskItem,	"MaskEdit|Represents a generic masked edit control."
+	cxEditConsts_scxSEditRepositoryMemoItem,	"Memo|Represents an edit control that allows editing memo data"
+	cxEditConsts_scxSEditRepositoryMRUItem,	"MRUEdit|Represents a text editor displaying the list of most recently used items (MRU) within a dropdown window"
+	cxEditConsts_scxSEditRepositoryPopupItem,	"PopupEdit|Represents an edit control with a dropdown list"
+	cxEditConsts_scxSEditRepositorySpinItem,	"SpinEdit|Represents a spin editor"
+	cxEditConsts_scxSEditRepositoryRadioGroupItem,	"RadioGroup|Represents a group of radio buttons"
+	cxEditConsts_scxSEditRepositoryTextItem,	"TextEdit|Represents a single line text editor"
+	cxEditConsts_scxSEditRepositoryTimeItem,	"TimeEdit|Represents an editor displaying time values"
+	cxEditConsts_scxRegExprLine,	"Line"
+	cxEditConsts_scxRegExprChar,	"Char"
+	cxEditConsts_scxRegExprNotAssignedSourceStream,	"The source stream is not assigned"
+	cxEditConsts_scxRegExprEmptySourceStream,	"The source stream is empty"
+	cxEditConsts_scxRegExprCantUsePlusQuantifier,	"The '+' quantifier cannot be applied here"
+	cxEditConsts_cxNavigatorHint_Edit,	"Edit record"
+	cxEditConsts_cxNavigatorHint_Post,	"Post edit"
+	cxEditConsts_cxNavigatorHint_Cancel,	"Cancel edit"
+	cxEditConsts_cxNavigatorHint_Refresh,	"Refresh data"
+	cxEditConsts_cxNavigatorHint_SaveBookmark,	"Save Bookmark"
+	cxEditConsts_cxNavigatorHint_GotoBookmark,	"Goto Bookmark"
+	cxEditConsts_cxNavigatorHint_Filter,	"Filter data"
+	cxEditConsts_cxNavigator_DeleteRecordQuestion,	"Delete record?"
+	cxEditConsts_scxSEditRepositoryBlobItem,	"BlobEdit|Represents the BLOB editor"
+	cxEditConsts_scxSEditRepositoryButtonItem,	"ButtonEdit|Represents an edit control with embedded buttons"
+	cxEditConsts_scxSEditRepositoryCalcItem,	"CalcEdit|Represents an edit control with a dropdown calculator window"
+	cxEditConsts_scxSEditRepositoryCheckBoxItem,	"CheckBox|Represents a check box control that allows selecting an option"
+	cxEditConsts_scxSEditRepositoryComboBoxItem,	"ComboBox|Represents the combo box editor"
+	cxEditConsts_scxSEditRepositoryCurrencyItem,	"CurrencyEdit|Represents an editor enabling editing currency data"
+	cxEditConsts_scxSEditRepositoryDateItem,	"DateEdit|Represents an edit control with a dropdown calendar"
+	cxEditConsts_scxSEditRepositoryHyperLinkItem,	"HyperLink|Represents a text editor with hyperlink functionality"
+	cxEditConsts_cxSDatePopupNow,	"Now"
+	cxEditConsts_cxSDatePopupOK,	"OK"
+	cxEditConsts_cxSDatePopupToday,	"Today"
+	cxEditConsts_cxSDateError,	"Invalid Date"
+	cxEditConsts_scxSCalcError,	"Error"
+	cxEditConsts_scxSHyperLinkPrefix,	"http://"
+	cxEditConsts_scxSHyperLinkDoubleSlash,	"//"
+	cxEditConsts_cxNavigatorHint_First,	"First record"
+	cxEditConsts_cxNavigatorHint_Prior,	"Prior record"
+	cxEditConsts_cxNavigatorHint_PriorPage,	"Prior page"
+	cxEditConsts_cxNavigatorHint_Next,	"Next record"
+	cxEditConsts_cxNavigatorHint_NextPage,	"Next page"
+	cxEditConsts_cxNavigatorHint_Last,	"Last record"
+	cxEditConsts_cxNavigatorHint_Insert,	"Insert record"
+	cxEditConsts_cxNavigatorHint_Append,	"Append record"
+	cxEditConsts_cxNavigatorHint_Delete,	"Delete record"
+	cxEditConsts_cxSTextTrue,	"True"
+	cxEditConsts_cxSTextFalse,	"False"
+	cxEditConsts_cxSBlobButtonOK,	"&OK"
+	cxEditConsts_cxSBlobButtonCancel,	"&Cancel"
+	cxEditConsts_cxSBlobButtonClose,	"&Close"
+	cxEditConsts_cxSBlobMemo,	"(MEMO)"
+	cxEditConsts_cxSBlobMemoEmpty,	"(memo)"
+	cxEditConsts_cxSBlobPicture,	"(PICTURE)"
+	cxEditConsts_cxSBlobPictureEmpty,	"(picture)"
+	cxEditConsts_cxSMenuItemCaptionCut,	"Cu&t"
+	cxEditConsts_cxSMenuItemCaptionCopy,	"&Copy"
+	cxEditConsts_cxSMenuItemCaptionPaste,	"&Paste"
+	cxEditConsts_cxSMenuItemCaptionDelete,	"&Delete"
+	cxEditConsts_cxSMenuItemCaptionLoad,	"&Load..."
+	cxEditConsts_cxSMenuItemCaptionSave,	"Save &As..."
+	cxEditConsts_cxSDatePopupClear,	"Clear"
+	ComStrs_sPageIndexError,	"%d is an invalid PageIndex value.  PageIndex must be between 0 and %d"
+	dxGDIPlusAPI_scxGdipInvalidOperation,	"Invalid operation in GDI+ (Code: %d)"
+	cxEditConsts_cxSEditButtonCancel,	"Cancel"
+	cxEditConsts_cxSEditButtonOK,	"OK"
+	cxEditConsts_cxSEditDateConvertError,	"Could not convert to date"
+	cxEditConsts_cxSEditInvalidRepositoryItem,	"The repository item is not acceptable"
+	cxEditConsts_cxSEditNumericValueConvertError,	"Could not convert to numeric value"
+	cxEditConsts_cxSEditPopupCircularReferencingError,	"Circular referencing is not allowed"
+	cxEditConsts_cxSEditPostError,	"An error occured during posting edit value"
+	cxEditConsts_cxSEditTimeConvertError,	"Could not convert to time"
+	cxEditConsts_cxSEditValidateErrorText,	"Invalid input value. Use escape key to abandon changes"
+	cxEditConsts_cxSEditValueOutOfBounds,	"Value out of bounds"
+	cxEditConsts_cxSEditCheckBoxChecked,	"True"
+	cxEditConsts_cxSEditCheckBoxGrayed,	""
+	cxEditConsts_cxSEditCheckBoxUnchecked,	"False"
+	cxEditConsts_cxSRadioGroupDefaultCaption,	""
+	cxDataConsts_cxSDataCustomDataSourceInvalidCompare,	"GetInfoForCompare not implemented"
+	cxDataConsts_cxSDBDetailFilterControllerNotFound,	"DetailFilterController not found"
+	cxDataConsts_cxSDBNotInGridMode,	"DataController not in GridMode"
+	cxDataConsts_cxSDBKeyFieldNotFound,	"Key Field not found"
+	DBConsts_SBcdOverflow,	"BCD overflow"
+	DBConsts_SInvalidBcdValue,	"%s is not a valid BCD value"
+	DBConsts_SInvalidFormatType,	"Invalid format type for BCD"
+	DBConsts_SCouldNotParseTimeStamp,	"Could not parse SQL TimeStamp string"
+	DBConsts_SInvalidSqlTimeStamp,	"Invalid SQL date/time values"
 	ComStrs_sTabFailClear,	"Failed to clear tab control"
 	ComStrs_sTabFailDelete,	"Failed to delete tab at index %d"
 	ComStrs_sTabFailRetrieve,	"Failed to retrieve tab at index %d"
@@ -709,11 +1060,71 @@ BEGIN
 	ComStrs_sTabFailSet,	"Failed to set tab \"%s\" at index %d"
 	ComStrs_sTabFailSetObject,	"Failed to set object at index %d"
 	ComStrs_sTabMustBeMultiLine,	"MultiLine must be True when TabPosition is tpLeft or tpRight"
-	ComStrs_sPageIndexError,	"%d is an invalid PageIndex value.  PageIndex must be between 0 and %d"
+	cxFilterConsts_cxSFilterOperatorEndsWith,	"ends with"
+	cxFilterConsts_cxSFilterOperatorDoesNotEndWith,	"does not end with"
+	cxFilterConsts_cxSFilterOperatorContains,	"contains"
+	cxFilterConsts_cxSFilterOperatorDoesNotContain,	"does not contain"
+	cxFilterConsts_cxSFilterBoxAllCaption,	"(All)"
+	cxFilterConsts_cxSFilterBoxCustomCaption,	"(Custom...)"
+	cxFilterConsts_cxSFilterBoxBlanksCaption,	"(Blanks)"
+	cxFilterConsts_cxSFilterBoxNonBlanksCaption,	"(NonBlanks)"
+	cxDataConsts_cxSDataReadError,	"Stream read error"
+	cxDataConsts_cxSDataWriteError,	"Stream write error"
+	cxDataConsts_cxSDataItemExistError,	"Item already exists"
+	cxDataConsts_cxSDataRecordIndexError,	"RecordIndex out of range"
+	cxDataConsts_cxSDataItemIndexError,	"ItemIndex out of range"
+	cxDataConsts_cxSDataProviderModeError,	"This operation is not supported in provider mode"
+	cxDataConsts_cxSDataInvalidStreamFormat,	"Invalid stream format"
+	cxDataConsts_cxSDataRowIndexError,	"RowIndex out of range"
+	cxFilterConsts_cxSFilterOperatorNext7Days,	"is next 7 days"
+	cxFilterConsts_cxSFilterOperatorNextWeek,	"is next week"
+	cxFilterConsts_cxSFilterOperatorNext14Days,	"is next 14 days"
+	cxFilterConsts_cxSFilterOperatorNextTwoWeeks,	"is next two weeks"
+	cxFilterConsts_cxSFilterOperatorNext30Days,	"is next 30 days"
+	cxFilterConsts_cxSFilterOperatorNextMonth,	"is next month"
+	cxFilterConsts_cxSFilterOperatorNextYear,	"is next year"
+	cxFilterConsts_cxSFilterOperatorFuture,	"is future"
+	cxFilterConsts_cxSFilterAndCaption,	"and"
+	cxFilterConsts_cxSFilterOrCaption,	"or"
+	cxFilterConsts_cxSFilterNotCaption,	"not"
+	cxFilterConsts_cxSFilterBlankCaption,	"blank"
+	cxFilterConsts_cxSFilterOperatorIsNull,	"is blank"
+	cxFilterConsts_cxSFilterOperatorIsNotNull,	"is not blank"
+	cxFilterConsts_cxSFilterOperatorBeginsWith,	"begins with"
+	cxFilterConsts_cxSFilterOperatorDoesNotBeginWith,	"does not begin with"
+	cxFilterConsts_cxSFilterOperatorInList,	"in"
+	cxFilterConsts_cxSFilterOperatorNotInList,	"not in"
+	cxFilterConsts_cxSFilterOperatorYesterday,	"is yesterday"
+	cxFilterConsts_cxSFilterOperatorToday,	"is today"
+	cxFilterConsts_cxSFilterOperatorTomorrow,	"is tomorrow"
+	cxFilterConsts_cxSFilterOperatorLast7Days,	"is last 7 days"
+	cxFilterConsts_cxSFilterOperatorLastWeek,	"is last week"
+	cxFilterConsts_cxSFilterOperatorLast14Days,	"is last 14 days"
+	cxFilterConsts_cxSFilterOperatorLastTwoWeeks,	"is last two weeks"
+	cxFilterConsts_cxSFilterOperatorLast30Days,	"is last 30 days"
+	cxFilterConsts_cxSFilterOperatorLastMonth,	"is last month"
+	cxFilterConsts_cxSFilterOperatorLastYear,	"is last year"
+	cxFilterConsts_cxSFilterOperatorPast,	"is past"
+	cxFilterConsts_cxSFilterOperatorThisWeek,	"is this week"
+	cxFilterConsts_cxSFilterOperatorThisMonth,	"is this month"
+	cxFilterConsts_cxSFilterOperatorThisYear,	"is this year"
+	ExtCtrls_clName3DDkShadow,	"3D Dark Shadow"
+	ExtCtrls_clName3DLight,	"3D Light"
+	ExtCtrls_clNameWindow,	"Window Background"
+	ExtCtrls_clNameWindowFrame,	"Window Frame"
+	ExtCtrls_clNameWindowText,	"Window Text"
 	WinHelpViewer_hNoKeyword,	"No help keyword specified."
-	DBConsts_SBcdOverflow,	"BCD overflow"
-	DBConsts_SInvalidBcdValue,	"%s is not a valid BCD value"
-	DBConsts_SInvalidFormatType,	"Invalid format type for BCD"
+	cxFilterConsts_cxSFilterOperatorEqual,	"equals"
+	cxFilterConsts_cxSFilterOperatorNotEqual,	"does not equal"
+	cxFilterConsts_cxSFilterOperatorLess,	"is less than"
+	cxFilterConsts_cxSFilterOperatorLessEqual,	"is less than or equal to"
+	cxFilterConsts_cxSFilterOperatorGreater,	"is greater than"
+	cxFilterConsts_cxSFilterOperatorGreaterEqual,	"is greater than or equal to"
+	cxFilterConsts_cxSFilterOperatorLike,	"like"
+	cxFilterConsts_cxSFilterOperatorNotLike,	"not like"
+	cxFilterConsts_cxSFilterOperatorBetween,	"between"
+	cxFilterConsts_cxSFilterOperatorNotBetween,	"not between"
+	ExtCtrls_clNameBtnShadow,	"Button Shadow"
 	ExtCtrls_clNameBtnText,	"Button Text"
 	ExtCtrls_clNameCaptionText,	"Caption Text"
 	ExtCtrls_clNameDefault,	"Default"
@@ -729,7 +1140,7 @@ BEGIN
 	ExtCtrls_clNameMenuText,	"Menu Text"
 	ExtCtrls_clNameNone,	"None"
 	ExtCtrls_clNameScrollBar,	"Scroll Bar"
-	ExtCtrls_clName3DDkShadow,	"3D Dark Shadow"
+	ExtCtrls_clNameLime,	"Lime"
 	ExtCtrls_clNameYellow,	"Yellow"
 	ExtCtrls_clNameBlue,	"Blue"
 	ExtCtrls_clNameFuchsia,	"Fuchsia"
@@ -745,7 +1156,7 @@ BEGIN
 	ExtCtrls_clNameBackground,	"Background"
 	ExtCtrls_clNameBtnFace,	"Button Face"
 	ExtCtrls_clNameBtnHighlight,	"Button Highlight"
-	ExtCtrls_clNameBtnShadow,	"Button Shadow"
+	Consts_SErrorSettingCount,	"Error setting %s.Count"
 	Consts_SListBoxMustBeVirtual,	"Listbox (%s) style must be virtual in order to set Count"
 	HelpIntfs_hNoTableOfContents,	"Unable to find a Table of Contents"
 	HelpIntfs_hNothingFound,	"No help found for %s"
@@ -761,7 +1172,7 @@ BEGIN
 	ExtCtrls_clNameGray,	"Gray"
 	ExtCtrls_clNameSilver,	"Silver"
 	ExtCtrls_clNameRed,	"Red"
-	ExtCtrls_clNameLime,	"Lime"
+	Consts_SmkcIns,	"Ins"
 	Consts_SmkcDel,	"Del"
 	Consts_SmkcShift,	"Shift+"
 	Consts_SmkcCtrl,	"Ctrl+"
@@ -777,7 +1188,7 @@ BEGIN
 	Consts_SDockTreeRemoveError,	"Error removing control from dock tree"
 	Consts_SDockZoneNotFound,	" - Dock zone not found"
 	Consts_SDockZoneHasNoCtl,	" - Dock zone has no control"
-	Consts_SErrorSettingCount,	"Error setting %s.Count"
+	Consts_SMsgDlgAll,	"&All"
 	Consts_SMsgDlgNoToAll,	"N&o to All"
 	Consts_SMsgDlgYesToAll,	"Yes to &All"
 	Consts_SmkcBkSp,	"BkSp"
@@ -793,7 +1204,7 @@ BEGIN
 	Consts_SmkcUp,	"Up"
 	Consts_SmkcRight,	"Right"
 	Consts_SmkcDown,	"Down"
-	Consts_SmkcIns,	"Ins"
+	Consts_SVMetafiles,	"Metafiles"
 	Consts_SVEnhMetafiles,	"Enhanced Metafiles"
 	Consts_SVIcons,	"Icons"
 	Consts_SVBitmaps,	"Bitmaps"
@@ -809,7 +1220,7 @@ BEGIN
 	Consts_SMsgDlgAbort,	"&Abort"
 	Consts_SMsgDlgRetry,	"&Retry"
 	Consts_SMsgDlgIgnore,	"&Ignore"
-	Consts_SMsgDlgAll,	"&All"
+	Consts_SMenuNotFound,	"Sub-menu is not in menu"
 	Consts_SNoTimers,	"Not enough timers available"
 	Consts_SGroupIndexTooLow,	"GroupIndex cannot be less than a previous menu item's GroupIndex"
 	Consts_SNoMDIForm,	"Cannot create form. No MDI forms are currently active"
@@ -825,7 +1236,7 @@ BEGIN
 	Consts_SAbortButton,	"Abort"
 	Consts_SAllButton,	"&All"
 	Consts_SCannotDragForm,	"Cannot drag a form"
-	Consts_SVMetafiles,	"Metafiles"
+	Consts_SInvalidImageList,	"Invalid ImageList"
 	Consts_SReplaceImage,	"Unable to Replace Image"
 	Consts_SImageIndexError,	"Invalid ImageList Index"
 	Consts_SImageReadFail,	"Failed to read ImageList data from stream"
@@ -841,7 +1252,6 @@ BEGIN
 	Consts_SPropertyOutOfRange,	"%s property out of range"
 	Consts_SMenuIndexError,	"Menu index out of range"
 	Consts_SMenuReinserted,	"Menu inserted twice"
-	Consts_SMenuNotFound,	"Sub-menu is not in menu"
 	RTLConsts_sSocketAlreadyOpen,	"Socket already open"
 	RTLConsts_sCantChangeWhileActive,	"Can't change value while socket is active"
 	RTLConsts_SInvalidDateTime,	"''%s'' is not a valid date and time"
@@ -851,13 +1261,13 @@ BEGIN
 	Consts_SInvalidIcon,	"Icon image is not valid"
 	Consts_SInvalidMetafile,	"Metafile is not valid"
 	Consts_SInvalidPixelFormat,	"Invalid pixel format"
+	Consts_SScanLine,	"Scan line index out of range"
 	Consts_SChangeIconSize,	"Cannot change the size of an icon"
 	Consts_SOleGraphic,	"Invalid operation on TOleGraphic"
 	Consts_SUnknownClipboardFormat,	"Unsupported clipboard format"
 	Consts_SOutOfResources,	"Out of system resources"
 	Consts_SNoCanvasHandle,	"Canvas does not allow drawing"
 	Consts_SInvalidImageSize,	"Invalid image size"
-	Consts_SInvalidImageList,	"Invalid ImageList"
 	RTLConsts_SReadOnlyProperty,	"Property is read-only"
 	RTLConsts_SRegGetDataFailed,	"Failed to get data for '%s'"
 	RTLConsts_SRegSetDataFailed,	"Failed to set data for '%s'"

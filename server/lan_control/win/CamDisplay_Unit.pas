@@ -145,6 +145,7 @@ var
    res: TDataRec;
    k: integer;
    url: string;
+   op : array of string;
 begin
    clearAllCamViewers;
    res := MainForm.metaQuery('cams', '');
@@ -158,8 +159,11 @@ begin
             cw.DefaultInterface.Toolbar := false;
             cw.video.aspectRatio := '16:9';
             url := res.val(k, 2);
-            //url := StringReplace(url, '0.sdp', '1.sdp', [rfReplaceAll]);
-            cw.playlist.add(url, NULL, NULL);
+            //url := StringReplace(url, '1.sdp', '0.sdp', [rfReplaceAll]);
+
+            SetLength(op, 1);
+            op[0] := ':rtsp-tcp';
+            cw.playlist.add(url, NULL, op);
             InsertControl(cw);
          except
             cw.Free;

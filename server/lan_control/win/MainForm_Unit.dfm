@@ -3400,8 +3400,11 @@ object MainForm: TMainForm
     Input = WaveIn1
     OnDone = DXAudioOut1Done
     DeviceNumber = 0
-    FramesInBuffer = 65536
+    Latency = 100
+    PrefetchData = True
     PollingInterval = 200
+    FramesInBuffer = 65536
+    SpeedFactor = 1.000000000000000000
     Left = 40
     Top = 320
   end
@@ -3429,8 +3432,11 @@ object MainForm: TMainForm
     Input = MP3In1
     OnDone = DXAudioOut2Done
     DeviceNumber = 0
-    FramesInBuffer = 65536
+    Latency = 100
+    PrefetchData = True
     PollingInterval = 200
+    FramesInBuffer = 65536
+    SpeedFactor = 1.000000000000000000
     Left = 40
     Top = 352
   end

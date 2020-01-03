@@ -350,7 +350,7 @@ type
 
 var
   MainForm: TMainForm;
-  CS: TCriticalSection;
+  //CS: TCriticalSection;
 
 implementation
 
@@ -366,7 +366,7 @@ var
    s: string;
    b: boolean;
 begin
-   CS:= TCriticalSection.Create;
+   //CS:= TCriticalSection.Create;
 
    fVarGroupList := TList.Create;
    fSpeachList:= TStringList.Create;
@@ -453,6 +453,7 @@ begin
    stopMiniPlayer;
 
    fHTTPServer.Terminate;
+   waitForSingleObject(fHTTPServer.Handle, 5000);
 
    Timer2.Enabled := false;   
    Timer1.Enabled := false;
@@ -486,17 +487,17 @@ begin
 
    DXAudioOut1.Stop(true);
    while DXAudioOut1.Status <> tosIdle do
-      Sleep(10);
+      Sleep(50);
 
    DXAudioOut2.Stop(true);
    while DXAudioOut2.Status <> tosIdle do
-      Sleep(10);
+      Sleep(50);
 
    fSessions.Free;
    clearList(fVarGroupList);
    fVarGroupList.Free;
 
-   CS.Free;
+   //CS.Free;
 end;
 
 procedure TMainForm.Timer1Timer(Sender: TObject);

@@ -477,6 +477,10 @@ begin
       vlcMediaPlayer := libvlc_media_player_new_from_media(vlcMedia);
       libvlc_media_add_option(vlcMedia, PAnsiChar(':network-caching=' + IntToStr(cacheTime)), 0);
       libvlc_media_add_option(vlcMedia, PAnsiChar(':rtsp-tcp'), 0);
+      libvlc_media_add_option(vlcMedia, PAnsiChar(':rtsp-timeout=1'), 0);
+      libvlc_media_add_option(vlcMedia, PAnsiChar(':rtp-timeout=1'), 0);
+      libvlc_media_add_option(vlcMedia, PAnsiChar(':udp-timeout=1'), 0);
+      
       libvlc_media_release(vlcMedia);
       libvlc_media_player_set_hwnd(vlcMediaPlayer, Pointer(vlcPanelHandle));
       libvlc_media_player_play(vlcMediaPlayer);
@@ -567,14 +571,16 @@ begin
                   vlcPlayers[k].prevUrl := url;
                   vlcPlayers[k].prevCache := cache;
                end;
+
+               Sleep(50);
             end
             else
             begin
                vlcPlayers[k].vlcStatus := -1;
             end;
          except
-         end;
-	      Sleep(200);
+            Sleep(100);
+         end;	      
       end;
       Sleep(100);      
    end;

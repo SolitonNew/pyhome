@@ -10,5 +10,5 @@ pass~
 7.txt
 8.txt
 server/executor/speech.wav
-server/lan_control/win/*.dcu
+*.dcu
 *.exe

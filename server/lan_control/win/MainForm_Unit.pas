@@ -350,7 +350,6 @@ type
 
 var
   MainForm: TMainForm;
-  //CS: TCriticalSection;
 
 implementation
 
@@ -366,8 +365,6 @@ var
    s: string;
    b: boolean;
 begin
-   //CS:= TCriticalSection.Create;
-
    fVarGroupList := TList.Create;
    fSpeachList:= TStringList.Create;
    //fSpeach:= TSpeach.Create;
@@ -496,8 +493,6 @@ begin
    fSessions.Free;
    clearList(fVarGroupList);
    fVarGroupList.Free;
-
-   //CS.Free;
 end;
 
 procedure TMainForm.Timer1Timer(Sender: TObject);

@@ -24,6 +24,8 @@ type
     fIndex: integer;
     fUrl: string;
     procedure Init(aIndex: integer; aUrl: string);
+    procedure reinit;
+    procedure replay;
     destructor Destroy; override;
   end;
 
@@ -40,10 +42,7 @@ begin
    fIndex := aIndex;
 	fUrl := aUrl;
 
-   libvlc.init(aIndex, Panel1.Handle);
-   libvlc.play(aIndex, aUrl, VLC_TIMEOUT);
-
-   //url := StringReplace(url, '1.sdp', '0.sdp', [rfReplaceAll]);
+	reinit;
 end;
 
 procedure TCamPlayer.FrameResize(Sender: TObject);
@@ -59,27 +58,45 @@ begin
 end;
 
 procedure TCamPlayer.Button1Click(Sender: TObject);
-var
-   url: string;
 begin
 	if (Button1.Tag = 0) then
    begin
    	Button1.Tag := 1;
       Button1.Caption := 'HIGH';
-      url := StringReplace(fUrl, '1.sdp', '0.sdp', [rfReplaceAll]);
-      libvlc.play(fIndex, url, VLC_TIMEOUT);
    end
    else
    begin
    	Button1.Tag := 0;
       Button1.Caption := 'LOW';
-      libvlc.play(fIndex, fUrl, VLC_TIMEOUT);
    end;
+
+   replay;
 end;
 
 procedure TCamPlayer.Panel1DblClick(Sender: TObject);
 begin
 	PostMessage(Parent.Handle, MSG_FULLSCREEN, fIndex, 0);
+end;
+
+procedure TCamPlayer.reinit;
+begin
+   libvlc.init(fIndex, Panel1.Handle);
+   replay;
+end;
+
+procedure TCamPlayer.replay;
+var
+   url: string;
+begin
+	if (Button1.Tag = 1) then
+   begin
+      url := StringReplace(fUrl, '1.sdp', '0.sdp', [rfReplaceAll]);
+      libvlc.play(fIndex, url, VLC_TIMEOUT);
+   end
+   else
+   begin
+      libvlc.play(fIndex, fUrl, VLC_TIMEOUT);
+   end;
 end;
 
 end.

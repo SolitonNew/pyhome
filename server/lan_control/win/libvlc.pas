@@ -287,6 +287,7 @@ type
       vlcWH: TPoint;
       prevUrl: string;
       prevCache: integer;
+      replay: boolean;
    end;
 
 implementation
@@ -378,7 +379,10 @@ end;
 
 procedure init(player: integer; Handle: Cardinal);
 begin
-   vlcPlayers[player].vlcPanelHandle := Handle;
+   with vlcPlayers[player] do
+   begin
+   	vlcPanelHandle := Handle;
+   end;
 end;
 
 procedure play(player: integer; url: string; cacheTime: integer = 5);
@@ -387,6 +391,7 @@ begin
    try
       vlcPlayers[player].vlcUrl := url;
       vlcPlayers[player].vlcCacheTime := cacheTime;
+      vlcPlayers[player].replay := true;
    finally
       libVlcThreadCS.Leave;
    end;
@@ -464,6 +469,8 @@ begin
 
    with vlcPlayers[player] do
    begin
+   	replay := false;
+   
       vlcInstance := libvlc_new(0, nil);
 
       vlcMedia := libvlc_media_new_location(vlcInstance, PAnsiChar(url));
@@ -542,7 +549,7 @@ begin
                      libVlcThreadCS.Leave;
                   end;
 
-                  if (vlcPlayers[k].prevUrl <> url) or (vlcPlayers[k].prevCache <> cache) then vlcPlayers[k].vlcStatus := -1;
+                  if (vlcPlayers[k].prevUrl <> url) or (vlcPlayers[k].prevCache <> cache) or (vlcPlayers[k].replay) then vlcPlayers[k].vlcStatus := -1;
 
                   case vlcPlayers[k].vlcStatus of
                      1, 2, 3, 4, 5: // Статусы которые при проигрывании
@@ -567,7 +574,7 @@ begin
             end;
          except
          end;
-	      Sleep(100);
+	      Sleep(200);
       end;
       Sleep(100);      
    end;

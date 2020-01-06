@@ -12,8 +12,8 @@ object MainForm: TMainForm
   Constraints.MinWidth = 260
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
-  Font.Height = -11
-  Font.Name = 'MS Sans Serif'
+  Font.Height = -16
+  Font.Name = 'Arial'
   Font.Style = []
   FormStyle = fsStayOnTop
   OldCreateOrder = False
@@ -26,7 +26,7 @@ object MainForm: TMainForm
   OnResize = FormResize
   OnShow = FormShow
   PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 18
   object Panel2: TPanel
     Left = 0
     Top = 0
@@ -304,7 +304,7 @@ object MainForm: TMainForm
         Left = 0
         Top = 0
         Width = 217
-        Height = 21
+        Height = 26
         Hint = #1060#1080#1083#1100#1090#1088' '#1089#1087#1080#1089#1082#1072
         ParentShowHint = False
         ShowHint = True

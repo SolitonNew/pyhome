@@ -35,8 +35,6 @@ begin
 
   if (CheckExeCopy) then exit;
 
-  //ReportMemoryLeaksOnShutdown := True;
-
   Application.Initialize;
   Application.CreateForm(TMainForm, MainForm);
   Application.CreateForm(TPropertysForm, PropertysForm);

@@ -5,7 +5,7 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, DlgMessagesRU, DataRec_Unit, StdCtrls, ExtCtrls,
-  Buttons, CamPlayer_Unit;
+  Buttons, CamPlayer_Unit, libvlc;
 
 type
   TCamDisplay = class(TForm)
@@ -22,6 +22,7 @@ type
      fFullScreenIndex: integer;
      procedure loadCamList;
      procedure clearAllCamViewers;
+     function camAtIndex(i: integer): TCamPlayer;
 
      procedure MSG_FULLSCREEN_Handler(var msg: TMessage); message MSG_FULLSCREEN;
   public
@@ -37,7 +38,7 @@ procedure hideCamAll();
 
 implementation
 
-uses MainForm_Unit;
+uses MainForm_Unit, Types;
 
 {$R *.dfm}
 
@@ -68,24 +69,6 @@ end;
 
 procedure TCamDisplay.resizeCamList;
 
-   function camAtIndex(i: integer): TCamPlayer;
-   var
-      k: integer;
-   begin
-      Result := nil;
-      for k:= 0 to ControlCount - 1 do
-      begin
-         if (Controls[k] is TCamPlayer) then
-         begin
-            if (TCamPlayer(Controls[k]).fIndex = i) then
-            begin
-               Result := TCamPlayer(Controls[k]);
-               break;
-            end;
-         end;
-      end;
-   end;
-
    procedure setCamBounds(i, x, y, w, h: integer);
    var
       v: TCamPlayer;
@@ -106,7 +89,7 @@ var
    cl, ct: integer;
    k: integer;
 begin
-	if (fFullScreenIndex = 0) or SpeedButton2.Down then
+	if (fFullScreenIndex = 0) then
    begin
       if (ClientWidth / 1.78 >= ClientHeight) then
       begin
@@ -136,15 +119,17 @@ begin
          for k:= 1 to 4 do
             setCamBounds(k, 1, (k - 1) * (ch + 1) + 1, ClientWidth - 2, ch);
       end;
+
+      Panel2.Visible := true;
+      Panel2.BringToFront;
    end
    else
-   begin
-	   setCamBounds(fFullScreenIndex, 0, 0, ClientWidth, ClientHeight);
+   begin     
+      Panel2.Visible := false;
+	   setCamBounds(fFullScreenIndex, 0, 0, ClientWidth, ClientHeight);      
       camAtIndex(fFullScreenIndex).BringToFront;
    end;
-
-   Panel2.BringToFront;
-
+   
    Repaint;
 end;
 
@@ -258,10 +243,13 @@ begin
 end;
 
 procedure TCamDisplay.MSG_FULLSCREEN_Handler(var msg: TMessage);
+var
+   k: integer;
+   c: TCamPlayer;
 begin
 	if (fFullScreenIndex <> msg.WParam) then 
    begin
-   	fFullScreenIndex := msg.WParam;
+      fFullScreenIndex := msg.WParam;
    end
    else
    begin
@@ -269,6 +257,24 @@ begin
    end;
 
    resizeCamList;
+end;
+
+function TCamDisplay.camAtIndex(i: integer): TCamPlayer;
+var
+   k: integer;
+begin
+   Result := nil;
+   for k:= 0 to ControlCount - 1 do
+   begin
+      if (Controls[k] is TCamPlayer) then
+      begin
+         if (TCamPlayer(Controls[k]).fIndex = i) then
+         begin
+            Result := TCamPlayer(Controls[k]);
+            break;
+         end;
+      end;
+   end;
 end;
 
 end.

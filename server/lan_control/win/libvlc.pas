@@ -280,7 +280,7 @@ type
       vlcInstance: plibvlc_instance_t;
       vlcMedia: plibvlc_media_t;
       vlcMediaPlayer: plibvlc_media_player_t;
-      vlcEventManager: plibvlc_event_manager_t;
+      //vlcEventManager: plibvlc_event_manager_t;
       vlcUrl: string;
       vlcStatus: integer;
       vlcCacheTime: integer;
@@ -288,6 +288,7 @@ type
       prevUrl: string;
       prevCache: integer;
       replay: boolean;
+      lastPlayTime: TDateTime;
    end;
 
 implementation
@@ -392,6 +393,7 @@ begin
       vlcPlayers[player].vlcUrl := url;
       vlcPlayers[player].vlcCacheTime := cacheTime;
       vlcPlayers[player].replay := true;
+		vlcPlayers[player].lastPlayTime := now;
    finally
       libVlcThreadCS.Leave;
    end;
@@ -451,13 +453,15 @@ begin
    with vlcPlayers[player] do
    begin
       libvlc_media_player_stop(vlcMediaPlayer);
-      while (libvlc_media_player_is_playing(vlcMediaPlayer) = 1) do 
+      while (libvlc_media_player_is_playing(vlcMediaPlayer) > 0) do 
       begin
          Sleep(100);
       end;
       libvlc_media_player_release(vlcMediaPlayer);
       vlcMediaPlayer := nil;
       libvlc_release(vlcInstance);
+
+      lastPlayTime := now;
    end;
 end;
 
@@ -477,9 +481,6 @@ begin
       vlcMediaPlayer := libvlc_media_player_new_from_media(vlcMedia);
       libvlc_media_add_option(vlcMedia, PAnsiChar(':network-caching=' + IntToStr(cacheTime)), 0);
       libvlc_media_add_option(vlcMedia, PAnsiChar(':rtsp-tcp'), 0);
-      libvlc_media_add_option(vlcMedia, PAnsiChar(':rtsp-timeout=1'), 0);
-      libvlc_media_add_option(vlcMedia, PAnsiChar(':rtp-timeout=1'), 0);
-      libvlc_media_add_option(vlcMedia, PAnsiChar(':udp-timeout=1'), 0);
       
       libvlc_media_release(vlcMedia);
       libvlc_media_player_set_hwnd(vlcMediaPlayer, Pointer(vlcPanelHandle));
@@ -488,8 +489,6 @@ begin
       libvlc_video_set_aspect_ratio(vlcMediaPlayer, '16:9');
       libvlc_video_set_mouse_input(vlcMediaPlayer, false);
       libvlc_video_set_key_input(vlcMediaPlayer, false);
-   
-      vlcEventManager := libvlc_media_player_event_manager(vlcMediaPlayer);
    end;
 end;
 
@@ -553,7 +552,10 @@ begin
                      libVlcThreadCS.Leave;
                   end;
 
-                  if (vlcPlayers[k].prevUrl <> url) or (vlcPlayers[k].prevCache <> cache) or (vlcPlayers[k].replay) then vlcPlayers[k].vlcStatus := -1;
+                  if (vlcPlayers[k].prevUrl <> url) or 
+                     (vlcPlayers[k].prevCache <> cache) or 
+                     (vlcPlayers[k].replay) or 
+                     (now - vlcPlayers[k].lastPlayTime > 120 / (24 * 3600)) then vlcPlayers[k].vlcStatus := -1;
 
                   case vlcPlayers[k].vlcStatus of
                      1, 2, 3, 4, 5: // Статусы которые при проигрывании
@@ -572,7 +574,7 @@ begin
                   vlcPlayers[k].prevCache := cache;
                end;
 
-               Sleep(50);
+               Sleep(10);
             end
             else
             begin
@@ -582,7 +584,7 @@ begin
             Sleep(100);
          end;	      
       end;
-      Sleep(100);      
+      Sleep(50);      
    end;
 
    for k := 1 to Length(vlcPlayers) do

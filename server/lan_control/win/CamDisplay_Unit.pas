@@ -192,6 +192,8 @@ procedure TCamDisplay.SpeedButton2Click(Sender: TObject);
 var
    n: integer;
 begin
+	SpeedButton2.Tag := 0;
+
    if (SpeedButton2.Down) then
       n := round((ClientHeight / 4) * 1.78)
    else
@@ -249,10 +251,21 @@ var
 begin
 	if (fFullScreenIndex <> msg.WParam) then 
    begin
+      if (SpeedButton2.Down) then 
+      begin
+         SpeedButton2.Down := false;
+      	SpeedButton2Click(nil);
+         SpeedButton2.Tag := 1;         
+      end;
       fFullScreenIndex := msg.WParam;
    end
    else
    begin
+   	if (SpeedButton2.Tag = 1) then
+      begin
+         SpeedButton2.Down := true;
+      	SpeedButton2Click(nil);
+      end;
    	fFullScreenIndex := 0;
    end;
 

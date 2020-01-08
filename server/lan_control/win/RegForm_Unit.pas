@@ -72,6 +72,8 @@ begin
       MainForm.SocketMetaConnect(nil, nil);
    end;
    //Application.Terminate
+
+   Hide;
 end;
 
 procedure TRegForm.appsLoad;

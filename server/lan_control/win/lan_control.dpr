@@ -35,6 +35,8 @@ begin
 
   if (CheckExeCopy) then exit;
 
+  SetThreadLocale(1049);
+
   Application.Initialize;
   Application.CreateForm(TMainForm, MainForm);
   Application.CreateForm(TPropertysForm, PropertysForm);

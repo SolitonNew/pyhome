@@ -434,7 +434,7 @@ begin
    SocketMeta.Host := loadProp('IP');
 
    Timer1.Enabled := true;
-   Timer2.Enabled := true;
+   //Timer2.Enabled := true;
 
    setStatusText('Запуск');
 
@@ -506,17 +506,20 @@ begin
          firstRun();
       end;
 
-      if (not SocketMeta.Active) then
+      if (SocketMeta.Host <> '') then
       begin
-         SocketMeta.Close;
-         SocketMeta.Open;
-      end
-      else
+         if (not SocketMeta.Active) then
+         begin
+            SocketMeta.Close;
+            SocketMeta.Open;
+         end
+         else
          if not InfoPanel.Visible then
          begin
             //syncLoad();
             syncLoadAsync();
          end;
+      end;
    finally
       Timer1.Enabled := true;
    end;
@@ -723,6 +726,7 @@ begin
             Brush.Color := clWhite;
             Font.Color := clBlack;
          end;
+         Font.Charset := RUSSIAN_CHARSET;
          Rectangle(0, 0, itemBmp.Width, itemBmp.Height);
 
          tl := 5;
@@ -1209,7 +1213,7 @@ begin
             Brush.Color := clWhite;
             Font.Color := clBlack;
          end;
-
+			Font.Charset := RUSSIAN_CHARSET;
          Pen.Color := Brush.Color;
          Rectangle(0, 0, itemBmp.Width, itemBmp.Height);
 
@@ -1548,6 +1552,7 @@ var
 begin
    if (not blokMessages) then
       Application.ProcessMessages;
+   if (SocketMeta.Host = '') then exit;
    if (not SocketMeta.Active) then exit;
    SocketMeta.Socket.SendText(pack_name + chr(1) + pack_data + chr(2));
    s := '';
@@ -2096,6 +2101,8 @@ begin
    // ------------------------------------
 
    schedLoad();
+   Timer2.Enabled := true;
+   FormStyle := fsStayOnTop;
 
    // --------------------------------------------
 end;
@@ -2502,7 +2509,7 @@ begin
             Brush.Color := clWhite;
             Font.Color := clBlack;
          end;
-
+         Font.Charset := RUSSIAN_CHARSET;
          Pen.Color := Brush.Color;
          Rectangle(0, 0, itemBmp.Width, itemBmp.Height);
 
@@ -2949,6 +2956,7 @@ begin
             Brush.Color := clWhite;
             Font.Color := clBlack;
          end;
+         Font.Charset := RUSSIAN_CHARSET;
          Pen.Color := Brush.Color;
          Rectangle(0, 0, itemBmp.Width, itemBmp.Height);
 

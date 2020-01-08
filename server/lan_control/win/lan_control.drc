@@ -197,7 +197,7 @@
 #define cxFilterControlStrs_cxSFilterControlDialogActionOpenCaption 65021
 #define cxFilterControlStrs_cxSFilterControlDialogActionOpenHint 65022
 #define cxFilterControlStrs_cxSFilterControlDialogActionApplyCaption 65023
-#define cxLibraryStrs_cxSDateNow 65024
+#define cxFilterConsts_cxSFilterBoxNonBlanksCaption 65024
 #define cxFilterControlStrs_cxSFilterBoolOperatorAnd 65025
 #define cxFilterControlStrs_cxSFilterBoolOperatorOr 65026
 #define cxFilterControlStrs_cxSFilterBoolOperatorNotAnd 65027
@@ -213,214 +213,214 @@
 #define cxFilterControlStrs_cxSFilterControlNullString 65037
 #define cxFilterControlStrs_cxSFilterErrorBuilding 65038
 #define cxFilterControlStrs_cxSFilterDialogCaption 65039
-#define cxLibraryStrs_cxSDateSunday 65040
-#define cxLibraryStrs_cxSDateMonday 65041
-#define cxLibraryStrs_cxSDateTuesday 65042
-#define cxLibraryStrs_cxSDateWednesday 65043
-#define cxLibraryStrs_cxSDateThursday 65044
-#define cxLibraryStrs_cxSDateFriday 65045
-#define cxLibraryStrs_cxSDateSaturday 65046
-#define cxLibraryStrs_cxSDateFirst 65047
-#define cxLibraryStrs_cxSDateSecond 65048
-#define cxLibraryStrs_cxSDateThird 65049
-#define cxLibraryStrs_cxSDateFourth 65050
-#define cxLibraryStrs_cxSDateFifth 65051
-#define cxLibraryStrs_cxSDateSixth 65052
-#define cxLibraryStrs_cxSDateSeventh 65053
-#define cxLibraryStrs_cxSDateBOM 65054
-#define cxLibraryStrs_cxSDateEOM 65055
-#define cxEditConsts_scxRegExprIncorrectParameterQuantifier 65056
-#define cxEditConsts_scxRegExprCantUseParameterQuantifier 65057
-#define cxEditConsts_scxMaskEditRegExprError 65058
-#define cxEditConsts_scxMaskEditInvalidEditValue 65059
-#define cxEditConsts_scxMaskEditNoMask 65060
-#define cxEditConsts_scxMaskEditIllegalFileFormat 65061
-#define cxEditConsts_scxMaskEditEmptyMaskCollectionFile 65062
-#define cxEditConsts_scxMaskEditMaskCollectionFiles 65063
-#define cxEditConsts_cxSSpinEditInvalidNumericValue 65064
-#define cxLibraryStrs_scxCantCreateRegistryKey 65065
-#define cxLibraryStrs_scxCantOpenRegistryKey 65066
-#define cxLibraryStrs_scxErrorStoreObject 65067
-#define cxLibraryStrs_scxConverterCantCreateStyleRepository 65068
-#define cxLibraryStrs_cxSDateToday 65069
-#define cxLibraryStrs_cxSDateYesterday 65070
-#define cxLibraryStrs_cxSDateTomorrow 65071
-#define cxEditConsts_scxRegExprCantUseStarQuantifier 65072
-#define cxEditConsts_scxRegExprCantCreateEmptyAlt 65073
-#define cxEditConsts_scxRegExprCantCreateEmptyBlock 65074
-#define cxEditConsts_scxRegExprIllegalSymbol 65075
-#define cxEditConsts_scxRegExprIllegalQuantifier 65076
-#define cxEditConsts_scxRegExprNotSupportQuantifier 65077
-#define cxEditConsts_scxRegExprIllegalIntegerValue 65078
-#define cxEditConsts_scxRegExprTooBigReferenceNumber 65079
-#define cxEditConsts_scxRegExprCantCreateEmptyEnum 65080
-#define cxEditConsts_scxRegExprSubrangeOrder 65081
-#define cxEditConsts_scxRegExprHexNumberExpected0 65082
-#define cxEditConsts_scxRegExprHexNumberExpected 65083
-#define cxEditConsts_scxRegExprMissing 65084
-#define cxEditConsts_scxRegExprUnnecessary 65085
-#define cxEditConsts_scxRegExprIncorrectSpace 65086
-#define cxEditConsts_scxRegExprNotCompiled 65087
-#define cxEditConsts_scxSEditRepositoryImageComboBoxItem 65088
-#define cxEditConsts_scxSEditRepositoryImageItem 65089
-#define cxEditConsts_scxSEditRepositoryLookupComboBoxItem 65090
-#define cxEditConsts_scxSEditRepositoryMaskItem 65091
-#define cxEditConsts_scxSEditRepositoryMemoItem 65092
-#define cxEditConsts_scxSEditRepositoryMRUItem 65093
-#define cxEditConsts_scxSEditRepositoryPopupItem 65094
-#define cxEditConsts_scxSEditRepositorySpinItem 65095
-#define cxEditConsts_scxSEditRepositoryRadioGroupItem 65096
-#define cxEditConsts_scxSEditRepositoryTextItem 65097
-#define cxEditConsts_scxSEditRepositoryTimeItem 65098
-#define cxEditConsts_scxRegExprLine 65099
-#define cxEditConsts_scxRegExprChar 65100
-#define cxEditConsts_scxRegExprNotAssignedSourceStream 65101
-#define cxEditConsts_scxRegExprEmptySourceStream 65102
-#define cxEditConsts_scxRegExprCantUsePlusQuantifier 65103
-#define cxEditConsts_cxNavigatorHint_Edit 65104
-#define cxEditConsts_cxNavigatorHint_Post 65105
-#define cxEditConsts_cxNavigatorHint_Cancel 65106
-#define cxEditConsts_cxNavigatorHint_Refresh 65107
-#define cxEditConsts_cxNavigatorHint_SaveBookmark 65108
-#define cxEditConsts_cxNavigatorHint_GotoBookmark 65109
-#define cxEditConsts_cxNavigatorHint_Filter 65110
-#define cxEditConsts_cxNavigator_DeleteRecordQuestion 65111
-#define cxEditConsts_scxSEditRepositoryBlobItem 65112
-#define cxEditConsts_scxSEditRepositoryButtonItem 65113
-#define cxEditConsts_scxSEditRepositoryCalcItem 65114
-#define cxEditConsts_scxSEditRepositoryCheckBoxItem 65115
-#define cxEditConsts_scxSEditRepositoryComboBoxItem 65116
-#define cxEditConsts_scxSEditRepositoryCurrencyItem 65117
-#define cxEditConsts_scxSEditRepositoryDateItem 65118
-#define cxEditConsts_scxSEditRepositoryHyperLinkItem 65119
-#define cxEditConsts_cxSDatePopupNow 65120
-#define cxEditConsts_cxSDatePopupOK 65121
-#define cxEditConsts_cxSDatePopupToday 65122
-#define cxEditConsts_cxSDateError 65123
-#define cxEditConsts_scxSCalcError 65124
-#define cxEditConsts_scxSHyperLinkPrefix 65125
-#define cxEditConsts_scxSHyperLinkDoubleSlash 65126
-#define cxEditConsts_cxNavigatorHint_First 65127
-#define cxEditConsts_cxNavigatorHint_Prior 65128
-#define cxEditConsts_cxNavigatorHint_PriorPage 65129
-#define cxEditConsts_cxNavigatorHint_Next 65130
-#define cxEditConsts_cxNavigatorHint_NextPage 65131
-#define cxEditConsts_cxNavigatorHint_Last 65132
-#define cxEditConsts_cxNavigatorHint_Insert 65133
-#define cxEditConsts_cxNavigatorHint_Append 65134
-#define cxEditConsts_cxNavigatorHint_Delete 65135
-#define cxEditConsts_cxSTextTrue 65136
-#define cxEditConsts_cxSTextFalse 65137
-#define cxEditConsts_cxSBlobButtonOK 65138
-#define cxEditConsts_cxSBlobButtonCancel 65139
-#define cxEditConsts_cxSBlobButtonClose 65140
-#define cxEditConsts_cxSBlobMemo 65141
-#define cxEditConsts_cxSBlobMemoEmpty 65142
-#define cxEditConsts_cxSBlobPicture 65143
-#define cxEditConsts_cxSBlobPictureEmpty 65144
-#define cxEditConsts_cxSMenuItemCaptionCut 65145
-#define cxEditConsts_cxSMenuItemCaptionCopy 65146
-#define cxEditConsts_cxSMenuItemCaptionPaste 65147
-#define cxEditConsts_cxSMenuItemCaptionDelete 65148
-#define cxEditConsts_cxSMenuItemCaptionLoad 65149
-#define cxEditConsts_cxSMenuItemCaptionSave 65150
-#define cxEditConsts_cxSDatePopupClear 65151
-#define ComStrs_sPageIndexError 65152
-#define dxGDIPlusAPI_scxGdipInvalidOperation 65153
-#define cxEditConsts_cxSEditButtonCancel 65154
-#define cxEditConsts_cxSEditButtonOK 65155
-#define cxEditConsts_cxSEditDateConvertError 65156
-#define cxEditConsts_cxSEditInvalidRepositoryItem 65157
-#define cxEditConsts_cxSEditNumericValueConvertError 65158
-#define cxEditConsts_cxSEditPopupCircularReferencingError 65159
-#define cxEditConsts_cxSEditPostError 65160
-#define cxEditConsts_cxSEditTimeConvertError 65161
-#define cxEditConsts_cxSEditValidateErrorText 65162
-#define cxEditConsts_cxSEditValueOutOfBounds 65163
-#define cxEditConsts_cxSEditCheckBoxChecked 65164
-#define cxEditConsts_cxSEditCheckBoxGrayed 65165
-#define cxEditConsts_cxSEditCheckBoxUnchecked 65166
-#define cxEditConsts_cxSRadioGroupDefaultCaption 65167
-#define cxDataConsts_cxSDataCustomDataSourceInvalidCompare 65168
-#define cxDataConsts_cxSDBDetailFilterControllerNotFound 65169
-#define cxDataConsts_cxSDBNotInGridMode 65170
-#define cxDataConsts_cxSDBKeyFieldNotFound 65171
-#define DBConsts_SBcdOverflow 65172
-#define DBConsts_SInvalidBcdValue 65173
-#define DBConsts_SInvalidFormatType 65174
-#define DBConsts_SCouldNotParseTimeStamp 65175
-#define DBConsts_SInvalidSqlTimeStamp 65176
-#define ComStrs_sTabFailClear 65177
-#define ComStrs_sTabFailDelete 65178
-#define ComStrs_sTabFailRetrieve 65179
-#define ComStrs_sTabFailGetObject 65180
-#define ComStrs_sTabFailSet 65181
-#define ComStrs_sTabFailSetObject 65182
-#define ComStrs_sTabMustBeMultiLine 65183
-#define cxFilterConsts_cxSFilterOperatorEndsWith 65184
-#define cxFilterConsts_cxSFilterOperatorDoesNotEndWith 65185
-#define cxFilterConsts_cxSFilterOperatorContains 65186
-#define cxFilterConsts_cxSFilterOperatorDoesNotContain 65187
-#define cxFilterConsts_cxSFilterBoxAllCaption 65188
-#define cxFilterConsts_cxSFilterBoxCustomCaption 65189
-#define cxFilterConsts_cxSFilterBoxBlanksCaption 65190
-#define cxFilterConsts_cxSFilterBoxNonBlanksCaption 65191
-#define cxDataConsts_cxSDataReadError 65192
-#define cxDataConsts_cxSDataWriteError 65193
-#define cxDataConsts_cxSDataItemExistError 65194
-#define cxDataConsts_cxSDataRecordIndexError 65195
-#define cxDataConsts_cxSDataItemIndexError 65196
-#define cxDataConsts_cxSDataProviderModeError 65197
-#define cxDataConsts_cxSDataInvalidStreamFormat 65198
-#define cxDataConsts_cxSDataRowIndexError 65199
-#define cxFilterConsts_cxSFilterOperatorNext7Days 65200
-#define cxFilterConsts_cxSFilterOperatorNextWeek 65201
-#define cxFilterConsts_cxSFilterOperatorNext14Days 65202
-#define cxFilterConsts_cxSFilterOperatorNextTwoWeeks 65203
-#define cxFilterConsts_cxSFilterOperatorNext30Days 65204
-#define cxFilterConsts_cxSFilterOperatorNextMonth 65205
-#define cxFilterConsts_cxSFilterOperatorNextYear 65206
-#define cxFilterConsts_cxSFilterOperatorFuture 65207
-#define cxFilterConsts_cxSFilterAndCaption 65208
-#define cxFilterConsts_cxSFilterOrCaption 65209
-#define cxFilterConsts_cxSFilterNotCaption 65210
-#define cxFilterConsts_cxSFilterBlankCaption 65211
-#define cxFilterConsts_cxSFilterOperatorIsNull 65212
-#define cxFilterConsts_cxSFilterOperatorIsNotNull 65213
-#define cxFilterConsts_cxSFilterOperatorBeginsWith 65214
-#define cxFilterConsts_cxSFilterOperatorDoesNotBeginWith 65215
-#define cxFilterConsts_cxSFilterOperatorInList 65216
-#define cxFilterConsts_cxSFilterOperatorNotInList 65217
-#define cxFilterConsts_cxSFilterOperatorYesterday 65218
-#define cxFilterConsts_cxSFilterOperatorToday 65219
-#define cxFilterConsts_cxSFilterOperatorTomorrow 65220
-#define cxFilterConsts_cxSFilterOperatorLast7Days 65221
-#define cxFilterConsts_cxSFilterOperatorLastWeek 65222
-#define cxFilterConsts_cxSFilterOperatorLast14Days 65223
-#define cxFilterConsts_cxSFilterOperatorLastTwoWeeks 65224
-#define cxFilterConsts_cxSFilterOperatorLast30Days 65225
-#define cxFilterConsts_cxSFilterOperatorLastMonth 65226
-#define cxFilterConsts_cxSFilterOperatorLastYear 65227
-#define cxFilterConsts_cxSFilterOperatorPast 65228
-#define cxFilterConsts_cxSFilterOperatorThisWeek 65229
-#define cxFilterConsts_cxSFilterOperatorThisMonth 65230
-#define cxFilterConsts_cxSFilterOperatorThisYear 65231
+#define cxFilterConsts_cxSFilterOperatorFuture 65040
+#define cxFilterConsts_cxSFilterAndCaption 65041
+#define cxFilterConsts_cxSFilterOrCaption 65042
+#define cxFilterConsts_cxSFilterNotCaption 65043
+#define cxFilterConsts_cxSFilterBlankCaption 65044
+#define cxFilterConsts_cxSFilterOperatorIsNull 65045
+#define cxFilterConsts_cxSFilterOperatorIsNotNull 65046
+#define cxFilterConsts_cxSFilterOperatorBeginsWith 65047
+#define cxFilterConsts_cxSFilterOperatorDoesNotBeginWith 65048
+#define cxFilterConsts_cxSFilterOperatorEndsWith 65049
+#define cxFilterConsts_cxSFilterOperatorDoesNotEndWith 65050
+#define cxFilterConsts_cxSFilterOperatorContains 65051
+#define cxFilterConsts_cxSFilterOperatorDoesNotContain 65052
+#define cxFilterConsts_cxSFilterBoxAllCaption 65053
+#define cxFilterConsts_cxSFilterBoxCustomCaption 65054
+#define cxFilterConsts_cxSFilterBoxBlanksCaption 65055
+#define cxFilterConsts_cxSFilterOperatorLast14Days 65056
+#define cxFilterConsts_cxSFilterOperatorLastTwoWeeks 65057
+#define cxFilterConsts_cxSFilterOperatorLast30Days 65058
+#define cxFilterConsts_cxSFilterOperatorLastMonth 65059
+#define cxFilterConsts_cxSFilterOperatorLastYear 65060
+#define cxFilterConsts_cxSFilterOperatorPast 65061
+#define cxFilterConsts_cxSFilterOperatorThisWeek 65062
+#define cxFilterConsts_cxSFilterOperatorThisMonth 65063
+#define cxFilterConsts_cxSFilterOperatorThisYear 65064
+#define cxFilterConsts_cxSFilterOperatorNext7Days 65065
+#define cxFilterConsts_cxSFilterOperatorNextWeek 65066
+#define cxFilterConsts_cxSFilterOperatorNext14Days 65067
+#define cxFilterConsts_cxSFilterOperatorNextTwoWeeks 65068
+#define cxFilterConsts_cxSFilterOperatorNext30Days 65069
+#define cxFilterConsts_cxSFilterOperatorNextMonth 65070
+#define cxFilterConsts_cxSFilterOperatorNextYear 65071
+#define cxFilterConsts_cxSFilterOperatorNotEqual 65072
+#define cxFilterConsts_cxSFilterOperatorLess 65073
+#define cxFilterConsts_cxSFilterOperatorLessEqual 65074
+#define cxFilterConsts_cxSFilterOperatorGreater 65075
+#define cxFilterConsts_cxSFilterOperatorGreaterEqual 65076
+#define cxFilterConsts_cxSFilterOperatorLike 65077
+#define cxFilterConsts_cxSFilterOperatorNotLike 65078
+#define cxFilterConsts_cxSFilterOperatorBetween 65079
+#define cxFilterConsts_cxSFilterOperatorNotBetween 65080
+#define cxFilterConsts_cxSFilterOperatorInList 65081
+#define cxFilterConsts_cxSFilterOperatorNotInList 65082
+#define cxFilterConsts_cxSFilterOperatorYesterday 65083
+#define cxFilterConsts_cxSFilterOperatorToday 65084
+#define cxFilterConsts_cxSFilterOperatorTomorrow 65085
+#define cxFilterConsts_cxSFilterOperatorLast7Days 65086
+#define cxFilterConsts_cxSFilterOperatorLastWeek 65087
+#define cxEditConsts_scxRegExprHexNumberExpected0 65088
+#define cxEditConsts_scxRegExprHexNumberExpected 65089
+#define cxEditConsts_scxRegExprMissing 65090
+#define cxEditConsts_scxRegExprUnnecessary 65091
+#define cxEditConsts_scxRegExprIncorrectSpace 65092
+#define cxEditConsts_scxRegExprNotCompiled 65093
+#define cxEditConsts_scxRegExprIncorrectParameterQuantifier 65094
+#define cxEditConsts_scxRegExprCantUseParameterQuantifier 65095
+#define cxEditConsts_scxMaskEditRegExprError 65096
+#define cxEditConsts_scxMaskEditInvalidEditValue 65097
+#define cxEditConsts_scxMaskEditNoMask 65098
+#define cxEditConsts_scxMaskEditIllegalFileFormat 65099
+#define cxEditConsts_scxMaskEditEmptyMaskCollectionFile 65100
+#define cxEditConsts_scxMaskEditMaskCollectionFiles 65101
+#define cxEditConsts_cxSSpinEditInvalidNumericValue 65102
+#define cxFilterConsts_cxSFilterOperatorEqual 65103
+#define cxEditConsts_scxSEditRepositoryTimeItem 65104
+#define cxEditConsts_scxRegExprLine 65105
+#define cxEditConsts_scxRegExprChar 65106
+#define cxEditConsts_scxRegExprNotAssignedSourceStream 65107
+#define cxEditConsts_scxRegExprEmptySourceStream 65108
+#define cxEditConsts_scxRegExprCantUsePlusQuantifier 65109
+#define cxEditConsts_scxRegExprCantUseStarQuantifier 65110
+#define cxEditConsts_scxRegExprCantCreateEmptyAlt 65111
+#define cxEditConsts_scxRegExprCantCreateEmptyBlock 65112
+#define cxEditConsts_scxRegExprIllegalSymbol 65113
+#define cxEditConsts_scxRegExprIllegalQuantifier 65114
+#define cxEditConsts_scxRegExprNotSupportQuantifier 65115
+#define cxEditConsts_scxRegExprIllegalIntegerValue 65116
+#define cxEditConsts_scxRegExprTooBigReferenceNumber 65117
+#define cxEditConsts_scxRegExprCantCreateEmptyEnum 65118
+#define cxEditConsts_scxRegExprSubrangeOrder 65119
+#define cxEditConsts_scxSEditRepositoryCalcItem 65120
+#define cxEditConsts_scxSEditRepositoryCheckBoxItem 65121
+#define cxEditConsts_scxSEditRepositoryComboBoxItem 65122
+#define cxEditConsts_scxSEditRepositoryCurrencyItem 65123
+#define cxEditConsts_scxSEditRepositoryDateItem 65124
+#define cxEditConsts_scxSEditRepositoryHyperLinkItem 65125
+#define cxEditConsts_scxSEditRepositoryImageComboBoxItem 65126
+#define cxEditConsts_scxSEditRepositoryImageItem 65127
+#define cxEditConsts_scxSEditRepositoryLookupComboBoxItem 65128
+#define cxEditConsts_scxSEditRepositoryMaskItem 65129
+#define cxEditConsts_scxSEditRepositoryMemoItem 65130
+#define cxEditConsts_scxSEditRepositoryMRUItem 65131
+#define cxEditConsts_scxSEditRepositoryPopupItem 65132
+#define cxEditConsts_scxSEditRepositorySpinItem 65133
+#define cxEditConsts_scxSEditRepositoryRadioGroupItem 65134
+#define cxEditConsts_scxSEditRepositoryTextItem 65135
+#define cxEditConsts_cxNavigatorHint_Next 65136
+#define cxEditConsts_cxNavigatorHint_NextPage 65137
+#define cxEditConsts_cxNavigatorHint_Last 65138
+#define cxEditConsts_cxNavigatorHint_Insert 65139
+#define cxEditConsts_cxNavigatorHint_Append 65140
+#define cxEditConsts_cxNavigatorHint_Delete 65141
+#define cxEditConsts_cxNavigatorHint_Edit 65142
+#define cxEditConsts_cxNavigatorHint_Post 65143
+#define cxEditConsts_cxNavigatorHint_Cancel 65144
+#define cxEditConsts_cxNavigatorHint_Refresh 65145
+#define cxEditConsts_cxNavigatorHint_SaveBookmark 65146
+#define cxEditConsts_cxNavigatorHint_GotoBookmark 65147
+#define cxEditConsts_cxNavigatorHint_Filter 65148
+#define cxEditConsts_cxNavigator_DeleteRecordQuestion 65149
+#define cxEditConsts_scxSEditRepositoryBlobItem 65150
+#define cxEditConsts_scxSEditRepositoryButtonItem 65151
+#define cxEditConsts_cxSMenuItemCaptionCopy 65152
+#define cxEditConsts_cxSMenuItemCaptionPaste 65153
+#define cxEditConsts_cxSMenuItemCaptionDelete 65154
+#define cxEditConsts_cxSMenuItemCaptionLoad 65155
+#define cxEditConsts_cxSMenuItemCaptionSave 65156
+#define cxEditConsts_cxSDatePopupClear 65157
+#define cxEditConsts_cxSDatePopupNow 65158
+#define cxEditConsts_cxSDatePopupOK 65159
+#define cxEditConsts_cxSDatePopupToday 65160
+#define cxEditConsts_cxSDateError 65161
+#define cxEditConsts_scxSCalcError 65162
+#define cxEditConsts_scxSHyperLinkPrefix 65163
+#define cxEditConsts_scxSHyperLinkDoubleSlash 65164
+#define cxEditConsts_cxNavigatorHint_First 65165
+#define cxEditConsts_cxNavigatorHint_Prior 65166
+#define cxEditConsts_cxNavigatorHint_PriorPage 65167
+#define cxEditConsts_cxSEditValidateErrorText 65168
+#define cxEditConsts_cxSEditValueOutOfBounds 65169
+#define cxEditConsts_cxSEditCheckBoxChecked 65170
+#define cxEditConsts_cxSEditCheckBoxGrayed 65171
+#define cxEditConsts_cxSEditCheckBoxUnchecked 65172
+#define cxEditConsts_cxSRadioGroupDefaultCaption 65173
+#define cxEditConsts_cxSTextTrue 65174
+#define cxEditConsts_cxSTextFalse 65175
+#define cxEditConsts_cxSBlobButtonOK 65176
+#define cxEditConsts_cxSBlobButtonCancel 65177
+#define cxEditConsts_cxSBlobButtonClose 65178
+#define cxEditConsts_cxSBlobMemo 65179
+#define cxEditConsts_cxSBlobMemoEmpty 65180
+#define cxEditConsts_cxSBlobPicture 65181
+#define cxEditConsts_cxSBlobPictureEmpty 65182
+#define cxEditConsts_cxSMenuItemCaptionCut 65183
+#define cxLibraryStrs_cxSDateThird 65184
+#define cxLibraryStrs_cxSDateFourth 65185
+#define cxLibraryStrs_cxSDateFifth 65186
+#define cxLibraryStrs_cxSDateSixth 65187
+#define cxLibraryStrs_cxSDateSeventh 65188
+#define cxLibraryStrs_cxSDateBOM 65189
+#define cxLibraryStrs_cxSDateEOM 65190
+#define cxLibraryStrs_cxSDateNow 65191
+#define cxEditConsts_cxSEditButtonCancel 65192
+#define cxEditConsts_cxSEditButtonOK 65193
+#define cxEditConsts_cxSEditDateConvertError 65194
+#define cxEditConsts_cxSEditInvalidRepositoryItem 65195
+#define cxEditConsts_cxSEditNumericValueConvertError 65196
+#define cxEditConsts_cxSEditPopupCircularReferencingError 65197
+#define cxEditConsts_cxSEditPostError 65198
+#define cxEditConsts_cxSEditTimeConvertError 65199
+#define cxLibraryStrs_scxCantCreateRegistryKey 65200
+#define cxLibraryStrs_scxCantOpenRegistryKey 65201
+#define cxLibraryStrs_scxErrorStoreObject 65202
+#define cxLibraryStrs_scxConverterCantCreateStyleRepository 65203
+#define cxLibraryStrs_cxSDateToday 65204
+#define cxLibraryStrs_cxSDateYesterday 65205
+#define cxLibraryStrs_cxSDateTomorrow 65206
+#define cxLibraryStrs_cxSDateSunday 65207
+#define cxLibraryStrs_cxSDateMonday 65208
+#define cxLibraryStrs_cxSDateTuesday 65209
+#define cxLibraryStrs_cxSDateWednesday 65210
+#define cxLibraryStrs_cxSDateThursday 65211
+#define cxLibraryStrs_cxSDateFriday 65212
+#define cxLibraryStrs_cxSDateSaturday 65213
+#define cxLibraryStrs_cxSDateFirst 65214
+#define cxLibraryStrs_cxSDateSecond 65215
+#define DBConsts_SInvalidBcdValue 65216
+#define DBConsts_SInvalidFormatType 65217
+#define DBConsts_SCouldNotParseTimeStamp 65218
+#define DBConsts_SInvalidSqlTimeStamp 65219
+#define cxDataConsts_cxSDataReadError 65220
+#define cxDataConsts_cxSDataWriteError 65221
+#define cxDataConsts_cxSDataItemExistError 65222
+#define cxDataConsts_cxSDataRecordIndexError 65223
+#define cxDataConsts_cxSDataItemIndexError 65224
+#define cxDataConsts_cxSDataProviderModeError 65225
+#define cxDataConsts_cxSDataInvalidStreamFormat 65226
+#define cxDataConsts_cxSDataRowIndexError 65227
+#define cxDataConsts_cxSDataCustomDataSourceInvalidCompare 65228
+#define cxDataConsts_cxSDBDetailFilterControllerNotFound 65229
+#define cxDataConsts_cxSDBNotInGridMode 65230
+#define cxDataConsts_cxSDBKeyFieldNotFound 65231
 #define ExtCtrls_clName3DDkShadow 65232
 #define ExtCtrls_clName3DLight 65233
 #define ExtCtrls_clNameWindow 65234
 #define ExtCtrls_clNameWindowFrame 65235
 #define ExtCtrls_clNameWindowText 65236
 #define WinHelpViewer_hNoKeyword 65237
-#define cxFilterConsts_cxSFilterOperatorEqual 65238
-#define cxFilterConsts_cxSFilterOperatorNotEqual 65239
-#define cxFilterConsts_cxSFilterOperatorLess 65240
-#define cxFilterConsts_cxSFilterOperatorLessEqual 65241
-#define cxFilterConsts_cxSFilterOperatorGreater 65242
-#define cxFilterConsts_cxSFilterOperatorGreaterEqual 65243
-#define cxFilterConsts_cxSFilterOperatorLike 65244
-#define cxFilterConsts_cxSFilterOperatorNotLike 65245
-#define cxFilterConsts_cxSFilterOperatorBetween 65246
-#define cxFilterConsts_cxSFilterOperatorNotBetween 65247
+#define ComStrs_sTabFailClear 65238
+#define ComStrs_sTabFailDelete 65239
+#define ComStrs_sTabFailRetrieve 65240
+#define ComStrs_sTabFailGetObject 65241
+#define ComStrs_sTabFailSet 65242
+#define ComStrs_sTabFailSetObject 65243
+#define ComStrs_sTabMustBeMultiLine 65244
+#define ComStrs_sPageIndexError 65245
+#define dxGDIPlusAPI_scxGdipInvalidOperation 65246
+#define DBConsts_SBcdOverflow 65247
 #define ExtCtrls_clNameBtnShadow 65248
 #define ExtCtrls_clNameBtnText 65249
 #define ExtCtrls_clNameCaptionText 65250
@@ -900,7 +900,7 @@ BEGIN
 	cxFilterControlStrs_cxSFilterControlDialogActionOpenCaption,	"&Open..."
 	cxFilterControlStrs_cxSFilterControlDialogActionOpenHint,	"Open|Opens an existing filter"
 	cxFilterControlStrs_cxSFilterControlDialogActionApplyCaption,	"&Apply"
-	cxLibraryStrs_cxSDateNow,	"now"
+	cxFilterConsts_cxSFilterBoxNonBlanksCaption,	"(NonBlanks)"
 	cxFilterControlStrs_cxSFilterBoolOperatorAnd,	"AND"
 	cxFilterControlStrs_cxSFilterBoolOperatorOr,	"OR"
 	cxFilterControlStrs_cxSFilterBoolOperatorNotAnd,	"NOT AND"
@@ -916,22 +916,60 @@ BEGIN
 	cxFilterControlStrs_cxSFilterControlNullString,	"<empty>"
 	cxFilterControlStrs_cxSFilterErrorBuilding,	"Can't build filter from source"
 	cxFilterControlStrs_cxSFilterDialogCaption,	"Custom Filter"
-	cxLibraryStrs_cxSDateSunday,	"Sunday"
-	cxLibraryStrs_cxSDateMonday,	"Monday"
-	cxLibraryStrs_cxSDateTuesday,	"Tuesday"
-	cxLibraryStrs_cxSDateWednesday,	"Wednesday"
-	cxLibraryStrs_cxSDateThursday,	"Thursday"
-	cxLibraryStrs_cxSDateFriday,	"Friday"
-	cxLibraryStrs_cxSDateSaturday,	"Saturday"
-	cxLibraryStrs_cxSDateFirst,	"first"
-	cxLibraryStrs_cxSDateSecond,	"second"
-	cxLibraryStrs_cxSDateThird,	"third"
-	cxLibraryStrs_cxSDateFourth,	"fourth"
-	cxLibraryStrs_cxSDateFifth,	"fifth"
-	cxLibraryStrs_cxSDateSixth,	"sixth"
-	cxLibraryStrs_cxSDateSeventh,	"seventh"
-	cxLibraryStrs_cxSDateBOM,	"bom"
-	cxLibraryStrs_cxSDateEOM,	"eom"
+	cxFilterConsts_cxSFilterOperatorFuture,	"is future"
+	cxFilterConsts_cxSFilterAndCaption,	"and"
+	cxFilterConsts_cxSFilterOrCaption,	"or"
+	cxFilterConsts_cxSFilterNotCaption,	"not"
+	cxFilterConsts_cxSFilterBlankCaption,	"blank"
+	cxFilterConsts_cxSFilterOperatorIsNull,	"is blank"
+	cxFilterConsts_cxSFilterOperatorIsNotNull,	"is not blank"
+	cxFilterConsts_cxSFilterOperatorBeginsWith,	"begins with"
+	cxFilterConsts_cxSFilterOperatorDoesNotBeginWith,	"does not begin with"
+	cxFilterConsts_cxSFilterOperatorEndsWith,	"ends with"
+	cxFilterConsts_cxSFilterOperatorDoesNotEndWith,	"does not end with"
+	cxFilterConsts_cxSFilterOperatorContains,	"contains"
+	cxFilterConsts_cxSFilterOperatorDoesNotContain,	"does not contain"
+	cxFilterConsts_cxSFilterBoxAllCaption,	"(All)"
+	cxFilterConsts_cxSFilterBoxCustomCaption,	"(Custom...)"
+	cxFilterConsts_cxSFilterBoxBlanksCaption,	"(Blanks)"
+	cxFilterConsts_cxSFilterOperatorLast14Days,	"is last 14 days"
+	cxFilterConsts_cxSFilterOperatorLastTwoWeeks,	"is last two weeks"
+	cxFilterConsts_cxSFilterOperatorLast30Days,	"is last 30 days"
+	cxFilterConsts_cxSFilterOperatorLastMonth,	"is last month"
+	cxFilterConsts_cxSFilterOperatorLastYear,	"is last year"
+	cxFilterConsts_cxSFilterOperatorPast,	"is past"
+	cxFilterConsts_cxSFilterOperatorThisWeek,	"is this week"
+	cxFilterConsts_cxSFilterOperatorThisMonth,	"is this month"
+	cxFilterConsts_cxSFilterOperatorThisYear,	"is this year"
+	cxFilterConsts_cxSFilterOperatorNext7Days,	"is next 7 days"
+	cxFilterConsts_cxSFilterOperatorNextWeek,	"is next week"
+	cxFilterConsts_cxSFilterOperatorNext14Days,	"is next 14 days"
+	cxFilterConsts_cxSFilterOperatorNextTwoWeeks,	"is next two weeks"
+	cxFilterConsts_cxSFilterOperatorNext30Days,	"is next 30 days"
+	cxFilterConsts_cxSFilterOperatorNextMonth,	"is next month"
+	cxFilterConsts_cxSFilterOperatorNextYear,	"is next year"
+	cxFilterConsts_cxSFilterOperatorNotEqual,	"does not equal"
+	cxFilterConsts_cxSFilterOperatorLess,	"is less than"
+	cxFilterConsts_cxSFilterOperatorLessEqual,	"is less than or equal to"
+	cxFilterConsts_cxSFilterOperatorGreater,	"is greater than"
+	cxFilterConsts_cxSFilterOperatorGreaterEqual,	"is greater than or equal to"
+	cxFilterConsts_cxSFilterOperatorLike,	"like"
+	cxFilterConsts_cxSFilterOperatorNotLike,	"not like"
+	cxFilterConsts_cxSFilterOperatorBetween,	"between"
+	cxFilterConsts_cxSFilterOperatorNotBetween,	"not between"
+	cxFilterConsts_cxSFilterOperatorInList,	"in"
+	cxFilterConsts_cxSFilterOperatorNotInList,	"not in"
+	cxFilterConsts_cxSFilterOperatorYesterday,	"is yesterday"
+	cxFilterConsts_cxSFilterOperatorToday,	"is today"
+	cxFilterConsts_cxSFilterOperatorTomorrow,	"is tomorrow"
+	cxFilterConsts_cxSFilterOperatorLast7Days,	"is last 7 days"
+	cxFilterConsts_cxSFilterOperatorLastWeek,	"is last week"
+	cxEditConsts_scxRegExprHexNumberExpected0,	"Hexadecimal number expected"
+	cxEditConsts_scxRegExprHexNumberExpected,	"Hexadecimal number expected but '%s' found"
+	cxEditConsts_scxRegExprMissing,	"Missing '%s'"
+	cxEditConsts_scxRegExprUnnecessary,	"Unnecessary '%s'"
+	cxEditConsts_scxRegExprIncorrectSpace,	"The space character is not allowed after '\\'"
+	cxEditConsts_scxRegExprNotCompiled,	"Regular expression is not compiled"
 	cxEditConsts_scxRegExprIncorrectParameterQuantifier,	"Incorrect parameter quantifier"
 	cxEditConsts_scxRegExprCantUseParameterQuantifier,	"The parameter quantifier cannot be applied here"
 	cxEditConsts_scxMaskEditRegExprError,	"Regular expression errors:"
@@ -941,13 +979,13 @@ BEGIN
 	cxEditConsts_scxMaskEditEmptyMaskCollectionFile,	"The mask collection file is empty"
 	cxEditConsts_scxMaskEditMaskCollectionFiles,	"Mask collection files"
 	cxEditConsts_cxSSpinEditInvalidNumericValue,	"Invalid numeric value"
-	cxLibraryStrs_scxCantCreateRegistryKey,	"Can't create the registry key: \\%s"
-	cxLibraryStrs_scxCantOpenRegistryKey,	"Can't open the registry key: \\%s"
-	cxLibraryStrs_scxErrorStoreObject,	"Error store %s object"
-	cxLibraryStrs_scxConverterCantCreateStyleRepository,	"Can't create the Style Repository"
-	cxLibraryStrs_cxSDateToday,	"today"
-	cxLibraryStrs_cxSDateYesterday,	"yesterday"
-	cxLibraryStrs_cxSDateTomorrow,	"tomorrow"
+	cxFilterConsts_cxSFilterOperatorEqual,	"equals"
+	cxEditConsts_scxSEditRepositoryTimeItem,	"TimeEdit|Represents an editor displaying time values"
+	cxEditConsts_scxRegExprLine,	"Line"
+	cxEditConsts_scxRegExprChar,	"Char"
+	cxEditConsts_scxRegExprNotAssignedSourceStream,	"The source stream is not assigned"
+	cxEditConsts_scxRegExprEmptySourceStream,	"The source stream is empty"
+	cxEditConsts_scxRegExprCantUsePlusQuantifier,	"The '+' quantifier cannot be applied here"
 	cxEditConsts_scxRegExprCantUseStarQuantifier,	"The '*' quantifier cannot be applied here"
 	cxEditConsts_scxRegExprCantCreateEmptyAlt,	"The alternative should not be empty"
 	cxEditConsts_scxRegExprCantCreateEmptyBlock,	"The block should not be empty"
@@ -958,12 +996,12 @@ BEGIN
 	cxEditConsts_scxRegExprTooBigReferenceNumber,	"Too big reference number"
 	cxEditConsts_scxRegExprCantCreateEmptyEnum,	"Can't create empty enumeration"
 	cxEditConsts_scxRegExprSubrangeOrder,	"The starting character of the subrange must be less than the finishing one"
-	cxEditConsts_scxRegExprHexNumberExpected0,	"Hexadecimal number expected"
-	cxEditConsts_scxRegExprHexNumberExpected,	"Hexadecimal number expected but '%s' found"
-	cxEditConsts_scxRegExprMissing,	"Missing '%s'"
-	cxEditConsts_scxRegExprUnnecessary,	"Unnecessary '%s'"
-	cxEditConsts_scxRegExprIncorrectSpace,	"The space character is not allowed after '\\'"
-	cxEditConsts_scxRegExprNotCompiled,	"Regular expression is not compiled"
+	cxEditConsts_scxSEditRepositoryCalcItem,	"CalcEdit|Represents an edit control with a dropdown calculator window"
+	cxEditConsts_scxSEditRepositoryCheckBoxItem,	"CheckBox|Represents a check box control that allows selecting an option"
+	cxEditConsts_scxSEditRepositoryComboBoxItem,	"ComboBox|Represents the combo box editor"
+	cxEditConsts_scxSEditRepositoryCurrencyItem,	"CurrencyEdit|Represents an editor enabling editing currency data"
+	cxEditConsts_scxSEditRepositoryDateItem,	"DateEdit|Represents an edit control with a dropdown calendar"
+	cxEditConsts_scxSEditRepositoryHyperLinkItem,	"HyperLink|Represents a text editor with hyperlink functionality"
 	cxEditConsts_scxSEditRepositoryImageComboBoxItem,	"ImageComboBox|Represents an editor displaying the list of images and text strings within the dropdown window"
 	cxEditConsts_scxSEditRepositoryImageItem,	"Image|Represents an image editor"
 	cxEditConsts_scxSEditRepositoryLookupComboBoxItem,	"LookupComboBox|Represents a lookup combo box control"
@@ -974,12 +1012,12 @@ BEGIN
 	cxEditConsts_scxSEditRepositorySpinItem,	"SpinEdit|Represents a spin editor"
 	cxEditConsts_scxSEditRepositoryRadioGroupItem,	"RadioGroup|Represents a group of radio buttons"
 	cxEditConsts_scxSEditRepositoryTextItem,	"TextEdit|Represents a single line text editor"
-	cxEditConsts_scxSEditRepositoryTimeItem,	"TimeEdit|Represents an editor displaying time values"
-	cxEditConsts_scxRegExprLine,	"Line"
-	cxEditConsts_scxRegExprChar,	"Char"
-	cxEditConsts_scxRegExprNotAssignedSourceStream,	"The source stream is not assigned"
-	cxEditConsts_scxRegExprEmptySourceStream,	"The source stream is empty"
-	cxEditConsts_scxRegExprCantUsePlusQuantifier,	"The '+' quantifier cannot be applied here"
+	cxEditConsts_cxNavigatorHint_Next,	"Next record"
+	cxEditConsts_cxNavigatorHint_NextPage,	"Next page"
+	cxEditConsts_cxNavigatorHint_Last,	"Last record"
+	cxEditConsts_cxNavigatorHint_Insert,	"Insert record"
+	cxEditConsts_cxNavigatorHint_Append,	"Append record"
+	cxEditConsts_cxNavigatorHint_Delete,	"Delete record"
 	cxEditConsts_cxNavigatorHint_Edit,	"Edit record"
 	cxEditConsts_cxNavigatorHint_Post,	"Post edit"
 	cxEditConsts_cxNavigatorHint_Cancel,	"Cancel edit"
@@ -990,12 +1028,12 @@ BEGIN
 	cxEditConsts_cxNavigator_DeleteRecordQuestion,	"Delete record?"
 	cxEditConsts_scxSEditRepositoryBlobItem,	"BlobEdit|Represents the BLOB editor"
 	cxEditConsts_scxSEditRepositoryButtonItem,	"ButtonEdit|Represents an edit control with embedded buttons"
-	cxEditConsts_scxSEditRepositoryCalcItem,	"CalcEdit|Represents an edit control with a dropdown calculator window"
-	cxEditConsts_scxSEditRepositoryCheckBoxItem,	"CheckBox|Represents a check box control that allows selecting an option"
-	cxEditConsts_scxSEditRepositoryComboBoxItem,	"ComboBox|Represents the combo box editor"
-	cxEditConsts_scxSEditRepositoryCurrencyItem,	"CurrencyEdit|Represents an editor enabling editing currency data"
-	cxEditConsts_scxSEditRepositoryDateItem,	"DateEdit|Represents an edit control with a dropdown calendar"
-	cxEditConsts_scxSEditRepositoryHyperLinkItem,	"HyperLink|Represents a text editor with hyperlink functionality"
+	cxEditConsts_cxSMenuItemCaptionCopy,	"&Copy"
+	cxEditConsts_cxSMenuItemCaptionPaste,	"&Paste"
+	cxEditConsts_cxSMenuItemCaptionDelete,	"&Delete"
+	cxEditConsts_cxSMenuItemCaptionLoad,	"&Load..."
+	cxEditConsts_cxSMenuItemCaptionSave,	"Save &As..."
+	cxEditConsts_cxSDatePopupClear,	"Clear"
 	cxEditConsts_cxSDatePopupNow,	"Now"
 	cxEditConsts_cxSDatePopupOK,	"OK"
 	cxEditConsts_cxSDatePopupToday,	"Today"
@@ -1006,12 +1044,12 @@ BEGIN
 	cxEditConsts_cxNavigatorHint_First,	"First record"
 	cxEditConsts_cxNavigatorHint_Prior,	"Prior record"
 	cxEditConsts_cxNavigatorHint_PriorPage,	"Prior page"
-	cxEditConsts_cxNavigatorHint_Next,	"Next record"
-	cxEditConsts_cxNavigatorHint_NextPage,	"Next page"
-	cxEditConsts_cxNavigatorHint_Last,	"Last record"
-	cxEditConsts_cxNavigatorHint_Insert,	"Insert record"
-	cxEditConsts_cxNavigatorHint_Append,	"Append record"
-	cxEditConsts_cxNavigatorHint_Delete,	"Delete record"
+	cxEditConsts_cxSEditValidateErrorText,	"Invalid input value. Use escape key to abandon changes"
+	cxEditConsts_cxSEditValueOutOfBounds,	"Value out of bounds"
+	cxEditConsts_cxSEditCheckBoxChecked,	"True"
+	cxEditConsts_cxSEditCheckBoxGrayed,	""
+	cxEditConsts_cxSEditCheckBoxUnchecked,	"False"
+	cxEditConsts_cxSRadioGroupDefaultCaption,	""
 	cxEditConsts_cxSTextTrue,	"True"
 	cxEditConsts_cxSTextFalse,	"False"
 	cxEditConsts_cxSBlobButtonOK,	"&OK"
@@ -1022,14 +1060,14 @@ BEGIN
 	cxEditConsts_cxSBlobPicture,	"(PICTURE)"
 	cxEditConsts_cxSBlobPictureEmpty,	"(picture)"
 	cxEditConsts_cxSMenuItemCaptionCut,	"Cu&t"
-	cxEditConsts_cxSMenuItemCaptionCopy,	"&Copy"
-	cxEditConsts_cxSMenuItemCaptionPaste,	"&Paste"
-	cxEditConsts_cxSMenuItemCaptionDelete,	"&Delete"
-	cxEditConsts_cxSMenuItemCaptionLoad,	"&Load..."
-	cxEditConsts_cxSMenuItemCaptionSave,	"Save &As..."
-	cxEditConsts_cxSDatePopupClear,	"Clear"
-	ComStrs_sPageIndexError,	"%d is an invalid PageIndex value.  PageIndex must be between 0 and %d"
-	dxGDIPlusAPI_scxGdipInvalidOperation,	"Invalid operation in GDI+ (Code: %d)"
+	cxLibraryStrs_cxSDateThird,	"third"
+	cxLibraryStrs_cxSDateFourth,	"fourth"
+	cxLibraryStrs_cxSDateFifth,	"fifth"
+	cxLibraryStrs_cxSDateSixth,	"sixth"
+	cxLibraryStrs_cxSDateSeventh,	"seventh"
+	cxLibraryStrs_cxSDateBOM,	"bom"
+	cxLibraryStrs_cxSDateEOM,	"eom"
+	cxLibraryStrs_cxSDateNow,	"now"
 	cxEditConsts_cxSEditButtonCancel,	"Cancel"
 	cxEditConsts_cxSEditButtonOK,	"OK"
 	cxEditConsts_cxSEditDateConvertError,	"Could not convert to date"
@@ -1038,36 +1076,26 @@ BEGIN
 	cxEditConsts_cxSEditPopupCircularReferencingError,	"Circular referencing is not allowed"
 	cxEditConsts_cxSEditPostError,	"An error occured during posting edit value"
 	cxEditConsts_cxSEditTimeConvertError,	"Could not convert to time"
-	cxEditConsts_cxSEditValidateErrorText,	"Invalid input value. Use escape key to abandon changes"
-	cxEditConsts_cxSEditValueOutOfBounds,	"Value out of bounds"
-	cxEditConsts_cxSEditCheckBoxChecked,	"True"
-	cxEditConsts_cxSEditCheckBoxGrayed,	""
-	cxEditConsts_cxSEditCheckBoxUnchecked,	"False"
-	cxEditConsts_cxSRadioGroupDefaultCaption,	""
-	cxDataConsts_cxSDataCustomDataSourceInvalidCompare,	"GetInfoForCompare not implemented"
-	cxDataConsts_cxSDBDetailFilterControllerNotFound,	"DetailFilterController not found"
-	cxDataConsts_cxSDBNotInGridMode,	"DataController not in GridMode"
-	cxDataConsts_cxSDBKeyFieldNotFound,	"Key Field not found"
-	DBConsts_SBcdOverflow,	"BCD overflow"
+	cxLibraryStrs_scxCantCreateRegistryKey,	"Can't create the registry key: \\%s"
+	cxLibraryStrs_scxCantOpenRegistryKey,	"Can't open the registry key: \\%s"
+	cxLibraryStrs_scxErrorStoreObject,	"Error store %s object"
+	cxLibraryStrs_scxConverterCantCreateStyleRepository,	"Can't create the Style Repository"
+	cxLibraryStrs_cxSDateToday,	"today"
+	cxLibraryStrs_cxSDateYesterday,	"yesterday"
+	cxLibraryStrs_cxSDateTomorrow,	"tomorrow"
+	cxLibraryStrs_cxSDateSunday,	"Sunday"
+	cxLibraryStrs_cxSDateMonday,	"Monday"
+	cxLibraryStrs_cxSDateTuesday,	"Tuesday"
+	cxLibraryStrs_cxSDateWednesday,	"Wednesday"
+	cxLibraryStrs_cxSDateThursday,	"Thursday"
+	cxLibraryStrs_cxSDateFriday,	"Friday"
+	cxLibraryStrs_cxSDateSaturday,	"Saturday"
+	cxLibraryStrs_cxSDateFirst,	"first"
+	cxLibraryStrs_cxSDateSecond,	"second"
 	DBConsts_SInvalidBcdValue,	"%s is not a valid BCD value"
 	DBConsts_SInvalidFormatType,	"Invalid format type for BCD"
 	DBConsts_SCouldNotParseTimeStamp,	"Could not parse SQL TimeStamp string"
 	DBConsts_SInvalidSqlTimeStamp,	"Invalid SQL date/time values"
-	ComStrs_sTabFailClear,	"Failed to clear tab control"
-	ComStrs_sTabFailDelete,	"Failed to delete tab at index %d"
-	ComStrs_sTabFailRetrieve,	"Failed to retrieve tab at index %d"
-	ComStrs_sTabFailGetObject,	"Failed to get object at index %d"
-	ComStrs_sTabFailSet,	"Failed to set tab \"%s\" at index %d"
-	ComStrs_sTabFailSetObject,	"Failed to set object at index %d"
-	ComStrs_sTabMustBeMultiLine,	"MultiLine must be True when TabPosition is tpLeft or tpRight"
-	cxFilterConsts_cxSFilterOperatorEndsWith,	"ends with"
-	cxFilterConsts_cxSFilterOperatorDoesNotEndWith,	"does not end with"
-	cxFilterConsts_cxSFilterOperatorContains,	"contains"
-	cxFilterConsts_cxSFilterOperatorDoesNotContain,	"does not contain"
-	cxFilterConsts_cxSFilterBoxAllCaption,	"(All)"
-	cxFilterConsts_cxSFilterBoxCustomCaption,	"(Custom...)"
-	cxFilterConsts_cxSFilterBoxBlanksCaption,	"(Blanks)"
-	cxFilterConsts_cxSFilterBoxNonBlanksCaption,	"(NonBlanks)"
 	cxDataConsts_cxSDataReadError,	"Stream read error"
 	cxDataConsts_cxSDataWriteError,	"Stream write error"
 	cxDataConsts_cxSDataItemExistError,	"Item already exists"
@@ -1076,54 +1104,26 @@ BEGIN
 	cxDataConsts_cxSDataProviderModeError,	"This operation is not supported in provider mode"
 	cxDataConsts_cxSDataInvalidStreamFormat,	"Invalid stream format"
 	cxDataConsts_cxSDataRowIndexError,	"RowIndex out of range"
-	cxFilterConsts_cxSFilterOperatorNext7Days,	"is next 7 days"
-	cxFilterConsts_cxSFilterOperatorNextWeek,	"is next week"
-	cxFilterConsts_cxSFilterOperatorNext14Days,	"is next 14 days"
-	cxFilterConsts_cxSFilterOperatorNextTwoWeeks,	"is next two weeks"
-	cxFilterConsts_cxSFilterOperatorNext30Days,	"is next 30 days"
-	cxFilterConsts_cxSFilterOperatorNextMonth,	"is next month"
-	cxFilterConsts_cxSFilterOperatorNextYear,	"is next year"
-	cxFilterConsts_cxSFilterOperatorFuture,	"is future"
-	cxFilterConsts_cxSFilterAndCaption,	"and"
-	cxFilterConsts_cxSFilterOrCaption,	"or"
-	cxFilterConsts_cxSFilterNotCaption,	"not"
-	cxFilterConsts_cxSFilterBlankCaption,	"blank"
-	cxFilterConsts_cxSFilterOperatorIsNull,	"is blank"
-	cxFilterConsts_cxSFilterOperatorIsNotNull,	"is not blank"
-	cxFilterConsts_cxSFilterOperatorBeginsWith,	"begins with"
-	cxFilterConsts_cxSFilterOperatorDoesNotBeginWith,	"does not begin with"
-	cxFilterConsts_cxSFilterOperatorInList,	"in"
-	cxFilterConsts_cxSFilterOperatorNotInList,	"not in"
-	cxFilterConsts_cxSFilterOperatorYesterday,	"is yesterday"
-	cxFilterConsts_cxSFilterOperatorToday,	"is today"
-	cxFilterConsts_cxSFilterOperatorTomorrow,	"is tomorrow"
-	cxFilterConsts_cxSFilterOperatorLast7Days,	"is last 7 days"
-	cxFilterConsts_cxSFilterOperatorLastWeek,	"is last week"
-	cxFilterConsts_cxSFilterOperatorLast14Days,	"is last 14 days"
-	cxFilterConsts_cxSFilterOperatorLastTwoWeeks,	"is last two weeks"
-	cxFilterConsts_cxSFilterOperatorLast30Days,	"is last 30 days"
-	cxFilterConsts_cxSFilterOperatorLastMonth,	"is last month"
-	cxFilterConsts_cxSFilterOperatorLastYear,	"is last year"
-	cxFilterConsts_cxSFilterOperatorPast,	"is past"
-	cxFilterConsts_cxSFilterOperatorThisWeek,	"is this week"
-	cxFilterConsts_cxSFilterOperatorThisMonth,	"is this month"
-	cxFilterConsts_cxSFilterOperatorThisYear,	"is this year"
+	cxDataConsts_cxSDataCustomDataSourceInvalidCompare,	"GetInfoForCompare not implemented"
+	cxDataConsts_cxSDBDetailFilterControllerNotFound,	"DetailFilterController not found"
+	cxDataConsts_cxSDBNotInGridMode,	"DataController not in GridMode"
+	cxDataConsts_cxSDBKeyFieldNotFound,	"Key Field not found"
 	ExtCtrls_clName3DDkShadow,	"3D Dark Shadow"
 	ExtCtrls_clName3DLight,	"3D Light"
 	ExtCtrls_clNameWindow,	"Window Background"
 	ExtCtrls_clNameWindowFrame,	"Window Frame"
 	ExtCtrls_clNameWindowText,	"Window Text"
 	WinHelpViewer_hNoKeyword,	"No help keyword specified."
-	cxFilterConsts_cxSFilterOperatorEqual,	"equals"
-	cxFilterConsts_cxSFilterOperatorNotEqual,	"does not equal"
-	cxFilterConsts_cxSFilterOperatorLess,	"is less than"
-	cxFilterConsts_cxSFilterOperatorLessEqual,	"is less than or equal to"
-	cxFilterConsts_cxSFilterOperatorGreater,	"is greater than"
-	cxFilterConsts_cxSFilterOperatorGreaterEqual,	"is greater than or equal to"
-	cxFilterConsts_cxSFilterOperatorLike,	"like"
-	cxFilterConsts_cxSFilterOperatorNotLike,	"not like"
-	cxFilterConsts_cxSFilterOperatorBetween,	"between"
-	cxFilterConsts_cxSFilterOperatorNotBetween,	"not between"
+	ComStrs_sTabFailClear,	"Failed to clear tab control"
+	ComStrs_sTabFailDelete,	"Failed to delete tab at index %d"
+	ComStrs_sTabFailRetrieve,	"Failed to retrieve tab at index %d"
+	ComStrs_sTabFailGetObject,	"Failed to get object at index %d"
+	ComStrs_sTabFailSet,	"Failed to set tab \"%s\" at index %d"
+	ComStrs_sTabFailSetObject,	"Failed to set object at index %d"
+	ComStrs_sTabMustBeMultiLine,	"MultiLine must be True when TabPosition is tpLeft or tpRight"
+	ComStrs_sPageIndexError,	"%d is an invalid PageIndex value.  PageIndex must be between 0 and %d"
+	dxGDIPlusAPI_scxGdipInvalidOperation,	"Invalid operation in GDI+ (Code: %d)"
+	DBConsts_SBcdOverflow,	"BCD overflow"
 	ExtCtrls_clNameBtnShadow,	"Button Shadow"
 	ExtCtrls_clNameBtnText,	"Button Text"
 	ExtCtrls_clNameCaptionText,	"Caption Text"

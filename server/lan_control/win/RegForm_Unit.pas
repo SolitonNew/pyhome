@@ -62,6 +62,7 @@ begin
       res := MainForm.metaQuery('registration', ComboBox1.Text);
       try
          saveProp('ID', res.val(0, 0));
+         MainForm.SocketMetaConnect(nil, nil);
       finally
          res.Free;
       end;

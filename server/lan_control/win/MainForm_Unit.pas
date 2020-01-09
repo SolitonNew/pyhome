@@ -1550,6 +1550,8 @@ var
    s, b: string;
    k: integer;
 begin
+	Result := nil;
+
    if (not blokMessages) then
       Application.ProcessMessages;
    if (SocketMeta.Host = '') then exit;
@@ -1566,6 +1568,9 @@ begin
          break;
       end;
    end;
+
+   if (Result = nil) then Result := TDataRec.Create('');
+   
    if (not blokMessages) then
       Application.ProcessMessages;
 end;
@@ -2427,7 +2432,7 @@ begin
    clearStrings(SchedList.Items);
    res := metaQuery('get scheduler list', '');
    try
-      for k:= 0 to res.Count - 1 do
+      for k := 0 to res.Count - 1 do
       begin
          os:= TSchedListItem.Create;
          try

@@ -1554,18 +1554,19 @@ begin
 
    if (not blokMessages) then
       Application.ProcessMessages;
-   if (SocketMeta.Host = '') then exit;
-   if (not SocketMeta.Active) then exit;
-   SocketMeta.Socket.SendText(pack_name + chr(1) + pack_data + chr(2));
-   s := '';
-   for k:= 1 to 10000 do
+   if (SocketMeta.Host <> '') and (SocketMeta.Active) then
    begin
-      b := SocketMeta.Socket.ReceiveText();
-      s := s + b;
-      if (Pos(chr(2), b) > 0) then
+      SocketMeta.Socket.SendText(pack_name + chr(1) + pack_data + chr(2));
+      s := '';
+      for k:= 1 to 10000 do
       begin
-         Result := TDataRec.Create(s); // parceTable(s);
-         break;
+         b := SocketMeta.Socket.ReceiveText();
+         s := s + b;
+         if (Pos(chr(2), b) > 0) then
+         begin
+            Result := TDataRec.Create(s); // parceTable(s);
+            break;
+         end;
       end;
    end;
 

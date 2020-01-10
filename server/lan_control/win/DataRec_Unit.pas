@@ -39,6 +39,7 @@ var
    row: TList;
 begin
    fRows:= TList.Create;
+   if (aTableStr = '') then exit;
    row := nil;
    try
       i := Pos(chr(1), aTableStr);
@@ -88,6 +89,10 @@ end;
 
 function TDataRec.val(r, c: integer): string;
 begin
+	Result := '';
+
+	if (r >= fRows.Count) then exit;
+
    Result := TDataValue(TList(fRows[r])[c]).fValue;
 end;
 

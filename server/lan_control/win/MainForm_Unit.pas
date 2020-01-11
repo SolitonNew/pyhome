@@ -506,19 +506,22 @@ begin
          firstRun();
       end;
 
-      if (SocketMeta.Host <> '') then
-      begin
-         if (not SocketMeta.Active) then
+      try
+         if (SocketMeta.Host <> '') then
          begin
-            SocketMeta.Close;
-            SocketMeta.Open;
-         end
-         else
-         if not InfoPanel.Visible then
-         begin
-            //syncLoad();
-            syncLoadAsync();
+            if (not SocketMeta.Active) then
+            begin
+               SocketMeta.Close;
+               SocketMeta.Open;
+            end
+            else
+            if not InfoPanel.Visible then
+            begin
+               //syncLoad();
+               syncLoadAsync();
+            end;
          end;
+      except
       end;
    finally
       Timer1.Enabled := true;

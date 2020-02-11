@@ -1,0 +1,47 @@
+object CamPlayer: TCamPlayer
+  Left = 0
+  Top = 0
+  Width = 420
+  Height = 271
+  Font.Charset = RUSSIAN_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  ParentFont = False
+  TabOrder = 0
+  OnResize = FrameResize
+  object Panel1: TPanel
+    Left = 0
+    Top = 0
+    Width = 420
+    Height = 271
+    Align = alClient
+    BevelOuter = bvNone
+    Caption = #1055#1086#1076#1082#1083#1102#1095#1077#1085#1080#1077
+    Color = clBlack
+    Font.Charset = RUSSIAN_CHARSET
+    Font.Color = clWhite
+    Font.Height = -11
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ParentFont = False
+    TabOrder = 1
+    OnDblClick = Panel1DblClick
+  end
+  object Button1: TButton
+    Left = 296
+    Top = 184
+    Width = 75
+    Height = 25
+    Caption = 'LOW'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ParentFont = False
+    TabOrder = 0
+    OnClick = Button1Click
+  end
+end

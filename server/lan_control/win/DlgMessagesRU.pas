@@ -121,6 +121,7 @@ begin
          if (ExceptObject <> nil) then
             TMessForm(Result).DetailMessage:= Exception(ExceptObject).Message;
       // ---------------------- 
+      Font.Charset := RUSSIAN_CHARSET;
       BiDiMode := Application.BiDiMode;
       BorderStyle := bsDialog;
       Canvas.Font := Font;
@@ -139,7 +140,7 @@ begin
          begin
             if ButtonWidths[B] = 0 then
             begin
-               TextRect := Rect(0,0,0,0);
+               TextRect := Rect(0,0,0,0);               
                Windows.DrawText( canvas.handle,
                   PChar(LoadResString(ButtonCaptions[B])), -1,
                   TextRect, DT_CALCRECT or DT_LEFT or DT_SINGLELINE or
@@ -188,6 +189,7 @@ begin
             Parent := Result;
             Picture.Icon.Handle := LoadIcon(0, IconID);
             SetBounds(HorzMargin, VertMargin, 32, 32);
+            AutoSize := true;
          end;
       with TLabel.Create(Result) do
       begin

@@ -95,6 +95,7 @@ begin
    fTexts := TStringList.Create;
    fDrawBitmap := TBitmap.Create;
    fDrawBitmap.Canvas.Font.Name := 'Arial';
+   fDrawBitmap.Canvas.Font.Charset := RUSSIAN_CHARSET;
    fDrawBitmap.Canvas.Font.Size := 9;
 end;
 
@@ -170,6 +171,7 @@ var
             fDrawBitmap.Canvas.Brush.Color := $00333333;
             fDrawBitmap.Canvas.Font.Color := clWhite;
          end;
+         fDrawBitmap.Canvas.Font.Charset := RUSSIAN_CHARSET;
          //fDrawBitmap.Canvas.Pen.Color := Brush.Color;
          fDrawBitmap.Canvas.Rectangle(0, y, fDrawBitmap.Width, fDrawBitmap.Height);
 

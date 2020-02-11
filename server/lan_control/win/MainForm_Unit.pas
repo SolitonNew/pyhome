@@ -350,7 +350,6 @@ type
 
 var
   MainForm: TMainForm;
-  CS: TCriticalSection;
 
 implementation
 
@@ -366,8 +365,6 @@ var
    s: string;
    b: boolean;
 begin
-   CS:= TCriticalSection.Create;
-
    fVarGroupList := TList.Create;
    fSpeachList:= TStringList.Create;
    //fSpeach:= TSpeach.Create;
@@ -442,7 +439,7 @@ begin
    SocketMeta.Host := loadProp('IP');
 
    Timer1.Enabled := true;
-   Timer2.Enabled := true;
+   //Timer2.Enabled := true;
 
    setStatusText('Запуск');
 
@@ -458,6 +455,7 @@ begin
    stopMiniPlayer;
 
    fHTTPServer.Terminate;
+   waitForSingleObject(fHTTPServer.Handle, 5000);
 
    Timer2.Enabled := false;   
    Timer1.Enabled := false;
@@ -491,17 +489,15 @@ begin
 
    DXAudioOut1.Stop(true);
    while DXAudioOut1.Status <> tosIdle do
-      Sleep(10);
+      Sleep(50);
 
    DXAudioOut2.Stop(true);
    while DXAudioOut2.Status <> tosIdle do
-      Sleep(10);
+      Sleep(50);
 
    fSessions.Free;
    clearList(fVarGroupList);
    fVarGroupList.Free;
-
-   CS.Free;
 end;
 
 procedure TMainForm.Timer1Timer(Sender: TObject);
@@ -515,17 +511,23 @@ begin
          firstRun();
       end;
 
-      if (not SocketMeta.Active) then
-      begin
-         SocketMeta.Close;
-         SocketMeta.Open;
-      end
-      else
-         if not InfoPanel.Visible then
+      try
+         if (SocketMeta.Host <> '') then
          begin
-            //syncLoad();
-            syncLoadAsync();
+            if (not SocketMeta.Active) then
+            begin
+               SocketMeta.Close;
+               SocketMeta.Open;
+            end
+            else
+            if not InfoPanel.Visible then
+            begin
+               //syncLoad();
+               syncLoadAsync();
+            end;
          end;
+      except
+      end;
    finally
       Timer1.Enabled := true;
    end;
@@ -732,6 +734,7 @@ begin
             Brush.Color := clWhite;
             Font.Color := clBlack;
          end;
+         Font.Charset := RUSSIAN_CHARSET;
          Rectangle(0, 0, itemBmp.Width, itemBmp.Height);
 
          tl := 5;
@@ -1218,7 +1221,7 @@ begin
             Brush.Color := clWhite;
             Font.Color := clBlack;
          end;
-
+			Font.Charset := RUSSIAN_CHARSET;
          Pen.Color := Brush.Color;
          Rectangle(0, 0, itemBmp.Width, itemBmp.Height);
 
@@ -1555,21 +1558,28 @@ var
    s, b: string;
    k: integer;
 begin
+	Result := nil;
+
    if (not blokMessages) then
       Application.ProcessMessages;
-   if (not SocketMeta.Active) then exit;
-   SocketMeta.Socket.SendText(pack_name + chr(1) + pack_data + chr(2));
-   s := '';
-   for k:= 1 to 10000 do
+   if (SocketMeta.Host <> '') and (SocketMeta.Active) then
    begin
-      b := SocketMeta.Socket.ReceiveText();
-      s := s + b;
-      if (Pos(chr(2), b) > 0) then
+      SocketMeta.Socket.SendText(pack_name + chr(1) + pack_data + chr(2));
+      s := '';
+      for k:= 1 to 10000 do
       begin
-         Result := TDataRec.Create(s); // parceTable(s);
-         break;
+         b := SocketMeta.Socket.ReceiveText();
+         s := s + b;
+         if (Pos(chr(2), b) > 0) then
+         begin
+            Result := TDataRec.Create(s); // parceTable(s);
+            break;
+         end;
       end;
    end;
+
+   if (Result = nil) then Result := TDataRec.Create('');
+   
    if (not blokMessages) then
       Application.ProcessMessages;
 end;
@@ -2105,6 +2115,8 @@ begin
    // ------------------------------------
 
    schedLoad();
+   Timer2.Enabled := true;
+   FormStyle := fsStayOnTop;
 
    // --------------------------------------------
 end;
@@ -2429,7 +2441,7 @@ begin
    clearStrings(SchedList.Items);
    res := metaQuery('get scheduler list', '');
    try
-      for k:= 0 to res.Count - 1 do
+      for k := 0 to res.Count - 1 do
       begin
          os:= TSchedListItem.Create;
          try
@@ -2511,7 +2523,7 @@ begin
             Brush.Color := clWhite;
             Font.Color := clBlack;
          end;
-
+         Font.Charset := RUSSIAN_CHARSET;
          Pen.Color := Brush.Color;
          Rectangle(0, 0, itemBmp.Width, itemBmp.Height);
 
@@ -2958,6 +2970,7 @@ begin
             Brush.Color := clWhite;
             Font.Color := clBlack;
          end;
+         Font.Charset := RUSSIAN_CHARSET;
          Pen.Color := Brush.Color;
          Rectangle(0, 0, itemBmp.Width, itemBmp.Height);
 

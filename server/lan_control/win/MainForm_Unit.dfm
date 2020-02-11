@@ -10,12 +10,11 @@ object MainForm: TMainForm
   Caption = 'Lan control'
   Color = clBtnFace
   Constraints.MinWidth = 260
-  Font.Charset = DEFAULT_CHARSET
+  Font.Charset = RUSSIAN_CHARSET
   Font.Color = clWindowText
-  Font.Height = -11
-  Font.Name = 'MS Sans Serif'
+  Font.Height = -16
+  Font.Name = 'Arial'
   Font.Style = []
-  FormStyle = fsStayOnTop
   OldCreateOrder = False
   Position = poDefault
   OnActivate = FormActivate
@@ -26,7 +25,7 @@ object MainForm: TMainForm
   OnResize = FormResize
   OnShow = FormShow
   PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 18
   object Panel2: TPanel
     Left = 0
     Top = 0
@@ -304,7 +303,7 @@ object MainForm: TMainForm
         Left = 0
         Top = 0
         Width = 217
-        Height = 21
+        Height = 26
         Hint = #1060#1080#1083#1100#1090#1088' '#1089#1087#1080#1089#1082#1072
         ParentShowHint = False
         ShowHint = True
@@ -3323,7 +3322,6 @@ object MainForm: TMainForm
     Top = 232
   end
   object PopupMenu3: TPopupMenu
-    Images = ImageList2
     OnPopup = PopupMenu3Popup
     Left = 40
     Top = 104

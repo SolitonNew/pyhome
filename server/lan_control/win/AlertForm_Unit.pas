@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, Buttons, ExtCtrls, IconButton;
+  Dialogs, StdCtrls, Buttons, ExtCtrls;
 
 const
    PHONE_CLICK = WM_USER + 100;

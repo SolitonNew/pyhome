@@ -37,7 +37,11 @@ public class VariableGroup {
     }
 
     public String getName() {
-        return _name;
+        return _name.trim();
+    }
+
+    public String getTitle() {
+        return _name.replace(parentName.toLowerCase(), "").trim();
     }
 
     public int getParentId() {

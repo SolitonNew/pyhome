@@ -106,7 +106,6 @@ public class VariableGroupAdapter extends BaseAdapter {
 
         View vgLine = view.findViewById(R.id.vgLine);
 
-        title.setText(vg.getName());
         if (vg.getBtnList() == null) {
             btn1.setVisibility(View.GONE);
             btn2.setVisibility(View.GONE);
@@ -118,6 +117,8 @@ public class VariableGroupAdapter extends BaseAdapter {
 
             vgLine.setVisibility(View.INVISIBLE);
         } else {
+            title.setText(vg.getTitle());
+
             vgGroup.setVisibility(View.GONE);
             vgGroupLayout.setVisibility(View.VISIBLE);
 
@@ -141,7 +142,7 @@ public class VariableGroupAdapter extends BaseAdapter {
                 case 3:
                     btn1.setVisibility(View.VISIBLE);
                     btn2.setVisibility(View.VISIBLE);
-                    btn3.setVisibility(View.VISIBLE);
+                    btn3.setVisibility(View.GONE);
 
                     btn1.setChecked(vg.getBtnList().get(0).getValue() == 1);
                     btn2.setChecked(vg.getBtnList().get(1).getValue() == 1);

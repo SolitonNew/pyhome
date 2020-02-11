@@ -152,16 +152,27 @@ public class Page1 extends Fragment {
             }
 
             if (notChild) {
-                tmp_sort.add(o);
-                o.isFinish = true;
                 o.setAllVariables(tmp_v);
-
-                // Ищем имя парента
-                for (int k1 = 0; k1 < tmp.size(); k1++) {
-                    VariableGroup f1 = tmp.get(k1);
-                    if (f1.getId() == o.getParentId()) {
-                        o.parentName = f1.getName();
+                // Проверяем не пустой ли раздел
+                boolean isNoEmpty = false;
+                for (int i1 = 0; i1 < o.getVariables().size(); i1++) {
+                    if (o.getVariables().get(i1).getAppControl() > 0) {
+                        isNoEmpty = true;
                         break;
+                    }
+                }
+
+                if (isNoEmpty) {
+                    tmp_sort.add(o);
+                    o.isFinish = true;
+
+                    // Ищем имя парента
+                    for (int k1 = 0; k1 < tmp.size(); k1++) {
+                        VariableGroup f1 = tmp.get(k1);
+                        if (f1.getId() == o.getParentId()) {
+                            o.parentName = f1.getName();
+                            break;
+                        }
                     }
                 }
             }
@@ -191,13 +202,11 @@ public class Page1 extends Fragment {
 
         // Делаем вставку заголовков групп
         String prevPName = "";
-        int d = 0;
         for (int i = tmp_sort.size() - 1; i > -1; i--) {
             VariableGroup vg = tmp_sort.get(i);
             if (prevPName != "" && prevPName != vg.parentName) {
                 String[] g = {"-999", prevPName, "", ""};
-                tmp_sort.add(i + d, new VariableGroup(g));
-                d++;
+                tmp_sort.add(i + 1, new VariableGroup(g));
             }
             prevPName = vg.parentName;
         }
@@ -226,6 +235,10 @@ public class Page1 extends Fragment {
 
     private Page1_detail _detail = null;
 
+    public Page1_detail getDetail() {
+        return _detail;
+    }
+
     public boolean getDetailVisible() {
         return _detail != null;
     }
@@ -234,6 +247,7 @@ public class Page1 extends Fragment {
         try {
             _detail = Page1_detail.newInstance("" + id, "");
             FragmentTransaction ft = ((MainActivity) getActivity()).getSupportFragmentManager().beginTransaction();
+            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
             ft.replace(R.id.fullFragmentContainer, _detail);
             ft.commit();
             getActivity().findViewById(R.id.bottomNavigationView).setVisibility(View.INVISIBLE);
@@ -248,10 +262,14 @@ public class Page1 extends Fragment {
 
         ((MainActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         FragmentTransaction ft = ((MainActivity) getActivity()).getSupportFragmentManager().beginTransaction();
+        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
         ft.detach(_detail);
         ft.commit();
         _detail = null;
         getActivity().findViewById(R.id.bottomNavigationView).setVisibility(View.VISIBLE);
+
+        ListView lv = getActivity().findViewById(R.id.rooms);
+        ((VariableGroupAdapter) lv.getAdapter()).notifyDataSetChanged();
     }
 
 }

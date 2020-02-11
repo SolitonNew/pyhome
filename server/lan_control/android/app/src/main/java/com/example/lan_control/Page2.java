@@ -1,12 +1,23 @@
 package com.example.lan_control;
 
 import android.content.Context;
+import android.content.res.Configuration;
+import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.OrientationEventListener;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.Toolbar;
+import android.widget.VideoView;
 
 
 /**
@@ -105,4 +116,81 @@ public class Page2 extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        ListView camList = getActivity().findViewById(R.id.camList);
+        CamListAdapter a = new CamListAdapter(getActivity(), ((MainActivity) getActivity())._cams);
+        camList.setAdapter(a);
+
+        camList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                showDetail(position);
+            }
+        });
+    }
+
+    private Page2_detail _detail = null;
+
+    public Page2_detail getDetail() {
+        return _detail;
+    }
+
+    public boolean getDetailVisible() {
+        return _detail != null;
+    }
+
+    public void showDetail(long id) {
+        try {
+            _detail = Page2_detail.newInstance("" + id, "");
+            FragmentTransaction ft = ((MainActivity) getActivity()).getSupportFragmentManager().beginTransaction();
+            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+            ft.replace(R.id.fullFragmentContainer, _detail);
+            ft.commit();
+            getActivity().findViewById(R.id.bottomNavigationView).setVisibility(View.INVISIBLE);
+            ((MainActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        } catch (Exception e) {
+            Log.d("ERROR", e.toString());
+        }
+    }
+
+    public void hideDetail() {
+        if (_detail == null) return ;
+
+        ((MainActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        FragmentTransaction ft = ((MainActivity) getActivity()).getSupportFragmentManager().beginTransaction();
+        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
+        ft.detach(_detail);
+        ft.commit();
+        _detail = null;
+        getActivity().findViewById(R.id.bottomNavigationView).setVisibility(View.VISIBLE);
+
+        ListView lv = getActivity().findViewById(R.id.camList);
+        ((CamListAdapter) lv.getAdapter()).notifyDataSetChanged();
+    }
+
+    public void doResize(int newOrientation) {
+        if (_detail != null) _detail.doResize();
+    }
+
+    /*public void startVideo() {
+        MainActivity mainActivity = (MainActivity) getActivity();
+
+        LinearLayout camList = mainActivity.findViewById(R.id.camList);
+
+        // v.ID, v.NAME, v.URL, v.ORDER_NUM, v.ALERT_VAR_ID
+        for (int i = 3; i < mainActivity._cams.length; i++) {
+            VideoView vv = new VideoView(getContext());
+            vv.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1000));
+            vv.setBackgroundColor(0x90000000);
+            camList.addView(vv);
+            String u = mainActivity._cams[i][2];
+            u = u.replace("stream=1.sdp", "stream=0.sdp");
+            vv.setVideoPath(u);
+            vv.start();
+        }
+    }*/
 }

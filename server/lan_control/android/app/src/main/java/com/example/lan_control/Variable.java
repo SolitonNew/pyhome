@@ -80,4 +80,47 @@ public class Variable {
     public void syncValue(double val) {
         _value = val;
     }
+
+    class AppControlDesign {
+        String label;
+        int bgColor;
+        String dim;
+
+        AppControlDesign(String aLabel, int aBgColor, String aDim) {
+            label = aLabel;
+            bgColor = aBgColor;
+            dim = aDim;
+        }
+    }
+
+    private AppControlDesign[] _appControlDesigns = {
+            new AppControlDesign("", 0, ""),
+            new AppControlDesign("СВЕТ", 0xffffff00, ""),
+            new AppControlDesign("", 0, ""),
+            new AppControlDesign("", 0xffff00ff, ""), // РОЗЕТКА
+            new AppControlDesign("ТЕРМОМЕТР", 0xffffff00, "°C"),
+            new AppControlDesign("ТЕРМОСТАТ", 0x4Fff0000, "°C"),
+            new AppControlDesign("", 0, ""),
+            new AppControlDesign("ВЕНТИЛЯЦИЯ", 0xff0000ff, "%"),
+            new AppControlDesign("", 0, ""),
+            new AppControlDesign("", 0, ""),
+            new AppControlDesign("ГИГРОМЕТР", 0xff0000ff, "%"),
+
+            new AppControlDesign("ГАЗ", 0, "ppm"),
+            new AppControlDesign("", 0, ""),
+            new AppControlDesign("АТМ. ДАВЛЕНИЕ", 0xff00ff00, "мм"),
+            new AppControlDesign("ТОК", 0, "A"),
+    };
+
+    public String getCommForGroup(String groupName) {
+        String s = _comm.toUpperCase().replace(groupName.toUpperCase(), "").trim();
+        if (s != "") {
+            s = " " + s;
+        }
+        return (_appControlDesigns[_appControl].label + s).trim();
+    }
+
+    public String getDim() {
+        return _appControlDesigns[_appControl].dim;
+    }
 }

@@ -2,7 +2,7 @@ program lan_control;
 
 uses
   FastMM4,
-  ExceptionLog,
+  //ExceptionLog,
   Forms,
   Windows,
   MainForm_Unit in 'MainForm_Unit.pas' {MainForm},

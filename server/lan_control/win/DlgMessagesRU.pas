@@ -3,7 +3,7 @@ unit DlgMessagesRU;
 interface
 
 uses
-   Types, Forms, Windows, Dialogs, StdCtrls, Graphics, Math, ExtCtrls, cxMemo;
+   Types, Forms, Windows, Dialogs, StdCtrls, Graphics, Math, ExtCtrls;
 
 type
   TMsgDlgBtn = (mbYes, mbNo, mbOK, mbCancel, mbAbort, mbRetry, mbIgnore,
@@ -16,15 +16,13 @@ type
 function MessageDlg(const Msg: string; DlgType: TMsgDlgType; Buttons: TMsgDlgButtons; HelpCtx: Longint): Integer;
 function InputQuery(const ACaption, APrompt: string; var Value: string): Boolean;
 function InputBox(const ACaption, APrompt, ADefault: string): string;
-function InputQueryForFloat(const ACaption, APrompt: string; var Val: Double): Boolean;
 function InputPassword(const ACaption, APrompt: string; var Value: string): Boolean;
 
 procedure SetAddingsMethodParams(MethodName: string; Method: TAddingsMethod);
 
 implementation
 
-uses Controls, Classes, SysUtils, cxEdit, cxTextEdit, cxCalc, cxLabel,
-  cxControls;
+uses Controls, Classes, SysUtils;
 
 type
    TMessForm = class(TForm)
@@ -281,8 +279,8 @@ function InputQuery(const ACaption, APrompt: string;
   var Value: string): Boolean;
 var
   Form: TForm;
-  Prompt: TcxLabel;
-  Edit: TcxTextEdit;
+  Prompt: TLabel;
+  Edit: TEdit;
   Group: TGroupBox;
   DialogUnits: TPoint;
   ButtonTop, ButtonWidth, ButtonHeight: Integer;
@@ -307,7 +305,7 @@ begin
         Width := Form.ClientWidth - 16;
       end;
       
-         Prompt := TcxLabel.Create(Group);
+         Prompt := TLabel.Create(Group);
          with Prompt do
          begin
            Parent := Group;
@@ -315,17 +313,16 @@ begin
            Left := 16;
            Top := 16;
            Constraints.MaxWidth := MulDiv(148, DialogUnits.X, 4);
-           Properties.WordWrap:= True;
+           WordWrap:= True;
          end;
-         Edit := TcxTextEdit.Create(Group);
+         Edit := TEdit.Create(Group);
          with Edit do
          begin
            Parent := Group;
            Left := Prompt.Left;
            Top := Prompt.Top + Prompt.Height;
            Width := MulDiv(148, DialogUnits.X, 4);
-           Properties.MaxLength:= 255;
-           Style.BorderStyle := ebs3D;
+           MaxLength:= 255;
            Text := Value;
            SelectAll;
          end;
@@ -367,79 +364,6 @@ begin
     end;
 end;
 
-function InputQueryForFloat(const ACaption, APrompt: string; var Val: Double): Boolean;
-label
-  l1; 
-var
-  Form: TForm;
-  Prompt: TLabel;
-  Edit: TcxCalcEdit;
-  DialogUnits: TPoint;
-  ButtonTop, ButtonWidth, ButtonHeight: Integer;
-begin
-  Form:= TForm.Create(Application);
-  with Form do
-    try
-      Canvas.Font := Font;
-      DialogUnits := GetAveCharSize(Canvas);
-      BorderStyle := bsDialog;
-      Caption := ACaption;
-      ClientWidth := MulDiv(180, DialogUnits.X, 4);
-      Position := poScreenCenter;
-      Prompt := TLabel.Create(Form);
-      with Prompt do
-      begin
-        Parent := Form;
-        Caption := APrompt;
-        Left := MulDiv(8, DialogUnits.X, 4);
-        Top := MulDiv(8, DialogUnits.Y, 8);
-        Constraints.MaxWidth := MulDiv(164, DialogUnits.X, 4);
-        WordWrap := True;
-      end;
-      Edit := TcxCalcEdit.Create(Form);
-      with Edit do
-      begin
-        Parent := Form;
-        Left := Prompt.Left;
-        Top := Prompt.Top + Prompt.Height + 1;
-        Width := MulDiv(164, DialogUnits.X, 4);
-        Properties.MaxLength:= 255;
-        EditValue:= CurrToStr(Val);
-        SelectAll;
-      end;
-      ButtonTop := Edit.Top + Edit.Height + 15;
-      ButtonWidth := MulDiv(50, DialogUnits.X, 4);
-      ButtonHeight := MulDiv(14, DialogUnits.Y, 8);
-      with TButton.Create(Form) do
-      begin
-        Parent := Form;
-        Caption := 'ОК';
-        ModalResult := mrOk;
-        Default := True;
-        SetBounds(MulDiv(38, DialogUnits.X, 4), ButtonTop, ButtonWidth, ButtonHeight);
-      end;
-      with TButton.Create(Form) do
-      begin
-        Parent := Form;
-        Caption := 'Отмена';
-        ModalResult := mrCancel;
-        Cancel := True;
-        SetBounds(MulDiv(92, DialogUnits.X, 4), Edit.Top + Edit.Height + 15, ButtonWidth, ButtonHeight);
-        Form.ClientHeight := Top + Height + 13;
-      end;
-
-l1:   Result:= false;
-      if ShowModal = mrOk then
-      begin
-         if Edit.EditText = '' then goto l1;
-         Val:= Edit.EditValue;
-         Result:= True;
-      end;
-    finally
-      Form.Free;
-    end;
-end;
-
 function InputBox(const ACaption, APrompt, ADefault: string): string;
 begin
    Result := ADefault;
@@ -450,8 +374,8 @@ function InputPassword(const ACaption, APrompt: string;
   var Value: string): Boolean;
 var
   Form: TForm;
-  Prompt: TcxLabel;
-  Edit: TcxTextEdit;
+  Prompt: TLabel;
+  Edit: TEdit;
   DialogUnits: TPoint;
   ButtonTop, ButtonWidth, ButtonHeight: Integer;
   TextRect: TRect;
@@ -466,7 +390,7 @@ begin
       Caption := ACaption;
       ClientWidth := MulDiv(180, DialogUnits.X, 4);
       Position := poScreenCenter;
-      Prompt := TcxLabel.Create(Form);
+      Prompt := TLabel.Create(Form);
       with Prompt do
       begin
         AutoSize:= false;
@@ -475,7 +399,7 @@ begin
         Left:= MulDiv(8, DialogUnits.X, 4);
         Top:= MulDiv(8, DialogUnits.Y, 8);
         Width:= MulDiv(164, DialogUnits.X, 4);
-        Properties.WordWrap:= True;
+        WordWrap:= True;
 
         TextRect:= Rect(0, 0, Width, Height);
         DrawText(Canvas.Handle, PChar(APrompt), Length(APrompt) + 1, TextRect,
@@ -483,17 +407,17 @@ begin
            DrawTextBiDiModeFlagsReadingOnly);
         Prompt.Height:= TextRect.Bottom - TextRect.Top + 16;
       end;
-      Edit := TcxTextEdit.Create(Form);
+      Edit := TEdit.Create(Form);
       with Edit do
       begin
         Parent := Form;
         Left := Prompt.Left;
         Top := Prompt.Top + Prompt.Height + 5;
         Width := MulDiv(164, DialogUnits.X, 4);
-        Properties.MaxLength:= 255;
+        MaxLength:= 255;
         Text := Value;
         SelectAll;
-        Properties.EchoMode:= eemPassword;
+        PasswordChar := '*';
       end;
       ButtonTop := Edit.Top + Edit.Height + 15;
       ButtonWidth := MulDiv(50, DialogUnits.X, 4);
@@ -563,7 +487,7 @@ begin
       end;
    end;
    ClientHeight:= ClientHeight + MemoHeight + MarginMemo * 2;
-   with TcxMemo.Create(Self) do
+   with TMemo.Create(Self) do
    begin
       Parent:= Self;
       Top:= Self.ClientHeight - (MemoHeight + MarginMemo);
@@ -572,10 +496,10 @@ begin
       Height:= MemoHeight;
 
       Text:= DetailMessage;
-      Properties.ScrollBars:= ssVertical;
-      Properties.ReadOnly:= true;
+      ScrollBars:= ssVertical;
+      ReadOnly:= true;
 
-      Style.Color:= Self.Color;
+      Color:= Self.Color;
    end;
 
    DetailButton.Enabled:= false;

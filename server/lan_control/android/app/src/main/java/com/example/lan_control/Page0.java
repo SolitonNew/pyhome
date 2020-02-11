@@ -7,18 +7,17 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link Page3.OnFragmentInteractionListener} interface
+ * {@link Page0.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link Page3#newInstance} factory method to
+ * Use the {@link Page0#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Page3 extends Fragment {
+public class Page0 extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -30,7 +29,7 @@ public class Page3 extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    public Page3() {
+    public Page0() {
         // Required empty public constructor
     }
 
@@ -40,11 +39,11 @@ public class Page3 extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment Page3.
+     * @return A new instance of fragment Page0.
      */
     // TODO: Rename and change types and number of parameters
-    public static Page3 newInstance(String param1, String param2) {
-        Page3 fragment = new Page3();
+    public static Page0 newInstance(String param1, String param2) {
+        Page0 fragment = new Page0();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -65,7 +64,7 @@ public class Page3 extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_page3, container, false);
+        return inflater.inflate(R.layout.fragment_page0, container, false);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -105,14 +104,5 @@ public class Page3 extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        ListView mediaList = getActivity().findViewById(R.id.mediaList);
-        MediaListAdapter a = new MediaListAdapter(getContext(), ((MainActivity) getActivity())._media);
-        mediaList.setAdapter(a);
     }
 }

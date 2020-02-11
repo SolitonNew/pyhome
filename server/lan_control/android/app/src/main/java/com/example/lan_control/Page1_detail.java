@@ -5,12 +5,19 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
+import android.widget.LinearLayout;
+import android.widget.SeekBar;
+import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 
 
 /**
@@ -119,8 +126,26 @@ public class Page1_detail extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
+    private boolean _programChangeLock = false;
+
+    class PanelItem {
+        int panelTyp;
+        Variable variable;
+        View control[];
+        PanelItem(int typ, Variable var, View ctrl[]) {
+            panelTyp = typ;
+            variable = var;
+            control = ctrl;
+        }
+    }
+
+    private ArrayList<PanelItem> _panels = new ArrayList<PanelItem>();
+
+    private int one_dip = 1;
 
     private void _initPage() {
+        one_dip = (int) (getResources().getDisplayMetrics().density + 0.5f);
+
         MainActivity mainActivity = (MainActivity) getActivity();
 
         int id = Integer.parseInt(mParam1);
@@ -134,8 +159,266 @@ public class Page1_detail extends Fragment {
             }
         }
 
-        TextView vgDetailName = (TextView) getActivity().findViewById(R.id.vgDetailName);
+        ((TextView) mainActivity.findViewById(R.id.varGroupName)).setText(_variableGroup.getName());
+        LinearLayout varDetailList = mainActivity.findViewById(R.id.varDetailList);
 
-        vgDetailName.setText(_variableGroup.getName());
+        ArrayList<Variable> tmp = _variableGroup.getVariables();
+
+        tmp.sort(new Comparator<Variable>() {
+            @Override
+            public int compare(Variable o1, Variable o2) {
+                if (o1.getAppControl() > o2.getAppControl()) {
+                    return 1;
+                } else
+                if (o1.getAppControl() < o2.getAppControl()) {
+                    return -1;
+                }
+                return 0;
+            }
+        });
+
+        _programChangeLock = true;
+
+        for (int i = 0; i < tmp.size(); i++) {
+            Variable v = tmp.get(i);
+
+            switch (v.getAppControl()) {
+                case 1: // Свет
+                case 3: // Розетка
+                    varDetailList.addView(createSwitchPanel(v));
+                    break;
+                case 5: // Термостат
+                case 7: // Вентилятор
+                    varDetailList.addView(createProgressPanel(v));
+                    break;
+                case 4: // Термометр
+                case 10:// Гигрометр
+                case 11:// Датчик газа
+                case 13:// Датчик атмосферного давления
+                case 14:// Датчик тока
+                    varDetailList.addView(createSensPanel(v, v.getAppControl()));
+                    break;
+            }
+        }
+
+        _programChangeLock = false;
+    }
+
+    public View createSwitchPanel(Variable variable) {
+        LinearLayout ll_v = new LinearLayout(getContext());
+        ll_v.setOrientation(LinearLayout.VERTICAL);
+        ll_v.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+
+        LinearLayout ll = new LinearLayout(getContext());
+        ll.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 75));
+        ll.setPadding(20,8,20,10);
+        ll.setGravity(Gravity.CENTER_VERTICAL);
+
+        TextView tv = new TextView(getContext());
+        tv.setText(variable.getCommForGroup(_variableGroup.getName()));
+        tv.setTextSize(17);
+        tv.setPadding(0,0,8,0);
+        tv.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1.0f));
+        ll.addView(tv);
+
+        Switch sw = new Switch(getContext());
+        sw.setChecked(variable.getValue() > 0);
+        ll.addView(sw);
+
+        ll_v.addView(ll);
+
+        View line = new View(getContext());
+        line.setBackgroundColor(0x1f000000);
+        line.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, one_dip));
+        ll_v.addView(line);
+
+        View control[] = {sw};
+        _panels.add(new PanelItem(1, variable, control));
+
+        sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (_programChangeLock) return ;
+
+                LinearLayout panel = (LinearLayout) buttonView.getParent().getParent();
+                LinearLayout parent = (LinearLayout) panel.getParent();
+                int index = parent.indexOfChild(panel);
+                if (isChecked) {
+                    _panels.get(index).variable.setValue(1);
+                } else {
+                    _panels.get(index).variable.setValue(0);
+                }
+            }
+        });
+
+        return ll_v;
+    }
+
+    public View createProgressPanel(Variable variable) {
+        LinearLayout ll_v = new LinearLayout(getContext());
+        ll_v.setOrientation(LinearLayout.VERTICAL);
+        ll_v.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+
+        LinearLayout ll = new LinearLayout(getContext());
+        ll.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+        ll.setPadding(20,8,20,0);
+        ll.setGravity(Gravity.CENTER_VERTICAL);
+        ll_v.addView(ll);
+
+        TextView tv = new TextView(getContext());
+        tv.setText(variable.getCommForGroup(_variableGroup.getName()));
+        tv.setTextSize(17);
+        tv.setPadding(0,0,8,0);
+        tv.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1.0f));
+        ll.addView(tv);
+
+        TextView tv_val = new TextView(getContext());
+        tv_val.setTextSize(30);
+        tv_val.setTextColor(0xff000000);
+        ll.addView(tv_val);
+
+        TextView tv_dim = new TextView(getContext());
+        tv_dim.setTextSize(17);
+        tv_dim.setText(variable.getDim());
+        tv_dim.setPadding(4,13,0,0);
+        ll.addView(tv_dim);
+
+        SeekBar sb = new SeekBar(getContext());
+        sb.setPadding(24,0,24,0);
+        sb.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 60));
+        switch (variable.getAppControl()) {
+            case 5:
+                sb.setMax(150);
+                sb.setProgress((int)((variable.getValue() - 15) * 10));
+                tv_val.setText("" + variable.getValue());
+                break;
+            case 7:
+                sb.setMax(10);
+                sb.setProgress((int) variable.getValue());
+                tv_val.setText("" + (int) (variable.getValue() * 10));
+                break;
+        }
+        ll_v.addView(sb);
+
+        View line = new View(getContext());
+        line.setBackgroundColor(0x1f000000);
+        line.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, one_dip));
+        ll_v.addView(line);
+
+        View control[] = {sb, tv_val};
+        _panels.add(new PanelItem(2, variable, control));
+
+        sb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                PanelItem p = null;
+                for (int i = 0; i < _panels.size(); i++) {
+                    p = _panels.get(i);
+                    if (p.control[0] == seekBar) {
+                        break;
+                    }
+                }
+                if (seekBar.getMax() <= 10) {
+                    ((TextView) p.control[1]).setText("" + progress * 10);
+                } else {
+                    ((TextView) p.control[1]).setText("" + (progress + 150) / 10.0);
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                PanelItem p = null;
+                for (int i = 0; i < _panels.size(); i++) {
+                    p = _panels.get(i);
+                    if (p.control[0] == seekBar) {
+                        break;
+                    }
+                }
+                if (seekBar.getMax() <= 10) {
+                    p.variable.setValue(seekBar.getProgress());
+                } else {
+                    p.variable.setValue((seekBar.getProgress() / 10.0) + 15);
+                }
+            }
+        });
+
+        return ll_v;
+    }
+
+    public View createSensPanel(Variable variable, int typ) {
+        LinearLayout ll_v = new LinearLayout(getContext());
+        ll_v.setOrientation(LinearLayout.VERTICAL);
+        ll_v.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+
+        LinearLayout ll = new LinearLayout(getContext());
+        ll.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+        ll.setPadding(20, 8, 20, 10);
+        ll.setGravity(Gravity.CENTER_VERTICAL);
+        ll_v.addView(ll);
+
+        TextView tv = new TextView(getContext());
+        tv.setText(variable.getCommForGroup(_variableGroup.getName()));
+        tv.setTextSize(17);
+        tv.setPadding(0,0,8,0);
+        tv.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1.0f));
+        ll.addView(tv);
+
+        TextView tv_val = new TextView(getContext());
+        tv_val.setTextSize(30);
+        tv_val.setTextColor(0xff000000);
+        tv_val.setText("" + variable.getValue());
+        ll.addView(tv_val);
+
+        TextView tv_dim = new TextView(getContext());
+        tv_dim.setTextSize(17);
+        tv_dim.setText(variable.getDim());
+        tv_dim.setPadding(4,13,0,0);
+        ll.addView(tv_dim);
+
+        View line = new View(getContext());
+        line.setBackgroundColor(0x1f000000);
+        line.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, one_dip));
+        ll_v.addView(line);
+
+        View control[] = {tv_val};
+        _panels.add(new PanelItem(3, variable, control));
+
+        return ll_v;
+    }
+
+    public void syncVariables() {
+        _programChangeLock = true;
+
+        for (int i = 0; i < _panels.size(); i++) {
+
+            PanelItem p = _panels.get(i);
+
+            switch (p.panelTyp) {
+                case 1:
+                    ((Switch) p.control[0]).setChecked(p.variable.getValue() == 1);
+                    break;
+                case 2:
+                    TextView tw = ((TextView) p.control[1]);
+                    SeekBar sb = ((SeekBar) p.control[0]);
+                    if (sb.getMax() <= 10) {
+                        sb.setProgress((int)p.variable.getValue());
+                        tw.setText("" + (int) (p.variable.getValue() * 10));
+                    } else {
+                        sb.setProgress((int)((p.variable.getValue() - 15) * 10));
+                        tw.setText("" + p.variable.getValue());
+                    }
+                    break;
+                case 3:
+                    ((TextView) p.control[0]).setText("" + p.variable.getValue());
+                    break;
+            }
+        }
+
+        _programChangeLock = false;
     }
 }

@@ -408,6 +408,11 @@ begin
    except
    end;
 
+   if (Width > Screen.Width div 2) then Width := Screen.Width div 2;
+   if (Height > Screen.Height) then Height := Screen.Height;
+   if (Left > Screen.Width - Width) then Left := Screen.Width - Width;
+   if (Top < 0) then Top := 0;
+
    try
       VolumeShape.Width := (VolumePanel.ClientWidth) * StrToInt(loadProp('Volume')) div 100;
    except

@@ -226,7 +226,6 @@ class Page5_3(BaseForm):
 
     def _calcBoiler(self, year, month):
         rele_id = 82
-        rele_on = False
         temp_id = 152
         temp_on = 50        
         var_ids = "%s, %s" % (rele_id, temp_id)        
@@ -257,10 +256,7 @@ class Page5_3(BaseForm):
                 if prev_var_val == None:
                     prev_var_val = rec[1]
 
-                if rele_on:
-                    is_on = rec[1] <= temp_on or (rec[1] - prev_var_val) > 0.25
-                else:
-                    is_on = False
+                is_on = rec[1] <= temp_on or (rec[1] - prev_var_val) > 0.25
 
                 if prev_var_on == None:
                     prev_var_on = is_on
@@ -276,7 +272,7 @@ class Page5_3(BaseForm):
                 prev_var_on = is_on
                 prev_var_val = rec[1]
             else:
-                rele_on = rec[1] > 0
+                pass
 
         if month == 0:
             month = 12

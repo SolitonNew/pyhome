@@ -2,10 +2,6 @@ program lan_control;
 
 uses
   FastMM4,
-<<<<<<< HEAD
-  //ExceptionLog,
-=======
->>>>>>> f403c4e94a67db0012d3f91f6004fdf123cbcf7b
   Forms,
   Windows,
   MainForm_Unit in 'MainForm_Unit.pas' {MainForm},

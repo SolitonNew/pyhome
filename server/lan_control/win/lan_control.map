@@ -159,8 +159,8 @@ Detailed map of segments
  0001:000B260C 00000454 C=CODE     S=.text    G=(none)   M=CamPlayer_Unit ACBP=A9
  0001:000B2A60 000009AC C=CODE     S=.text    G=(none)   M=CamDisplay_Unit ACBP=A9
  0001:000B340C 00000B9F C=CODE     S=.text    G=(none)   M=CamAlertDiaplay_Unit ACBP=A9
- 0001:000B3FAC 00000B04 C=CODE     S=.text    G=(none)   M=http     ACBP=A9
- 0001:000B4AB0 00009C90 C=CODE     S=.text    G=(none)   M=MainForm_Unit ACBP=A9
+ 0001:000B3FAC 00009C90 C=CODE     S=.text    G=(none)   M=MainForm_Unit ACBP=A9
+ 0001:000BDC3C 00000B04 C=CODE     S=.text    G=(none)   M=http     ACBP=A9
  0001:000BE740 0000061F C=CODE     S=.text    G=(none)   M=lan_control ACBP=A9
  0002:00000000 000000A0 C=DATA     S=.data    G=DGROUP   M=System   ACBP=A9
  0002:000000A0 00000020 C=DATA     S=.data    G=DGROUP   M=SysInit  ACBP=A9
@@ -365,8 +365,8 @@ Detailed map of segments
  0002:000078F8 00000004 C=BSS      S=.bss     G=DGROUP   M=CamPlayer_Unit ACBP=A9
  0002:000078FC 00000008 C=BSS      S=.bss     G=DGROUP   M=CamDisplay_Unit ACBP=A9
  0002:00007904 00000008 C=BSS      S=.bss     G=DGROUP   M=CamAlertDiaplay_Unit ACBP=A9
- 0002:0000790C 00000004 C=BSS      S=.bss     G=DGROUP   M=http     ACBP=A9
- 0002:00007910 00000020 C=BSS      S=.bss     G=DGROUP   M=MainForm_Unit ACBP=A9
+ 0002:0000790C 00000020 C=BSS      S=.bss     G=DGROUP   M=MainForm_Unit ACBP=A9
+ 0002:0000792C 00000004 C=BSS      S=.bss     G=DGROUP   M=http     ACBP=A9
  0002:00007930 00000004 C=BSS      S=.bss     G=DGROUP   M=lan_control ACBP=A9
 
 
@@ -385,14 +385,14 @@ Detailed map of segments
  0002:0000701C       .1
  0002:00007558       .1
  0002:00006B50       .1
- 0002:00006B64       .1
  0002:00007024       .1
+ 0002:00006B64       .1
  0002:0000703C       .1
  0002:00007040       .1
- 0002:00006B98       .1
  0002:0000705C       .1
- 0002:00006C6C       .1
+ 0002:00006B98       .1
  0002:0000706C       .1
+ 0002:00006C6C       .1
  0002:0000466C       .1
  0002:00006CFC       .1
  0002:00006CEC       .1
@@ -403,8 +403,8 @@ Detailed map of segments
  0002:0000467C       .1
  0002:00004684       .1
  0002:00007510       .1
- 0002:00007324       .1
  0002:000070B8       .1
+ 0002:00007324       .1
  0002:00006C88       .1
  0002:00006C8C       .1
  0002:00006C90       .1
@@ -420,50 +420,50 @@ Detailed map of segments
  0002:00007144       .1
  0002:000072F4       .1
  0002:00006DC8       .1
- 0002:00006CA8       .11
  0002:00007634       .11
  0002:0000752C       .11
+ 0002:00006CA8       .11
  0002:00006CA0       .12
  0002:00006AC0       .12
  0002:00007310       .2
  0002:00007138       .2
- 0002:00006E04       .2
+ 0002:00007570       .2
  0002:0000731C       .2
  0002:000070D4       .2
- 0002:00007570       .2
  0002:00007508       .2
  0002:00007574       .2
  0002:00007900       .2
  0002:00007624       .2
  0002:00006E74       .2
  0002:00007538       .2
+ 0002:0000753C       .2
  0002:000078F8       .2
  0002:00006CE4       .2
- 0002:0000753C       .2
+ 0002:00007620       .2
  0002:00007070       .2
  0002:00007668       .2
- 0002:00007620       .2
- 0002:00007664       .2
  0002:00007550       .2
+ 0002:00007664       .2
  0002:00006C7C       .2
+ 0002:00007650       .2
  0002:00007068       .2
  0002:0000761C       .2
  0002:00006B1C       .2
  0002:00007568       .2
- 0002:00007560       .2
  0002:00006B68       .2
+ 0002:00007560       .2
  0002:0000755C       .2
  0002:00007908       .2
  0002:000072E8       .2
- 0002:00007650       .2
+ 0002:00006E04       .2
  0002:00007300       .2
  0002:000072FC       .2
  0002:00006B20       .21
  0002:00007638       .22
  0002:00007600       .3
- 0002:00006B74       .3
+ 0002:00006B70       .3
  0002:0000757C       .3
- 0002:00007554       .3
+ 0002:00006B74       .3
  0002:00006A70       .3
  0002:00007540       .3
  0002:00004678       .3
@@ -473,13 +473,13 @@ Detailed map of segments
  0002:00006D8C       .3
  0002:00006E44       .3
  0002:0000751C       .3
- 0002:0000790C       .3
  0002:000070D0       .3
- 0002:00007564       .3
  0002:00007318       .3
+ 0002:00007564       .3
  0002:000072F0       .3
+ 0002:00007554       .3
  0002:00007014       .3
- 0002:00006B70       .3
+ 0002:0000792C       .3
  0002:0000756C       .31
  0002:000069BC       .35
  0002:00006E64       .36
@@ -522,7 +522,7 @@ Detailed map of segments
  0002:00006D88       .8
  0002:00006A48       .81
  0002:00007034       .81
- 0002:00007914       .9
+ 0002:00007910       .9
  0002:0000764C       .9
  0002:00007548       .9
  0002:00006DA0       .9
@@ -756,15 +756,15 @@ Detailed map of segments
  0001:00006494       AdjustWindowRectEx
  0002:00007314       AlertForm
  0001:000981A0       AlertForm_Unit
- 0002:00000FC0       Alignments
+ 0002:00001058       Alignments
  0002:0000158C       Alignments
  0002:000010C4       Alignments
- 0002:00001058       Alignments
- 0002:00000F80       Alignments
+ 0002:00000FC0       Alignments
  0002:0000157C       Alignments
+ 0002:00000F80       Alignments
  0002:00001800       AlignStyles
- 0001:0004B4F0       AlignWork
  0001:00068040       AlignWork
+ 0001:0004B4F0       AlignWork
  0001:0002339C       AllocateHWnd
  0001:0000751C       AllocateLargeBlock
  0001:000407AC       AllocFilterStr
@@ -869,13 +869,13 @@ Detailed map of segments
  0002:00001DB4       ButtonMap
  0002:000016E8       ButtonNames
  0002:000012D8       ButtonNames
- 0002:000015A0       Buttons
  0001:0006EC7C       Buttons
+ 0002:000015A0       Buttons
  0002:00001050       ButtonStyles
- 0002:00006CB4       ButtonWidths
  0002:00006DD8       ButtonWidths
- 0001:0009AC6C       ByteIsOk
+ 0002:00006CB4       ButtonWidths
  0001:0008DA80       ByteIsOk
+ 0001:0009AC6C       ByteIsOk
  0001:00026D38       BytesPerScanline
  0001:0002709C       ByteSwapColors
  0001:0000F028       ByteToCharIndex
@@ -898,8 +898,8 @@ Detailed map of segments
  0001:00046EA4       CancelDrag
  0002:00006D58       CanvasList
  0002:00006B14       CanvasList
- 0002:000016C0       Captions
  0002:000012B0       Captions
+ 0002:000016C0       Captions
  0002:00001420       CaptureControl
  0002:000014C4       cBooleanToItemAutoFlag
  0002:00000A7C       CBooleanToRelationship
@@ -931,7 +931,7 @@ Detailed map of segments
  0001:0009F52C       CheckIsReadable
  0001:00002FB0       CheckJmp
  0001:00097268       CheckLst
- 0001:000B7A90       checkMediaInGroup
+ 0001:000B6F8C       checkMediaInGroup
  0001:000064E4       CheckMenuItem
  0002:00001514       Checks
  0001:000083E0       CheckSmallBlockPoolForLeaks
@@ -1004,11 +1004,11 @@ Detailed map of segments
  0001:0000AD9C       CompareWith
  0001:0001F828       ComponentCreated
  0001:00027910       ComputeAldusChecksum
- 0001:000B9880       compVarGroup
+ 0001:000B8D7C       compVarGroup
  0001:0006C568       ComStrs
- 0001:0008BA00       Connect
  0002:00007338       connect
  0001:00075664       connect
+ 0001:0008BA00       Connect
  0001:000A1134       ConnectTimeout
  0001:000238C8       Consts
  0001:0002D1FC       Contnrs
@@ -1130,7 +1130,7 @@ Detailed map of segments
  0002:000068B3       DecimalSeparator
  0001:0000C780       DecodeDate
  0001:0000C630       DecodeDateFully
- 0001:000BCE48       decodeHex
+ 0001:000BC344       decodeHex
  0001:0008D1A4       DecodeInt
  0001:0000C498       DecodeTime
  0001:00000938       Decommit
@@ -1153,8 +1153,8 @@ Detailed map of segments
  0001:00006524       DefWindowProc
  0001:00004EAC       DelayLoadResourceModule
  0001:00000554       DeleteBlock
- 0001:00005F8C       DeleteCriticalSection
  0001:00000464       DeleteCriticalSection
+ 0001:00005F8C       DeleteCriticalSection
  0001:000062BC       DeleteDC
  0001:000062C4       DeleteEnhMetaFile
  0001:00000E4C       DeleteFree
@@ -1226,8 +1226,8 @@ Detailed map of segments
  0002:00000B74       DotSep
  0002:000017A4       DownStyles
  0001:0001C82C       DoWrite
- 0001:00027DA8       DoWrite
  0001:00028A00       DoWrite
+ 0001:00027DA8       DoWrite
  0001:00056ED0       DoWrite
  0001:0004C0B4       DoWriteDesignSize
  0001:00049B14       DoWriteIsControl
@@ -1332,10 +1332,10 @@ Detailed map of segments
  0001:0000D6E8       EraToYear
  0002:00006998       EraYearOffsets
  0002:00000068       errCaption
- 0001:0001E814       Error
- 0001:0000200C       Error
- 0001:0001A6CC       Error
  0001:000585E8       Error
+ 0001:0001E814       Error
+ 0001:0001A6CC       Error
+ 0001:0000200C       Error
  0002:00000004       ErrorAddr
  0001:00001FC0       ErrorAt
  0001:0000E838       ErrorHandler
@@ -1393,8 +1393,8 @@ Detailed map of segments
  0002:00000880       FCon1E18
  0001:0008B98C       FD_SET
  0001:0008B99C       FD_ZERO
- 0001:0008D56C       Fetch
  0001:0009D758       Fetch
+ 0001:0008D56C       Fetch
  0001:0008D4F4       FetchBin
  0001:0009D670       FetchCaseInsensitive
  0002:00007530       FIdPorts
@@ -1410,7 +1410,7 @@ Detailed map of segments
  0001:0000AF44       FileRead
  0002:00000BB0       FilerSignature
  0001:0000AF9C       FileSeek
- 0001:000BCF34       FileSizeByName
+ 0001:000BC430       FileSizeByName
  0001:00005FA4       FileTimeToDosDateTime
  0001:00005FAC       FileTimeToLocalFileTime
  0001:0000AF70       FileWrite
@@ -1554,8 +1554,8 @@ Detailed map of segments
  0001:0003C624       Finalization
  0001:0003C5EC       Finalization
  0001:0003C5AC       Finalization
- 0001:000B4A78       Finalization
  0001:00030930       Finalization
+ 0001:000BDBF0       Finalization
  0001:0002FBA4       Finalization
  0001:0002F220       Finalization
  0001:0002EECC       Finalization
@@ -1564,8 +1564,8 @@ Detailed map of segments
  0001:0002EB28       Finalization
  0001:0002DB40       Finalization
  0001:0002DB00       Finalization
+ 0001:000BE708       Finalization
  0001:0002D374       Finalization
- 0001:000BE6F4       Finalization
  0001:0002347C       Finalization
  0001:000BE788       Finalization
  0001:00023898       Finalization
@@ -1585,8 +1585,8 @@ Detailed map of segments
  0001:00095040       FindChild
  0001:0001ABE8       FindClass
  0001:00004EA4       FindClassHInstance
- 0001:00000320       FindClose
  0001:00005FB4       FindClose
+ 0001:00000320       FindClose
  0001:0000B158       FindClose
  0001:00000EE0       FindCommitted
  0001:000454B4       FindControl
@@ -1596,8 +1596,8 @@ Detailed map of segments
  0001:00046EF0       FindDragTarget
  0001:0001FA58       FindExistingComponent
  0001:0000B0E4       FindFirst
- 0001:00005FBC       FindFirstFile
  0001:00000328       FindFirstFile
+ 0001:00005FBC       FindFirstFile
  0001:0006085C       FindGlobalComponent
  0001:0001AFD4       FindGlobalComponent
  0002:00006A8C       FindGlobalComponentProcs
@@ -1649,8 +1649,8 @@ Detailed map of segments
  0001:00087180       FontToOleFont
  0002:00001248       ForceCurrentDirectory
  0001:00060830       ForegroundTask
- 0001:0000BAC8       Format
  0002:0000089C       Format
+ 0001:0000BAC8       Format
  0001:0000B6B8       FormatBuf
  0001:0000B6AC       FormatClearStr
  0001:0000D470       FormatDateTime
@@ -1676,8 +1676,8 @@ Detailed map of segments
  0001:00005FE4       FreeLibrary
  0001:000875C8       FreeList
  0001:00029D48       FreeMemoryContexts
- 0001:00023378       FreeObjectInstance
  0001:000608DC       FreeObjectInstance
+ 0001:00023378       FreeObjectInstance
  0001:00006004       FreeResource
  0001:000007B0       FreeSpace
  0001:0000FD44       FreeTerminateProcs
@@ -1698,8 +1698,8 @@ Detailed map of segments
  0001:000683D0       GetAnimation
  0001:000B1B14       GetAProcAddress
  0001:000065F4       GetAsyncKeyState
- 0001:00040E2C       GetAveCharSize
  0001:0006B23C       GetAveCharSize
+ 0001:00040E2C       GetAveCharSize
  0001:000062EC       GetBitmapBits
  0001:0000046C       GetBlockDesc
  0001:000062F4       GetBrushOrgEx
@@ -1762,8 +1762,8 @@ Detailed map of segments
  0001:00006344       GetEnhMetaFilePaletteEntries
  0001:00017AD0       GetEnumNameValue
  0001:00017B1C       GetEnumValue
- 0001:00006044       GetEnvironmentVariable
  0001:00010394       GetEnvironmentVariable
+ 0001:00006044       GetEnvironmentVariable
  0001:0000E044       GetEraNamesAndYearOffsets
  0001:0000D694       GetEraYearOffset
  0001:00018644       GetErrorInfo
@@ -1792,10 +1792,10 @@ Detailed map of segments
  0001:0002DFC0       GetHelpSystem
  0001:000681B4       GetHint
  0001:000681EC       GetHintControl
- 0002:00001E8C       GetHostByAddr
  0002:00007388       gethostbyaddr
- 0001:000756AC       gethostbyname
+ 0002:00001E8C       GetHostByAddr
  0002:00001E88       GetHostByName
+ 0001:000756AC       gethostbyname
  0002:0000738C       gethostbyname
  0001:0008BA80       GetHostName
  0002:00007390       gethostname
@@ -1832,14 +1832,14 @@ Detailed map of segments
  0001:00006084       GetModuleFileName
  0001:0000608C       GetModuleFileNameA
  0001:00000350       GetModuleHandle
- 0001:00006094       GetModuleHandle
  0001:00005C40       GetModuleHandle
+ 0001:00006094       GetModuleHandle
  0002:00006B40       GetMonitorInfo
  0002:00006B44       GetMonitorInfoA
  0002:00006B48       GetMonitorInfoW
  0001:0000DE6C       GetMonthDayNames
  0002:00001EF8       GetNameInfo
- 0001:000B97F8       getNameVarGroup
+ 0001:000B8CF4       getNameVarGroup
  0001:000066DC       GetNextWindow
  0001:0000634C       GetObject
  0001:00085688       GetOleFont
@@ -1850,18 +1850,18 @@ Detailed map of segments
  0001:000020EC       GetParamStr
  0001:000066E4       GetParent
  0001:00060A30       GetParentForm
- 0001:000B9790       getParentVarGroup
+ 0001:000B8C8C       getParentVarGroup
  0001:0008BA50       GetPeerName
  0002:00007340       getpeername
  0001:00085638       GetPictureAccess
  0001:0000635C       GetPixel
- 0001:00000358       GetProcAddress
  0001:0000609C       GetProcAddress
+ 0001:00000358       GetProcAddress
  0001:000066EC       GetProp
  0001:00017B80       GetPropInfo
  0001:00017BF0       GetPropInfos
- 0002:00001E80       GetProtoByName
  0002:000073A0       getprotobyname
+ 0002:00001E80       GetProtoByName
  0002:00001E84       GetProtoByNumber
  0002:0000739C       getprotobynumber
  0001:00060EF0       GetRealScrollPosition
@@ -1869,9 +1869,9 @@ Detailed map of segments
  0001:000066F4       GetScrollInfo
  0001:000066FC       GetScrollPos
  0001:00006704       GetScrollRange
- 0002:00001E78       GetServByName
- 0001:000756B4       getservbyname
  0002:00007398       getservbyname
+ 0001:000756B4       getservbyname
+ 0002:00001E78       GetServByName
  0002:00007394       getservbyport
  0002:00001E7C       GetServByPort
  0001:000456F4       GetShortHint
@@ -1929,11 +1929,11 @@ Detailed map of segments
  0002:00006C38       GetThemeSysString
  0002:00006BCC       GetThemeTextExtent
  0002:00006BD0       GetThemeTextMetrics
- 0001:000060C4       GetThreadLocale
  0001:00000368       GetThreadLocale
+ 0001:000060C4       GetThreadLocale
  0001:0008D0F4       GetTick
- 0001:000060CC       GetTickCount
  0001:00000400       GetTickCount
+ 0001:000060CC       GetTickCount
  0001:0000C944       GetTime
  0001:000060D4       GetTimeZoneInformation
  0001:00005C78       GetTlsSize
@@ -1953,8 +1953,8 @@ Detailed map of segments
  0001:0000675C       GetWindowRect
  0001:00006764       GetWindowText
  0002:00006C48       GetWindowTheme
- 0001:00006774       GetWindowThreadProcessId
  0001:0000676C       GetWindowThreadProcessId
+ 0001:00006774       GetWindowThreadProcessId
  0001:0000638C       GetWinMetaFileBits
  0001:0007FBE8       get_tag
  0001:0007B000       get_tags_size
@@ -1994,8 +1994,8 @@ Detailed map of segments
  0002:00000B78       GUID_NULL
  0001:00011C34       HandleConversionException
  0001:00065B24       HandleEdge
- 0001:00020194       HandleException
  0001:000855BC       HandleException
+ 0001:00020194       HandleException
  0001:00036074       HasPopup
  0001:00039498       HasSelectedText
  0001:000B0A10       HeadersCanContinue
@@ -2031,10 +2031,10 @@ Detailed map of segments
  0001:00068300       HookHintHooks
  0002:00001ECC       htonl
  0002:0000734C       htonl
- 0002:00001EC8       htons
  0002:00007350       htons
+ 0002:00001EC8       htons
  0001:0007566C       htons
- 0001:000B4AA8       http
+ 0001:000BE738       http
  0001:000981D8       httpsend
  0001:00006B60       HwndMSWheel
  0002:00002080       hWS2Dll
@@ -2213,27 +2213,27 @@ Detailed map of segments
  0002:000070DC       in6addr_any
  0002:000074E8       in6addr_any
  0001:0009A2D4       IN6ADDR_ANY_INIT
- 0002:000074F8       in6addr_loopback
  0002:000070EC       in6addr_loopback
+ 0002:000074F8       in6addr_loopback
  0001:0009A2E4       IN6ADDR_LOOPBACK_INIT
- 0001:00011D20       InBounds
  0001:00011FC0       InBounds
+ 0001:00011D20       InBounds
  0001:0000F2FC       IncludeTrailingPathDelimiter
  0001:0009D0AC       IncludeTrailingSlash
  0001:0009633C       IncMinute
  0001:0008D698       IncPoint
- 0001:00011D50       Increment
  0001:00011FF0       Increment
+ 0001:00011D50       Increment
  0001:00096368       IncSecond
  0002:00001D00       IndexTab
  0002:00007524       IndyFalseBoolStrs
  0002:00002620       IndyPos
  0002:00007528       IndyTrueBoolStrs
+ 0002:00001EC4       Inet_addr
  0002:00007354       inet_addr
  0001:00075674       inet_addr
- 0002:00001EC4       Inet_addr
- 0002:00007358       inet_ntoa
  0002:00001EC0       Inet_ntoa
+ 0002:00007358       inet_ntoa
  0001:0000677C       InflateRect
  0001:000AA008       InfoCallback
  0001:0006ED3C       IniFiles
@@ -2304,12 +2304,12 @@ Detailed map of segments
  0001:000003E0       InterlockedDecrement
  0001:00005FEC       InterlockedDecrement
  0001:0000FDD8       InterlockedDecrement
- 0001:0000FDE4       InterlockedExchange
  0001:00005FF4       InterlockedExchange
+ 0001:0000FDE4       InterlockedExchange
  0001:0000FDEC       InterlockedExchangeAdd
- 0001:000003D8       InterlockedIncrement
- 0001:0000FDCC       InterlockedIncrement
  0001:00005FFC       InterlockedIncrement
+ 0001:0000FDCC       InterlockedIncrement
+ 0001:000003D8       InterlockedIncrement
  0001:00024950       InternalDeletePalette
  0001:00002370       InternalFlush
  0001:00000F60       InternalFreeMem
@@ -2323,8 +2323,8 @@ Detailed map of segments
  0001:00006794       IntersectRect
  0001:0000AC1C       IntToHex
  0001:0001AF38       IntToIdent
- 0001:0000ABF4       IntToStr
  0001:0000AB08       IntToStr
+ 0001:0000ABF4       IntToStr
  0001:0000679C       InvalidateRect
  0001:00026A88       InvalidBitmap
  0001:000964D0       InvalidDateTimeError
@@ -2406,11 +2406,11 @@ Detailed map of segments
  0002:00006870       LargeBlocksLocked
  0001:0000B1AC       LastDelimiter
  0002:000047E4       LastSequentiallyFedMediumBlock
- 0001:0000F554       LCIDToCodePage
  0001:00005AA4       LCIDToCodePage
+ 0001:0000F554       LCIDToCodePage
  0002:00000824       LeadBytes
- 0001:0000045C       LeaveCriticalSection
  0001:0000614C       LeaveCriticalSection
+ 0001:0000045C       LeaveCriticalSection
  0002:00001F08       LibHandle
  0002:00000038       LibModuleList
  0001:000B2598       libvlc
@@ -2443,8 +2443,8 @@ Detailed map of segments
  0001:0006F45C       ListActns
  0001:00046F38       ListAdd
  0002:0000735C       listen
- 0002:00001EB8       Listen
  0001:00075684       listen
+ 0002:00001EB8       Listen
  0001:00046F60       ListRemove
  0002:0000697A       ListSeparator
  0001:000A7B6C       Load
@@ -2464,13 +2464,13 @@ Detailed map of segments
  0001:0000615C       LoadResource
  0001:00005140       LoadResourceModule
  0001:00005A4C       LoadResString
- 0001:00000378       LoadString
  0001:0000680C       LoadString
+ 0001:00000378       LoadString
  0001:000B1B6C       LoadVLCFunctions
  0001:000B197C       LoadVLCLibrary
  0001:0007F370       LoadWMVCore
- 0001:0000042C       LocalAlloc
  0001:00005C48       LocalAlloc
+ 0001:0000042C       LocalAlloc
  0001:00000434       LocalFree
  0001:0000DE30       LocalGetLocaleStr
  0002:00006C78       Lock
@@ -2504,8 +2504,8 @@ Detailed map of segments
  0001:0007FDA0       lwma_reader_get_year
  0001:0007F6AC       lwma_reader_init
  0001:0007FE4C       lwma_reader_seek
- 0002:00007910       MainForm
- 0001:000BE738       MainForm_Unit
+ 0002:0000790C       MainForm
+ 0001:000BDC34       MainForm_Unit
  0002:00004030       MainInstance
  0002:00004034       MainThreadID
  0001:000004F0       MakeEmpty
@@ -2545,8 +2545,8 @@ Detailed map of segments
  0001:00000588       MergeBlockAfter
  0001:00001264       MergeCommit
  0001:00006824       MessageBeep
- 0001:0000682C       MessageBox
  0001:00000318       MessageBox
+ 0001:0000682C       MessageBox
  0001:00006834       MessageBoxA
  0001:00041A74       MessageDlg
  0001:0006BA24       MessageDlg
@@ -2559,8 +2559,8 @@ Detailed map of segments
  0001:0004A7F8       MinVar
  0002:00006B60       MMAvailable
  0001:00077A94       MMSystem
- 0002:00001740       ModalResults
  0002:00001330       ModalResults
+ 0002:00001740       ModalResults
  0002:00001490       ModeMap
  0001:000652B0       ModifySystemMenu
  0002:000000A8       Module
@@ -2572,8 +2572,8 @@ Detailed map of segments
  0002:00006B38       MonitorFromRect
  0002:00006B34       MonitorFromWindow
  0002:000007F4       MonthDays
- 0002:00002640       monthnames
  0002:000025F0       monthnames
+ 0002:00002640       monthnames
  0002:00002818       monthnames
  0002:00006D08       Mouse
  0002:00001DAC       MouseMap
@@ -2632,8 +2632,8 @@ Detailed map of segments
  0001:00003014       NotifyUnhandled
  0001:0000C7C8       Now
  0001:0005C604       NthParentOf
- 0002:00001EB4       ntohl
  0002:00007360       ntohl
+ 0002:00001EB4       ntohl
  0001:0007568C       ntohs
  0002:00007364       ntohs
  0002:00001EB0       ntohs
@@ -2647,8 +2647,8 @@ Detailed map of segments
  0002:00000FB4       OEMConverts
  0001:00006844       OemToAnsi
  0001:0009D548       OffsetFromUTC
- 0001:0000684C       OffsetRect
  0001:00005DBC       OffsetRect
+ 0001:0000684C       OffsetRect
  0002:00006888       OldMemoryManager
  0001:00084190       OleCheck
  0001:00086924       OleConst
@@ -2673,8 +2673,8 @@ Detailed map of segments
  0002:00006BB0       OpenThemeData
  0002:0000269C       Options
  0002:00001470       OrientArray
- 0002:0000143C       OuterStyles
  0002:00001028       OuterStyles
+ 0002:0000143C       OuterStyles
  0002:000069C0       OutOfMemory
  0001:0000E5AC       OutOfMemoryError
  0001:00026AAC       OutOfResources
@@ -2713,10 +2713,10 @@ Detailed map of segments
  0001:00006864       PostMessage
  0001:0000686C       PostQuitMessage
  0001:000AA17C       PrepareOpenSSLLocking
- 0002:00007920       prevSpeechAllTime
- 0002:0000792C       prevSpeechID
- 0002:00007918       prevSpeechIdTime
- 0002:00007928       prevSpeechType
+ 0002:0000791C       prevSpeechAllTime
+ 0002:00007928       prevSpeechID
+ 0002:00007914       prevSpeechIdTime
+ 0002:00007924       prevSpeechType
  0001:0002EBE4       Printers
  0002:00000BC0       Priorities
  0001:000669C4       ProcessExecute
@@ -2737,13 +2737,13 @@ Detailed map of segments
  0002:000000A4       PtrToNil
  0001:0000BBA4       PutExponent
  0002:00006D50       QualifyingSites
- 0001:00006184       QueryPerformanceCounter
  0001:000003F8       QueryPerformanceCounter
+ 0001:00006184       QueryPerformanceCounter
  0001:0000618C       QueryPerformanceFrequency
  0001:0001B728       QuickSort
  0001:0000E938       RaiseAssertException
- 0001:000B0870       RaiseException
  0001:0001DEC4       RaiseException
+ 0001:000B0870       RaiseException
  0001:00084C4C       RaiseException
  0001:000002D8       RaiseException
  0002:00004014       RaiseExceptionProc
@@ -2756,8 +2756,8 @@ Detailed map of segments
  0001:000B0990       ReadContent
  0001:00051E08       ReadControlName
  0001:000214EC       ReadCustomVariant
- 0001:0006EE0C       ReadError
  0001:0001F00C       ReadError
+ 0001:0006EE0C       ReadError
  0001:00006194       ReadFile
  0001:000275FC       ReadIcon
  0002:00000F98       ReadOnlys
@@ -2767,20 +2767,20 @@ Detailed map of segments
  0001:000063D4       RealizePalette
  0001:00007650       ReallocateLargeBlock
  0001:0001F848       Recover
- 0001:0001A054       Rect
  0001:00005D98       Rect
+ 0001:0001A054       Rect
  0001:000063E4       Rectangle
  0001:000063DC       RectVisible
  0001:0008BB10       Recv
- 0002:00007368       recv
  0001:00075694       recv
- 0002:0000736C       recvfrom
+ 0002:00007368       recv
  0001:0008BB6C       RecvFrom
+ 0002:0000736C       recvfrom
  0001:0000687C       RedrawWindow
  0002:00006A44       RefAnyProc
  0002:00006C74       ReferenceCount
- 0001:00000398       RegCloseKey
  0001:00005EF4       RegCloseKey
+ 0001:00000398       RegCloseKey
  0001:00005EFC       RegCreateKeyEx
  0001:0006EE4C       RegDataToDataType
  0001:00005F04       RegFlushKey
@@ -2788,8 +2788,8 @@ Detailed map of segments
  0001:00096334       RegForm_Unit
  0002:00006A88       RegGroups
  0001:000A55E4       RegisterAuthenticationMethod
- 0001:0001AC08       RegisterClass
  0001:00006884       RegisterClass
+ 0001:0001AC08       RegisterClass
  0001:0000688C       RegisterClipboardFormat
  0001:000462DC       RegisterDockSite
  0001:0001AF7C       RegisterFindGlobalComponentProc
@@ -2800,8 +2800,8 @@ Detailed map of segments
  0001:0006F360       Registry
  0001:00005F0C       RegOpenKeyEx
  0001:000003A0       RegOpenKeyEx
- 0001:00005F14       RegQueryValueEx
  0001:000003A8       RegQueryValueEx
+ 0001:00005F14       RegQueryValueEx
  0001:00005F1C       RegSetValueEx
  0001:0003C654       RegStr
  0001:0000689C       ReleaseCapture
@@ -2832,10 +2832,10 @@ Detailed map of segments
  0001:000063EC       RestoreDC
  0001:00060570       RestoreFocusState
  0001:000061AC       ResumeThread
- 0001:000585E0       ReturnAddr
  0001:0000E588       ReturnAddr
  0001:0001C98C       ReturnAddr
  0001:0001B3DC       ReturnAddr
+ 0001:000585E0       ReturnAddr
  0001:0008CFE8       Rfc822DateTime
  0001:00027028       RGBQuadToTriple
  0001:00026FE0       RGBTripleToQuad
@@ -2848,8 +2848,8 @@ Detailed map of segments
  0001:0009D458       RPos
  0002:0000182C       RRStyles
  0002:000017D0       RTFConversionFormat
- 0002:000017E8       RTL
  0002:000017F8       RTL
+ 0002:000017E8       RTL
  0002:000017F0       RTL
  0001:00017A90       RTLConsts
  0001:000002E0       RtlUnwind
@@ -2894,14 +2894,14 @@ Detailed map of segments
  0001:000946D0       SelectDirectory
  0001:0000640C       SelectObject
  0001:00006414       SelectPalette
- 0001:0008BAF8       Send
  0001:0007569C       send
  0002:00007374       send
+ 0001:0008BAF8       Send
  0001:00045510       SendAppMessage
  0001:000607F0       SendFocusMessage
  0001:000068CC       SendMessage
- 0001:0008BB28       SendTo
  0002:00007378       sendto
+ 0001:0008BB28       SendTo
  0001:0008D33C       SeparateLeft
  0001:0008D37C       SeparateRight
  0002:00001530       Separators
@@ -2959,8 +2959,8 @@ Detailed map of segments
  0001:00006944       SetScrollRange
  0001:00017D14       SetShortStrProp
  0001:00017D68       SetShortStrPropAsLongStr
- 0002:0000737C       setsockopt
  0002:00001E98       SetSockOpt
+ 0002:0000737C       setsockopt
  0001:00006454       SetStretchBltMode
  0001:00017E48       SetStrProp
  0001:0001F7C0       SetSubComponentState
@@ -2988,8 +2988,8 @@ Detailed map of segments
  0001:0008B95C       SET_IN6_IF_ADDR_ANY
  0001:0008B970       SET_LOOPBACK_ADDR6
  0001:0007B038       set_tag_item
- 0002:00001B50       ShareMode
  0002:00000864       ShareMode
+ 0002:00001B50       ShareMode
  0001:0003C700       SHBrowseForFolder
  0001:0003C61C       ShellAPI
  0002:00006E68       ShellModule
@@ -3010,13 +3010,13 @@ Detailed map of segments
  0001:000977CC       show
  0001:000B3674       showCamAlert
  0001:000B2C90       showCamAll
+ 0002:00001620       ShowCommands
  0002:00001608       ShowCommands
  0002:00001614       ShowCommands
- 0002:00001620       ShowCommands
  0001:0000697C       ShowCursor
  0001:0000E4C0       ShowException
- 0002:000016BC       ShowFlags
  0002:00001424       ShowFlags
+ 0002:000016BC       ShowFlags
  0002:000068A2       ShowingMessageBox
  0001:00060578       ShowMDIClientEdge
  0001:000070D8       ShowMessageBox
@@ -3025,8 +3025,8 @@ Detailed map of segments
  0001:00006994       ShowWindow
  0001:00068428       ShowWinNoAnimate
  0001:000530C4       ShowZone
- 0002:00001E94       Shutdown
  0002:00007380       shutdown
+ 0002:00001E94       Shutdown
  0001:00021B2C       SignalSyncEvent
  0001:0006C47C       SimpleTimer
  0002:0000176C       SimpleTimerHandler
@@ -3037,9 +3037,9 @@ Detailed map of segments
  0001:00021050       SkipCollection
  0001:00020FF8       SkipList
  0001:0000FC64       Sleep
- 0001:0008B918       Sleep
- 0001:000061EC       Sleep
  0001:0009DDB0       Sleep
+ 0001:000061EC       Sleep
+ 0001:0008B918       Sleep
  0002:000000C4       SmallBlockTypes
  0001:0001A044       SmallPoint
  0001:00006A6C       SmallPointToPoint
@@ -3109,7 +3109,7 @@ Detailed map of segments
  0001:0000B46C       StrPLCopy
  0001:0000B55C       StrPos
  0001:0000B53C       StrScan
- 0001:000BADA0       strToDate
+ 0001:000BA29C       strToDate
  0001:0009D8D4       StrToDay
  0001:0000C25C       StrToFloat
  0001:0000AC44       StrToInt
@@ -3121,8 +3121,8 @@ Detailed map of segments
  0002:000015FC       Styles
  0002:00001068       Styles
  0001:0001864C       Succeeded
- 0001:00010254       Supports
  0001:00010278       Supports
+ 0001:00010254       Supports
  0002:00004680       SuppressMessageBoxes
  0001:0008D6D8       SwapBytes
  0001:0008DA78       synacode
@@ -5395,8 +5395,8 @@ Detailed map of segments
  0001:000A21BC       TIdTCPConnection.GetResponse
  0001:000A2C34       TIdTCPConnection.Notification
  0001:000A328C       TIdTCPConnection.OpenWriteBuffer
- 0001:000A2244       TIdTCPConnection.RaiseExceptionForLastCmdResult
  0001:000A21E4       TIdTCPConnection.RaiseExceptionForLastCmdResult
+ 0001:000A2244       TIdTCPConnection.RaiseExceptionForLastCmdResult
  0001:000A22A8       TIdTCPConnection.ReadBuffer
  0001:000A2314       TIdTCPConnection.ReadFromStack
  0001:000A25BC       TIdTCPConnection.ReadInteger
@@ -5458,8 +5458,8 @@ Detailed map of segments
  0001:0001B360       TList.Clear
  0001:0001B378       TList.Delete
  0001:0001B30C       TList.Destroy
- 0001:0001B3E0       TList.Error
  0001:0001B418       TList.Error
+ 0001:0001B3E0       TList.Error
  0001:0001B46C       TList.Expand
  0001:0001B7D0       TList.Extract
  0001:0001B484       TList.First
@@ -5493,130 +5493,130 @@ Detailed map of segments
  0002:000000A0       TlsIndex
  0002:FFB40014       TlsLast
  0001:00005C58       TlsSetValue
- 0001:000BCD08       TMainForm.ActionSelAllExecute
- 0001:000BBE94       TMainForm.AddMediaListButtonClick
- 0001:000BE5F4       TMainForm.CamAlertBtnClick
- 0001:000B8BA8       TMainForm.checkAppatId
- 0001:000BCFE0       TMainForm.checkSpechData
- 0001:000BB238       TMainForm.clearList
- 0001:000BB274       TMainForm.clearStrings
- 0001:000B8428       TMainForm.ComboBox1Change
- 0001:000BCA44       TMainForm.ComboBox1DrawItem
- 0001:000BBB3C       TMainForm.CoolTrayIcon1Click
- 0001:000B6A78       TMainForm.currView
- 0001:000BB70C       TMainForm.drawIcon
- 0001:000BD4A4       TMainForm.DXAudioOut1Done
- 0001:000BD5A8       TMainForm.DXAudioOut2Done
- 0001:000B7F54       TMainForm.FilterEditChange
- 0001:000BA700       TMainForm.firstRun
- 0001:000BD570       TMainForm.FormActivate
- 0001:000B799C       TMainForm.FormCloseQuery
- 0001:000B5B04       TMainForm.FormCreate
- 0001:000BD57C       TMainForm.FormDeactivate
- 0001:000B60CC       TMainForm.FormDestroy
- 0001:000B75C4       TMainForm.FormResize
- 0001:000B9474       TMainForm.FormShow
- 0001:000B854C       TMainForm.getMediaAtId
- 0001:000BE670       TMainForm.HIDE_CAM_ALERT
- 0001:000BE6E8       TMainForm.HIDE_CAM_ALL
- 0001:000B7A70       TMainForm.InfoPanelResize
- 0001:000BB7B0       TMainForm.inverIcon
- 0001:000BE6C0       TMainForm.Label1DblClick
- 0001:000BC278       TMainForm.loadMediaCross
- 0001:000BC6B8       TMainForm.loadMediaGroups
- 0001:000BC3D4       TMainForm.MediaGroupAddClick
- 0001:000BC520       TMainForm.MediaGroupDelClick
- 0001:000BE16C       TMainForm.mediaHandler
- 0001:000B9374       TMainForm.MediaListDblClick
- 0001:000B7FC8       TMainForm.MediaListDrawItem
- 0001:000B977C       TMainForm.MediaListKeyDown
- 0001:000BBAD4       TMainForm.MediaListMouseDown
- 0001:000B8954       TMainForm.MediaVolPanelMouseDown
- 0001:000B898C       TMainForm.MediaVolPanelMouseMove
- 0001:000B89C8       TMainForm.MediaVolPanelMouseUp
- 0001:000BDD70       TMainForm.MEDIA_END_MESS
- 0001:000B8C64       TMainForm.metaQuery
- 0001:000B9440       TMainForm.mp3OnChange
- 0001:000B9508       TMainForm.mp3OnPlayPosEvent
- 0001:000B9764       TMainForm.mp3OnStopEvent
- 0001:000BCC84       TMainForm.N12Click
- 0001:000BB89C       TMainForm.N14Click
- 0001:000BB824       TMainForm.N15Click
- 0001:000BB900       TMainForm.N18Click
- 0001:000B7A38       TMainForm.N1Click
- 0001:000BBFBC       TMainForm.N26Click
- 0001:000BC124       TMainForm.N27Click
- 0001:000B7A2C       TMainForm.N3Click
- 0001:000BBB1C       TMainForm.N4Click
- 0001:000BB848       TMainForm.N7Click
- 0001:000BBB30       TMainForm.N8Click
- 0001:000B7A4C       TMainForm.Panel5Resize
- 0001:000B83E8       TMainForm.Panel6Resize
- 0001:000BD5D8       TMainForm.Panel7Resize
- 0001:000B8F60       TMainForm.PauseButtonClick
- 0001:000BD9BC       TMainForm.pauseMiniPlayer
- 0001:000B8F78       TMainForm.PlayButtonClick
- 0001:000B96A4       TMainForm.PlayLoopButtonClick
- 0001:000BCE28       TMainForm.PlayLoopButtonMouseUp
- 0001:000B9514       TMainForm.playMediaNextItem
- 0001:000B8FE0       TMainForm.playMediaPlayAt
- 0001:000BD71C       TMainForm.playMiniPlayer
- 0001:000BCE30       TMainForm.PlayNextButtonClick
- 0001:000BBB6C       TMainForm.PopupMenu3Popup
- 0001:000BDE38       TMainForm.queueHandler
- 0001:000B7AD0       TMainForm.refreshMediaList
- 0001:000B6618       TMainForm.refreshVarList
- 0001:000BB2C8       TMainForm.SchedListDrawItem
- 0001:000BBA90       TMainForm.SchedListMouseDown
- 0001:000BAF14       TMainForm.schedLoad
- 0001:000B6AD8       TMainForm.sendVarValue
- 0001:000BE110       TMainForm.sessionHandler
- 0001:000B8A00       TMainForm.setMediaVolume
- 0001:000B646C       TMainForm.setStatusText
- 0001:000B76A4       TMainForm.setVolume
- 0001:000BE660       TMainForm.SHOW_CAM_ALERT
- 0001:000B6978       TMainForm.SocketMetaConnect
- 0001:000B6520       TMainForm.SocketMetaConnecting
- 0001:000B6560       TMainForm.SocketMetaDisconnect
- 0001:000B65C4       TMainForm.SocketMetaError
- 0001:000B682C       TMainForm.SpeedButton1Click
- 0001:000BE6B4       TMainForm.SpeedButton2Click
- 0001:000B8B24       TMainForm.SpeedButton6Click
- 0001:000B9928       TMainForm.startLoad
- 0001:000B903C       TMainForm.startMediaPlay
- 0001:000B8F34       TMainForm.StopButtonClick
- 0001:000BDA18       TMainForm.stopMiniPlayer
- 0001:000BA3F4       TMainForm.syncHandler
- 0001:000BDD7C       TMainForm.syncLoadAsync
- 0001:000B8750       TMainForm.TimePanelMouseDown
- 0001:000B87C8       TMainForm.TimePanelMouseMove
- 0001:000B8808       TMainForm.TimePanelMouseUp
- 0001:000B871C       TMainForm.TimePanelResize
- 0001:000B6378       TMainForm.Timer1Timer
- 0001:000BB8F4       TMainForm.Timer2Timer
- 0001:000BD284       TMainForm.Timer3Timer
- 0001:000B8850       TMainForm.timeSeek
- 0001:000B8DB0       TMainForm.transferMedia
- 0001:000BB648       TMainForm.trimText
- 0001:000BCD50       TMainForm.updatePlayLoopButtonIcon
- 0001:000B8594       TMainForm.updateTimePanel
- 0001:000B6BC4       TMainForm.VarListDrawItem
- 0001:000B7740       TMainForm.VarListKeyDown
- 0001:000B742C       TMainForm.VarListMouseDown
- 0001:000BA814       TMainForm.VarPopupItemClick
- 0001:000BB95C       TMainForm.VarPopupMenuPopup
- 0001:000B9390       TMainForm.vlcOnChange
- 0001:000B94FC       TMainForm.vlcOnPlayPosEvent
- 0001:000B973C       TMainForm.vlcOnStopEvent
- 0001:000BDB40       TMainForm.VLCPlugin21MediaPlayerLengthChanged
- 0001:000BDB78       TMainForm.VLCPlugin21MediaPlayerPaused
- 0001:000BDB90       TMainForm.VLCPlugin21MediaPlayerPlaying
- 0001:000BDBA8       TMainForm.VLCPlugin21MediaPlayerStopped
- 0001:000BDC58       TMainForm.VLCPlugin21MediaPlayerTimeChanged
- 0001:000B75F8       TMainForm.VolumePanelMouseDown
- 0001:000B7630       TMainForm.VolumePanelMouseMove
- 0001:000B766C       TMainForm.VolumePanelMouseUp
- 0001:000BD588       TMainForm.WMGetSysCommand
+ 0001:000BC204       TMainForm.ActionSelAllExecute
+ 0001:000BB390       TMainForm.AddMediaListButtonClick
+ 0001:000BDAF0       TMainForm.CamAlertBtnClick
+ 0001:000B80A4       TMainForm.checkAppatId
+ 0001:000BC4DC       TMainForm.checkSpechData
+ 0001:000BA734       TMainForm.clearList
+ 0001:000BA770       TMainForm.clearStrings
+ 0001:000B7924       TMainForm.ComboBox1Change
+ 0001:000BBF40       TMainForm.ComboBox1DrawItem
+ 0001:000BB038       TMainForm.CoolTrayIcon1Click
+ 0001:000B5F74       TMainForm.currView
+ 0001:000BAC08       TMainForm.drawIcon
+ 0001:000BC9A0       TMainForm.DXAudioOut1Done
+ 0001:000BCAA4       TMainForm.DXAudioOut2Done
+ 0001:000B7450       TMainForm.FilterEditChange
+ 0001:000B9BFC       TMainForm.firstRun
+ 0001:000BCA6C       TMainForm.FormActivate
+ 0001:000B6E98       TMainForm.FormCloseQuery
+ 0001:000B5000       TMainForm.FormCreate
+ 0001:000BCA78       TMainForm.FormDeactivate
+ 0001:000B55C8       TMainForm.FormDestroy
+ 0001:000B6AC0       TMainForm.FormResize
+ 0001:000B8970       TMainForm.FormShow
+ 0001:000B7A48       TMainForm.getMediaAtId
+ 0001:000BDB6C       TMainForm.HIDE_CAM_ALERT
+ 0001:000BDBE4       TMainForm.HIDE_CAM_ALL
+ 0001:000B6F6C       TMainForm.InfoPanelResize
+ 0001:000BACAC       TMainForm.inverIcon
+ 0001:000BDBBC       TMainForm.Label1DblClick
+ 0001:000BB774       TMainForm.loadMediaCross
+ 0001:000BBBB4       TMainForm.loadMediaGroups
+ 0001:000BB8D0       TMainForm.MediaGroupAddClick
+ 0001:000BBA1C       TMainForm.MediaGroupDelClick
+ 0001:000BD668       TMainForm.mediaHandler
+ 0001:000B8870       TMainForm.MediaListDblClick
+ 0001:000B74C4       TMainForm.MediaListDrawItem
+ 0001:000B8C78       TMainForm.MediaListKeyDown
+ 0001:000BAFD0       TMainForm.MediaListMouseDown
+ 0001:000B7E50       TMainForm.MediaVolPanelMouseDown
+ 0001:000B7E88       TMainForm.MediaVolPanelMouseMove
+ 0001:000B7EC4       TMainForm.MediaVolPanelMouseUp
+ 0001:000BD26C       TMainForm.MEDIA_END_MESS
+ 0001:000B8160       TMainForm.metaQuery
+ 0001:000B893C       TMainForm.mp3OnChange
+ 0001:000B8A04       TMainForm.mp3OnPlayPosEvent
+ 0001:000B8C60       TMainForm.mp3OnStopEvent
+ 0001:000BC180       TMainForm.N12Click
+ 0001:000BAD98       TMainForm.N14Click
+ 0001:000BAD20       TMainForm.N15Click
+ 0001:000BADFC       TMainForm.N18Click
+ 0001:000B6F34       TMainForm.N1Click
+ 0001:000BB4B8       TMainForm.N26Click
+ 0001:000BB620       TMainForm.N27Click
+ 0001:000B6F28       TMainForm.N3Click
+ 0001:000BB018       TMainForm.N4Click
+ 0001:000BAD44       TMainForm.N7Click
+ 0001:000BB02C       TMainForm.N8Click
+ 0001:000B6F48       TMainForm.Panel5Resize
+ 0001:000B78E4       TMainForm.Panel6Resize
+ 0001:000BCAD4       TMainForm.Panel7Resize
+ 0001:000B845C       TMainForm.PauseButtonClick
+ 0001:000BCEB8       TMainForm.pauseMiniPlayer
+ 0001:000B8474       TMainForm.PlayButtonClick
+ 0001:000B8BA0       TMainForm.PlayLoopButtonClick
+ 0001:000BC324       TMainForm.PlayLoopButtonMouseUp
+ 0001:000B8A10       TMainForm.playMediaNextItem
+ 0001:000B84DC       TMainForm.playMediaPlayAt
+ 0001:000BCC18       TMainForm.playMiniPlayer
+ 0001:000BC32C       TMainForm.PlayNextButtonClick
+ 0001:000BB068       TMainForm.PopupMenu3Popup
+ 0001:000BD334       TMainForm.queueHandler
+ 0001:000B6FCC       TMainForm.refreshMediaList
+ 0001:000B5B14       TMainForm.refreshVarList
+ 0001:000BA7C4       TMainForm.SchedListDrawItem
+ 0001:000BAF8C       TMainForm.SchedListMouseDown
+ 0001:000BA410       TMainForm.schedLoad
+ 0001:000B5FD4       TMainForm.sendVarValue
+ 0001:000BD60C       TMainForm.sessionHandler
+ 0001:000B7EFC       TMainForm.setMediaVolume
+ 0001:000B5968       TMainForm.setStatusText
+ 0001:000B6BA0       TMainForm.setVolume
+ 0001:000BDB5C       TMainForm.SHOW_CAM_ALERT
+ 0001:000B5E74       TMainForm.SocketMetaConnect
+ 0001:000B5A1C       TMainForm.SocketMetaConnecting
+ 0001:000B5A5C       TMainForm.SocketMetaDisconnect
+ 0001:000B5AC0       TMainForm.SocketMetaError
+ 0001:000B5D28       TMainForm.SpeedButton1Click
+ 0001:000BDBB0       TMainForm.SpeedButton2Click
+ 0001:000B8020       TMainForm.SpeedButton6Click
+ 0001:000B8E24       TMainForm.startLoad
+ 0001:000B8538       TMainForm.startMediaPlay
+ 0001:000B8430       TMainForm.StopButtonClick
+ 0001:000BCF14       TMainForm.stopMiniPlayer
+ 0001:000B98F0       TMainForm.syncHandler
+ 0001:000BD278       TMainForm.syncLoadAsync
+ 0001:000B7C4C       TMainForm.TimePanelMouseDown
+ 0001:000B7CC4       TMainForm.TimePanelMouseMove
+ 0001:000B7D04       TMainForm.TimePanelMouseUp
+ 0001:000B7C18       TMainForm.TimePanelResize
+ 0001:000B5874       TMainForm.Timer1Timer
+ 0001:000BADF0       TMainForm.Timer2Timer
+ 0001:000BC780       TMainForm.Timer3Timer
+ 0001:000B7D4C       TMainForm.timeSeek
+ 0001:000B82AC       TMainForm.transferMedia
+ 0001:000BAB44       TMainForm.trimText
+ 0001:000BC24C       TMainForm.updatePlayLoopButtonIcon
+ 0001:000B7A90       TMainForm.updateTimePanel
+ 0001:000B60C0       TMainForm.VarListDrawItem
+ 0001:000B6C3C       TMainForm.VarListKeyDown
+ 0001:000B6928       TMainForm.VarListMouseDown
+ 0001:000B9D10       TMainForm.VarPopupItemClick
+ 0001:000BAE58       TMainForm.VarPopupMenuPopup
+ 0001:000B888C       TMainForm.vlcOnChange
+ 0001:000B89F8       TMainForm.vlcOnPlayPosEvent
+ 0001:000B8C38       TMainForm.vlcOnStopEvent
+ 0001:000BD03C       TMainForm.VLCPlugin21MediaPlayerLengthChanged
+ 0001:000BD074       TMainForm.VLCPlugin21MediaPlayerPaused
+ 0001:000BD08C       TMainForm.VLCPlugin21MediaPlayerPlaying
+ 0001:000BD0A4       TMainForm.VLCPlugin21MediaPlayerStopped
+ 0001:000BD154       TMainForm.VLCPlugin21MediaPlayerTimeChanged
+ 0001:000B6AF4       TMainForm.VolumePanelMouseDown
+ 0001:000B6B2C       TMainForm.VolumePanelMouseMove
+ 0001:000B6B68       TMainForm.VolumePanelMouseUp
+ 0001:000BCA84       TMainForm.WMGetSysCommand
  0001:0005D150       TMainMenu.GetHandle
  0001:0005D124       TMainMenu.ItemChanged
  0001:0005D094       TMainMenu.MenuChanged
@@ -5664,8 +5664,8 @@ Detailed map of segments
  0001:0005CB78       TMenu.Loaded
  0001:0005CB90       TMenu.MenuChanged
  0001:0005CC14       TMenu.Notification
- 0001:0005D008       TMenu.ParentBiDiModeChanged
  0001:0005CFE0       TMenu.ParentBiDiModeChanged
+ 0001:0005D008       TMenu.ParentBiDiModeChanged
  0001:0005CD9C       TMenu.ProcessMenuChar
  0001:0005D044       TMenu.SetAutoHotkeys
  0001:0005D064       TMenu.SetAutoLineReduction
@@ -6639,13 +6639,13 @@ Detailed map of segments
  0001:000940B0       TTCPBlockSocket.SendBuffer
  0001:00093AF8       TTCPBlockSocket.SocksDoConnect
  0001:00093848       TTCPBlockSocket.WaitingData
- 0001:000B4084       TTCPHttpDaemon.Create
- 0001:000B40D4       TTCPHttpDaemon.Destroy
- 0001:000B4108       TTCPHttpDaemon.Execute
- 0001:000B41C8       TTCPHttpThrd.Create
- 0001:000B4260       TTCPHttpThrd.Destroy
- 0001:000B42B8       TTCPHttpThrd.Execute
- 0001:000B48BC       TTCPHttpThrd.ProcessHttpRequest
+ 0001:000BDD14       TTCPHttpDaemon.Create
+ 0001:000BDD64       TTCPHttpDaemon.Destroy
+ 0001:000BDD98       TTCPHttpDaemon.Execute
+ 0001:000BDE58       TTCPHttpThrd.Create
+ 0001:000BDEF0       TTCPHttpThrd.Destroy
+ 0001:000BDF48       TTCPHttpThrd.Execute
+ 0001:000BE54C       TTCPHttpThrd.ProcessHttpRequest
  0001:0002FFA0       TThemeServices.ApplyThemeChange
  0001:0002FFB4       TThemeServices.ContentRect
  0001:0002FE5C       TThemeServices.Create
@@ -6657,10 +6657,10 @@ Detailed map of segments
  0001:000300DC       TThemeServices.DrawParentBackground
  0001:00030144       TThemeServices.DrawText
  0001:0003022C       TThemeServices.GetElementDetails
- 0001:00030268       TThemeServices.GetElementDetails
- 0001:00030380       TThemeServices.GetElementDetails
- 0001:0003041C       TThemeServices.GetElementDetails
  0001:000301A8       TThemeServices.GetElementDetails
+ 0001:0003041C       TThemeServices.GetElementDetails
+ 0001:00030380       TThemeServices.GetElementDetails
+ 0001:00030268       TThemeServices.GetElementDetails
  0001:0002FF04       TThemeServices.GetTheme
  0001:0002FF44       TThemeServices.GetThemesEnabled
  0001:000307A8       TThemeServices.PaintBorder
@@ -6668,8 +6668,8 @@ Detailed map of segments
  0001:00030914       TThemeServices.UpdateThemes
  0001:00021ED0       TThread.AfterConstruction
  0001:00021F70       TThread.CallOnTerminate
- 0001:00021EDC       TThread.CheckThreadError
  0001:00021F58       TThread.CheckThreadError
+ 0001:00021EDC       TThread.CheckThreadError
  0001:00021D98       TThread.Create
  0001:00021E68       TThread.Destroy
  0001:00021F84       TThread.DoTerminate
@@ -7132,10 +7132,10 @@ Detailed map of segments
  0002:00006CF8       ViewerName
  0001:0000043C       VirtualAlloc
  0001:000061FC       VirtualAlloc
- 0001:00006204       VirtualFree
  0001:00000444       VirtualFree
- 0001:000003B8       VirtualQuery
+ 0001:00006204       VirtualFree
  0001:0000620C       VirtualQuery
+ 0001:000003B8       VirtualQuery
  0001:000B229C       vlcGetStatus
  0002:000078F4       vlcLib
  0001:000B20C0       vlcPlay
@@ -7192,8 +7192,8 @@ Detailed map of segments
  0002:00001250       WndProcPtrAtom
  0001:0009AC94       WordIsOk
  0002:00000FE8       WordWraps
- 0002:00000F88       WordWraps
  0002:00000F8C       WordWraps
+ 0002:00000F88       WordWraps
  0001:00052970       WriteControlName
  0001:00003788       WriteErrorMessage
  0001:0000621C       WriteFile
@@ -7322,21 +7322,21 @@ Detailed map of segments
  0002:00007460       WSAAddressToStringA
  0002:00007464       WSAAddressToStringW
  0002:000073D0       WSAAsyncGetHostByAddr
- 0002:000073CC       WSAAsyncGetHostByName
  0001:000756C4       WSAAsyncGetHostByName
+ 0002:000073CC       WSAAsyncGetHostByName
  0002:000073C4       WSAAsyncGetProtoByName
  0002:000073C8       WSAAsyncGetProtoByNumber
  0002:000073BC       WSAAsyncGetServByName
  0001:000756CC       WSAAsyncGetServByName
  0002:000073C0       WSAAsyncGetServByPort
- 0002:000073D8       WSAAsyncSelect
  0001:000756BC       WSAAsyncSelect
+ 0002:000073D8       WSAAsyncSelect
  0001:000756D4       WSACancelAsyncRequest
  0002:000073D4       WSACancelAsyncRequest
  0002:000073B8       WSACancelBlockingCall
- 0001:000756EC       WSACleanup
  0002:00007328       WSACleanup
  0002:00001E70       WSACleanup
+ 0001:000756EC       WSACleanup
  0002:000073E4       WSACloseEvent
  0002:000073E8       WSAConnect
  0002:000073EC       WSACreateEvent
@@ -7353,9 +7353,9 @@ Detailed map of segments
  0002:00007400       WSAEnumProtocolsA
  0002:00007404       WSAEnumProtocolsW
  0002:0000740C       WSAEventSelect
- 0001:000756DC       WSAGetLastError
- 0002:00001E74       WSAGetLastError
  0002:000073A8       WSAGetLastError
+ 0002:00001E74       WSAGetLastError
+ 0001:000756DC       WSAGetLastError
  0002:00007410       WSAGetOverlappedResult
  0002:00007414       WSAGetQosByName
  0002:000074AC       WSAGetServiceClassInfo
@@ -7401,9 +7401,9 @@ Detailed map of segments
  0002:00007458       WSASocket
  0002:00007450       WSASocketA
  0002:00007454       WSASocketW
+ 0001:000756E4       WSAStartup
  0002:00001E6C       WSAStartup
  0001:0009A1C8       WSAStartup
- 0001:000756E4       WSAStartup
  0002:00007474       WSAStringToAddress
  0002:0000746C       WSAStringToAddressA
  0002:00007470       WSAStringToAddressW
@@ -7441,8 +7441,8 @@ Detailed map of segments
  0002:00006D70       _ImmSetOpenStatus
  0002:00006B2C       _InitCommonControlsEx
  0002:00006BA4       _InitializeFlatSB
- 0001:000836A0       _Min
  0001:000793F8       _min
+ 0001:000836A0       _Min
  0001:00080B3C       _MSAcm
  0002:000070AC       _OleCreateFontIndirect
  0002:000070B0       _OleCreatePictureIndirect
@@ -7462,8 +7462,8 @@ Detailed map of segments
  0002:00001B28       _vorbis_TrackGain
  0002:00001B2C       _vorbis_TrackPeak
  0002:00006D5C       _WINNLSEnableIME
- 0002:000073DC       __WSAFDIsSet
  0002:00001EFC       __WSAFDIsSet
+ 0002:000073DC       __WSAFDIsSet
 
 
   Address         Publics by Value
@@ -13346,148 +13346,148 @@ Detailed map of segments
  0001:000B3F28       TCamAlertDiaplay.FormDestroy
  0001:000B3F4C       Finalization
  0001:000B3F8C       CamAlertDiaplay_Unit
- 0001:000B4084       TTCPHttpDaemon.Create
- 0001:000B40D4       TTCPHttpDaemon.Destroy
- 0001:000B4108       TTCPHttpDaemon.Execute
- 0001:000B41C8       TTCPHttpThrd.Create
- 0001:000B4260       TTCPHttpThrd.Destroy
- 0001:000B42B8       TTCPHttpThrd.Execute
- 0001:000B48BC       TTCPHttpThrd.ProcessHttpRequest
- 0001:000B4A78       Finalization
- 0001:000B4AA8       http
- 0001:000B5B04       TMainForm.FormCreate
- 0001:000B60CC       TMainForm.FormDestroy
- 0001:000B6378       TMainForm.Timer1Timer
- 0001:000B646C       TMainForm.setStatusText
- 0001:000B6520       TMainForm.SocketMetaConnecting
- 0001:000B6560       TMainForm.SocketMetaDisconnect
- 0001:000B65C4       TMainForm.SocketMetaError
- 0001:000B6618       TMainForm.refreshVarList
- 0001:000B682C       TMainForm.SpeedButton1Click
- 0001:000B6978       TMainForm.SocketMetaConnect
- 0001:000B6A78       TMainForm.currView
- 0001:000B6AD8       TMainForm.sendVarValue
- 0001:000B6BC4       TMainForm.VarListDrawItem
- 0001:000B742C       TMainForm.VarListMouseDown
- 0001:000B75C4       TMainForm.FormResize
- 0001:000B75F8       TMainForm.VolumePanelMouseDown
- 0001:000B7630       TMainForm.VolumePanelMouseMove
- 0001:000B766C       TMainForm.VolumePanelMouseUp
- 0001:000B76A4       TMainForm.setVolume
- 0001:000B7740       TMainForm.VarListKeyDown
- 0001:000B799C       TMainForm.FormCloseQuery
- 0001:000B7A2C       TMainForm.N3Click
- 0001:000B7A38       TMainForm.N1Click
- 0001:000B7A4C       TMainForm.Panel5Resize
- 0001:000B7A70       TMainForm.InfoPanelResize
- 0001:000B7A90       checkMediaInGroup
- 0001:000B7AD0       TMainForm.refreshMediaList
- 0001:000B7F54       TMainForm.FilterEditChange
- 0001:000B7FC8       TMainForm.MediaListDrawItem
- 0001:000B83E8       TMainForm.Panel6Resize
- 0001:000B8428       TMainForm.ComboBox1Change
- 0001:000B854C       TMainForm.getMediaAtId
- 0001:000B8594       TMainForm.updateTimePanel
- 0001:000B871C       TMainForm.TimePanelResize
- 0001:000B8750       TMainForm.TimePanelMouseDown
- 0001:000B87C8       TMainForm.TimePanelMouseMove
- 0001:000B8808       TMainForm.TimePanelMouseUp
- 0001:000B8850       TMainForm.timeSeek
- 0001:000B8954       TMainForm.MediaVolPanelMouseDown
- 0001:000B898C       TMainForm.MediaVolPanelMouseMove
- 0001:000B89C8       TMainForm.MediaVolPanelMouseUp
- 0001:000B8A00       TMainForm.setMediaVolume
- 0001:000B8B24       TMainForm.SpeedButton6Click
- 0001:000B8BA8       TMainForm.checkAppatId
- 0001:000B8C64       TMainForm.metaQuery
- 0001:000B8DB0       TMainForm.transferMedia
- 0001:000B8F34       TMainForm.StopButtonClick
- 0001:000B8F60       TMainForm.PauseButtonClick
- 0001:000B8F78       TMainForm.PlayButtonClick
- 0001:000B8FE0       TMainForm.playMediaPlayAt
- 0001:000B903C       TMainForm.startMediaPlay
- 0001:000B9374       TMainForm.MediaListDblClick
- 0001:000B9390       TMainForm.vlcOnChange
- 0001:000B9440       TMainForm.mp3OnChange
- 0001:000B9474       TMainForm.FormShow
- 0001:000B94FC       TMainForm.vlcOnPlayPosEvent
- 0001:000B9508       TMainForm.mp3OnPlayPosEvent
- 0001:000B9514       TMainForm.playMediaNextItem
- 0001:000B96A4       TMainForm.PlayLoopButtonClick
- 0001:000B973C       TMainForm.vlcOnStopEvent
- 0001:000B9764       TMainForm.mp3OnStopEvent
- 0001:000B977C       TMainForm.MediaListKeyDown
- 0001:000B9790       getParentVarGroup
- 0001:000B97F8       getNameVarGroup
- 0001:000B9880       compVarGroup
- 0001:000B9928       TMainForm.startLoad
- 0001:000BA3F4       TMainForm.syncHandler
- 0001:000BA700       TMainForm.firstRun
- 0001:000BA814       TMainForm.VarPopupItemClick
- 0001:000BADA0       strToDate
- 0001:000BAF14       TMainForm.schedLoad
- 0001:000BB238       TMainForm.clearList
- 0001:000BB274       TMainForm.clearStrings
- 0001:000BB2C8       TMainForm.SchedListDrawItem
- 0001:000BB648       TMainForm.trimText
- 0001:000BB70C       TMainForm.drawIcon
- 0001:000BB7B0       TMainForm.inverIcon
- 0001:000BB824       TMainForm.N15Click
- 0001:000BB848       TMainForm.N7Click
- 0001:000BB89C       TMainForm.N14Click
- 0001:000BB8F4       TMainForm.Timer2Timer
- 0001:000BB900       TMainForm.N18Click
- 0001:000BB95C       TMainForm.VarPopupMenuPopup
- 0001:000BBA90       TMainForm.SchedListMouseDown
- 0001:000BBAD4       TMainForm.MediaListMouseDown
- 0001:000BBB1C       TMainForm.N4Click
- 0001:000BBB30       TMainForm.N8Click
- 0001:000BBB3C       TMainForm.CoolTrayIcon1Click
- 0001:000BBB6C       TMainForm.PopupMenu3Popup
- 0001:000BBE94       TMainForm.AddMediaListButtonClick
- 0001:000BBFBC       TMainForm.N26Click
- 0001:000BC124       TMainForm.N27Click
- 0001:000BC278       TMainForm.loadMediaCross
- 0001:000BC3D4       TMainForm.MediaGroupAddClick
- 0001:000BC520       TMainForm.MediaGroupDelClick
- 0001:000BC6B8       TMainForm.loadMediaGroups
- 0001:000BCA44       TMainForm.ComboBox1DrawItem
- 0001:000BCC84       TMainForm.N12Click
- 0001:000BCD08       TMainForm.ActionSelAllExecute
- 0001:000BCD50       TMainForm.updatePlayLoopButtonIcon
- 0001:000BCE28       TMainForm.PlayLoopButtonMouseUp
- 0001:000BCE30       TMainForm.PlayNextButtonClick
- 0001:000BCE48       decodeHex
- 0001:000BCF34       FileSizeByName
- 0001:000BCFE0       TMainForm.checkSpechData
- 0001:000BD284       TMainForm.Timer3Timer
- 0001:000BD4A4       TMainForm.DXAudioOut1Done
- 0001:000BD570       TMainForm.FormActivate
- 0001:000BD57C       TMainForm.FormDeactivate
- 0001:000BD588       TMainForm.WMGetSysCommand
- 0001:000BD5A8       TMainForm.DXAudioOut2Done
- 0001:000BD5D8       TMainForm.Panel7Resize
- 0001:000BD71C       TMainForm.playMiniPlayer
- 0001:000BD9BC       TMainForm.pauseMiniPlayer
- 0001:000BDA18       TMainForm.stopMiniPlayer
- 0001:000BDB40       TMainForm.VLCPlugin21MediaPlayerLengthChanged
- 0001:000BDB78       TMainForm.VLCPlugin21MediaPlayerPaused
- 0001:000BDB90       TMainForm.VLCPlugin21MediaPlayerPlaying
- 0001:000BDBA8       TMainForm.VLCPlugin21MediaPlayerStopped
- 0001:000BDC58       TMainForm.VLCPlugin21MediaPlayerTimeChanged
- 0001:000BDD70       TMainForm.MEDIA_END_MESS
- 0001:000BDD7C       TMainForm.syncLoadAsync
- 0001:000BDE38       TMainForm.queueHandler
- 0001:000BE110       TMainForm.sessionHandler
- 0001:000BE16C       TMainForm.mediaHandler
- 0001:000BE5F4       TMainForm.CamAlertBtnClick
- 0001:000BE660       TMainForm.SHOW_CAM_ALERT
- 0001:000BE670       TMainForm.HIDE_CAM_ALERT
- 0001:000BE6B4       TMainForm.SpeedButton2Click
- 0001:000BE6C0       TMainForm.Label1DblClick
- 0001:000BE6E8       TMainForm.HIDE_CAM_ALL
- 0001:000BE6F4       Finalization
- 0001:000BE738       MainForm_Unit
+ 0001:000B5000       TMainForm.FormCreate
+ 0001:000B55C8       TMainForm.FormDestroy
+ 0001:000B5874       TMainForm.Timer1Timer
+ 0001:000B5968       TMainForm.setStatusText
+ 0001:000B5A1C       TMainForm.SocketMetaConnecting
+ 0001:000B5A5C       TMainForm.SocketMetaDisconnect
+ 0001:000B5AC0       TMainForm.SocketMetaError
+ 0001:000B5B14       TMainForm.refreshVarList
+ 0001:000B5D28       TMainForm.SpeedButton1Click
+ 0001:000B5E74       TMainForm.SocketMetaConnect
+ 0001:000B5F74       TMainForm.currView
+ 0001:000B5FD4       TMainForm.sendVarValue
+ 0001:000B60C0       TMainForm.VarListDrawItem
+ 0001:000B6928       TMainForm.VarListMouseDown
+ 0001:000B6AC0       TMainForm.FormResize
+ 0001:000B6AF4       TMainForm.VolumePanelMouseDown
+ 0001:000B6B2C       TMainForm.VolumePanelMouseMove
+ 0001:000B6B68       TMainForm.VolumePanelMouseUp
+ 0001:000B6BA0       TMainForm.setVolume
+ 0001:000B6C3C       TMainForm.VarListKeyDown
+ 0001:000B6E98       TMainForm.FormCloseQuery
+ 0001:000B6F28       TMainForm.N3Click
+ 0001:000B6F34       TMainForm.N1Click
+ 0001:000B6F48       TMainForm.Panel5Resize
+ 0001:000B6F6C       TMainForm.InfoPanelResize
+ 0001:000B6F8C       checkMediaInGroup
+ 0001:000B6FCC       TMainForm.refreshMediaList
+ 0001:000B7450       TMainForm.FilterEditChange
+ 0001:000B74C4       TMainForm.MediaListDrawItem
+ 0001:000B78E4       TMainForm.Panel6Resize
+ 0001:000B7924       TMainForm.ComboBox1Change
+ 0001:000B7A48       TMainForm.getMediaAtId
+ 0001:000B7A90       TMainForm.updateTimePanel
+ 0001:000B7C18       TMainForm.TimePanelResize
+ 0001:000B7C4C       TMainForm.TimePanelMouseDown
+ 0001:000B7CC4       TMainForm.TimePanelMouseMove
+ 0001:000B7D04       TMainForm.TimePanelMouseUp
+ 0001:000B7D4C       TMainForm.timeSeek
+ 0001:000B7E50       TMainForm.MediaVolPanelMouseDown
+ 0001:000B7E88       TMainForm.MediaVolPanelMouseMove
+ 0001:000B7EC4       TMainForm.MediaVolPanelMouseUp
+ 0001:000B7EFC       TMainForm.setMediaVolume
+ 0001:000B8020       TMainForm.SpeedButton6Click
+ 0001:000B80A4       TMainForm.checkAppatId
+ 0001:000B8160       TMainForm.metaQuery
+ 0001:000B82AC       TMainForm.transferMedia
+ 0001:000B8430       TMainForm.StopButtonClick
+ 0001:000B845C       TMainForm.PauseButtonClick
+ 0001:000B8474       TMainForm.PlayButtonClick
+ 0001:000B84DC       TMainForm.playMediaPlayAt
+ 0001:000B8538       TMainForm.startMediaPlay
+ 0001:000B8870       TMainForm.MediaListDblClick
+ 0001:000B888C       TMainForm.vlcOnChange
+ 0001:000B893C       TMainForm.mp3OnChange
+ 0001:000B8970       TMainForm.FormShow
+ 0001:000B89F8       TMainForm.vlcOnPlayPosEvent
+ 0001:000B8A04       TMainForm.mp3OnPlayPosEvent
+ 0001:000B8A10       TMainForm.playMediaNextItem
+ 0001:000B8BA0       TMainForm.PlayLoopButtonClick
+ 0001:000B8C38       TMainForm.vlcOnStopEvent
+ 0001:000B8C60       TMainForm.mp3OnStopEvent
+ 0001:000B8C78       TMainForm.MediaListKeyDown
+ 0001:000B8C8C       getParentVarGroup
+ 0001:000B8CF4       getNameVarGroup
+ 0001:000B8D7C       compVarGroup
+ 0001:000B8E24       TMainForm.startLoad
+ 0001:000B98F0       TMainForm.syncHandler
+ 0001:000B9BFC       TMainForm.firstRun
+ 0001:000B9D10       TMainForm.VarPopupItemClick
+ 0001:000BA29C       strToDate
+ 0001:000BA410       TMainForm.schedLoad
+ 0001:000BA734       TMainForm.clearList
+ 0001:000BA770       TMainForm.clearStrings
+ 0001:000BA7C4       TMainForm.SchedListDrawItem
+ 0001:000BAB44       TMainForm.trimText
+ 0001:000BAC08       TMainForm.drawIcon
+ 0001:000BACAC       TMainForm.inverIcon
+ 0001:000BAD20       TMainForm.N15Click
+ 0001:000BAD44       TMainForm.N7Click
+ 0001:000BAD98       TMainForm.N14Click
+ 0001:000BADF0       TMainForm.Timer2Timer
+ 0001:000BADFC       TMainForm.N18Click
+ 0001:000BAE58       TMainForm.VarPopupMenuPopup
+ 0001:000BAF8C       TMainForm.SchedListMouseDown
+ 0001:000BAFD0       TMainForm.MediaListMouseDown
+ 0001:000BB018       TMainForm.N4Click
+ 0001:000BB02C       TMainForm.N8Click
+ 0001:000BB038       TMainForm.CoolTrayIcon1Click
+ 0001:000BB068       TMainForm.PopupMenu3Popup
+ 0001:000BB390       TMainForm.AddMediaListButtonClick
+ 0001:000BB4B8       TMainForm.N26Click
+ 0001:000BB620       TMainForm.N27Click
+ 0001:000BB774       TMainForm.loadMediaCross
+ 0001:000BB8D0       TMainForm.MediaGroupAddClick
+ 0001:000BBA1C       TMainForm.MediaGroupDelClick
+ 0001:000BBBB4       TMainForm.loadMediaGroups
+ 0001:000BBF40       TMainForm.ComboBox1DrawItem
+ 0001:000BC180       TMainForm.N12Click
+ 0001:000BC204       TMainForm.ActionSelAllExecute
+ 0001:000BC24C       TMainForm.updatePlayLoopButtonIcon
+ 0001:000BC324       TMainForm.PlayLoopButtonMouseUp
+ 0001:000BC32C       TMainForm.PlayNextButtonClick
+ 0001:000BC344       decodeHex
+ 0001:000BC430       FileSizeByName
+ 0001:000BC4DC       TMainForm.checkSpechData
+ 0001:000BC780       TMainForm.Timer3Timer
+ 0001:000BC9A0       TMainForm.DXAudioOut1Done
+ 0001:000BCA6C       TMainForm.FormActivate
+ 0001:000BCA78       TMainForm.FormDeactivate
+ 0001:000BCA84       TMainForm.WMGetSysCommand
+ 0001:000BCAA4       TMainForm.DXAudioOut2Done
+ 0001:000BCAD4       TMainForm.Panel7Resize
+ 0001:000BCC18       TMainForm.playMiniPlayer
+ 0001:000BCEB8       TMainForm.pauseMiniPlayer
+ 0001:000BCF14       TMainForm.stopMiniPlayer
+ 0001:000BD03C       TMainForm.VLCPlugin21MediaPlayerLengthChanged
+ 0001:000BD074       TMainForm.VLCPlugin21MediaPlayerPaused
+ 0001:000BD08C       TMainForm.VLCPlugin21MediaPlayerPlaying
+ 0001:000BD0A4       TMainForm.VLCPlugin21MediaPlayerStopped
+ 0001:000BD154       TMainForm.VLCPlugin21MediaPlayerTimeChanged
+ 0001:000BD26C       TMainForm.MEDIA_END_MESS
+ 0001:000BD278       TMainForm.syncLoadAsync
+ 0001:000BD334       TMainForm.queueHandler
+ 0001:000BD60C       TMainForm.sessionHandler
+ 0001:000BD668       TMainForm.mediaHandler
+ 0001:000BDAF0       TMainForm.CamAlertBtnClick
+ 0001:000BDB5C       TMainForm.SHOW_CAM_ALERT
+ 0001:000BDB6C       TMainForm.HIDE_CAM_ALERT
+ 0001:000BDBB0       TMainForm.SpeedButton2Click
+ 0001:000BDBBC       TMainForm.Label1DblClick
+ 0001:000BDBE4       TMainForm.HIDE_CAM_ALL
+ 0001:000BDBF0       Finalization
+ 0001:000BDC34       MainForm_Unit
+ 0001:000BDD14       TTCPHttpDaemon.Create
+ 0001:000BDD64       TTCPHttpDaemon.Destroy
+ 0001:000BDD98       TTCPHttpDaemon.Execute
+ 0001:000BDE58       TTCPHttpThrd.Create
+ 0001:000BDEF0       TTCPHttpThrd.Destroy
+ 0001:000BDF48       TTCPHttpThrd.Execute
+ 0001:000BE54C       TTCPHttpThrd.ProcessHttpRequest
+ 0001:000BE708       Finalization
+ 0001:000BE738       http
  0001:000BE740       CheckExeCopy
  0001:000BE788       Finalization
  0001:000BEC90       lan_control
@@ -14552,13 +14552,13 @@ Detailed map of segments
  0002:00007900       .2
  0002:00007904       camAlerts
  0002:00007908       .2
- 0002:0000790C       .3
- 0002:00007910       MainForm
- 0002:00007914       .9
- 0002:00007918       prevSpeechIdTime
- 0002:00007920       prevSpeechAllTime
- 0002:00007928       prevSpeechType
- 0002:0000792C       prevSpeechID
+ 0002:0000790C       MainForm
+ 0002:00007910       .9
+ 0002:00007914       prevSpeechIdTime
+ 0002:0000791C       prevSpeechAllTime
+ 0002:00007924       prevSpeechType
+ 0002:00007928       prevSpeechID
+ 0002:0000792C       .3
  0002:00007930       mutex
 
 
@@ -16661,476 +16661,476 @@ Line numbers for CamAlertDiaplay_Unit(CamAlertDiaplay_Unit.pas) segment .text
    200 0001:000B3F3B   201 0001:000B3F46   207 0001:000B3F4C   208 0001:000B3F6A
    210 0001:000B3F89   203 0001:000B3F8C   204 0001:000B3F98   206 0001:000B3FA9
 
-Line numbers for http(http.pas) segment .text
-
-    44 0001:000B4084    45 0001:000B4099    46 0001:000B40A4    47 0001:000B40B3
-    48 0001:000B40CE    51 0001:000B40D4    52 0001:000B40E2    53 0001:000B40EA
-    54 0001:000B4101    59 0001:000B4108    60 0001:000B411F    62 0001:000B4122
-    63 0001:000B4129    64 0001:000B4137    65 0001:000B4153    67 0001:000B415A
-    68 0001:000B4160    70 0001:000B4173    71 0001:000B417A    73 0001:000B4191
-    75 0001:000B41B0    80 0001:000B41C8    81 0001:000B41E0    82 0001:000B41EF
-    83 0001:000B41FE    84 0001:000B420D    85 0001:000B421C    86 0001:000B4221
-    87 0001:000B422B    88 0001:000B422F    89 0001:000B423A    90 0001:000B425A
-    93 0001:000B4260    94 0001:000B426E    95 0001:000B4276    96 0001:000B427E
-    97 0001:000B4286    98 0001:000B428D    99 0001:000B4292   100 0001:000B429A
-   101 0001:000B42B1   117 0001:000B42B8   118 0001:000B42DB   120 0001:000B42E2
-   121 0001:000B42F0   123 0001:000B42FE   124 0001:000B430C   125 0001:000B431C
-   126 0001:000B4326   127 0001:000B4336   128 0001:000B434A   129 0001:000B435A
-   130 0001:000B4364   131 0001:000B4374   132 0001:000B437C   133 0001:000B438A
-   135 0001:000B438E   137 0001:000B4398   138 0001:000B43AC   139 0001:000B43BC
-   141 0001:000B43C0   142 0001:000B43CE   143 0001:000B43DE   144 0001:000B43E4
-   145 0001:000B43EF   146 0001:000B4410   147 0001:000B4438   148 0001:000B4459
-   149 0001:000B445D   151 0001:000B4482   152 0001:000B449D   153 0001:000B44D6
-   157 0001:000B4514   160 0001:000B451E   161 0001:000B4526   163 0001:000B4536
-   164 0001:000B4543   165 0001:000B4557   166 0001:000B4561   169 0001:000B4571
-   170 0001:000B4590   171 0001:000B45CE   173 0001:000B45D8   174 0001:000B4610
-   175 0001:000B4616   176 0001:000B4623   177 0001:000B465E   178 0001:000B466B
-   179 0001:000B4675   180 0001:000B468C   179 0001:000B46BE   182 0001:000B46C1
-   184 0001:000B46D1   187 0001:000B46E5   188 0001:000B46EA   189 0001:000B471B
-   190 0001:000B4728   191 0001:000B4738   185 0001:000B4748   194 0001:000B4764
-   195 0001:000B476A   196 0001:000B47AC   201 0001:000B48BC   202 0001:000B48EF
-   203 0001:000B48F4   205 0001:000B4907   206 0001:000B4930   207 0001:000B493B
-   208 0001:000B4949   209 0001:000B495D   211 0001:000B4978   214 0001:000B498B
-   216 0001:000B4996   218 0001:000B49A6   219 0001:000B49C2   220 0001:000B49CF
-   221 0001:000B49DB   223 0001:000B49EB   225 0001:000B49FF   226 0001:000B4A15
-   228 0001:000B4A1C   230 0001:000B4A45   232 0001:000B4AA8   232 0001:000B4AAF
-
 Line numbers for MainForm_Unit(MainForm_Unit.pas) segment .text
 
-   367 0001:000B5B04   368 0001:000B5B28   369 0001:000B5B3D   372 0001:000B5B52
-   375 0001:000B5B57   377 0001:000B5B67   380 0001:000B5B77   381 0001:000B5B87
-   383 0001:000B5B97   384 0001:000B5BA7   386 0001:000B5BB7   387 0001:000B5BC5
-   389 0001:000B5BF3   392 0001:000B5C1B   393 0001:000B5C29   395 0001:000B5C57
-   398 0001:000B5C7F   399 0001:000B5C8D   401 0001:000B5CBB   403 0001:000B5CC0
-   404 0001:000B5CCE   406 0001:000B5CFC   408 0001:000B5D01   409 0001:000B5D39
-   410 0001:000B5D63   411 0001:000B5D99   413 0001:000B5DAC   414 0001:000B5DBA
-   416 0001:000B5E0B   418 0001:000B5E10   419 0001:000B5E1E   421 0001:000B5E6F
-   423 0001:000B5E74   425 0001:000B5E9F   427 0001:000B5EC5   428 0001:000B5ED2
-   429 0001:000B5EE1   431 0001:000B5EF3   432 0001:000B5F02   434 0001:000B5F14
-   436 0001:000B5F22   437 0001:000B5F37   439 0001:000B5F4C   441 0001:000B5F6A
-   444 0001:000B5F7A   446 0001:000B5F87   448 0001:000B5F8F   449 0001:000B5FC6
-   454 0001:000B60CC   455 0001:000B60E7   457 0001:000B60EE   458 0001:000B60F9
-   460 0001:000B610D   461 0001:000B611A   462 0001:000B6127   464 0001:000B6132
-   465 0001:000B613B   467 0001:000B614C   468 0001:000B615B   469 0001:000B6173
-   470 0001:000B618B   471 0001:000B61A3   472 0001:000B61BB   473 0001:000B61EC
-   474 0001:000B61FB   476 0001:000B6202   477 0001:000B620F   478 0001:000B621A
-   479 0001:000B6227   481 0001:000B6232   482 0001:000B6245   488 0001:000B6258
-   490 0001:000B6263   492 0001:000B6272   491 0001:000B6279   494 0001:000B6288
-   496 0001:000B6297   495 0001:000B629E   498 0001:000B62AD   499 0001:000B62B8
-   500 0001:000B62C5   501 0001:000B62F2   504 0001:000B6378   505 0001:000B6382
-   506 0001:000B6392   507 0001:000B63A0   509 0001:000B63AF   511 0001:000B63B6
-   514 0001:000B63BE   515 0001:000B63CC   517 0001:000B63DB   519 0001:000B63E1
-   520 0001:000B63E8   523 0001:000B63F8   526 0001:000B6407   530 0001:000B641E
-   532 0001:000B6430   535 0001:000B6448   536 0001:000B6463   539 0001:000B646C
-   540 0001:000B6493   541 0001:000B64A1   542 0001:000B64C9   543 0001:000B64F4
-   547 0001:000B6520   548 0001:000B6523   549 0001:000B652D   553 0001:000B6560
-   554 0001:000B6566   555 0001:000B6573   556 0001:000B657F   557 0001:000B658B
-   558 0001:000B6596   563 0001:000B65C4   564 0001:000B65CA   565 0001:000B65D1
-   566 0001:000B65DD   567 0001:000B65E8   576 0001:000B6618   577 0001:000B6639
-   579 0001:000B6643   580 0001:000B6654   581 0001:000B6662   582 0001:000B6667
-   584 0001:000B6684   585 0001:000B6694   587 0001:000B66C3   588 0001:000B66C5
-   589 0001:000B66D7   590 0001:000B66EC   591 0001:000B6704   594 0001:000B671C
-   596 0001:000B6726   598 0001:000B673C   599 0001:000B6753   602 0001:000B676B
-   603 0001:000B677E   605 0001:000B6781   582 0001:000B6784   606 0001:000B678D
-   607 0001:000B67AD   606 0001:000B67C4   609 0001:000B67C9   610 0001:000B67D7
-   611 0001:000B680D   617 0001:000B682C   618 0001:000B6846   619 0001:000B6848
-   620 0001:000B6860   621 0001:000B6867   622 0001:000B686E   625 0001:000B6873
-   626 0001:000B6887   628 0001:000B688A   629 0001:000B689B   630 0001:000B68AB
-   631 0001:000B68BC   633 0001:000B68CD   636 0001:000B68DB   637 0001:000B68DF
-   638 0001:000B68EC   639 0001:000B68F3   640 0001:000B68FE   644 0001:000B690E
-   645 0001:000B6919   649 0001:000B6929   650 0001:000B6934   661 0001:000B6942
-   663 0001:000B6947   665 0001:000B6970   668 0001:000B6978   669 0001:000B6997
-   670 0001:000B69A5   672 0001:000B69D2   674 0001:000B69E4   676 0001:000B69F0
-   677 0001:000B69FC   681 0001:000B6A0B   682 0001:000B6A17   684 0001:000B6A3C
-   689 0001:000B6A78   690 0001:000B6A81   691 0001:000B6A88   693 0001:000B6A9D
-   695 0001:000B6AB3   696 0001:000B6AC6   698 0001:000B6AC8   691 0001:000B6AC9
-   699 0001:000B6ACF   704 0001:000B6AD8   705 0001:000B6AF5   706 0001:000B6B45
-   707 0001:000B6B81   716 0001:000B6BC4   717 0001:000B6BFE   719 0001:000B6C17
-   720 0001:000B6C26   721 0001:000B6C34   722 0001:000B6C42   723 0001:000B6C50
-   725 0001:000B6C5B   727 0001:000B6C6A   728 0001:000B6C7A   729 0001:000B6C8A
-   733 0001:000B6C9C   734 0001:000B6CAC   735 0001:000B6CBC   737 0001:000B6CC9
-   738 0001:000B6CD6   740 0001:000B6CF4   741 0001:000B6CFB   743 0001:000B6D02
-   746 0001:000B6D3C   747 0001:000B6D4B   748 0001:000B6D59   749 0001:000B6D63
-   750 0001:000B6D70   751 0001:000B6D7D   752 0001:000B6D8E   754 0001:000B6DB0
-   757 0001:000B6DD0   759 0001:000B6DF1   760 0001:000B6DF5   762 0001:000B6E10
-   764 0001:000B6E31   765 0001:000B6E5E   766 0001:000B6E62   768 0001:000B6E64
-   760 0001:000B6E65   770 0001:000B6E75   776 0001:000B6E85   778 0001:000B6E9A
-   779 0001:000B6EAB   780 0001:000B6EBB   783 0001:000B6EFC   784 0001:000B6F17
-   785 0001:000B6F2A   787 0001:000B6F43   788 0001:000B6F5A   790 0001:000B6F67
-   792 0001:000B6F74   797 0001:000B6FAB   798 0001:000B6FD0   802 0001:000B6FEF
-   806 0001:000B7019   807 0001:000B7034   808 0001:000B7047   810 0001:000B7060
-   811 0001:000B7077   815 0001:000B7086   818 0001:000B70AB   824 0001:000B70DB
-   825 0001:000B70EA   826 0001:000B70F8   827 0001:000B7105   828 0001:000B710F
-   829 0001:000B711C   830 0001:000B7129   831 0001:000B715C   833 0001:000B718A
-   838 0001:000B719A   840 0001:000B71A7   841 0001:000B71B7   842 0001:000B71DB
-   843 0001:000B71EB   844 0001:000B71FD   845 0001:000B7210   846 0001:000B7233
-   850 0001:000B724D   851 0001:000B725D   852 0001:000B726E   853 0001:000B7277
-   854 0001:000B7293   855 0001:000B729C   856 0001:000B72B8   857 0001:000B72F9
-   860 0001:000B730A   862 0001:000B7335   864 0001:000B7345   865 0001:000B734B
-   866 0001:000B7393   876 0001:000B742C   877 0001:000B743D   878 0001:000B745C
-   880 0001:000B7465   882 0001:000B7475   883 0001:000B7485   884 0001:000B749A
-   887 0001:000B74B3   889 0001:000B74C9   890 0001:000B74D7   892 0001:000B74EA
-   896 0001:000B7500   898 0001:000B750A   899 0001:000B7528   906 0001:000B753B
-   908 0001:000B7551   909 0001:000B7572   910 0001:000B7588   911 0001:000B75A2
-   916 0001:000B75B2   919 0001:000B75C4   920 0001:000B75CA   921 0001:000B75D8
-   922 0001:000B75E6   923 0001:000B75F4   927 0001:000B75F8   928 0001:000B7603
-   929 0001:000B760D   931 0001:000B7610   933 0001:000B7616   934 0001:000B761F
-   936 0001:000B7626   940 0001:000B7630   941 0001:000B763F   942 0001:000B7649
-   944 0001:000B764C   946 0001:000B7652   947 0001:000B765B   949 0001:000B7662
-   953 0001:000B766C   954 0001:000B7677   955 0001:000B7681   957 0001:000B7684
-   959 0001:000B768A   960 0001:000B7693   962 0001:000B769A   967 0001:000B76A4
-   968 0001:000B76AE   969 0001:000B76C4   971 0001:000B76DC   972 0001:000B7704
-   973 0001:000B770E   974 0001:000B7718   975 0001:000B772F   976 0001:000B7737
-   983 0001:000B7740   987 0001:000B774D   989 0001:000B7762   990 0001:000B7782
-   993 0001:000B77B8   995 0001:000B77C8   996 0001:000B77D5   997 0001:000B77DB
-   998 0001:000B77DC   999 0001:000B77E2  1000 0001:000B77E3  1001 0001:000B77E7
-  1002 0001:000B77E9  1003 0001:000B77EE  1004 0001:000B77F3  1005 0001:000B7814
-  1010 0001:000B7833  1012 0001:000B7840  1013 0001:000B784D  1014 0001:000B7853
-  1015 0001:000B7854  1016 0001:000B785A  1017 0001:000B785B  1018 0001:000B7860
-  1019 0001:000B7865  1020 0001:000B786A  1021 0001:000B786F  1022 0001:000B7890
-  1027 0001:000B78AF  1028 0001:000B78BC  1029 0001:000B78C2  1030 0001:000B78C3
-  1031 0001:000B78C9  1032 0001:000B78CA  1033 0001:000B78CF  1034 0001:000B78D4
-  1035 0001:000B78D9  1036 0001:000B78DE  1037 0001:000B78FF  1042 0001:000B791B
-  1043 0001:000B7928  1044 0001:000B792E  1045 0001:000B7931  1046 0001:000B7937
-  1047 0001:000B793A  1048 0001:000B793E  1049 0001:000B7940  1050 0001:000B7945
-  1051 0001:000B794A  1052 0001:000B7967  1057 0001:000B7981  1058 0001:000B7992
-  1061 0001:000B799C  1062 0001:000B79A5  1063 0001:000B79D0  1065 0001:000B79D5
-  1066 0001:000B79DA  1068 0001:000B79DF  1071 0001:000B7A2C  1072 0001:000B7A2F
-  1073 0001:000B7A34  1076 0001:000B7A38  1077 0001:000B7A3B  1078 0001:000B7A47
-  1081 0001:000B7A4C  1082 0001:000B7A52  1083 0001:000B7A6A  1086 0001:000B7A70
-  1087 0001:000B7A73  1088 0001:000B7A8E  1095 0001:000B7A90  1096 0001:000B7A96
-  1098 0001:000B7AAF  1100 0001:000B7AC0  1101 0001:000B7AC2  1103 0001:000B7AC5
-  1096 0001:000B7AC6  1104 0001:000B7AC9  1105 0001:000B7ACB  1113 0001:000B7AD0
-  1114 0001:000B7AF2  1115 0001:000B7B03  1116 0001:000B7B08  1117 0001:000B7B1C
-  1118 0001:000B7B2A  1120 0001:000B7B3E  1122 0001:000B7B56  1124 0001:000B7B7E
-  1127 0001:000B7B98  1129 0001:000B7BB5  1130 0001:000B7BC8  1131 0001:000B7C2D
-  1132 0001:000B7C43  1127 0001:000B7C46  1136 0001:000B7C52  1138 0001:000B7C6F
-  1139 0001:000B7C82  1140 0001:000B7CFD  1141 0001:000B7D13  1136 0001:000B7D16
-  1147 0001:000B7D22  1149 0001:000B7D3F  1150 0001:000B7D52  1151 0001:000B7DC5
-  1152 0001:000B7DDB  1147 0001:000B7DDE  1155 0001:000B7DE5  1157 0001:000B7E02
-  1160 0001:000B7E1E  1162 0001:000B7E2E  1164 0001:000B7E4E  1165 0001:000B7E67
-  1167 0001:000B7E75  1168 0001:000B7E7B  1170 0001:000B7E7D  1162 0001:000B7E80
-  1172 0001:000B7E83  1173 0001:000B7EA7  1175 0001:000B7EBA  1176 0001:000B7EC3
-  1179 0001:000B7ED6  1181 0001:000B7F4D  1184 0001:000B7F54  1185 0001:000B7F6A
-  1186 0001:000B7F71  1187 0001:000B7F85  1189 0001:000B7F97  1190 0001:000B7FC4
-  1202 0001:000B7FC8  1203 0001:000B7FFE  1204 0001:000B8013  1205 0001:000B801B
-  1206 0001:000B8029  1208 0001:000B8034  1209 0001:000B8043  1210 0001:000B8051
-  1211 0001:000B805F  1212 0001:000B806D  1214 0001:000B8077  1216 0001:000B8082
-  1217 0001:000B808F  1221 0001:000B809E  1222 0001:000B80AB  1224 0001:000B80B5
-  1225 0001:000B80BF  1226 0001:000B80D1  1228 0001:000B80EE  1230 0001:000B80FD
-  1232 0001:000B810B  1233 0001:000B8116  1235 0001:000B8125  1236 0001:000B8132
-  1240 0001:000B8170  1244 0001:000B81A6  1245 0001:000B81B3  1247 0001:000B81C2
-  1248 0001:000B81D4  1250 0001:000B81E5  1252 0001:000B81EE  1253 0001:000B81FC
-  1254 0001:000B8203  1256 0001:000B820E  1257 0001:000B823A  1262 0001:000B8243
-  1263 0001:000B8251  1266 0001:000B8258  1268 0001:000B8269  1269 0001:000B8274
-  1271 0001:000B8295  1272 0001:000B82A5  1274 0001:000B82B8  1278 0001:000B82CC
-  1279 0001:000B82DD  1282 0001:000B82DF  1272 0001:000B82E2  1285 0001:000B82E5
-  1287 0001:000B82F0  1291 0001:000B8324  1294 0001:000B8353  1295 0001:000B836E
-  1296 0001:000B8374  1298 0001:000B8395  1300 0001:000B83D4  1303 0001:000B83E8
-  1304 0001:000B83EE  1305 0001:000B840F  1306 0001:000B8424  1309 0001:000B8428
-  1311 0001:000B8442  1312 0001:000B8449  1313 0001:000B8450  1315 0001:000B8459
-  1317 0001:000B846E  1319 0001:000B84B2  1323 0001:000B84D9  1326 0001:000B8530
-  1332 0001:000B854C  1333 0001:000B855A  1335 0001:000B856B  1336 0001:000B8578
-  1338 0001:000B8580  1339 0001:000B8583  1341 0001:000B8585  1333 0001:000B8586
-  1342 0001:000B858C  1349 0001:000B8594  1350 0001:000B85B8  1353 0001:000B85C6
-  1355 0001:000B85D8  1356 0001:000B85E5  1360 0001:000B85F4  1361 0001:000B85FA
-  1364 0001:000B8600  1366 0001:000B8609  1368 0001:000B860D  1371 0001:000B863F
-  1374 0001:000B864C  1375 0001:000B8660  1377 0001:000B866C  1378 0001:000B8675
-  1379 0001:000B867E  1380 0001:000B8681  1382 0001:000B8690  1383 0001:000B8706
-  1386 0001:000B871C  1387 0001:000B8722  1388 0001:000B874A  1395 0001:000B8750
-  1396 0001:000B875C  1397 0001:000B876E  1399 0001:000B877C  1401 0001:000B8782
-  1403 0001:000B878E  1404 0001:000B8791  1405 0001:000B87A1  1407 0001:000B87A4
-  1408 0001:000B87AB  1409 0001:000B87B8  1412 0001:000B87BF  1418 0001:000B87C8
-  1419 0001:000B87CF  1421 0001:000B87D8  1422 0001:000B87DB  1423 0001:000B87ED
-  1424 0001:000B87F0  1425 0001:000B87F9  1428 0001:000B8800  1434 0001:000B8808
-  1435 0001:000B880F  1437 0001:000B8818  1438 0001:000B881B  1439 0001:000B882D
-  1440 0001:000B8830  1441 0001:000B8839  1442 0001:000B8840  1445 0001:000B8847
-  1450 0001:000B8850  1451 0001:000B886D  1453 0001:000B887F  1457 0001:000B88C6
-  1459 0001:000B88CF  1460 0001:000B8905  1463 0001:000B894B  1467 0001:000B8954
-  1468 0001:000B895F  1469 0001:000B8969  1471 0001:000B896C  1473 0001:000B8972
-  1474 0001:000B897B  1476 0001:000B8982  1480 0001:000B898C  1481 0001:000B899B
-  1482 0001:000B89A5  1484 0001:000B89A8  1486 0001:000B89AE  1487 0001:000B89B7
-  1489 0001:000B89BE  1493 0001:000B89C8  1494 0001:000B89D3  1495 0001:000B89DD
-  1497 0001:000B89E0  1499 0001:000B89E6  1500 0001:000B89EF  1502 0001:000B89F6
-  1507 0001:000B8A00  1508 0001:000B8A21  1509 0001:000B8A37  1511 0001:000B8A4F
-  1512 0001:000B8A79  1513 0001:000B8A83  1515 0001:000B8A8D  1516 0001:000B8A97
-  1517 0001:000B8AB0  1518 0001:000B8ABE  1520 0001:000B8ACB  1521 0001:000B8B07
-  1524 0001:000B8B24  1525 0001:000B8B3B  1527 0001:000B8B4A  1528 0001:000B8B58
-  1529 0001:000B8B62  1532 0001:000B8B7E  1533 0001:000B8BA2  1539 0001:000B8BA8
-  1540 0001:000B8BC6  1541 0001:000B8BCA  1542 0001:000B8BD4  1544 0001:000B8BDE
-  1546 0001:000B8BEF  1548 0001:000B8C0F  1549 0001:000B8C2B  1550 0001:000B8C2F
-  1552 0001:000B8C31  1544 0001:000B8C32  1554 0001:000B8C5A  1560 0001:000B8C64
-  1561 0001:000B8C9A  1563 0001:000B8C9C  1564 0001:000B8CA2  1565 0001:000B8CAE
-  1567 0001:000B8CC4  1568 0001:000B8CEF  1569 0001:000B8CF7  1571 0001:000B8CFC
-  1572 0001:000B8D10  1573 0001:000B8D1B  1575 0001:000B8D2C  1576 0001:000B8D3D
-  1569 0001:000B8D3F  1581 0001:000B8D42  1583 0001:000B8D56  1584 0001:000B8D5C
-  1585 0001:000B8D8C  1592 0001:000B8DB0  1593 0001:000B8DD1  1595 0001:000B8DE3
-  1596 0001:000B8DF1  1600 0001:000B8E00  1601 0001:000B8E06  1604 0001:000B8E0C
-  1606 0001:000B8E16  1607 0001:000B8E2B  1610 0001:000B8E2D  1611 0001:000B8E5D
-  1612 0001:000B8E99  1613 0001:000B8E9E  1614 0001:000B8EC9  1622 0001:000B8F34
-  1623 0001:000B8F3A  1624 0001:000B8F47  1625 0001:000B8F53  1626 0001:000B8F5A
-  1629 0001:000B8F60  1630 0001:000B8F63  1631 0001:000B8F68  1632 0001:000B8F74
-  1637 0001:000B8F78  1638 0001:000B8F7E  1639 0001:000B8F90  1641 0001:000B8F9E
-  1643 0001:000B8FA4  1645 0001:000B8FA9  1649 0001:000B8FB5  1650 0001:000B8FC2
-  1652 0001:000B8FDB  1657 0001:000B8FE0  1658 0001:000B8FED  1660 0001:000B9004
-  1661 0001:000B900F  1662 0001:000B9025  1664 0001:000B9036  1674 0001:000B903C
-  1675 0001:000B9068  1677 0001:000B9071  1679 0001:000B907D  1680 0001:000B9089
-  1682 0001:000B9091  1684 0001:000B90A7  1686 0001:000B90C7  1687 0001:000B90DD
-  1688 0001:000B90F3  1690 0001:000B90F5  1682 0001:000B90F6  1692 0001:000B90FB
-  1694 0001:000B9105  1695 0001:000B910E  1696 0001:000B9117  1697 0001:000B9154
-  1699 0001:000B918D  1703 0001:000B91B4  1707 0001:000B91D2  1709 0001:000B91DC
-  1710 0001:000B91FB  1711 0001:000B9209  1713 0001:000B9226  1715 0001:000B9236
-  1718 0001:000B92B4  1721 0001:000B9374  1722 0001:000B937A  1723 0001:000B9383
-  1724 0001:000B938C  1727 0001:000B9390  1728 0001:000B93AD  1729 0001:000B93BB
-  1730 0001:000B93C4  1732 0001:000B93CF  1733 0001:000B93D8  1734 0001:000B9438
-  1737 0001:000B9440  1738 0001:000B9446  1739 0001:000B9454  1740 0001:000B9465
-  1741 0001:000B9470  1744 0001:000B9474  1745 0001:000B947A  1747 0001:000B948B
-  1748 0001:000B94A2  1749 0001:000B94B9  1751 0001:000B94D0  1753 0001:000B94D7
-  1754 0001:000B94E0  1756 0001:000B94E7  1758 0001:000B94F2  1760 0001:000B94F9
-  1763 0001:000B94FC  1764 0001:000B94FF  1765 0001:000B9504  1768 0001:000B9508
-  1769 0001:000B950B  1770 0001:000B9510  1777 0001:000B9514  1778 0001:000B951F
-  1779 0001:000B952E  1780 0001:000B953C  1782 0001:000B9554  1783 0001:000B9572
-  1785 0001:000B957B  1787 0001:000B959C  1789 0001:000B95B9  1780 0001:000B95BA
-  1791 0001:000B95BD  1793 0001:000B95CB  1797 0001:000B95DF  1798 0001:000B95E2
-  1799 0001:000B95E8  1801 0001:000B95ED  1802 0001:000B960E  1806 0001:000B961C
-  1808 0001:000B9621  1809 0001:000B963A  1810 0001:000B965B  1806 0001:000B9671
-  1813 0001:000B9674  1819 0001:000B968D  1821 0001:000B969D  1826 0001:000B96A4
-  1827 0001:000B96AA  1828 0001:000B96B3  1829 0001:000B96B4  1830 0001:000B96B9
-  1831 0001:000B96BB  1833 0001:000B96BE  1836 0001:000B96CA  1840 0001:000B96D8
-  1844 0001:000B96E9  1847 0001:000B96F8  1848 0001:000B96FF  1851 0001:000B973C
-  1852 0001:000B9742  1853 0001:000B974E  1854 0001:000B9755  1855 0001:000B975E
-  1858 0001:000B9764  1859 0001:000B9767  1860 0001:000B9773  1861 0001:000B9778
-  1865 0001:000B977C  1866 0001:000B977F  1867 0001:000B9785  1868 0001:000B978C
-  1875 0001:000B9790  1876 0001:000B9799  1877 0001:000B97A0  1879 0001:000B97B7
-  1881 0001:000B97CF  1882 0001:000B97E8  1884 0001:000B97EA  1877 0001:000B97EB
-  1885 0001:000B97F1  1890 0001:000B97F8  1891 0001:000B9804  1892 0001:000B9811
-  1894 0001:000B9828  1896 0001:000B9840  1897 0001:000B985E  1899 0001:000B9860
-  1892 0001:000B9861  1900 0001:000B9864  1906 0001:000B9880  1907 0001:000B989F
-  1908 0001:000B98A2  1909 0001:000B98A8  1910 0001:000B98B3  1911 0001:000B98C1
-  1912 0001:000B98C3  1913 0001:000B98C7  1915 0001:000B98CE  1916 0001:000B98D2
-  1918 0001:000B98D7  1919 0001:000B98E4  1921 0001:000B98EB  1922 0001:000B98F8
-  1923 0001:000B991F  1933 0001:000B9928  1934 0001:000B994B  1936 0001:000B9955
-  1937 0001:000B9966  1938 0001:000B997A  1939 0001:000B9988  1941 0001:000B99A4
-  1942 0001:000B99B3  1943 0001:000B99C1  1944 0001:000B99E0  1945 0001:000B9A02
-  1946 0001:000B9A25  1948 0001:000B9A31  1949 0001:000B9A53  1951 0001:000B9A73
-  1953 0001:000B9A80  1939 0001:000B9A83  1955 0001:000B9A99  1958 0001:000B9AA9
-  1959 0001:000B9ABA  1960 0001:000B9AE0  1961 0001:000B9AEE  1963 0001:000B9B0A
-  1964 0001:000B9B19  1965 0001:000B9B27  1966 0001:000B9B46  1967 0001:000B9B68
-  1968 0001:000B9B8A  1969 0001:000B9BAC  1970 0001:000B9BD5  1971 0001:000B9BE9
-  1972 0001:000B9BF8  1973 0001:000B9C05  1974 0001:000B9C30  1975 0001:000B9C39
-  1976 0001:000B9C4D  1978 0001:000B9C6D  1980 0001:000B9C7A  1961 0001:000B9C7D
-  1982 0001:000B9C93  1987 0001:000B9CA3  1989 0001:000B9CBC  1990 0001:000B9CD0
-  1992 0001:000B9CDD  1994 0001:000B9CFD  1995 0001:000B9D11  1997 0001:000B9D3B
-  1998 0001:000B9D47  1999 0001:000B9D59  2000 0001:000B9D61  2001 0001:000B9D72
-  2003 0001:000B9D74  1992 0001:000B9D77  2005 0001:000B9D7C  1987 0001:000B9D7F
-  2009 0001:000B9D89  2013 0001:000B9D9C  2014 0001:000B9DA3  2016 0001:000B9DBC
-  2017 0001:000B9DD0  2019 0001:000B9DE4  2020 0001:000B9DF3  2021 0001:000B9E01
-  2022 0001:000B9E0B  2023 0001:000B9E26  2025 0001:000B9E4A  2028 0001:000B9E57
-  2029 0001:000B9E60  2014 0001:000B9E63  2033 0001:000B9E6D  2034 0001:000B9E75
-  2038 0001:000B9E7F  2039 0001:000B9E93  2040 0001:000B9EA1  2042 0001:000B9ECB
-  2048 0001:000B9EDB  2049 0001:000B9EEF  2050 0001:000B9EFD  2051 0001:000B9F09
-  2053 0001:000B9F41  2055 0001:000B9F51  2059 0001:000B9F5E  2060 0001:000B9F68
-  2062 0001:000B9F79  2063 0001:000B9F8D  2064 0001:000B9F9B  2066 0001:000B9FB7
-  2067 0001:000B9FC6  2068 0001:000B9FD4  2069 0001:000B9FF3  2070 0001:000BA015
-  2071 0001:000BA037  2072 0001:000BA059  2073 0001:000BA07B  2075 0001:000BA09B
-  2077 0001:000BA0A8  2064 0001:000BA0AB  2079 0001:000BA0C1  2081 0001:000BA0D1
-  2082 0001:000BA0D9  2083 0001:000BA0E3  2084 0001:000BA0F0  2085 0001:000BA0FC
-  2086 0001:000BA106  2090 0001:000BA110  2092 0001:000BA11B  2093 0001:000BA120
-  2094 0001:000BA12E  2096 0001:000BA155  2097 0001:000BA15A  2099 0001:000BA164
-  2100 0001:000BA16A  2103 0001:000BA182  2105 0001:000BA1A6  2107 0001:000BA1E0
-  2108 0001:000BA1F4  2110 0001:000BA1F6  2103 0001:000BA1F9  2112 0001:000BA1FE
-  2117 0001:000BA208  2118 0001:000BA210  2119 0001:000BA220  2122 0001:000BA254
-  2263 0001:000BA3F4  2264 0001:000BA419  2265 0001:000BA427  2267 0001:000BA443
-  2268 0001:000BA461  2269 0001:000BA466  2271 0001:000BA4A9  2274 0001:000BA4B5
-  2275 0001:000BA4F4  2279 0001:000BA509  2281 0001:000BA521  2283 0001:000BA533
-  2284 0001:000BA547  2285 0001:000BA556  2286 0001:000BA563  2289 0001:000BA59C
-  2291 0001:000BA5AE  2292 0001:000BA5C2  2293 0001:000BA5D1  2294 0001:000BA5DE
-  2296 0001:000BA617  2279 0001:000BA618  2297 0001:000BA621  2265 0001:000BA624
-  2298 0001:000BA62D  2299 0001:000BA639  2301 0001:000BA64D  2303 0001:000BA687
-  2309 0001:000BA700  2310 0001:000BA71F  2313 0001:000BA728  2314 0001:000BA736
-  2315 0001:000BA744  2316 0001:000BA75A  2318 0001:000BA76D  2319 0001:000BA775
-  2321 0001:000BA78B  2322 0001:000BA797  2324 0001:000BA79E  2311 0001:000BA7B4
-  2328 0001:000BA7BE  2329 0001:000BA7E3  2335 0001:000BA814  2336 0001:000BA839
-  2338 0001:000BA84E  2340 0001:000BA86D  2341 0001:000BA8BE  2344 0001:000BA8D4
-  2346 0001:000BA8EE  2347 0001:000BA8F4  2349 0001:000BA96D  2350 0001:000BA98D
-  2355 0001:000BA999  2357 0001:000BA9B3  2359 0001:000BA9BD  2360 0001:000BA9CB
-  2361 0001:000BA9DC  2364 0001:000BAA55  2365 0001:000BAA75  2368 0001:000BAA81
-  2371 0001:000BAA94  2373 0001:000BAAAE  2375 0001:000BAAB4  2378 0001:000BAB2D
-  2379 0001:000BAB4D  2384 0001:000BAB59  2386 0001:000BAB73  2388 0001:000BAB7D
-  2389 0001:000BAB8B  2390 0001:000BAB99  2393 0001:000BAC12  2394 0001:000BAC32
-  2400 0001:000BAC3B  2401 0001:000BAC5B  2404 0001:000BAC84  2411 0001:000BADA0
-  2412 0001:000BADD6  2414 0001:000BADE5  2415 0001:000BADED  2418 0001:000BADF2
-  2419 0001:000BAE12  2420 0001:000BAE32  2421 0001:000BAE52  2422 0001:000BAE73
-  2423 0001:000BAE94  2425 0001:000BAEB2  2426 0001:000BAEFB  2433 0001:000BAF14
-  2434 0001:000BAF37  2435 0001:000BAF48  2436 0001:000BAF5C  2438 0001:000BAF8D
-  2440 0001:000BAF9D  2441 0001:000BAFB1  2442 0001:000BAFC8  2443 0001:000BAFDC
-  2444 0001:000BAFEA  2446 0001:000BB006  2447 0001:000BB015  2448 0001:000BB023
-  2449 0001:000BB042  2450 0001:000BB064  2451 0001:000BB086  2452 0001:000BB0A9
-  2453 0001:000BB0CB  2454 0001:000BB0ED  2455 0001:000BB10F  2456 0001:000BB131
-  2457 0001:000BB14B  2458 0001:000BB15F  2460 0001:000BB185  2462 0001:000BB192
-  2444 0001:000BB195  2464 0001:000BB1AB  2467 0001:000BB1BB  2468 0001:000BB1CC
-  2469 0001:000BB1E0  2470 0001:000BB213  2475 0001:000BB238  2476 0001:000BB240
-  2478 0001:000BB24B  2479 0001:000BB259  2480 0001:000BB264  2476 0001:000BB265
-  2481 0001:000BB268  2482 0001:000BB26F  2487 0001:000BB274  2488 0001:000BB27D
-  2490 0001:000BB28F  2492 0001:000BB29C  2493 0001:000BB2AA  2495 0001:000BB2B5
-  2488 0001:000BB2B6  2496 0001:000BB2BB  2497 0001:000BB2C2  2507 0001:000BB2C8
-  2508 0001:000BB2FE  2510 0001:000BB314  2511 0001:000BB323  2512 0001:000BB331
-  2513 0001:000BB33F  2514 0001:000BB34D  2516 0001:000BB357  2518 0001:000BB362
-  2519 0001:000BB36F  2523 0001:000BB37E  2524 0001:000BB38B  2526 0001:000BB395
-  2527 0001:000BB39F  2528 0001:000BB3B1  2530 0001:000BB3CE  2531 0001:000BB3D5
-  2533 0001:000BB3DA  2534 0001:000BB3E7  2536 0001:000BB3F4  2538 0001:000BB405
-  2539 0001:000BB416  2542 0001:000BB427  2543 0001:000BB434  2545 0001:000BB441
-  2547 0001:000BB444  2548 0001:000BB460  2550 0001:000BB48B  2551 0001:000BB4C9
-  2553 0001:000BB507  2554 0001:000BB514  2556 0001:000BB521  2558 0001:000BB524
-  2559 0001:000BB552  2562 0001:000BB590  2563 0001:000BB5AB  2564 0001:000BB5B1
-  2566 0001:000BB5D2  2568 0001:000BB611  2574 0001:000BB648  2575 0001:000BB66F
-  2576 0001:000BB679  2578 0001:000BB688  2579 0001:000BB697  2581 0001:000BB6A6
-  2583 0001:000BB6B7  2584 0001:000BB6C3  2586 0001:000BB6C5  2587 0001:000BB6D3
-  2579 0001:000BB6D4  2588 0001:000BB6F5  2594 0001:000BB70C  2595 0001:000BB71C
-  2596 0001:000BB71F  2598 0001:000BB725  2599 0001:000BB72A  2600 0001:000BB730
-  2603 0001:000BB733  2604 0001:000BB742  2605 0001:000BB750  2606 0001:000BB75A
-  2607 0001:000BB768  2608 0001:000BB76D  2609 0001:000BB779  2611 0001:000BB797
-  2613 0001:000BB7A7  2618 0001:000BB7B0  2619 0001:000BB7BE  2620 0001:000BB7D5
-  2621 0001:000BB7E6  2622 0001:000BB7FB  2620 0001:000BB811  2622 0001:000BB814
-  2619 0001:000BB817  2623 0001:000BB81C  2626 0001:000BB824  2627 0001:000BB82A
-  2628 0001:000BB83C  2629 0001:000BB843  2632 0001:000BB848  2633 0001:000BB84F
-  2635 0001:000BB860  2636 0001:000BB88F  2637 0001:000BB896  2640 0001:000BB89C
-  2641 0001:000BB8A3  2643 0001:000BB8B4  2644 0001:000BB8DF  2645 0001:000BB8ED
-  2648 0001:000BB8F4  2649 0001:000BB8F7  2650 0001:000BB8FC  2653 0001:000BB900
-  2654 0001:000BB907  2656 0001:000BB918  2657 0001:000BB94A  2658 0001:000BB958
-  2663 0001:000BB95C  2664 0001:000BB963  2666 0001:000BB974  2667 0001:000BB981
-  2668 0001:000BB98E  2670 0001:000BB99B  2671 0001:000BB9A8  2672 0001:000BB9B5
-  2673 0001:000BB9C2  2675 0001:000BB9C7  2677 0001:000BB9E6  2678 0001:000BBA00
-  2679 0001:000BBA1A  2681 0001:000BBA34  2682 0001:000BBA4E  2683 0001:000BBA68
-  2684 0001:000BBA82  2690 0001:000BBA90  2691 0001:000BBA99  2692 0001:000BBAB7
-  2693 0001:000BBABC  2694 0001:000BBACC  2700 0001:000BBAD4  2701 0001:000BBADD
-  2703 0001:000BBAE2  2704 0001:000BBB00  2705 0001:000BBB05  2707 0001:000BBB15
-  2710 0001:000BBB1C  2711 0001:000BBB1F  2712 0001:000BBB2D  2715 0001:000BBB30
-  2716 0001:000BBB33  2717 0001:000BBB3A  2720 0001:000BBB3C  2721 0001:000BBB3F
-  2722 0001:000BBB4B  2724 0001:000BBB58  2726 0001:000BBB63  2727 0001:000BBB68
-  2734 0001:000BBB6C  2735 0001:000BBB90  2736 0001:000BBB9E  2738 0001:000BBBC0
-  2741 0001:000BBC28  2742 0001:000BBC39  2743 0001:000BBC47  2744 0001:000BBC6C
-  2745 0001:000BBC91  2746 0001:000BBCA7  2748 0001:000BBCC7  2751 0001:000BBCD4
-  2736 0001:000BBCD7  2753 0001:000BBCE0  2755 0001:000BBCF2  2756 0001:000BBD03
-  2757 0001:000BBD11  2758 0001:000BBD1E  2759 0001:000BBD28  2761 0001:000BBD48
-  2765 0001:000BBD55  2766 0001:000BBD63  2768 0001:000BBD8B  2770 0001:000BBDAA
-  2771 0001:000BBDC3  2773 0001:000BBDC9  2774 0001:000BBDDA  2775 0001:000BBDE8
-  2776 0001:000BBDF3  2777 0001:000BBDFC  2778 0001:000BBE12  2780 0001:000BBE32
-  2784 0001:000BBE3F  2766 0001:000BBE42  2787 0001:000BBE6D  2794 0001:000BBE94
-  2795 0001:000BBEAE  2797 0001:000BBEC4  2798 0001:000BBEE8  2799 0001:000BBEF6
-  2801 0001:000BBF1B  2805 0001:000BBF55  2811 0001:000BBFBC  2812 0001:000BBFD7
-  2813 0001:000BBFEC  2814 0001:000BC011  2815 0001:000BC030  2816 0001:000BC036
-  2817 0001:000BC044  2819 0001:000BC05A  2822 0001:000BC0B5  2827 0001:000BC124
-  2828 0001:000BC13F  2829 0001:000BC154  2830 0001:000BC179  2831 0001:000BC198
-  2832 0001:000BC19E  2834 0001:000BC1DE  2837 0001:000BC22C  2843 0001:000BC278
-  2844 0001:000BC294  2845 0001:000BC2A9  2847 0001:000BC2CE  2848 0001:000BC30A
-  2849 0001:000BC318  2850 0001:000BC33A  2851 0001:000BC34C  2850 0001:000BC36E
-  2853 0001:000BC37E  2855 0001:000BC3B0  2861 0001:000BC3D4  2862 0001:000BC3F4
-  2864 0001:000BC40C  2866 0001:000BC41D  2867 0001:000BC433  2869 0001:000BC47D
-  2862 0001:000BC47E  2871 0001:000BC481  2872 0001:000BC4C5  2873 0001:000BC4F0
-  2880 0001:000BC520  2881 0001:000BC53D  2883 0001:000BC55E  2884 0001:000BC573
-  2886 0001:000BC578  2887 0001:000BC598  2889 0001:000BC5B0  2891 0001:000BC5C1
-  2892 0001:000BC5D7  2894 0001:000BC621  2887 0001:000BC622  2895 0001:000BC647
-  2902 0001:000BC6B8  2903 0001:000BC6DD  2904 0001:000BC6F1  2905 0001:000BC712
-  2907 0001:000BC72F  2908 0001:000BC735  2910 0001:000BC73B  2911 0001:000BC74F
-  2912 0001:000BC766  2913 0001:000BC77E  2914 0001:000BC796  2915 0001:000BC7AE
-  2917 0001:000BC7C6  2918 0001:000BC7D5  2919 0001:000BC7DF  2920 0001:000BC7E7
-  2922 0001:000BC800  2923 0001:000BC814  2924 0001:000BC822  2926 0001:000BC83E
-  2927 0001:000BC84D  2928 0001:000BC85B  2929 0001:000BC87A  2930 0001:000BC884
-  2931 0001:000BC8A6  2932 0001:000BC8C0  2933 0001:000BC8CB  2935 0001:000BC8F2
-  2937 0001:000BC8FF  2924 0001:000BC902  2939 0001:000BC918  2942 0001:000BC928
-  2943 0001:000BC92E  2945 0001:000BC944  2946 0001:000BC957  2948 0001:000BC96B
-  2949 0001:000BC973  2950 0001:000BC99F  2956 0001:000BCA44  2957 0001:000BCA72
-  2958 0001:000BCA81  2959 0001:000BCA8F  2960 0001:000BCA9D  2961 0001:000BCAAB
-  2963 0001:000BCAB5  2965 0001:000BCABB  2966 0001:000BCAC8  2970 0001:000BCAD7
-  2971 0001:000BCAE4  2973 0001:000BCAEE  2974 0001:000BCAF8  2975 0001:000BCB0A
-  2977 0001:000BCB27  2979 0001:000BCB3F  2981 0001:000BCB59  2982 0001:000BCB63
-  2983 0001:000BCB77  2987 0001:000BCB93  2988 0001:000BCB9A  2990 0001:000BCBA1
-  2991 0001:000BCBAF  2994 0001:000BCC02  2995 0001:000BCC1D  2996 0001:000BCC23
-  2998 0001:000BCC44  3000 0001:000BCC76  3005 0001:000BCC84  3006 0001:000BCC8B
-  3007 0001:000BCC9C  3008 0001:000BCCBB  3009 0001:000BCCC8  3010 0001:000BCCDD
-  3011 0001:000BCCF2  3012 0001:000BCD01  3015 0001:000BCD08  3016 0001:000BCD0E
-  3019 0001:000BCD1A  3020 0001:000BCD2B  3021 0001:000BCD39  3024 0001:000BCD4A
-  3027 0001:000BCD50  3028 0001:000BCD57  3030 0001:000BCD5D  3031 0001:000BCD76
-  3032 0001:000BCD8F  3035 0001:000BCDBE  3036 0001:000BCDD0  3037 0001:000BCDEB
-  3039 0001:000BCE04  3040 0001:000BCE12  3041 0001:000BCE24  3047 0001:000BCE28
-  3069 0001:000BCE2B  3072 0001:000BCE30  3073 0001:000BCE36  3074 0001:000BCE3D
-  3075 0001:000BCE44  3081 0001:000BCE48  3082 0001:000BCEE1  3083 0001:000BCEE6
-  3084 0001:000BCEEB  3085 0001:000BCEF0  3086 0001:000BCEF5  3087 0001:000BCEFA
-  3088 0001:000BCEFF  3089 0001:000BCF04  3090 0001:000BCF09  3091 0001:000BCF0E
-  3092 0001:000BCF13  3093 0001:000BCF18  3094 0001:000BCF1D  3095 0001:000BCF22
-  3096 0001:000BCF27  3097 0001:000BCF2C  3099 0001:000BCF30  3104 0001:000BCF34
-  3105 0001:000BCF53  3106 0001:000BCF61  3108 0001:000BCF6D  3109 0001:000BCF81
-  3110 0001:000BCF8F  3112 0001:000BCFA9  3115 0001:000BCFDC  3125 0001:000BCFE0
-  3126 0001:000BD00E  3127 0001:000BD012  3128 0001:000BD02F  3129 0001:000BD03B
-  3131 0001:000BD043  3132 0001:000BD07E  3134 0001:000BD098  3136 0001:000BD0B5
-  3138 0001:000BD0DB  3139 0001:000BD0EF  3140 0001:000BD0FD  3142 0001:000BD10D
-  3143 0001:000BD124  3144 0001:000BD132  3145 0001:000BD142  3146 0001:000BD147
-  3148 0001:000BD15C  3149 0001:000BD17D  3150 0001:000BD180  3146 0001:000BD190
-  3153 0001:000BD1A0  3157 0001:000BD1BD  3160 0001:000BD21C  3184 0001:000BD284
-  3185 0001:000BD2A2  3186 0001:000BD2B3  3187 0001:000BD2C5  3189 0001:000BD2DA
-  3190 0001:000BD2F4  3192 0001:000BD320  3193 0001:000BD333  3195 0001:000BD341
-  3197 0001:000BD35F  3198 0001:000BD384  3202 0001:000BD393  3203 0001:000BD3B8
-  3206 0001:000BD3C5  3208 0001:000BD3C9  3209 0001:000BD404  3212 0001:000BD421
-  3213 0001:000BD426  3215 0001:000BD458  3220 0001:000BD4A4  3221 0001:000BD4BC
-  3222 0001:000BD4D0  3224 0001:000BD4DC  3225 0001:000BD4FA  3227 0001:000BD516
-  3228 0001:000BD554  3231 0001:000BD570  3232 0001:000BD573  3233 0001:000BD578
-  3236 0001:000BD57C  3237 0001:000BD57F  3238 0001:000BD584  3241 0001:000BD588
-  3242 0001:000BD58B  3243 0001:000BD594  3245 0001:000BD5A1  3246 0001:000BD5A6
-  3249 0001:000BD5A8  3251 0001:000BD5B0  3250 0001:000BD5B7  3252 0001:000BD5C6
-  3253 0001:000BD5D3  3258 0001:000BD5D8  3259 0001:000BD5E0  3260 0001:000BD5E2
-  3262 0001:000BD5EB  3263 0001:000BD606  3264 0001:000BD60F  3265 0001:000BD611
-  3266 0001:000BD61E  3267 0001:000BD62B  3268 0001:000BD643  3271 0001:000BD650
-  3272 0001:000BD65E  3273 0001:000BD66C  3274 0001:000BD67C  3275 0001:000BD689
-  3276 0001:000BD696  3277 0001:000BD6A3  3278 0001:000BD6B0  3279 0001:000BD6D5
-  3280 0001:000BD6F6  3282 0001:000BD6FD  3283 0001:000BD714  3286 0001:000BD71C
-  3287 0001:000BD751  3289 0001:000BD758  3290 0001:000BD76E  3291 0001:000BD777
-  3292 0001:000BD7AD  3293 0001:000BD7C3  3294 0001:000BD7D3  3296 0001:000BD7E3
-  3297 0001:000BD7F3  3299 0001:000BD803  3300 0001:000BD81D  3301 0001:000BD839
-  3302 0001:000BD8A6  3303 0001:000BD8B7  3304 0001:000BD8D3  3306 0001:000BD8DA
-  3307 0001:000BD8E0  3309 0001:000BD8FC  3310 0001:000BD900  3312 0001:000BD92F
-  3313 0001:000BD9B0  3316 0001:000BD9BC  3317 0001:000BD9D3  3318 0001:000BD9DD
-  3319 0001:000BDA12  3324 0001:000BDA18  3325 0001:000BDA33  3327 0001:000BDA41
-  3328 0001:000BDA5B  3329 0001:000BDA67  3330 0001:000BDA83  3332 0001:000BDA88
-  3333 0001:000BDA94  3334 0001:000BDABB  3330 0001:000BDAC2  3336 0001:000BDAC5
-  3337 0001:000BDAD6  3338 0001:000BDAE1  3339 0001:000BDAE9  3340 0001:000BDAF1
-  3341 0001:000BDAFA  3342 0001:000BDB04  3344 0001:000BDB3A  3348 0001:000BDB40
-  3349 0001:000BDB47  3351 0001:000BDB50  3352 0001:000BDB62  3354 0001:000BDB72
-  3357 0001:000BDB78  3358 0001:000BDB7B  3359 0001:000BDB85  3360 0001:000BDB8C
-  3363 0001:000BDB90  3364 0001:000BDB93  3365 0001:000BDB9D  3366 0001:000BDBA4
-  3369 0001:000BDBA8  3370 0001:000BDBBE  3371 0001:000BDBDC  3372 0001:000BDBE5
-  3373 0001:000BDBEF  3374 0001:000BDBF7  3375 0001:000BDBFF  3376 0001:000BDC08
-  3377 0001:000BDC1E  3378 0001:000BDC51  3382 0001:000BDC58  3383 0001:000BDC75
-  3384 0001:000BDC87  3385 0001:000BDC99  3386 0001:000BDCA2  3387 0001:000BDCD0
-  3388 0001:000BDD0D  3389 0001:000BDD34  3390 0001:000BDD69  3393 0001:000BDD70
-  3394 0001:000BDD73  3395 0001:000BDD7A  3398 0001:000BDD7C  3399 0001:000BDD82
-  3400 0001:000BDD9B  3401 0001:000BDDB4  3402 0001:000BDDCD  3403 0001:000BDDE6
-  3409 0001:000BDE38  3410 0001:000BDE5D  3411 0001:000BDE6B  3413 0001:000BDE7B
-  3415 0001:000BDE92  3417 0001:000BDEB8  3418 0001:000BDECB  3419 0001:000BDEDE
-  3420 0001:000BDEE9  3421 0001:000BDEF3  3422 0001:000BDF10  3424 0001:000BDF3B
-  3425 0001:000BDF49  3429 0001:000BDF6F  3431 0001:000BDF95  3432 0001:000BDFA8
-  3433 0001:000BDFCD  3434 0001:000BDFD7  3436 0001:000BE02D  3437 0001:000BE03B
-  3440 0001:000BE046  3413 0001:000BE047  3443 0001:000BE05D  3445 0001:000BE0A9
-  3448 0001:000BE110  3449 0001:000BE11A  3450 0001:000BE128  3451 0001:000BE131
-  3452 0001:000BE13C  3453 0001:000BE142  3455 0001:000BE15F  3456 0001:000BE164
-  3462 0001:000BE16C  3463 0001:000BE193  3464 0001:000BE1A1  3466 0001:000BE1B1
-  3468 0001:000BE1CD  3471 0001:000BE231  3472 0001:000BE240  3473 0001:000BE24E
-  3474 0001:000BE270  3475 0001:000BE292  3476 0001:000BE2B4  3477 0001:000BE2D6
-  3478 0001:000BE2F8  3480 0001:000BE31B  3485 0001:000BE32D  3487 0001:000BE345
-  3488 0001:000BE358  3490 0001:000BE380  3491 0001:000BE3A2  3492 0001:000BE3C4
-  3493 0001:000BE3E6  3494 0001:000BE408  3495 0001:000BE42A  3497 0001:000BE42F
-  3485 0001:000BE430  3501 0001:000BE43C  3503 0001:000BE454  3504 0001:000BE467
-  3506 0001:000BE48B  3507 0001:000BE49B  3509 0001:000BE4A0  3501 0001:000BE4A1
-  3514 0001:000BE4A9  3515 0001:000BE4B9  3520 0001:000BE505  3525 0001:000BE515
-  3526 0001:000BE54D  3527 0001:000BE590  3530 0001:000BE59A  3466 0001:000BE59D
-  3531 0001:000BE5A6  3534 0001:000BE5BB  3536 0001:000BE5ED  3539 0001:000BE5F4
-  3540 0001:000BE5F7  3541 0001:000BE606  3543 0001:000BE617  3544 0001:000BE626
-  3547 0001:000BE660  3548 0001:000BE663  3549 0001:000BE66B  3552 0001:000BE670
-  3553 0001:000BE676  3554 0001:000BE684  3555 0001:000BE68A  3557 0001:000BE691
-  3559 0001:000BE6A8  3560 0001:000BE6AD  3563 0001:000BE6B4  3564 0001:000BE6B7
-  3565 0001:000BE6BC  3568 0001:000BE6C0  3569 0001:000BE6C4  3570 0001:000BE6E3
-  3573 0001:000BE6E8  3574 0001:000BE6EB  3575 0001:000BE6F0  3577 0001:000BE738
-  3577 0001:000BE73F
+   367 0001:000B5000   368 0001:000B5024   369 0001:000B5039   372 0001:000B504E
+   375 0001:000B5053   377 0001:000B5063   380 0001:000B5073   381 0001:000B5083
+   383 0001:000B5093   384 0001:000B50A3   386 0001:000B50B3   387 0001:000B50C1
+   389 0001:000B50EF   392 0001:000B5117   393 0001:000B5125   395 0001:000B5153
+   398 0001:000B517B   399 0001:000B5189   401 0001:000B51B7   403 0001:000B51BC
+   404 0001:000B51CA   406 0001:000B51F8   408 0001:000B51FD   409 0001:000B5235
+   410 0001:000B525F   411 0001:000B5295   413 0001:000B52A8   414 0001:000B52B6
+   416 0001:000B5307   418 0001:000B530C   419 0001:000B531A   421 0001:000B536B
+   423 0001:000B5370   425 0001:000B539B   427 0001:000B53C1   428 0001:000B53CE
+   429 0001:000B53DD   431 0001:000B53EF   432 0001:000B53FE   434 0001:000B5410
+   436 0001:000B541E   437 0001:000B5433   439 0001:000B5448   441 0001:000B5466
+   444 0001:000B5476   446 0001:000B5483   448 0001:000B548B   449 0001:000B54C2
+   454 0001:000B55C8   455 0001:000B55E3   457 0001:000B55EA   458 0001:000B55F5
+   460 0001:000B5609   461 0001:000B5616   462 0001:000B5623   464 0001:000B562E
+   465 0001:000B5637   467 0001:000B5648   468 0001:000B5657   469 0001:000B566F
+   470 0001:000B5687   471 0001:000B569F   472 0001:000B56B7   473 0001:000B56E8
+   474 0001:000B56F7   476 0001:000B56FE   477 0001:000B570B   478 0001:000B5716
+   479 0001:000B5723   481 0001:000B572E   482 0001:000B5741   488 0001:000B5754
+   490 0001:000B575F   492 0001:000B576E   491 0001:000B5775   494 0001:000B5784
+   496 0001:000B5793   495 0001:000B579A   498 0001:000B57A9   499 0001:000B57B4
+   500 0001:000B57C1   501 0001:000B57EE   504 0001:000B5874   505 0001:000B587E
+   506 0001:000B588E   507 0001:000B589C   509 0001:000B58AB   511 0001:000B58B2
+   514 0001:000B58BA   515 0001:000B58C8   517 0001:000B58D7   519 0001:000B58DD
+   520 0001:000B58E4   523 0001:000B58F4   526 0001:000B5903   530 0001:000B591A
+   532 0001:000B592C   535 0001:000B5944   536 0001:000B595F   539 0001:000B5968
+   540 0001:000B598F   541 0001:000B599D   542 0001:000B59C5   543 0001:000B59F0
+   547 0001:000B5A1C   548 0001:000B5A1F   549 0001:000B5A29   553 0001:000B5A5C
+   554 0001:000B5A62   555 0001:000B5A6F   556 0001:000B5A7B   557 0001:000B5A87
+   558 0001:000B5A92   563 0001:000B5AC0   564 0001:000B5AC6   565 0001:000B5ACD
+   566 0001:000B5AD9   567 0001:000B5AE4   576 0001:000B5B14   577 0001:000B5B35
+   579 0001:000B5B3F   580 0001:000B5B50   581 0001:000B5B5E   582 0001:000B5B63
+   584 0001:000B5B80   585 0001:000B5B90   587 0001:000B5BBF   588 0001:000B5BC1
+   589 0001:000B5BD3   590 0001:000B5BE8   591 0001:000B5C00   594 0001:000B5C18
+   596 0001:000B5C22   598 0001:000B5C38   599 0001:000B5C4F   602 0001:000B5C67
+   603 0001:000B5C7A   605 0001:000B5C7D   582 0001:000B5C80   606 0001:000B5C89
+   607 0001:000B5CA9   606 0001:000B5CC0   609 0001:000B5CC5   610 0001:000B5CD3
+   611 0001:000B5D09   617 0001:000B5D28   618 0001:000B5D42   619 0001:000B5D44
+   620 0001:000B5D5C   621 0001:000B5D63   622 0001:000B5D6A   625 0001:000B5D6F
+   626 0001:000B5D83   628 0001:000B5D86   629 0001:000B5D97   630 0001:000B5DA7
+   631 0001:000B5DB8   633 0001:000B5DC9   636 0001:000B5DD7   637 0001:000B5DDB
+   638 0001:000B5DE8   639 0001:000B5DEF   640 0001:000B5DFA   644 0001:000B5E0A
+   645 0001:000B5E15   649 0001:000B5E25   650 0001:000B5E30   661 0001:000B5E3E
+   663 0001:000B5E43   665 0001:000B5E6C   668 0001:000B5E74   669 0001:000B5E93
+   670 0001:000B5EA1   672 0001:000B5ECE   674 0001:000B5EE0   676 0001:000B5EEC
+   677 0001:000B5EF8   681 0001:000B5F07   682 0001:000B5F13   684 0001:000B5F38
+   689 0001:000B5F74   690 0001:000B5F7D   691 0001:000B5F84   693 0001:000B5F99
+   695 0001:000B5FAF   696 0001:000B5FC2   698 0001:000B5FC4   691 0001:000B5FC5
+   699 0001:000B5FCB   704 0001:000B5FD4   705 0001:000B5FF1   706 0001:000B6041
+   707 0001:000B607D   716 0001:000B60C0   717 0001:000B60FA   719 0001:000B6113
+   720 0001:000B6122   721 0001:000B6130   722 0001:000B613E   723 0001:000B614C
+   725 0001:000B6157   727 0001:000B6166   728 0001:000B6176   729 0001:000B6186
+   733 0001:000B6198   734 0001:000B61A8   735 0001:000B61B8   737 0001:000B61C5
+   738 0001:000B61D2   740 0001:000B61F0   741 0001:000B61F7   743 0001:000B61FE
+   746 0001:000B6238   747 0001:000B6247   748 0001:000B6255   749 0001:000B625F
+   750 0001:000B626C   751 0001:000B6279   752 0001:000B628A   754 0001:000B62AC
+   757 0001:000B62CC   759 0001:000B62ED   760 0001:000B62F1   762 0001:000B630C
+   764 0001:000B632D   765 0001:000B635A   766 0001:000B635E   768 0001:000B6360
+   760 0001:000B6361   770 0001:000B6371   776 0001:000B6381   778 0001:000B6396
+   779 0001:000B63A7   780 0001:000B63B7   783 0001:000B63F8   784 0001:000B6413
+   785 0001:000B6426   787 0001:000B643F   788 0001:000B6456   790 0001:000B6463
+   792 0001:000B6470   797 0001:000B64A7   798 0001:000B64CC   802 0001:000B64EB
+   806 0001:000B6515   807 0001:000B6530   808 0001:000B6543   810 0001:000B655C
+   811 0001:000B6573   815 0001:000B6582   818 0001:000B65A7   824 0001:000B65D7
+   825 0001:000B65E6   826 0001:000B65F4   827 0001:000B6601   828 0001:000B660B
+   829 0001:000B6618   830 0001:000B6625   831 0001:000B6658   833 0001:000B6686
+   838 0001:000B6696   840 0001:000B66A3   841 0001:000B66B3   842 0001:000B66D7
+   843 0001:000B66E7   844 0001:000B66F9   845 0001:000B670C   846 0001:000B672F
+   850 0001:000B6749   851 0001:000B6759   852 0001:000B676A   853 0001:000B6773
+   854 0001:000B678F   855 0001:000B6798   856 0001:000B67B4   857 0001:000B67F5
+   860 0001:000B6806   862 0001:000B6831   864 0001:000B6841   865 0001:000B6847
+   866 0001:000B688F   876 0001:000B6928   877 0001:000B6939   878 0001:000B6958
+   880 0001:000B6961   882 0001:000B6971   883 0001:000B6981   884 0001:000B6996
+   887 0001:000B69AF   889 0001:000B69C5   890 0001:000B69D3   892 0001:000B69E6
+   896 0001:000B69FC   898 0001:000B6A06   899 0001:000B6A24   906 0001:000B6A37
+   908 0001:000B6A4D   909 0001:000B6A6E   910 0001:000B6A84   911 0001:000B6A9E
+   916 0001:000B6AAE   919 0001:000B6AC0   920 0001:000B6AC6   921 0001:000B6AD4
+   922 0001:000B6AE2   923 0001:000B6AF0   927 0001:000B6AF4   928 0001:000B6AFF
+   929 0001:000B6B09   931 0001:000B6B0C   933 0001:000B6B12   934 0001:000B6B1B
+   936 0001:000B6B22   940 0001:000B6B2C   941 0001:000B6B3B   942 0001:000B6B45
+   944 0001:000B6B48   946 0001:000B6B4E   947 0001:000B6B57   949 0001:000B6B5E
+   953 0001:000B6B68   954 0001:000B6B73   955 0001:000B6B7D   957 0001:000B6B80
+   959 0001:000B6B86   960 0001:000B6B8F   962 0001:000B6B96   967 0001:000B6BA0
+   968 0001:000B6BAA   969 0001:000B6BC0   971 0001:000B6BD8   972 0001:000B6C00
+   973 0001:000B6C0A   974 0001:000B6C14   975 0001:000B6C2B   976 0001:000B6C33
+   983 0001:000B6C3C   987 0001:000B6C49   989 0001:000B6C5E   990 0001:000B6C7E
+   993 0001:000B6CB4   995 0001:000B6CC4   996 0001:000B6CD1   997 0001:000B6CD7
+   998 0001:000B6CD8   999 0001:000B6CDE  1000 0001:000B6CDF  1001 0001:000B6CE3
+  1002 0001:000B6CE5  1003 0001:000B6CEA  1004 0001:000B6CEF  1005 0001:000B6D10
+  1010 0001:000B6D2F  1012 0001:000B6D3C  1013 0001:000B6D49  1014 0001:000B6D4F
+  1015 0001:000B6D50  1016 0001:000B6D56  1017 0001:000B6D57  1018 0001:000B6D5C
+  1019 0001:000B6D61  1020 0001:000B6D66  1021 0001:000B6D6B  1022 0001:000B6D8C
+  1027 0001:000B6DAB  1028 0001:000B6DB8  1029 0001:000B6DBE  1030 0001:000B6DBF
+  1031 0001:000B6DC5  1032 0001:000B6DC6  1033 0001:000B6DCB  1034 0001:000B6DD0
+  1035 0001:000B6DD5  1036 0001:000B6DDA  1037 0001:000B6DFB  1042 0001:000B6E17
+  1043 0001:000B6E24  1044 0001:000B6E2A  1045 0001:000B6E2D  1046 0001:000B6E33
+  1047 0001:000B6E36  1048 0001:000B6E3A  1049 0001:000B6E3C  1050 0001:000B6E41
+  1051 0001:000B6E46  1052 0001:000B6E63  1057 0001:000B6E7D  1058 0001:000B6E8E
+  1061 0001:000B6E98  1062 0001:000B6EA1  1063 0001:000B6ECC  1065 0001:000B6ED1
+  1066 0001:000B6ED6  1068 0001:000B6EDB  1071 0001:000B6F28  1072 0001:000B6F2B
+  1073 0001:000B6F30  1076 0001:000B6F34  1077 0001:000B6F37  1078 0001:000B6F43
+  1081 0001:000B6F48  1082 0001:000B6F4E  1083 0001:000B6F66  1086 0001:000B6F6C
+  1087 0001:000B6F6F  1088 0001:000B6F8A  1095 0001:000B6F8C  1096 0001:000B6F92
+  1098 0001:000B6FAB  1100 0001:000B6FBC  1101 0001:000B6FBE  1103 0001:000B6FC1
+  1096 0001:000B6FC2  1104 0001:000B6FC5  1105 0001:000B6FC7  1113 0001:000B6FCC
+  1114 0001:000B6FEE  1115 0001:000B6FFF  1116 0001:000B7004  1117 0001:000B7018
+  1118 0001:000B7026  1120 0001:000B703A  1122 0001:000B7052  1124 0001:000B707A
+  1127 0001:000B7094  1129 0001:000B70B1  1130 0001:000B70C4  1131 0001:000B7129
+  1132 0001:000B713F  1127 0001:000B7142  1136 0001:000B714E  1138 0001:000B716B
+  1139 0001:000B717E  1140 0001:000B71F9  1141 0001:000B720F  1136 0001:000B7212
+  1147 0001:000B721E  1149 0001:000B723B  1150 0001:000B724E  1151 0001:000B72C1
+  1152 0001:000B72D7  1147 0001:000B72DA  1155 0001:000B72E1  1157 0001:000B72FE
+  1160 0001:000B731A  1162 0001:000B732A  1164 0001:000B734A  1165 0001:000B7363
+  1167 0001:000B7371  1168 0001:000B7377  1170 0001:000B7379  1162 0001:000B737C
+  1172 0001:000B737F  1173 0001:000B73A3  1175 0001:000B73B6  1176 0001:000B73BF
+  1179 0001:000B73D2  1181 0001:000B7449  1184 0001:000B7450  1185 0001:000B7466
+  1186 0001:000B746D  1187 0001:000B7481  1189 0001:000B7493  1190 0001:000B74C0
+  1202 0001:000B74C4  1203 0001:000B74FA  1204 0001:000B750F  1205 0001:000B7517
+  1206 0001:000B7525  1208 0001:000B7530  1209 0001:000B753F  1210 0001:000B754D
+  1211 0001:000B755B  1212 0001:000B7569  1214 0001:000B7573  1216 0001:000B757E
+  1217 0001:000B758B  1221 0001:000B759A  1222 0001:000B75A7  1224 0001:000B75B1
+  1225 0001:000B75BB  1226 0001:000B75CD  1228 0001:000B75EA  1230 0001:000B75F9
+  1232 0001:000B7607  1233 0001:000B7612  1235 0001:000B7621  1236 0001:000B762E
+  1240 0001:000B766C  1244 0001:000B76A2  1245 0001:000B76AF  1247 0001:000B76BE
+  1248 0001:000B76D0  1250 0001:000B76E1  1252 0001:000B76EA  1253 0001:000B76F8
+  1254 0001:000B76FF  1256 0001:000B770A  1257 0001:000B7736  1262 0001:000B773F
+  1263 0001:000B774D  1266 0001:000B7754  1268 0001:000B7765  1269 0001:000B7770
+  1271 0001:000B7791  1272 0001:000B77A1  1274 0001:000B77B4  1278 0001:000B77C8
+  1279 0001:000B77D9  1282 0001:000B77DB  1272 0001:000B77DE  1285 0001:000B77E1
+  1287 0001:000B77EC  1291 0001:000B7820  1294 0001:000B784F  1295 0001:000B786A
+  1296 0001:000B7870  1298 0001:000B7891  1300 0001:000B78D0  1303 0001:000B78E4
+  1304 0001:000B78EA  1305 0001:000B790B  1306 0001:000B7920  1309 0001:000B7924
+  1311 0001:000B793E  1312 0001:000B7945  1313 0001:000B794C  1315 0001:000B7955
+  1317 0001:000B796A  1319 0001:000B79AE  1323 0001:000B79D5  1326 0001:000B7A2C
+  1332 0001:000B7A48  1333 0001:000B7A56  1335 0001:000B7A67  1336 0001:000B7A74
+  1338 0001:000B7A7C  1339 0001:000B7A7F  1341 0001:000B7A81  1333 0001:000B7A82
+  1342 0001:000B7A88  1349 0001:000B7A90  1350 0001:000B7AB4  1353 0001:000B7AC2
+  1355 0001:000B7AD4  1356 0001:000B7AE1  1360 0001:000B7AF0  1361 0001:000B7AF6
+  1364 0001:000B7AFC  1366 0001:000B7B05  1368 0001:000B7B09  1371 0001:000B7B3B
+  1374 0001:000B7B48  1375 0001:000B7B5C  1377 0001:000B7B68  1378 0001:000B7B71
+  1379 0001:000B7B7A  1380 0001:000B7B7D  1382 0001:000B7B8C  1383 0001:000B7C02
+  1386 0001:000B7C18  1387 0001:000B7C1E  1388 0001:000B7C46  1395 0001:000B7C4C
+  1396 0001:000B7C58  1397 0001:000B7C6A  1399 0001:000B7C78  1401 0001:000B7C7E
+  1403 0001:000B7C8A  1404 0001:000B7C8D  1405 0001:000B7C9D  1407 0001:000B7CA0
+  1408 0001:000B7CA7  1409 0001:000B7CB4  1412 0001:000B7CBB  1418 0001:000B7CC4
+  1419 0001:000B7CCB  1421 0001:000B7CD4  1422 0001:000B7CD7  1423 0001:000B7CE9
+  1424 0001:000B7CEC  1425 0001:000B7CF5  1428 0001:000B7CFC  1434 0001:000B7D04
+  1435 0001:000B7D0B  1437 0001:000B7D14  1438 0001:000B7D17  1439 0001:000B7D29
+  1440 0001:000B7D2C  1441 0001:000B7D35  1442 0001:000B7D3C  1445 0001:000B7D43
+  1450 0001:000B7D4C  1451 0001:000B7D69  1453 0001:000B7D7B  1457 0001:000B7DC2
+  1459 0001:000B7DCB  1460 0001:000B7E01  1463 0001:000B7E47  1467 0001:000B7E50
+  1468 0001:000B7E5B  1469 0001:000B7E65  1471 0001:000B7E68  1473 0001:000B7E6E
+  1474 0001:000B7E77  1476 0001:000B7E7E  1480 0001:000B7E88  1481 0001:000B7E97
+  1482 0001:000B7EA1  1484 0001:000B7EA4  1486 0001:000B7EAA  1487 0001:000B7EB3
+  1489 0001:000B7EBA  1493 0001:000B7EC4  1494 0001:000B7ECF  1495 0001:000B7ED9
+  1497 0001:000B7EDC  1499 0001:000B7EE2  1500 0001:000B7EEB  1502 0001:000B7EF2
+  1507 0001:000B7EFC  1508 0001:000B7F1D  1509 0001:000B7F33  1511 0001:000B7F4B
+  1512 0001:000B7F75  1513 0001:000B7F7F  1515 0001:000B7F89  1516 0001:000B7F93
+  1517 0001:000B7FAC  1518 0001:000B7FBA  1520 0001:000B7FC7  1521 0001:000B8003
+  1524 0001:000B8020  1525 0001:000B8037  1527 0001:000B8046  1528 0001:000B8054
+  1529 0001:000B805E  1532 0001:000B807A  1533 0001:000B809E  1539 0001:000B80A4
+  1540 0001:000B80C2  1541 0001:000B80C6  1542 0001:000B80D0  1544 0001:000B80DA
+  1546 0001:000B80EB  1548 0001:000B810B  1549 0001:000B8127  1550 0001:000B812B
+  1552 0001:000B812D  1544 0001:000B812E  1554 0001:000B8156  1560 0001:000B8160
+  1561 0001:000B8196  1563 0001:000B8198  1564 0001:000B819E  1565 0001:000B81AA
+  1567 0001:000B81C0  1568 0001:000B81EB  1569 0001:000B81F3  1571 0001:000B81F8
+  1572 0001:000B820C  1573 0001:000B8217  1575 0001:000B8228  1576 0001:000B8239
+  1569 0001:000B823B  1581 0001:000B823E  1583 0001:000B8252  1584 0001:000B8258
+  1585 0001:000B8288  1592 0001:000B82AC  1593 0001:000B82CD  1595 0001:000B82DF
+  1596 0001:000B82ED  1600 0001:000B82FC  1601 0001:000B8302  1604 0001:000B8308
+  1606 0001:000B8312  1607 0001:000B8327  1610 0001:000B8329  1611 0001:000B8359
+  1612 0001:000B8395  1613 0001:000B839A  1614 0001:000B83C5  1622 0001:000B8430
+  1623 0001:000B8436  1624 0001:000B8443  1625 0001:000B844F  1626 0001:000B8456
+  1629 0001:000B845C  1630 0001:000B845F  1631 0001:000B8464  1632 0001:000B8470
+  1637 0001:000B8474  1638 0001:000B847A  1639 0001:000B848C  1641 0001:000B849A
+  1643 0001:000B84A0  1645 0001:000B84A5  1649 0001:000B84B1  1650 0001:000B84BE
+  1652 0001:000B84D7  1657 0001:000B84DC  1658 0001:000B84E9  1660 0001:000B8500
+  1661 0001:000B850B  1662 0001:000B8521  1664 0001:000B8532  1674 0001:000B8538
+  1675 0001:000B8564  1677 0001:000B856D  1679 0001:000B8579  1680 0001:000B8585
+  1682 0001:000B858D  1684 0001:000B85A3  1686 0001:000B85C3  1687 0001:000B85D9
+  1688 0001:000B85EF  1690 0001:000B85F1  1682 0001:000B85F2  1692 0001:000B85F7
+  1694 0001:000B8601  1695 0001:000B860A  1696 0001:000B8613  1697 0001:000B8650
+  1699 0001:000B8689  1703 0001:000B86B0  1707 0001:000B86CE  1709 0001:000B86D8
+  1710 0001:000B86F7  1711 0001:000B8705  1713 0001:000B8722  1715 0001:000B8732
+  1718 0001:000B87B0  1721 0001:000B8870  1722 0001:000B8876  1723 0001:000B887F
+  1724 0001:000B8888  1727 0001:000B888C  1728 0001:000B88A9  1729 0001:000B88B7
+  1730 0001:000B88C0  1732 0001:000B88CB  1733 0001:000B88D4  1734 0001:000B8934
+  1737 0001:000B893C  1738 0001:000B8942  1739 0001:000B8950  1740 0001:000B8961
+  1741 0001:000B896C  1744 0001:000B8970  1745 0001:000B8976  1747 0001:000B8987
+  1748 0001:000B899E  1749 0001:000B89B5  1751 0001:000B89CC  1753 0001:000B89D3
+  1754 0001:000B89DC  1756 0001:000B89E3  1758 0001:000B89EE  1760 0001:000B89F5
+  1763 0001:000B89F8  1764 0001:000B89FB  1765 0001:000B8A00  1768 0001:000B8A04
+  1769 0001:000B8A07  1770 0001:000B8A0C  1777 0001:000B8A10  1778 0001:000B8A1B
+  1779 0001:000B8A2A  1780 0001:000B8A38  1782 0001:000B8A50  1783 0001:000B8A6E
+  1785 0001:000B8A77  1787 0001:000B8A98  1789 0001:000B8AB5  1780 0001:000B8AB6
+  1791 0001:000B8AB9  1793 0001:000B8AC7  1797 0001:000B8ADB  1798 0001:000B8ADE
+  1799 0001:000B8AE4  1801 0001:000B8AE9  1802 0001:000B8B0A  1806 0001:000B8B18
+  1808 0001:000B8B1D  1809 0001:000B8B36  1810 0001:000B8B57  1806 0001:000B8B6D
+  1813 0001:000B8B70  1819 0001:000B8B89  1821 0001:000B8B99  1826 0001:000B8BA0
+  1827 0001:000B8BA6  1828 0001:000B8BAF  1829 0001:000B8BB0  1830 0001:000B8BB5
+  1831 0001:000B8BB7  1833 0001:000B8BBA  1836 0001:000B8BC6  1840 0001:000B8BD4
+  1844 0001:000B8BE5  1847 0001:000B8BF4  1848 0001:000B8BFB  1851 0001:000B8C38
+  1852 0001:000B8C3E  1853 0001:000B8C4A  1854 0001:000B8C51  1855 0001:000B8C5A
+  1858 0001:000B8C60  1859 0001:000B8C63  1860 0001:000B8C6F  1861 0001:000B8C74
+  1865 0001:000B8C78  1866 0001:000B8C7B  1867 0001:000B8C81  1868 0001:000B8C88
+  1875 0001:000B8C8C  1876 0001:000B8C95  1877 0001:000B8C9C  1879 0001:000B8CB3
+  1881 0001:000B8CCB  1882 0001:000B8CE4  1884 0001:000B8CE6  1877 0001:000B8CE7
+  1885 0001:000B8CED  1890 0001:000B8CF4  1891 0001:000B8D00  1892 0001:000B8D0D
+  1894 0001:000B8D24  1896 0001:000B8D3C  1897 0001:000B8D5A  1899 0001:000B8D5C
+  1892 0001:000B8D5D  1900 0001:000B8D60  1906 0001:000B8D7C  1907 0001:000B8D9B
+  1908 0001:000B8D9E  1909 0001:000B8DA4  1910 0001:000B8DAF  1911 0001:000B8DBD
+  1912 0001:000B8DBF  1913 0001:000B8DC3  1915 0001:000B8DCA  1916 0001:000B8DCE
+  1918 0001:000B8DD3  1919 0001:000B8DE0  1921 0001:000B8DE7  1922 0001:000B8DF4
+  1923 0001:000B8E1B  1933 0001:000B8E24  1934 0001:000B8E47  1936 0001:000B8E51
+  1937 0001:000B8E62  1938 0001:000B8E76  1939 0001:000B8E84  1941 0001:000B8EA0
+  1942 0001:000B8EAF  1943 0001:000B8EBD  1944 0001:000B8EDC  1945 0001:000B8EFE
+  1946 0001:000B8F21  1948 0001:000B8F2D  1949 0001:000B8F4F  1951 0001:000B8F6F
+  1953 0001:000B8F7C  1939 0001:000B8F7F  1955 0001:000B8F95  1958 0001:000B8FA5
+  1959 0001:000B8FB6  1960 0001:000B8FDC  1961 0001:000B8FEA  1963 0001:000B9006
+  1964 0001:000B9015  1965 0001:000B9023  1966 0001:000B9042  1967 0001:000B9064
+  1968 0001:000B9086  1969 0001:000B90A8  1970 0001:000B90D1  1971 0001:000B90E5
+  1972 0001:000B90F4  1973 0001:000B9101  1974 0001:000B912C  1975 0001:000B9135
+  1976 0001:000B9149  1978 0001:000B9169  1980 0001:000B9176  1961 0001:000B9179
+  1982 0001:000B918F  1987 0001:000B919F  1989 0001:000B91B8  1990 0001:000B91CC
+  1992 0001:000B91D9  1994 0001:000B91F9  1995 0001:000B920D  1997 0001:000B9237
+  1998 0001:000B9243  1999 0001:000B9255  2000 0001:000B925D  2001 0001:000B926E
+  2003 0001:000B9270  1992 0001:000B9273  2005 0001:000B9278  1987 0001:000B927B
+  2009 0001:000B9285  2013 0001:000B9298  2014 0001:000B929F  2016 0001:000B92B8
+  2017 0001:000B92CC  2019 0001:000B92E0  2020 0001:000B92EF  2021 0001:000B92FD
+  2022 0001:000B9307  2023 0001:000B9322  2025 0001:000B9346  2028 0001:000B9353
+  2029 0001:000B935C  2014 0001:000B935F  2033 0001:000B9369  2034 0001:000B9371
+  2038 0001:000B937B  2039 0001:000B938F  2040 0001:000B939D  2042 0001:000B93C7
+  2048 0001:000B93D7  2049 0001:000B93EB  2050 0001:000B93F9  2051 0001:000B9405
+  2053 0001:000B943D  2055 0001:000B944D  2059 0001:000B945A  2060 0001:000B9464
+  2062 0001:000B9475  2063 0001:000B9489  2064 0001:000B9497  2066 0001:000B94B3
+  2067 0001:000B94C2  2068 0001:000B94D0  2069 0001:000B94EF  2070 0001:000B9511
+  2071 0001:000B9533  2072 0001:000B9555  2073 0001:000B9577  2075 0001:000B9597
+  2077 0001:000B95A4  2064 0001:000B95A7  2079 0001:000B95BD  2081 0001:000B95CD
+  2082 0001:000B95D5  2083 0001:000B95DF  2084 0001:000B95EC  2085 0001:000B95F8
+  2086 0001:000B9602  2090 0001:000B960C  2092 0001:000B9617  2093 0001:000B961C
+  2094 0001:000B962A  2096 0001:000B9651  2097 0001:000B9656  2099 0001:000B9660
+  2100 0001:000B9666  2103 0001:000B967E  2105 0001:000B96A2  2107 0001:000B96DC
+  2108 0001:000B96F0  2110 0001:000B96F2  2103 0001:000B96F5  2112 0001:000B96FA
+  2117 0001:000B9704  2118 0001:000B970C  2119 0001:000B971C  2122 0001:000B9750
+  2263 0001:000B98F0  2264 0001:000B9915  2265 0001:000B9923  2267 0001:000B993F
+  2268 0001:000B995D  2269 0001:000B9962  2271 0001:000B99A5  2274 0001:000B99B1
+  2275 0001:000B99F0  2279 0001:000B9A05  2281 0001:000B9A1D  2283 0001:000B9A2F
+  2284 0001:000B9A43  2285 0001:000B9A52  2286 0001:000B9A5F  2289 0001:000B9A98
+  2291 0001:000B9AAA  2292 0001:000B9ABE  2293 0001:000B9ACD  2294 0001:000B9ADA
+  2296 0001:000B9B13  2279 0001:000B9B14  2297 0001:000B9B1D  2265 0001:000B9B20
+  2298 0001:000B9B29  2299 0001:000B9B35  2301 0001:000B9B49  2303 0001:000B9B83
+  2309 0001:000B9BFC  2310 0001:000B9C1B  2313 0001:000B9C24  2314 0001:000B9C32
+  2315 0001:000B9C40  2316 0001:000B9C56  2318 0001:000B9C69  2319 0001:000B9C71
+  2321 0001:000B9C87  2322 0001:000B9C93  2324 0001:000B9C9A  2311 0001:000B9CB0
+  2328 0001:000B9CBA  2329 0001:000B9CDF  2335 0001:000B9D10  2336 0001:000B9D35
+  2338 0001:000B9D4A  2340 0001:000B9D69  2341 0001:000B9DBA  2344 0001:000B9DD0
+  2346 0001:000B9DEA  2347 0001:000B9DF0  2349 0001:000B9E69  2350 0001:000B9E89
+  2355 0001:000B9E95  2357 0001:000B9EAF  2359 0001:000B9EB9  2360 0001:000B9EC7
+  2361 0001:000B9ED8  2364 0001:000B9F51  2365 0001:000B9F71  2368 0001:000B9F7D
+  2371 0001:000B9F90  2373 0001:000B9FAA  2375 0001:000B9FB0  2378 0001:000BA029
+  2379 0001:000BA049  2384 0001:000BA055  2386 0001:000BA06F  2388 0001:000BA079
+  2389 0001:000BA087  2390 0001:000BA095  2393 0001:000BA10E  2394 0001:000BA12E
+  2400 0001:000BA137  2401 0001:000BA157  2404 0001:000BA180  2411 0001:000BA29C
+  2412 0001:000BA2D2  2414 0001:000BA2E1  2415 0001:000BA2E9  2418 0001:000BA2EE
+  2419 0001:000BA30E  2420 0001:000BA32E  2421 0001:000BA34E  2422 0001:000BA36F
+  2423 0001:000BA390  2425 0001:000BA3AE  2426 0001:000BA3F7  2433 0001:000BA410
+  2434 0001:000BA433  2435 0001:000BA444  2436 0001:000BA458  2438 0001:000BA489
+  2440 0001:000BA499  2441 0001:000BA4AD  2442 0001:000BA4C4  2443 0001:000BA4D8
+  2444 0001:000BA4E6  2446 0001:000BA502  2447 0001:000BA511  2448 0001:000BA51F
+  2449 0001:000BA53E  2450 0001:000BA560  2451 0001:000BA582  2452 0001:000BA5A5
+  2453 0001:000BA5C7  2454 0001:000BA5E9  2455 0001:000BA60B  2456 0001:000BA62D
+  2457 0001:000BA647  2458 0001:000BA65B  2460 0001:000BA681  2462 0001:000BA68E
+  2444 0001:000BA691  2464 0001:000BA6A7  2467 0001:000BA6B7  2468 0001:000BA6C8
+  2469 0001:000BA6DC  2470 0001:000BA70F  2475 0001:000BA734  2476 0001:000BA73C
+  2478 0001:000BA747  2479 0001:000BA755  2480 0001:000BA760  2476 0001:000BA761
+  2481 0001:000BA764  2482 0001:000BA76B  2487 0001:000BA770  2488 0001:000BA779
+  2490 0001:000BA78B  2492 0001:000BA798  2493 0001:000BA7A6  2495 0001:000BA7B1
+  2488 0001:000BA7B2  2496 0001:000BA7B7  2497 0001:000BA7BE  2507 0001:000BA7C4
+  2508 0001:000BA7FA  2510 0001:000BA810  2511 0001:000BA81F  2512 0001:000BA82D
+  2513 0001:000BA83B  2514 0001:000BA849  2516 0001:000BA853  2518 0001:000BA85E
+  2519 0001:000BA86B  2523 0001:000BA87A  2524 0001:000BA887  2526 0001:000BA891
+  2527 0001:000BA89B  2528 0001:000BA8AD  2530 0001:000BA8CA  2531 0001:000BA8D1
+  2533 0001:000BA8D6  2534 0001:000BA8E3  2536 0001:000BA8F0  2538 0001:000BA901
+  2539 0001:000BA912  2542 0001:000BA923  2543 0001:000BA930  2545 0001:000BA93D
+  2547 0001:000BA940  2548 0001:000BA95C  2550 0001:000BA987  2551 0001:000BA9C5
+  2553 0001:000BAA03  2554 0001:000BAA10  2556 0001:000BAA1D  2558 0001:000BAA20
+  2559 0001:000BAA4E  2562 0001:000BAA8C  2563 0001:000BAAA7  2564 0001:000BAAAD
+  2566 0001:000BAACE  2568 0001:000BAB0D  2574 0001:000BAB44  2575 0001:000BAB6B
+  2576 0001:000BAB75  2578 0001:000BAB84  2579 0001:000BAB93  2581 0001:000BABA2
+  2583 0001:000BABB3  2584 0001:000BABBF  2586 0001:000BABC1  2587 0001:000BABCF
+  2579 0001:000BABD0  2588 0001:000BABF1  2594 0001:000BAC08  2595 0001:000BAC18
+  2596 0001:000BAC1B  2598 0001:000BAC21  2599 0001:000BAC26  2600 0001:000BAC2C
+  2603 0001:000BAC2F  2604 0001:000BAC3E  2605 0001:000BAC4C  2606 0001:000BAC56
+  2607 0001:000BAC64  2608 0001:000BAC69  2609 0001:000BAC75  2611 0001:000BAC93
+  2613 0001:000BACA3  2618 0001:000BACAC  2619 0001:000BACBA  2620 0001:000BACD1
+  2621 0001:000BACE2  2622 0001:000BACF7  2620 0001:000BAD0D  2622 0001:000BAD10
+  2619 0001:000BAD13  2623 0001:000BAD18  2626 0001:000BAD20  2627 0001:000BAD26
+  2628 0001:000BAD38  2629 0001:000BAD3F  2632 0001:000BAD44  2633 0001:000BAD4B
+  2635 0001:000BAD5C  2636 0001:000BAD8B  2637 0001:000BAD92  2640 0001:000BAD98
+  2641 0001:000BAD9F  2643 0001:000BADB0  2644 0001:000BADDB  2645 0001:000BADE9
+  2648 0001:000BADF0  2649 0001:000BADF3  2650 0001:000BADF8  2653 0001:000BADFC
+  2654 0001:000BAE03  2656 0001:000BAE14  2657 0001:000BAE46  2658 0001:000BAE54
+  2663 0001:000BAE58  2664 0001:000BAE5F  2666 0001:000BAE70  2667 0001:000BAE7D
+  2668 0001:000BAE8A  2670 0001:000BAE97  2671 0001:000BAEA4  2672 0001:000BAEB1
+  2673 0001:000BAEBE  2675 0001:000BAEC3  2677 0001:000BAEE2  2678 0001:000BAEFC
+  2679 0001:000BAF16  2681 0001:000BAF30  2682 0001:000BAF4A  2683 0001:000BAF64
+  2684 0001:000BAF7E  2690 0001:000BAF8C  2691 0001:000BAF95  2692 0001:000BAFB3
+  2693 0001:000BAFB8  2694 0001:000BAFC8  2700 0001:000BAFD0  2701 0001:000BAFD9
+  2703 0001:000BAFDE  2704 0001:000BAFFC  2705 0001:000BB001  2707 0001:000BB011
+  2710 0001:000BB018  2711 0001:000BB01B  2712 0001:000BB029  2715 0001:000BB02C
+  2716 0001:000BB02F  2717 0001:000BB036  2720 0001:000BB038  2721 0001:000BB03B
+  2722 0001:000BB047  2724 0001:000BB054  2726 0001:000BB05F  2727 0001:000BB064
+  2734 0001:000BB068  2735 0001:000BB08C  2736 0001:000BB09A  2738 0001:000BB0BC
+  2741 0001:000BB124  2742 0001:000BB135  2743 0001:000BB143  2744 0001:000BB168
+  2745 0001:000BB18D  2746 0001:000BB1A3  2748 0001:000BB1C3  2751 0001:000BB1D0
+  2736 0001:000BB1D3  2753 0001:000BB1DC  2755 0001:000BB1EE  2756 0001:000BB1FF
+  2757 0001:000BB20D  2758 0001:000BB21A  2759 0001:000BB224  2761 0001:000BB244
+  2765 0001:000BB251  2766 0001:000BB25F  2768 0001:000BB287  2770 0001:000BB2A6
+  2771 0001:000BB2BF  2773 0001:000BB2C5  2774 0001:000BB2D6  2775 0001:000BB2E4
+  2776 0001:000BB2EF  2777 0001:000BB2F8  2778 0001:000BB30E  2780 0001:000BB32E
+  2784 0001:000BB33B  2766 0001:000BB33E  2787 0001:000BB369  2794 0001:000BB390
+  2795 0001:000BB3AA  2797 0001:000BB3C0  2798 0001:000BB3E4  2799 0001:000BB3F2
+  2801 0001:000BB417  2805 0001:000BB451  2811 0001:000BB4B8  2812 0001:000BB4D3
+  2813 0001:000BB4E8  2814 0001:000BB50D  2815 0001:000BB52C  2816 0001:000BB532
+  2817 0001:000BB540  2819 0001:000BB556  2822 0001:000BB5B1  2827 0001:000BB620
+  2828 0001:000BB63B  2829 0001:000BB650  2830 0001:000BB675  2831 0001:000BB694
+  2832 0001:000BB69A  2834 0001:000BB6DA  2837 0001:000BB728  2843 0001:000BB774
+  2844 0001:000BB790  2845 0001:000BB7A5  2847 0001:000BB7CA  2848 0001:000BB806
+  2849 0001:000BB814  2850 0001:000BB836  2851 0001:000BB848  2850 0001:000BB86A
+  2853 0001:000BB87A  2855 0001:000BB8AC  2861 0001:000BB8D0  2862 0001:000BB8F0
+  2864 0001:000BB908  2866 0001:000BB919  2867 0001:000BB92F  2869 0001:000BB979
+  2862 0001:000BB97A  2871 0001:000BB97D  2872 0001:000BB9C1  2873 0001:000BB9EC
+  2880 0001:000BBA1C  2881 0001:000BBA39  2883 0001:000BBA5A  2884 0001:000BBA6F
+  2886 0001:000BBA74  2887 0001:000BBA94  2889 0001:000BBAAC  2891 0001:000BBABD
+  2892 0001:000BBAD3  2894 0001:000BBB1D  2887 0001:000BBB1E  2895 0001:000BBB43
+  2902 0001:000BBBB4  2903 0001:000BBBD9  2904 0001:000BBBED  2905 0001:000BBC0E
+  2907 0001:000BBC2B  2908 0001:000BBC31  2910 0001:000BBC37  2911 0001:000BBC4B
+  2912 0001:000BBC62  2913 0001:000BBC7A  2914 0001:000BBC92  2915 0001:000BBCAA
+  2917 0001:000BBCC2  2918 0001:000BBCD1  2919 0001:000BBCDB  2920 0001:000BBCE3
+  2922 0001:000BBCFC  2923 0001:000BBD10  2924 0001:000BBD1E  2926 0001:000BBD3A
+  2927 0001:000BBD49  2928 0001:000BBD57  2929 0001:000BBD76  2930 0001:000BBD80
+  2931 0001:000BBDA2  2932 0001:000BBDBC  2933 0001:000BBDC7  2935 0001:000BBDEE
+  2937 0001:000BBDFB  2924 0001:000BBDFE  2939 0001:000BBE14  2942 0001:000BBE24
+  2943 0001:000BBE2A  2945 0001:000BBE40  2946 0001:000BBE53  2948 0001:000BBE67
+  2949 0001:000BBE6F  2950 0001:000BBE9B  2956 0001:000BBF40  2957 0001:000BBF6E
+  2958 0001:000BBF7D  2959 0001:000BBF8B  2960 0001:000BBF99  2961 0001:000BBFA7
+  2963 0001:000BBFB1  2965 0001:000BBFB7  2966 0001:000BBFC4  2970 0001:000BBFD3
+  2971 0001:000BBFE0  2973 0001:000BBFEA  2974 0001:000BBFF4  2975 0001:000BC006
+  2977 0001:000BC023  2979 0001:000BC03B  2981 0001:000BC055  2982 0001:000BC05F
+  2983 0001:000BC073  2987 0001:000BC08F  2988 0001:000BC096  2990 0001:000BC09D
+  2991 0001:000BC0AB  2994 0001:000BC0FE  2995 0001:000BC119  2996 0001:000BC11F
+  2998 0001:000BC140  3000 0001:000BC172  3005 0001:000BC180  3006 0001:000BC187
+  3007 0001:000BC198  3008 0001:000BC1B7  3009 0001:000BC1C4  3010 0001:000BC1D9
+  3011 0001:000BC1EE  3012 0001:000BC1FD  3015 0001:000BC204  3016 0001:000BC20A
+  3019 0001:000BC216  3020 0001:000BC227  3021 0001:000BC235  3024 0001:000BC246
+  3027 0001:000BC24C  3028 0001:000BC253  3030 0001:000BC259  3031 0001:000BC272
+  3032 0001:000BC28B  3035 0001:000BC2BA  3036 0001:000BC2CC  3037 0001:000BC2E7
+  3039 0001:000BC300  3040 0001:000BC30E  3041 0001:000BC320  3047 0001:000BC324
+  3069 0001:000BC327  3072 0001:000BC32C  3073 0001:000BC332  3074 0001:000BC339
+  3075 0001:000BC340  3081 0001:000BC344  3082 0001:000BC3DD  3083 0001:000BC3E2
+  3084 0001:000BC3E7  3085 0001:000BC3EC  3086 0001:000BC3F1  3087 0001:000BC3F6
+  3088 0001:000BC3FB  3089 0001:000BC400  3090 0001:000BC405  3091 0001:000BC40A
+  3092 0001:000BC40F  3093 0001:000BC414  3094 0001:000BC419  3095 0001:000BC41E
+  3096 0001:000BC423  3097 0001:000BC428  3099 0001:000BC42C  3104 0001:000BC430
+  3105 0001:000BC44F  3106 0001:000BC45D  3108 0001:000BC469  3109 0001:000BC47D
+  3110 0001:000BC48B  3112 0001:000BC4A5  3115 0001:000BC4D8  3125 0001:000BC4DC
+  3126 0001:000BC50A  3127 0001:000BC50E  3128 0001:000BC52B  3129 0001:000BC537
+  3131 0001:000BC53F  3132 0001:000BC57A  3134 0001:000BC594  3136 0001:000BC5B1
+  3138 0001:000BC5D7  3139 0001:000BC5EB  3140 0001:000BC5F9  3142 0001:000BC609
+  3143 0001:000BC620  3144 0001:000BC62E  3145 0001:000BC63E  3146 0001:000BC643
+  3148 0001:000BC658  3149 0001:000BC679  3150 0001:000BC67C  3146 0001:000BC68C
+  3153 0001:000BC69C  3157 0001:000BC6B9  3160 0001:000BC718  3184 0001:000BC780
+  3185 0001:000BC79E  3186 0001:000BC7AF  3187 0001:000BC7C1  3189 0001:000BC7D6
+  3190 0001:000BC7F0  3192 0001:000BC81C  3193 0001:000BC82F  3195 0001:000BC83D
+  3197 0001:000BC85B  3198 0001:000BC880  3202 0001:000BC88F  3203 0001:000BC8B4
+  3206 0001:000BC8C1  3208 0001:000BC8C5  3209 0001:000BC900  3212 0001:000BC91D
+  3213 0001:000BC922  3215 0001:000BC954  3220 0001:000BC9A0  3221 0001:000BC9B8
+  3222 0001:000BC9CC  3224 0001:000BC9D8  3225 0001:000BC9F6  3227 0001:000BCA12
+  3228 0001:000BCA50  3231 0001:000BCA6C  3232 0001:000BCA6F  3233 0001:000BCA74
+  3236 0001:000BCA78  3237 0001:000BCA7B  3238 0001:000BCA80  3241 0001:000BCA84
+  3242 0001:000BCA87  3243 0001:000BCA90  3245 0001:000BCA9D  3246 0001:000BCAA2
+  3249 0001:000BCAA4  3251 0001:000BCAAC  3250 0001:000BCAB3  3252 0001:000BCAC2
+  3253 0001:000BCACF  3258 0001:000BCAD4  3259 0001:000BCADC  3260 0001:000BCADE
+  3262 0001:000BCAE7  3263 0001:000BCB02  3264 0001:000BCB0B  3265 0001:000BCB0D
+  3266 0001:000BCB1A  3267 0001:000BCB27  3268 0001:000BCB3F  3271 0001:000BCB4C
+  3272 0001:000BCB5A  3273 0001:000BCB68  3274 0001:000BCB78  3275 0001:000BCB85
+  3276 0001:000BCB92  3277 0001:000BCB9F  3278 0001:000BCBAC  3279 0001:000BCBD1
+  3280 0001:000BCBF2  3282 0001:000BCBF9  3283 0001:000BCC10  3286 0001:000BCC18
+  3287 0001:000BCC4D  3289 0001:000BCC54  3290 0001:000BCC6A  3291 0001:000BCC73
+  3292 0001:000BCCA9  3293 0001:000BCCBF  3294 0001:000BCCCF  3296 0001:000BCCDF
+  3297 0001:000BCCEF  3299 0001:000BCCFF  3300 0001:000BCD19  3301 0001:000BCD35
+  3302 0001:000BCDA2  3303 0001:000BCDB3  3304 0001:000BCDCF  3306 0001:000BCDD6
+  3307 0001:000BCDDC  3309 0001:000BCDF8  3310 0001:000BCDFC  3312 0001:000BCE2B
+  3313 0001:000BCEAC  3316 0001:000BCEB8  3317 0001:000BCECF  3318 0001:000BCED9
+  3319 0001:000BCF0E  3324 0001:000BCF14  3325 0001:000BCF2F  3327 0001:000BCF3D
+  3328 0001:000BCF57  3329 0001:000BCF63  3330 0001:000BCF7F  3332 0001:000BCF84
+  3333 0001:000BCF90  3334 0001:000BCFB7  3330 0001:000BCFBE  3336 0001:000BCFC1
+  3337 0001:000BCFD2  3338 0001:000BCFDD  3339 0001:000BCFE5  3340 0001:000BCFED
+  3341 0001:000BCFF6  3342 0001:000BD000  3344 0001:000BD036  3348 0001:000BD03C
+  3349 0001:000BD043  3351 0001:000BD04C  3352 0001:000BD05E  3354 0001:000BD06E
+  3357 0001:000BD074  3358 0001:000BD077  3359 0001:000BD081  3360 0001:000BD088
+  3363 0001:000BD08C  3364 0001:000BD08F  3365 0001:000BD099  3366 0001:000BD0A0
+  3369 0001:000BD0A4  3370 0001:000BD0BA  3371 0001:000BD0D8  3372 0001:000BD0E1
+  3373 0001:000BD0EB  3374 0001:000BD0F3  3375 0001:000BD0FB  3376 0001:000BD104
+  3377 0001:000BD11A  3378 0001:000BD14D  3382 0001:000BD154  3383 0001:000BD171
+  3384 0001:000BD183  3385 0001:000BD195  3386 0001:000BD19E  3387 0001:000BD1CC
+  3388 0001:000BD209  3389 0001:000BD230  3390 0001:000BD265  3393 0001:000BD26C
+  3394 0001:000BD26F  3395 0001:000BD276  3398 0001:000BD278  3399 0001:000BD27E
+  3400 0001:000BD297  3401 0001:000BD2B0  3402 0001:000BD2C9  3403 0001:000BD2E2
+  3409 0001:000BD334  3410 0001:000BD359  3411 0001:000BD367  3413 0001:000BD377
+  3415 0001:000BD38E  3417 0001:000BD3B4  3418 0001:000BD3C7  3419 0001:000BD3DA
+  3420 0001:000BD3E5  3421 0001:000BD3EF  3422 0001:000BD40C  3424 0001:000BD437
+  3425 0001:000BD445  3429 0001:000BD46B  3431 0001:000BD491  3432 0001:000BD4A4
+  3433 0001:000BD4C9  3434 0001:000BD4D3  3436 0001:000BD529  3437 0001:000BD537
+  3440 0001:000BD542  3413 0001:000BD543  3443 0001:000BD559  3445 0001:000BD5A5
+  3448 0001:000BD60C  3449 0001:000BD616  3450 0001:000BD624  3451 0001:000BD62D
+  3452 0001:000BD638  3453 0001:000BD63E  3455 0001:000BD65B  3456 0001:000BD660
+  3462 0001:000BD668  3463 0001:000BD68F  3464 0001:000BD69D  3466 0001:000BD6AD
+  3468 0001:000BD6C9  3471 0001:000BD72D  3472 0001:000BD73C  3473 0001:000BD74A
+  3474 0001:000BD76C  3475 0001:000BD78E  3476 0001:000BD7B0  3477 0001:000BD7D2
+  3478 0001:000BD7F4  3480 0001:000BD817  3485 0001:000BD829  3487 0001:000BD841
+  3488 0001:000BD854  3490 0001:000BD87C  3491 0001:000BD89E  3492 0001:000BD8C0
+  3493 0001:000BD8E2  3494 0001:000BD904  3495 0001:000BD926  3497 0001:000BD92B
+  3485 0001:000BD92C  3501 0001:000BD938  3503 0001:000BD950  3504 0001:000BD963
+  3506 0001:000BD987  3507 0001:000BD997  3509 0001:000BD99C  3501 0001:000BD99D
+  3514 0001:000BD9A5  3515 0001:000BD9B5  3520 0001:000BDA01  3525 0001:000BDA11
+  3526 0001:000BDA49  3527 0001:000BDA8C  3530 0001:000BDA96  3466 0001:000BDA99
+  3531 0001:000BDAA2  3534 0001:000BDAB7  3536 0001:000BDAE9  3539 0001:000BDAF0
+  3540 0001:000BDAF3  3541 0001:000BDB02  3543 0001:000BDB13  3544 0001:000BDB22
+  3547 0001:000BDB5C  3548 0001:000BDB5F  3549 0001:000BDB67  3552 0001:000BDB6C
+  3553 0001:000BDB72  3554 0001:000BDB80  3555 0001:000BDB86  3557 0001:000BDB8D
+  3559 0001:000BDBA4  3560 0001:000BDBA9  3563 0001:000BDBB0  3564 0001:000BDBB3
+  3565 0001:000BDBB8  3568 0001:000BDBBC  3569 0001:000BDBC0  3570 0001:000BDBDF
+  3573 0001:000BDBE4  3574 0001:000BDBE7  3575 0001:000BDBEC  3577 0001:000BDC34
+  3577 0001:000BDC3B
+
+Line numbers for http(http.pas) segment .text
+
+    44 0001:000BDD14    45 0001:000BDD29    46 0001:000BDD34    47 0001:000BDD43
+    48 0001:000BDD5E    51 0001:000BDD64    52 0001:000BDD72    53 0001:000BDD7A
+    54 0001:000BDD91    59 0001:000BDD98    60 0001:000BDDAF    62 0001:000BDDB2
+    63 0001:000BDDB9    64 0001:000BDDC7    65 0001:000BDDE3    67 0001:000BDDEA
+    68 0001:000BDDF0    70 0001:000BDE03    71 0001:000BDE0A    73 0001:000BDE21
+    75 0001:000BDE40    80 0001:000BDE58    81 0001:000BDE70    82 0001:000BDE7F
+    83 0001:000BDE8E    84 0001:000BDE9D    85 0001:000BDEAC    86 0001:000BDEB1
+    87 0001:000BDEBB    88 0001:000BDEBF    89 0001:000BDECA    90 0001:000BDEEA
+    93 0001:000BDEF0    94 0001:000BDEFE    95 0001:000BDF06    96 0001:000BDF0E
+    97 0001:000BDF16    98 0001:000BDF1D    99 0001:000BDF22   100 0001:000BDF2A
+   101 0001:000BDF41   117 0001:000BDF48   118 0001:000BDF6B   120 0001:000BDF72
+   121 0001:000BDF80   123 0001:000BDF8E   124 0001:000BDF9C   125 0001:000BDFAC
+   126 0001:000BDFB6   127 0001:000BDFC6   128 0001:000BDFDA   129 0001:000BDFEA
+   130 0001:000BDFF4   131 0001:000BE004   132 0001:000BE00C   133 0001:000BE01A
+   135 0001:000BE01E   137 0001:000BE028   138 0001:000BE03C   139 0001:000BE04C
+   141 0001:000BE050   142 0001:000BE05E   143 0001:000BE06E   144 0001:000BE074
+   145 0001:000BE07F   146 0001:000BE0A0   147 0001:000BE0C8   148 0001:000BE0E9
+   149 0001:000BE0ED   151 0001:000BE112   152 0001:000BE12D   153 0001:000BE166
+   157 0001:000BE1A4   160 0001:000BE1AE   161 0001:000BE1B6   163 0001:000BE1C6
+   164 0001:000BE1D3   165 0001:000BE1E7   166 0001:000BE1F1   169 0001:000BE201
+   170 0001:000BE220   171 0001:000BE25E   173 0001:000BE268   174 0001:000BE2A0
+   175 0001:000BE2A6   176 0001:000BE2B3   177 0001:000BE2EE   178 0001:000BE2FB
+   179 0001:000BE305   180 0001:000BE31C   179 0001:000BE34E   182 0001:000BE351
+   184 0001:000BE361   187 0001:000BE375   188 0001:000BE37A   189 0001:000BE3AB
+   190 0001:000BE3B8   191 0001:000BE3C8   185 0001:000BE3D8   194 0001:000BE3F4
+   195 0001:000BE3FA   196 0001:000BE43C   201 0001:000BE54C   202 0001:000BE57F
+   203 0001:000BE584   205 0001:000BE597   206 0001:000BE5C0   207 0001:000BE5CB
+   208 0001:000BE5D9   209 0001:000BE5ED   211 0001:000BE608   214 0001:000BE61B
+   216 0001:000BE626   218 0001:000BE636   219 0001:000BE652   220 0001:000BE65F
+   221 0001:000BE66B   223 0001:000BE67B   225 0001:000BE68F   226 0001:000BE6A5
+   228 0001:000BE6AC   230 0001:000BE6D5   232 0001:000BE738   232 0001:000BE73F
 
 Line numbers for lan_control(D:\work\wisehouse\server\lan_control\win\lan_control.dpr) segment .text
 

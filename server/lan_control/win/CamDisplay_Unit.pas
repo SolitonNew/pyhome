@@ -88,6 +88,7 @@ var
    ww, hh : integer;
    cl, ct: integer;
    k: integer;
+   p: TPoint;
 begin
 	if (fFullScreenIndex = 0) then
    begin
@@ -126,8 +127,16 @@ begin
    else
    begin     
       Panel2.Visible := false;
-	   setCamBounds(fFullScreenIndex, 0, 0, ClientWidth, ClientHeight);      
       camAtIndex(fFullScreenIndex).BringToFront;
+      if (ClientWidth >= Screen.Width) then
+      begin
+         p := ClientToScreen(Point(0, 0));
+         setCamBounds(fFullScreenIndex, -p.X, -p.Y, Screen.Width, Screen.Height);
+      end
+      else
+      begin
+   	   setCamBounds(fFullScreenIndex, 0, 0, ClientWidth, ClientHeight);
+      end;
    end;
    
    Repaint;

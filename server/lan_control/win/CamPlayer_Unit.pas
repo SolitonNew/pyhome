@@ -47,8 +47,16 @@ end;
 
 procedure TCamPlayer.FrameResize(Sender: TObject);
 begin
-	Button1.Left := ClientWidth - Button1.Width - 5;
-   Button1.Top := ClientHeight - Button1.Height - 5;
+   if (ClientWidth > Screen.Width * 2 div 3) then
+   begin
+      Button1.Left := ClientWidth - Button1.Width - 10;
+      Button1.Top := Screen.Height - Button1.Height - 50;
+   end
+   else
+   begin
+      Button1.Left := ClientWidth - Button1.Width - 5;
+      Button1.Top := ClientHeight - Button1.Height - 5;   
+   end;
 end;
 
 destructor TCamPlayer.Destroy;

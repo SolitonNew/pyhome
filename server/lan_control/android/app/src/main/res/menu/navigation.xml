@@ -14,6 +14,7 @@
     <item
         android:id="@+id/navigation_page3"
         android:icon="@drawable/ic_notifications_white_24dp"
-        android:title="Медия" />
+        android:title="Медия"
+        android:visible="false" />
 
 </menu>

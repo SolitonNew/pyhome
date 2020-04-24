@@ -29,7 +29,7 @@ object MainForm: TMainForm
   object Panel2: TPanel
     Left = 0
     Top = 0
-    Width = 280
+    Width = 272
     Height = 27
     Align = alTop
     BevelOuter = bvNone
@@ -445,8 +445,8 @@ object MainForm: TMainForm
   end
   object Panel8: TPanel
     Left = 0
-    Top = 454
-    Width = 280
+    Top = 446
+    Width = 272
     Height = 84
     Align = alBottom
     BevelOuter = bvNone
@@ -454,7 +454,7 @@ object MainForm: TMainForm
     object Panel1: TPanel
       Left = 0
       Top = 59
-      Width = 280
+      Width = 272
       Height = 25
       Align = alBottom
       Alignment = taLeftJustify
@@ -517,7 +517,7 @@ object MainForm: TMainForm
         OnClick = CamAlertBtnClick
       end
       object Panel4: TPanel
-        Left = 172
+        Left = 164
         Top = 0
         Width = 108
         Height = 25
@@ -594,7 +594,7 @@ object MainForm: TMainForm
     object Panel7: TPanel
       Left = 0
       Top = 0
-      Width = 280
+      Width = 272
       Height = 59
       Align = alClient
       BevelOuter = bvNone
@@ -799,7 +799,7 @@ object MainForm: TMainForm
       object Bevel1: TBevel
         Left = 4
         Top = 53
-        Width = 272
+        Width = 264
         Height = 2
         Align = alBottom
       end
@@ -3400,7 +3400,7 @@ object MainForm: TMainForm
     DeviceNumber = 0
     FramesInBuffer = 65536
     PollingInterval = 200
-    PrefetchData = True
+    PrefetchData = False
     Left = 40
     Top = 320
   end
@@ -3430,7 +3430,7 @@ object MainForm: TMainForm
     DeviceNumber = 0
     FramesInBuffer = 65536
     PollingInterval = 200
-    PrefetchData = True
+    PrefetchData = False
     Left = 40
     Top = 352
   end

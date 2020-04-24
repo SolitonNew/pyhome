@@ -256,7 +256,7 @@ public class MainActivity extends AppCompatActivity
             }
 
             _cams = metaQuery("cams", "");
-            _media = metaQuery("get media list", "");
+            //_media = metaQuery("get media list", "");
 
             _timer = new Timer();
             _timer.scheduleAtFixedRate(new TimerTask() {

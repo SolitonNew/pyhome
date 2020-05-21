@@ -459,7 +459,7 @@ begin
       end;
       libvlc_media_player_release(vlcMediaPlayer);
       vlcMediaPlayer := nil;
-      libvlc_release(vlcInstance);
+      //libvlc_release(vlcInstance);
 
       lastPlayTime := now;
    end;

@@ -56,7 +56,7 @@ var
    MediaExts: string;
 
 procedure addToMetaLog(s: string);
-function loadProp(name:string):string;
+function loadProp(name:string; def: string = ''):string;
 procedure saveProp(name, value:string);
 
 implementation
@@ -65,19 +65,21 @@ uses MainForm_Unit;
 
 {$R *.dfm}
 
-function loadProp(name: string): string;
+function loadProp(name: string; def: string = ''): string;
 var
    Registry: TRegistry;
 begin
    Result := '';
    Registry:= TRegistry.Create(KEY_ALL_ACCESS);
    try
-      Registry.RootKey:= HKEY_LOCAL_MACHINE;
+      Registry.RootKey:= HKEY_CURRENT_USER;
       Registry.OpenKey('SOFTWARE\WiseHouse\APP\Propertys', True);
       Result := Registry.ReadString(name);
    finally
       Registry.Free;
    end;
+
+   if (Result = '') then Result := def;
 end;
 
 procedure saveProp(name, value: string);
@@ -86,7 +88,7 @@ var
 begin
    Registry:= TRegistry.Create(KEY_ALL_ACCESS);
    try
-      Registry.RootKey:= HKEY_LOCAL_MACHINE;
+      Registry.RootKey:= HKEY_CURRENT_USER;
       Registry.OpenKey('SOFTWARE\WiseHouse\APP\Propertys', True);
       Registry.WriteString(name, value);
    finally

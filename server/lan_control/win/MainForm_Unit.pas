@@ -384,24 +384,24 @@ begin
    SchedList.DoubleBuffered := true;
    
    try
-      Left := StrToInt(loadProp('Left'));
+      Left := StrToInt(loadProp('Left', '10'));
    except
       Left := (Screen.Width - Width) div 2;
    end;
 
    try
-      Top := StrToInt(loadProp('Top'));
+      Top := StrToInt(loadProp('Top', '10'));
    except
       Top := (Screen.Height - Height) div 2;
    end;
 
    try
-      Width := StrToInt(loadProp('Width'));
+      Width := StrToInt(loadProp('Width', '300'));
    except
    end;
 
    try
-      Height := StrToInt(loadProp('Height'));
+      Height := StrToInt(loadProp('Height', '600'));
    except
    end;
 
@@ -411,12 +411,12 @@ begin
    if (Top < 0) then Top := 0;
 
    try
-      VolumeShape.Width := (VolumePanel.ClientWidth) * StrToInt(loadProp('Volume')) div 100;
+      VolumeShape.Width := (VolumePanel.ClientWidth) * StrToInt(loadProp('Volume', '8700')) div 100;
    except
    end;
 
    try
-      MediaVolShape.Width := (MediaVolPanel.ClientWidth) * StrToInt(loadProp('MediaVolume')) div 100;
+      MediaVolShape.Width := (MediaVolPanel.ClientWidth) * StrToInt(loadProp('MediaVolume', '8700')) div 100;
    except
    end;
 
@@ -667,7 +667,7 @@ end;
 procedure TMainForm.SocketMetaConnect(Sender: TObject; Socket: TCustomWinSocket);
 begin
    try
-      fAppID := StrToInt(loadProp('ID'));
+      fAppID := StrToInt(loadProp('ID', '-1'));
    except
       fAppID := -1;
    end;
@@ -2091,7 +2091,7 @@ begin
 
    i := 0;
    try
-      i := StrToInt(loadProp('selGroup'));
+      i := StrToInt(loadProp('selGroup', '-1'));
    except
    end;
    if (i <> 0) then

@@ -40,6 +40,8 @@ def generate_variable_list(db):
         channel = ''
         if row[5]:
             channel = row[5].decode("utf-8")
+            if channel == "TEMP":
+                channel = ""
         if name == '':
             name = "VAR_%s" % (row[1])
           

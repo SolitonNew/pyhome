@@ -257,10 +257,7 @@ class Page5_3(BaseForm):
                 if prev_var_val == None:
                     prev_var_val = rec[1]
 
-                if rele_on:
-                    is_on = rec[1] <= temp_on or (rec[1] - prev_var_val) > 0.25
-                else:
-                    is_on = False
+                is_on = rec[1] <= temp_on or (rec[1] - prev_var_val) > 0.25
 
                 if prev_var_on == None:
                     prev_var_on = is_on

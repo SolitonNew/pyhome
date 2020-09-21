@@ -112,7 +112,7 @@ class Info():
                  "градусов")
         v = 0
         c = 0
-        t = datetime.now().timestamp() - 1800 #30 минут
+        t = datetime.now().timestamp() - 1800 * 2  #30 * 2 минут
         for row in db.select("select v.VALUE "
                              "  from core_variables v "
                              " where ID in (%s) "

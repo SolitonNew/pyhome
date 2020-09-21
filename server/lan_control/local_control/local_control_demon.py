@@ -59,7 +59,7 @@ while True:
         lastSpeechId = rec[0]
         if str(rec[1], "utf-8") == "speech":
             try:
-                correctVolume(rec[3])
+                #correctVolume(rec[3])
                 print("Звучит: %s" % (rec[2]))
                 now = datetime.now().timestamp()
                 if now - beep_time > 5:

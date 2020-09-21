@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="left|center_vertical"
+    android:minHeight="?android:attr/listPreferredItemHeightSmall"
+    android:orientation="vertical"
+    android:showDividers="none">
+
+    <TextView
+        android:id="@+id/vgGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="0"
+        android:focusable="true"
+        android:paddingBottom="?android:attr/listPreferredItemPaddingStart"
+        android:paddingEnd="8dip"
+        android:paddingStart="?android:attr/listPreferredItemPaddingStart"
+        android:paddingTop="?android:attr/listPreferredItemPaddingStart"
+        android:text="item"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:id="@+id/vgGroupLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="left|center_vertical"
+        android:orientation="horizontal"
+        android:paddingEnd="8dip"
+        android:paddingStart="?android:attr/listPreferredItemPaddingStart">
+
+        <TextView
+            android:id="@+id/vgName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingBottom="?android:attr/listPreferredItemPaddingStart"
+            android:paddingTop="?android:attr/listPreferredItemPaddingStart"
+            android:textAppearance="@android:style/TextAppearance.Holo.Medium"
+            android:textSize="16sp" />
+
+        <Switch
+            android:id="@+id/vgBtn1"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="0"
+            android:focusable="false"
+            android:paddingBottom="?android:attr/listPreferredItemPaddingStart"
+            android:paddingLeft="3dip"
+            android:paddingRight="3dip"
+            android:paddingTop="?android:attr/listPreferredItemPaddingStart" />
+
+        <Switch
+            android:id="@+id/vgBtn2"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="0"
+            android:focusable="false"
+            android:paddingBottom="?android:attr/listPreferredItemPaddingStart"
+            android:paddingLeft="3dip"
+            android:paddingRight="3dip"
+            android:paddingTop="?android:attr/listPreferredItemPaddingStart" />
+
+        <Switch
+            android:id="@+id/vgBtn3"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="0"
+            android:focusable="false"
+            android:paddingBottom="?android:attr/listPreferredItemPaddingStart"
+            android:paddingLeft="3dip"
+            android:paddingRight="3dip"
+            android:paddingTop="?android:attr/listPreferredItemPaddingStart" />
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/vgLine"
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+        android:layout_weight="0"
+        android:background="@color/common_google_signin_btn_text_dark_disabled" />
+
+</LinearLayout>

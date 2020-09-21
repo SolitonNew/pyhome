@@ -60,7 +60,7 @@ class BaseForm(object):
                     s = w.query()
                     if s: return s
                 except Exception as e:
-                    print("ERROR %s " % (e.args,))
+                    print("ERROR in widget %s %s " % (w.id, e.args,))
             return render_template(self.VIEW, widget=self._widget_data)
         except Exception as e:
             return "Шаблон формы не найден: %s" % e.args

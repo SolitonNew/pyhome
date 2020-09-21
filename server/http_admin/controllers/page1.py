@@ -42,8 +42,13 @@ class Page1(BaseForm):
         except:
             return "<div style=\"padding:3px;\">%s</div>" % (row[index])        
 
-    def column_val_func(self, index, row):        
-        if str(row[2], "utf-8") == "pyb" and row[3] == 1:
+    def column_val_func(self, index, row):
+        try:
+            r_2 = str(row[2], "utf-8")
+        except:
+            r_2 = row[2]
+        
+        if r_2 == "pyb" and row[3] == 1:
             if row[index]:
                 lab = "ВКЛ."
                 v = 0
@@ -58,7 +63,7 @@ class Page1(BaseForm):
                 return "<div style=\"padding:3px;\">%s</div>" % (row[index])
             else:
                 return "<div style=\"padding:3px;\"></div>"
-
+    
     def _treeRecursive(self, parentNode):
         res = str(parentNode.id) + ','
         for node in parentNode.childs:

@@ -2,7 +2,7 @@
   "name": "desktop-control",
   "productName": "desktop-control",
   "version": "0.0.1",
-  "description": "pyHome lan control desctop version",
+  "description": "pyHome lan control desktop version",
   "main": "src/index.js",
   "scripts": {
     "start": "electron-forge start",
@@ -49,6 +49,7 @@
   "dependencies": {
     "bootstrap": "^4.5.2",
     "electron-compile": "^6.4.4",
+    "electron-settings": "^4.0.2",
     "electron-squirrel-startup": "^1.0.0"
   },
   "devDependencies": {

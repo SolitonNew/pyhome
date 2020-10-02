@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Настройки</title>
+        <link rel="stylesheet" type="text/css" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="./styles.css">
+    </head>
+    <body onload="startLoad()">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Настройки</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="closeWindow()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link active" id="page1-tab" data-toggle="tab" href="#page1" role="tab" aria-selected="true">Общие</a>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link" id="page2-tab" data-toggle="tab" href="#page2" role="tab" aria-selected="false">Библиотека</a>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link" id="page3-tab" data-toggle="tab" href="#page3" role="tab" aria-selected="false">Лог метаданных</a>
+                    </li>
+                </ul>
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active" id="page1" role="tabpanel">
+                        <div class="content" style="padding-top: 20px;">
+                            <div class="form-group row">
+                                <label class="col-2 form-label">Login:</label>
+                                <div class="col-7">
+                                    <input type="text" id="connect_login" class="form-control" value="">
+                                </div>
+                                <div class="col-3">
+                                    <button type="button" class="btn btn-primary" style="width:100%;" onclick="saveConfogLogin()">Сохранить</button>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-2 form-label">IP:</label>
+                                <div class="col-7">
+                                    <input type="text" id="connect_ip" class="form-control" value="">
+                                </div>
+                                <div class="col-3">
+                                    <button type="button" class="btn btn-primary" style="width:100%;" onclick="saveConfigIp()">Сохранить</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="page2" role="tabpanel">
+                        <div class="content" style="padding-top: 20px;">
+                            <div class="form-group">
+                                <label>Папки медии:</label>
+                                <div class="row">
+                                    <div class="col-9">
+                                        <select id="mediaList" multiple class="form-control" style="height:200px;"></select>
+                                    </div>
+                                    <div class="col-3 form-group">
+                                        <div style="padding-bottom: 1rem;">
+                                            <button type="button" class="btn btn-primary" style="width:100%;" onclick="addMedia()">Добавить...</button>
+                                        </div>
+                                        <div>
+                                            <button type="button" class="btn btn-primary" style="width:100%;" onclick="delMedia()">Удалить</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="page3" role="tabpanel">
+                        <div style="position:relative;padding-top:20px;height:290px;">
+                            <div id="metadataList" class="form-control" style="position:absolute;overflow-y: auto;height:100%;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="closeWindow()">Закрыть</button>
+            </div>
+        </div>
+        <script src='./settingsForm.js'></script>
+        <script>let $ = require('jquery');</script>
+        <script>require('popper.js');</script>
+        <script>require('bootstrap');</script>      
+    </body>
+</html>

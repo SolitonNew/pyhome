@@ -1,6 +1,7 @@
-import { app, BrowserWindow } from 'electron';
+import {app, BrowserWindow} from 'electron';
 import settings from 'electron-settings';
 
+const {dialog, ipcMain} = require('electron');
 const os = require('os');
 let platform = os.platform();
 
@@ -11,6 +12,8 @@ if (require('electron-squirrel-startup')) {
 let mainWindow;
 
 const createWindow = () => {
+    // Проверяем есть ли куда подключаться
+
     var size = settings.getSync('size');
     if (!size) {
         size = new Array(300, 600);
@@ -34,13 +37,8 @@ const createWindow = () => {
         icon: __dirname + '/images/icon.png',
     });
 
-    mainWindow.loadURL(`file://${__dirname}/index.html`);
-
-    mainWindow.on('closed', () => {
-        mainWindow = null;
-        app.quit();
-    });
-
+    mainWindow.loadURL(`file://${__dirname}/mainForm.html`);
+    
     mainWindow.on('resize', () => {
         settings.setSync('size', mainWindow.getSize());
     });
@@ -48,6 +46,11 @@ const createWindow = () => {
     mainWindow.on('move', () => {
         let pos = mainWindow.getPosition();
         settings.setSync('position', pos);
+    });
+
+    mainWindow.on('closed', () => {
+        mainWindow = null;
+        app.quit();
     });
 };
 
@@ -63,4 +66,14 @@ app.on('activate', () => {
     if (mainWindow === null) {
         createWindow();
     }
+});
+
+ipcMain.on('open-dir-dialog', (event) => {
+    dialog.showOpenDialog({properties: ['openFile', 'openDirectory']}).then((result) => {
+        event.sender.send('selected-directory', result.filePaths);    
+    });
+});
+
+ipcMain.on('connect-params-changed', (event) => {
+    mainWindow.send('connect-params-changed');
 });

@@ -73,4 +73,8 @@
     width: 100%;
 }
 
+.form-label {
+    padding-top: 7px;
+    text-align: right;
+}
 

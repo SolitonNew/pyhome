@@ -1,20 +1,50 @@
 const {BrowserWindow} = require('electron').remote;
+const {ipcRenderer} = require('electron');
 import settings from 'electron-settings';
 
-let fs = require('fs');
+let variables = new Array();
 
-function startLoad() {
-    //let ls = document.getElementById('page1');
-
-    //let data = fs.readFileSync('src/page1.txt', 'utf-8');
-
-    //ls.innerHTML = data;
+function reconnect() {
+    document.getElementById('pageTabs').style.visibility = 'hidden';
+    document.getElementById('pages').style.visibility = 'hidden';
+    document.getElementById('bottomToolBar1').style.visibility = 'hidden';
+    document.getElementById('bottomToolBar2').style.visibility = 'hidden';
     
-    buildPage1();
+    alert('RECONNECT');
+
+    document.getElementById('pageTabs').style.visibility = '';
+    document.getElementById('pages').style.visibility = '';
+    document.getElementById('bottomToolBar1').style.visibility = '';
+    document.getElementById('bottomToolBar2').style.visibility = '';
+}
+
+function startLoad() {    
+    reconnect();
 }
 
 function closeWindow() {
     window.close();
+}
+
+ipcRenderer.on('connect-params-changed', (event) => {
+    reconnect();
+});
+
+let loginWindow;
+
+function showLogin() {
+    loginWindow = new BrowserWindow({
+        width: 400,
+        height: 200,
+        autoHideMenuBar: true,
+        webPreferences: {
+            nodeIntegration: true,
+        },
+        frame: false,
+        icon: __dirname + '/images/icon.png',
+    });
+    
+    loginWindow.loadURL(`file://${__dirname}/loginForm.html`);
 }
 
 let settingsWindow;
@@ -26,14 +56,17 @@ function showSettings() {
     }
 
     settingsWindow = new BrowserWindow({
-        width: 500,
+        width: 600,
         height: 500,
         autoHideMenuBar: true,
         show: true,
         frame: false,
+        webPreferences: {
+            nodeIntegration: true,
+        }
     });
   
-    settingsWindow.loadURL(`file://${__dirname}/settingsWindow.html`);
+    settingsWindow.loadURL(`file://${__dirname}/settingsForm.html`);
   
     settingsWindow.on('closed', () => {
         settingsWindow = null;
@@ -54,9 +87,12 @@ function showVideo() {
         autoHideMenuBar: true,
         show: true,
         frame: false,
+        webPreferences: {
+            nodeIntegration: true,
+        }
     });
   
-    videoWindow.loadURL(`file://${__dirname}/video.html`);
+    videoWindow.loadURL(`file://${__dirname}/videoForm.html`);
   
     videoWindow.on('closed', () => {
         videoWindow = null;
@@ -104,4 +140,17 @@ function buildPage1() {
     let page = document.getElementById('page1');
     page.innerHTML = a.join('');
 }
+
+function buildVariables() {
+    for (let i = 0; i < variables.length; i++) {
+        
+    
+    
+    }
+}
+
+function updateVariables() {
+
+}
+
 

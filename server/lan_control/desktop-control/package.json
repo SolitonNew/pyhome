@@ -1,7 +1,7 @@
 {
   "name": "desktop-control",
   "productName": "desktop-control",
-  "version": "0.0.1",
+  "version": "0.1.1",
   "description": "pyHome lan control desktop version",
   "main": "src/index.js",
   "scripts": {
@@ -50,7 +50,10 @@
     "bootstrap": "^4.5.2",
     "electron-compile": "^6.4.4",
     "electron-settings": "^4.0.2",
-    "electron-squirrel-startup": "^1.0.0"
+    "electron-squirrel-startup": "^1.0.0",
+    "jquery": "^3.5.1",
+    "popper": "^1.0.1",
+    "popper.js": "^1.16.1"
   },
   "devDependencies": {
     "babel-plugin-transform-async-to-generator": "^6.24.1",

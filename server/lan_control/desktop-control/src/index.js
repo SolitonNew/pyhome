@@ -3,6 +3,7 @@ import settings from 'electron-settings';
 
 const {dialog, ipcMain} = require('electron');
 const os = require('os');
+
 let platform = os.platform();
 
 if (require('electron-squirrel-startup')) {
@@ -29,6 +30,7 @@ const createWindow = () => {
         y: position[1],
         width: size[0],
         height: size[1],
+        minwidth: 300,
         autoHideMenuBar: true,
         webPreferences: {
             nodeIntegration: true,

@@ -5,9 +5,12 @@ const {ipcRenderer} = require('electron');
 const net = require('net');
 const iconv = require('iconv-lite');
 
+let variableGroups = new Array();
 let variables = new Array();
 let socket = null;
 let appID = -1;
+let socketQueue = new Array();
+let socketData = '';
 
 function reconnect() {
     hideMainControls();
@@ -19,7 +22,9 @@ function reconnect() {
     }
     
     if (socket != null) {
-        socket.end();
+        socket.destroy();
+        socketQueue = new Array();
+        socketData = '';
     }
     
     socket = new net.Socket();
@@ -29,16 +34,28 @@ function reconnect() {
         if (appID == -1) {
             metaQuery('apps list', '');
         } else {
-            showMainControls(); 
+            metaQuery('load variable group', '');
+            metaQuery('load variables', appID);
         }
     });
     
     socket.on('data', (data) => {
-        let a = parseMetaQuery(data);
-        if (appID == -1) {
-            showRegister(a);
-        } else {
-            
+        let q = parseMetaQuery(data);
+        
+        if (!q) return ;
+        
+        switch (q.packName) {
+            case 'apps list':
+                showRegister(q.data);
+                break;
+            case 'load variable group':
+                variableGroups = q.data;
+                break;
+            case 'load variables':
+                variables = q.data;
+                buildVariables();
+                showMainControls();
+                break;
         }
     });        
 }
@@ -167,30 +184,60 @@ function showPage(num) {
     page.classList.add('active');
 }
 
-function buildPage1() {
-    var a = new Array();
-
-    for (let i = 0; i < 10; i++) {
-        let s = '<div class="list-item">' +
-                '<div class="item-label">VARIABLE_' + i + '</div>' +
-                '<div class="custom-control custom-switch">' +
-                '<input type="checkbox" class="custom-control-input" id="customSwitch' + i + '">' +
-                '<label class="custom-control-label" for="customSwitch' + i + '"></label>' +
-                '</div>' +
-                '</div>';
-        a.push(s);
-    }
-
-    let page = document.getElementById('page1');
-    page.innerHTML = a.join('');
-}
-
 function buildVariables() {
-    for (let i = 0; i < variables.length; i++) {
+    let page1 = document.getElementById('page1');
+    let page2 = document.getElementById('page2');
+    let page3 = document.getElementById('page3');
         
+    //1: ok := (o.typ in [1, 3]); 
+    //4: ok := (o.typ in [4, 5, 10]); 
+    //7: ok := (o.typ in [7, 11, 13]);
     
-    
+    let page1_a = new Array();
+    let page2_a = new Array();
+    let page3_a = new Array();
+
+    for (let i = 0; i < variables.length; i++) {
+        let row = variables[i];
+        switch (row[3]) {
+            case '1':
+            case '3':
+                page1_a.push(
+                    '<div class="list-item">' +
+                        '<div class="item-label">' + row[2] + '</div>' +
+                        '<div class="custom-control custom-switch">' +
+                            '<input type="checkbox" class="custom-control-input" id="page1_btn_' + row[0] + '">' +
+                            '<label class="custom-control-label" for="page1_btn_' + row[0] + '"></label>' +
+                        '</div>' +
+                    '</div>'
+                );
+                break;
+                
+            case '4':
+            case '5':
+            case '10':
+                page2_a.push(
+                    '<div class="list-item">' +
+                        '<div class="item-label">' + row[2] + '</div>' +
+                    '</div>'
+                );
+                break;
+                
+            case '7':
+            case '11':
+            case '13':
+                page3_a.push(
+                    '<div class="list-item">' +
+                        '<div class="item-label">' + row[2] + '</div>' +
+                    '</div>'
+                );
+                break;
+        }    
     }
+    
+    page1.innerHTML = page1_a.join('');
+    page2.innerHTML = page2_a.join('');
+    page3.innerHTML = page3_a.join('');
 }
 
 function updateVariables() {
@@ -198,11 +245,23 @@ function updateVariables() {
 }
 
 function metaQuery(packName, packData) {
+    socketQueue.push(packName);
     socket.write(packName + String.fromCharCode(1) + packData + String.fromCharCode(2));
 }
 
 function parseMetaQuery(data) {
-    let str = iconv.decode(data, 'win1251');
+    socketData += iconv.decode(data, 'win1251');
+    
+    let end_i = socketData.indexOf(String.fromCharCode(2));
+    
+    let str = '';
+    if (end_i >= 0) {
+        str = socketData.substring(0, end_i);
+        socketData = socketData.substring(end_i + 1);
+    }
+    
+    if (!str) return null;
+    
     let a = str.split(String.fromCharCode(1));
     let n = a[0];
     let count = Math.trunc((a.length - 2) / n);
@@ -216,7 +275,10 @@ function parseMetaQuery(data) {
         }
         res.push(row);
     }
-    return res;
+    return {
+        packName: socketQueue.shift(0, 1), 
+        data: res
+    };
 }
 
 function hideMainControls() {
@@ -232,5 +294,4 @@ function showMainControls() {
     document.getElementById('bottomToolBar1').style.visibility = '';
     document.getElementById('bottomToolBar2').style.visibility = '';
 }
-
 

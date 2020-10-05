@@ -6,11 +6,12 @@ const net = require('net');
 const iconv = require('iconv-lite');
 
 let variableGroups = new Array();
-let variables = new Array();
+let variables = new Array();   // ["156", "AQUA_PUMP", "Аквариум фильтр", "3", "0.0", "23"]
 let socket = null;
 let appID = -1;
 let socketQueue = new Array();
 let socketData = '';
+let syncTimer = null;
 
 function reconnect() {
     hideMainControls();
@@ -22,6 +23,7 @@ function reconnect() {
     }
     
     if (socket != null) {
+        clearInterval(syncTimer);
         socket.destroy();
         socketQueue = new Array();
         socketData = '';
@@ -42,20 +44,43 @@ function reconnect() {
     socket.on('data', (data) => {
         let q = parseMetaQuery(data);
         
-        if (!q) return ;
-        
-        switch (q.packName) {
-            case 'apps list':
-                showRegister(q.data);
-                break;
-            case 'load variable group':
-                variableGroups = q.data;
-                break;
-            case 'load variables':
-                variables = q.data;
-                buildVariables();
-                showMainControls();
-                break;
+        for (let i = 0; i < q.length; i++) {    
+            switch (q[i].packName) {
+                case 'apps list':
+                    showRegister(q[i].data);
+                    break;
+                case 'load variable group':
+                    variableGroups = q[i].data;
+                    break;
+                case 'load variables':
+                    variables = q[i].data;
+                    
+                    console.log(variables);
+                    
+                    buildVariables();
+                    showMainControls();
+                    syncTimer = setInterval(() => {
+                        metaQuery('sync', '');
+                        metaQuery('exe queue', '');
+                        metaQuery('sessions', '');
+                        metaQuery('media queue', '');
+                    }, 500);
+                    break;
+                case 'setvar':
+                    break;
+                case 'sync':
+                    updateVariables(q[i].data);
+                    break;
+                case 'exe queue':
+                    if (q[i].data.length > 0) {
+                        showNotications(q[i].data);
+                    }
+                    break;
+                case 'sessions':
+                    break;
+                case 'media queue':
+                    break;
+            }
         }
     });        
 }
@@ -196,18 +221,24 @@ function buildVariables() {
     let page1_a = new Array();
     let page2_a = new Array();
     let page3_a = new Array();
+    let v;
 
     for (let i = 0; i < variables.length; i++) {
         let row = variables[i];
         switch (row[3]) {
             case '1':
             case '3':
+                if (row[4] == '1.0') {
+                    v = 'checked';
+                } else {
+                    v = '';
+                }
                 page1_a.push(
                     '<div class="list-item">' +
                         '<div class="item-label">' + row[2] + '</div>' +
                         '<div class="custom-control custom-switch">' +
-                            '<input type="checkbox" class="custom-control-input" id="page1_btn_' + row[0] + '">' +
-                            '<label class="custom-control-label" for="page1_btn_' + row[0] + '"></label>' +
+                            '<input type="checkbox" class="custom-control-input" id="variable_' + row[0] + '" oninput="switchClick(' + row[0] + ')" ' + v + '>' +
+                            '<label class="custom-control-label" for="variable_' + row[0] + '"></label>' +
                         '</div>' +
                     '</div>'
                 );
@@ -240,45 +271,90 @@ function buildVariables() {
     page3.innerHTML = page3_a.join('');
 }
 
-function updateVariables() {
+function updateVariables(data) {
+
+/* Array(5)
+    0: "10108327"
+    1: "95"
+    2: "21.4"
+    3: "4"
+    4: "11" */
+    
+    //["156", "AQUA_PUMP", "Аквариум фильтр", "3", "0.0", "23"]
+    
+    for (let r = 0; r < data.length; r++) {
+        for (let i = 0; i < variables.length; i++) {
+            if (variables[i][0] == data[r][1]) {
+                variables[i][4] = data[r][2];
+                
+                switch (variables[i][3]) {
+                    case '1':
+                    case '3':
+                        if (variables[i][4] == '1.0') {
+                            $('#variable_' + variables[i][0]).prop('checked', true);
+                        } else {
+                            $('#variable_' + variables[i][0]).prop('checked', false);
+                        }
+                        break;
+                
+                    case '4':
+                    case '5':
+                    case '10':
+                        
+                        break;
+                        
+                    case '7':
+                    case '11':
+                    case '13':
+                        break;
+                }
+            }
+        }
+    }
+    
 
 }
 
 function metaQuery(packName, packData) {
     socketQueue.push(packName);
-    socket.write(packName + String.fromCharCode(1) + packData + String.fromCharCode(2));
+    socket.write(iconv.encode(packName + String.fromCharCode(1) + packData + String.fromCharCode(2), 'win1251'));
 }
 
 function parseMetaQuery(data) {
     socketData += iconv.decode(data, 'win1251');
+    let resArray = new Array();
     
-    let end_i = socketData.indexOf(String.fromCharCode(2));
-    
-    let str = '';
-    if (end_i >= 0) {
-        str = socketData.substring(0, end_i);
-        socketData = socketData.substring(end_i + 1);
-    }
-    
-    if (!str) return null;
-    
-    let a = str.split(String.fromCharCode(1));
-    let n = a[0];
-    let count = Math.trunc((a.length - 2) / n);
-    let i = 1;
-    let res = new Array();
-    for (let r = 0; r < count; r++) {
-        let row = new Array();
-        for (let c = 0; c < n; c++) {
-            row[c] = a[i];
-            i++;
+    while (true) {    
+        let end_i = socketData.indexOf(String.fromCharCode(2));
+        
+        let str = '';
+        if (end_i >= 0) {
+            str = socketData.substring(0, end_i);
+            socketData = socketData.substring(end_i + 1);
+        } else {
+            break;
         }
-        res.push(row);
+        
+        let a = str.split(String.fromCharCode(1));
+        let n = a[0];
+        let count = Math.trunc((a.length - 2) / n);
+        let i = 1;
+        let res = new Array();
+        for (let r = 0; r < count; r++) {
+            let row = new Array();
+            for (let c = 0; c < n; c++) {
+                row[c] = a[i];
+                i++;
+            }
+            res.push(row);
+        }
+        
+        resArray.push({
+            packName: socketQueue.shift(0, 1), 
+            data: res
+        });
     }
-    return {
-        packName: socketQueue.shift(0, 1), 
-        data: res
-    };
+    return resArray;
 }
 
 function hideMainControls() {
@@ -293,5 +369,25 @@ function showMainControls() {
     document.getElementById('pages').style.visibility = '';
     document.getElementById('bottomToolBar1').style.visibility = '';
     document.getElementById('bottomToolBar2').style.visibility = '';
+}
+
+function switchClick(id) {
+    if ($('#variable_' + id).prop('checked')) {
+        setVarValue(id, 1);
+    } else {
+        setVarValue(id, 0);
+    }
+}
+
+function setVarValue(id, value) {
+    let str = id + String.fromCharCode(1) + value;
+    metaQuery('setvar', str);
+}
+
+function showNotications(data) {
+    for (let i = 0; i < data.length; i++) {
+        let row = data[i];
+        new window.Notification(row[1], {title: row[1], body: row[4]});
+    }
 }
 

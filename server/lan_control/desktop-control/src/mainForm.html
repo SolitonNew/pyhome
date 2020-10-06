@@ -14,7 +14,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div id="pageTabs" class="toolbar-top" style="visibility: hidden;">
+            <div id="pageTabs" class="toolbar-top" style="display: none;">
                 <button type="button" id="tab1" class="btn btn-light active" title="Освещение" onclick="showPage(1)">
                     <img src="./images/btn1.png">
                 </button>
@@ -38,10 +38,10 @@
                     <img src="./images/settings.png">
                 </button>
             </div>
-            <div id="pages" class="modal-body" style="padding: 0px;margin:2px; visibility: hidden;">            
+            <div id="pages" class="modal-body" style="padding: 0px;margin:2px; display: none;">            
                 <div style="position: absolute; width: 100%; height: 100%; overflow-x:hidden; overflow-y: auto;">
                     <div class="tab-content" id="pageContent">
-                        <div class="tab-pane fade var-list show active" id="page1">PAGE1</div>
+                        <div class="tab-pane fade show active" id="page1">PAGE1</div>
                         <div class="tab-pane fade" id="page2">PAGE2</div>
                         <div class="tab-pane fade" id="page3">PAGE3</div>
                         <div class="tab-pane fade" id="page4">PAGE4</div>
@@ -50,7 +50,7 @@
                     </div>
                 </div>
             </div>
-            <div id="bottomToolBar1" class="toolbar-bottom" style="visibility: hidden;">
+            <div id="bottomToolBar1" class="toolbar-bottom" style="display: none;">
                 <div class="toolbar-container" style="width: 100%;overflow-x:hidden;">
                     <button type="button" class="btn btn-light">
                         <img src="./images/play_1.png">
@@ -77,7 +77,7 @@
                     <img src="./images/mute.png">
                 </button>
             </div>            
-            <div id="bottomToolBar2" class="toolbar-bottom" style="visibility: hidden;">
+            <div id="bottomToolBar2" class="toolbar-bottom" style="display: none;">
                 <div class="toolbar-container" style="width: 100%;">
                     <button type="button" class="btn btn-light">
                         <img src="./images/btn6.png">
@@ -91,7 +91,16 @@
                 <button type="button" class="btn btn-light">
                     <img src="./images/mute.png">
                 </button>
-            </div>            
+            </div>
+            <div id="waiter" style="position: relative;width:100%;height:100%;" class="alert-dark">
+                <div style="display:flex;justify-content: center;flex-direction:column;align-items: center;height:100%;">
+                    <div class="spinner-border text-secondary" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div> 
+                    <label id="waiterText" class="text-secondary" style="padding-top:10px;">Выполняется подключение</label>
+                    <div style="position:relative;height:150px;"></div>
+                </div>
+            </div>        
         </div>    
         <script src='./mainForm.js'></script>
         <script>let $ = require('jquery');</script>

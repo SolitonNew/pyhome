@@ -37,6 +37,13 @@ body:hover ::-webkit-scrollbar-thumb {
     background-color: #333;
 }
 
+
+input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    box-shadow: 0 0 0 1px #ffffff;
+}
+
+
 .modal-header {
     -webkit-user-select: none;
     -webkit-app-region: drag;
@@ -46,7 +53,27 @@ body:hover ::-webkit-scrollbar-thumb {
 .modal-header .close {
     -webkit-app-region: no-drag;
     margin: -7px;
+    margin-left: 0px;
     padding: 10px 7px;
+    outline: none;
+    font-size: 22px;
+}
+
+.modal-header .minimize {
+    -webkit-app-region: no-drag;
+    margin: -7px 0px;
+    padding: 10px 9px;
+    padding-top: 9px;
+    padding-bottom: 4px;
+    font-size: 20px;
+    outline: none;
+    background-color: transparent;
+    border: 0;
+    opacity: 0.5;
+}
+
+.modal-header .minimize:hover {
+    opacity: 1;
 }
 
 .modal-content {
@@ -173,16 +200,41 @@ body:hover ::-webkit-scrollbar-thumb {
     text-align: right;
 }
 
-.progress {
-    border: 1px solid #bbbbbb;
-    padding: 1px;
-    height: 11px;
-}
-
-.progress-bar {
-
-}
-
 .list-item.selected .custom-control-input:checked~.custom-control-label::before {
     border: #ffffff solid 1px;
+}
+
+.list-item .scheduler-img {
+    padding-right: 5px;
+    margin-left: -3px;
+}
+
+.list-item .scheduler-text {
+    width: 100%;
+    padding: 4px 0px;
+    padding-bottom: 5px;
+}
+
+.list-item .scheduler-name {
+    padding: 0px;
+    line-height: 15px;
+}
+
+.list-item .scheduler-range {
+    font-size: 11px;
+    padding: 0px;
+    padding-top: 2px;
+    line-height: 11px;
+}
+
+.list-item .sheduler-date {
+    font-size: 10px;
+    min-width: 52px;   
+    width: 52px;
+}
+
+.list-item .media-name {
+    line-height: 16px;
+    padding: 2px 0px;
+    padding-bottom: 3px;
 }

@@ -9,8 +9,11 @@
     <body onload="startLoad()">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Desktop-Control</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="closeWindow()">
+                <h5 class="modal-title" style="width:100%;">Desktop-Control</h5>
+                <button type="button" class="minimize" onclick="minimizeWindow()">
+                    <span aria-hidden="true">&minus;</span>
+                </button>
+                <button type="button" class="close" onclick="closeWindow()">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -41,18 +44,17 @@
             <div id="pages" class="modal-body" style="padding: 0px;margin:2px; display: none;">            
                 <div style="position: absolute; width: 100%; height: 100%; overflow-x:hidden; overflow-y: auto;">
                     <div class="tab-content" id="pageContent">
-                        <div class="tab-pane fade show active" id="page1">PAGE1</div>
-                        <div class="tab-pane fade" id="page2">PAGE2</div>
-                        <div class="tab-pane fade" id="page3">PAGE3</div>
-                        <div class="tab-pane fade" id="page4">PAGE4</div>
-                        <div class="tab-pane fade" id="page5">PAGE5</div>
-                        <div class="tab-pane fade" id="page6">PAGE6</div>
+                        <div class="tab-pane fade show active" id="page1"></div>
+                        <div class="tab-pane fade" id="page2"></div>
+                        <div class="tab-pane fade" id="page3"></div>
+                        <div class="tab-pane fade" id="page4"></div>
+                        <div class="tab-pane fade" id="page5"></div>
                     </div>
                 </div>
             </div>
             <div id="bottomToolBar1" class="toolbar-bottom" style="display: none;">
                 <div class="toolbar-container" style="width: 100%;overflow-x:hidden;">
-                    <button type="button" class="btn btn-light">
+                    <button type="button" class="btn btn-light" onclick="playSound()">
                         <img src="./images/play_1.png">
                     </button>
                     <button type="button" class="btn btn-light">
@@ -69,9 +71,7 @@
                     </button>                
                 </div>
                 <div class="toolbar-container" style="width:70px;min-width:70px;">
-                    <div class="progress volume-bar" style="width:100%">
-                        <div class="progress-bar w-75" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
+                    <input id="mediaVolume" type="range" class="custom-range">
                 </div>
                 <button type="button" class="btn btn-light">
                     <img src="./images/mute.png">
@@ -82,11 +82,10 @@
                     <button type="button" class="btn btn-light">
                         <img src="./images/btn6.png">
                     </button>
+                    <div id="silentInfo" style="font-weight:bold;padding-left:5px;"></div>
                 </div>       
                 <div class="toolbar-container" style="width:70px;min-width:70px;">
-                    <div class="progress volume-bar" style="width:100%;">
-                        <div class="progress-bar w-75" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>     
+                    <input id="audioVolume" type="range" class="custom-range">
                 </div>
                 <button type="button" class="btn btn-light">
                     <img src="./images/mute.png">
@@ -97,12 +96,15 @@
                     <div class="spinner-border text-secondary" role="status">
                         <span class="sr-only">Loading...</span>
                     </div> 
-                    <label id="waiterText" class="text-secondary" style="padding-top:10px;">Выполняется подключение</label>
+                    <label id="waiterText" class="text-secondary" style="padding-top:10px;"></label>
                     <div style="position:relative;height:150px;"></div>
                 </div>
-            </div>        
+            </div>
         </div>    
         <script src='./mainForm.js'></script>
+        <script src='./variables.js'></script>
+        <script src='./scheduler.js'></script>
+        <script src='./media.js'></script>
         <script>let $ = require('jquery');</script>
         <script>require('popper.js');</script>
         <script>require('bootstrap');</script>  

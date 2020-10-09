@@ -1,6 +1,6 @@
 import settings from 'electron-settings';
 
-const {BrowserWindow, Menu, MenuItem} = require('electron').remote;
+const {BrowserWindow, Menu, MenuItem, dialog} = require('electron').remote;
 const remote = require('electron').remote;
 const {ipcRenderer} = require('electron');
 const net = require('net');
@@ -14,6 +14,7 @@ let appID = -1;
 let socketQueue = new Array();
 let socketData = '';
 let syncTimer = null;
+let schedulerTimer = null;
 
 let firstConnecting = false;
 let reconectCount = 0;
@@ -236,6 +237,7 @@ function reconnect() {
     
     if (socket != null) {
         clearInterval(syncTimer);
+        clearInterval(schedulerTimer);
         socket.destroy();
         socketQueue = new Array();
         socketData = '';
@@ -280,7 +282,11 @@ function reconnect() {
             metaQuery('exe queue', '');
             metaQuery('sessions', '');
             metaQuery('media queue', '');
-        }, 500);        
+        }, 500);
+        
+        schedulerTimer = setInterval(() => {
+            metaQuery('get scheduler list', '');
+        }, 1000);
     }
     
     socket.on('data', (data) => {
@@ -316,6 +322,11 @@ function reconnect() {
                     runSync();
                     break;
                     
+                case 'get app info':
+                    if (settingsWindow) {
+                        settingsWindow.send('get-app-info-data', q[i].data);
+                    }
+                    break;
                 case 'apps list':
                     showRegister(q[i].data);
                     break;
@@ -465,10 +476,21 @@ ipcRenderer.on('edit-scheduler-record', (event, data) => {
 });
 
 ipcRenderer.on('delete-scheduler-record', (event, data) => {
-    if (confirm('Удалить запись расписания?')) {
-        metaQuery('del scheduler', data);
-        metaQuery('get scheduler list', '');
-    }
+    dialog.showMessageBox(remote.getCurrentWindow(), {
+        type: "question",
+        title: 'Подтверждение',
+        message: 'Удалить запись расписания?',
+        buttons: ["Yes", "No"],
+    }).then((res) => {
+        switch (res.response) {
+            case 0:
+                metaQuery('del scheduler', data);
+                metaQuery('get scheduler list', '');
+                break;
+            case 1:
+                break;
+        }
+    });
 });
 
 
@@ -530,36 +552,12 @@ function showSettings() {
         }
     });
   
-    settingsWindow.loadURL(`file://${__dirname}/settingsForm.html`);
+    settingsWindow.loadURL(`file://${__dirname}/settingsForm.html`).then(() => {
+        metaQuery('get app info', appID);
+    });
   
     settingsWindow.on('closed', () => {
         settingsWindow = null;
-    });
-}
-
-let videoWindow;
-
-function showVideo() {
-    if (videoWindow) {
-        videoWindow.focus();
-        return ;
-    }
-
-    videoWindow = new BrowserWindow({
-        width: 800,
-        height: 600,
-        autoHideMenuBar: true,
-        show: true,
-        frame: false,
-        webPreferences: {
-            nodeIntegration: true,
-        }
-    });
-  
-    videoWindow.loadURL(`file://${__dirname}/videoForm.html`);
-  
-    videoWindow.on('closed', () => {
-        videoWindow = null;
     });
 }
 
@@ -773,14 +771,19 @@ function page1_varOnClick(item) {
 function page1_varOnAfterClick(item) {
     let sel = getSelectedRecord();
     if (sel.page == 1 && sel.recID > -1) {
-        
+        dialog.showMessageBox(remote.getCurrentWindow(), {
+            type: "warning",
+            title: 'Включить через (минут)',
+            message: 'Включить через (минут), Включить через (минут), Включить через (минут), Включить через (минут) Включить через (минут)',
+            buttons: ["OK"],
+        });
     }
 }
 
 function page1_varTempOnClick(item) {
     let sel = getSelectedRecord();
     if (sel.page == 1 && sel.recID > -1) {
-        
+        prompt('Включить временно на (минут)', '5');
     }
 }
 
@@ -798,14 +801,14 @@ function page1_varOffClick(item) {
 function page1_varOffAfterClick(item) {
     let sel = getSelectedRecord();
     if (sel.page == 1 && sel.recID > -1) {
-        
+        prompt('Выключить через (минут)', '5');
     }
 }
 
 function page1_varTempOffClick(item) {
     let sel = getSelectedRecord();
     if (sel.page == 1 && sel.recID > -1) {
-        
+        prompt('Выключить временно на (минут)', '5');
     }
 }
 
@@ -845,9 +848,20 @@ function page4_runClick(item) {
             }
         }
         if (comm) {
-            if (confirm('Выпонить действие расписания?')) {
-                metaQuery('execute', comm)
-            }
+            dialog.showMessageBox(remote.getCurrentWindow(), {
+                type: "question",
+                title: 'Подтверждение',
+                message: 'Выполнить действие расписания?',
+                buttons: ["Yes", "No"],
+            }).then((res) => {
+                switch (res.response) {
+                    case 0:
+                        metaQuery('execute', comm);
+                        break;
+                    case 1:
+                        break;
+                }
+            });
         }
     }
 }

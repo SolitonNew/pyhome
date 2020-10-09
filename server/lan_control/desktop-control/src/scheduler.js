@@ -18,8 +18,18 @@ function buildScheduler() {
         );    
     }
 
+    let item = $('#page4 div.list-item.selected');
+    let selID = '';
+    if (item.length == 1) {
+        selID = item.prop('id');
+    }
+
     let page = document.getElementById('page4');
     page.innerHTML = ls.join('');
+    
+    if (selID) {
+        $('#page4 div.list-item#' + selID).addClass('selected');
+    }
     
     $('#page4 div.list-item').on('click', (event) => {
         $('#page4 .selected').removeClass('selected');

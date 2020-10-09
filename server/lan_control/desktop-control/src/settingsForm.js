@@ -7,8 +7,7 @@ let ip = document.getElementById('connect_ip');
 let mediaList = document.getElementById('mediaList');
 let mediaListData = new Array();
 
-function startLoad() {    
-    login.value = settings.getSync('connect_login');
+function startLoad() {
     ip.value = settings.getSync('connect_ip');
     
     mediaListData = settings.getSync('medias');
@@ -25,8 +24,8 @@ function closeWindow() {
     window.close();
 }
 
-function saveConfogLogin() {
-    settings.setSync('connect_login', login.value);
+function saveAppInfo() {
+    ipcRenderer.send('set-app-info-data', $('#app_info').val());
 }
 
 function saveConfigIp() {
@@ -44,6 +43,10 @@ ipcRenderer.on('selected-directory', (event, files) => {
         mediaListData.push(files[i]);
     }    
     settings.setSync('medias', mediaListData);
+});
+
+ipcRenderer.on('get-app-info-data', (event, data) => {
+    $('#app_info').val(data[0][0]);
 });
 
 function delMedia() {

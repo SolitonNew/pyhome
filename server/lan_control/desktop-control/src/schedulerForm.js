@@ -1,4 +1,6 @@
 const {ipcRenderer} = require('electron');
+const {dialog} = require('electron').remote;
+const remote = require('electron').remote;
 
 let recordID = -1;
 let schedulerVariableID = 0;
@@ -66,9 +68,11 @@ function saveWindow() {
         days: $('#schedulerDays').val(),
     };
     
+    let error_comm = false;
     let error_timeOfDay = false;
     let error_days = false;
     
+    error_comm = (data.comm == '');
     switch ($('#schedulerType').val()) {
         case '0':
             error_timeOfDay = (data.timeOfDay == '');
@@ -90,14 +94,34 @@ function saveWindow() {
             error_days = (data.days == '');
             break;
     }
+    
+    if (error_comm) {
+        dialog.showMessageBox(remote.getCurrentWindow(), {
+            type: "warning",
+            title: 'Внимание',
+            message: 'Поле "' + $('#schedulerCommLabel').text() + '" должно быть непустым.',
+            buttons: ["OK"],
+        });
+        return ;
+    }
 
     if (error_timeOfDay) {
-        alert('Поле "' + $('#schedulerTimeOfDayLabel').text() + '" должно быть непустым.');    
+        dialog.showMessageBox(remote.getCurrentWindow(), {
+            type: "warning",
+            title: 'Внимание',
+            message: 'Поле "' + $('#schedulerTimeOfDayLabel').text() + '" должно быть непустым.',
+            buttons: ["OK"],
+        });  
         return ;
     }
     
     if (error_days) {
-        alert('Поле "' + $('#schedulerDaysLabel').text() + '" должно быть непустым.');    
+        dialog.showMessageBox(remote.getCurrentWindow(), {
+            type: "warning",
+            title: 'Внимание',
+            message: 'Поле "' + $('#schedulerDaysLabel').text() + '" должно быть непустым.',
+            buttons: ["OK"],
+        });
         return ;
     }
 

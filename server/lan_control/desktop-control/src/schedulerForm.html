@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Настройки</title>
+        <link rel="stylesheet" type="text/css" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="./styles.css">
+    </head>
+    <body onload="startLoad()">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Запись расписания</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="closeWindow()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="content">
+                    <div class="form-group row">
+                        <label class="form-label col-3" for="schedulerComm">Описание:</label>
+                        <div class="col-9">
+                            <textarea id="schedulerComm" class="form-control" rows="3"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="form-label col-3" for="schedulerAction">Действие:</label>
+                        <div class="col-9">
+                            <textarea id="schedulerAction" class="form-control" rows="3"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="form-label col-3" for="schedulerType">Повторять:</label>
+                        <div class="col-4">
+                            <select id="schedulerType" class="form-control">
+                                <option value="0">Каждый день</option>
+                                <option value="1">Каждую неделю</option>
+                                <option value="2">Каждый месяц</option>
+                                <option value="3">Каждый год</option>
+                                <option value="4">Только один раз</option>
+                            </select>
+                        </div>
+                        <div class="col-5">
+                            <button type="button" class="btn btn-warning" onclick="runAction()">Выполнить действие</button>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label id="schedulerTimeOfDayLabel" class="form-label col-3" style="font-weight:bold;" for="schedulerTimeOfDay">Время дня:</label>
+                        <div class="col-9">
+                            <textarea id="schedulerTimeOfDay" class="form-control" rows="3"></textarea>
+                        </div>
+                    </div>
+                    <div id="schedulerDaysRow" class="form-group row" style="margin-bottom: 0px;">
+                        <label id="schedulerDaysLabel" class="form-label col-3" style="font-weight:bold;" for="schedulerRange">Время года:</label>
+                        <div class="col-9">
+                            <textarea id="schedulerDays" class="form-control" rows="3"></textarea>
+                        </div>
+                    </div>
+                </div>   
+            </div>
+            <div class="modal-footer" style="display:flex;">
+                <button id="schedulerButtonDel" type="button" class="btn btn-danger" onclick="delWindow()">Удалить</button>
+                <div style="flex-grow:1;"></div>
+                <button type="button" class="btn btn-primary" onclick="saveWindow()">Сохранить</button>
+                <button type="button" class="btn btn-secondary" onclick="closeWindow()">Отмена</button>
+            </div>
+        </div>
+        <script src='./schedulerForm.js'></script>
+        <script>let $ = require('jquery');</script>
+        <script>require('popper.js');</script>
+        <script>require('bootstrap');</script>      
+    </body>
+</html>

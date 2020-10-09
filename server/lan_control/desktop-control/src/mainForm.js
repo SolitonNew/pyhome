@@ -337,6 +337,14 @@ function reconnect() {
                     break;
                 case 'get groups cross':  // Media
                     break;
+                case 'edit scheduler':
+                    buildScheduler();
+                    break;
+                case 'del scheduler':
+                    buildScheduler();
+                    break;
+                case 'execute':
+                    break;
             }
         }
     });        
@@ -388,9 +396,9 @@ function startLoad() {
             case 3:
                 break;
             case 4:
+                menu = new Menu();
+                menu.append(new MenuItem({label: 'Создать...', click: page4_addClick}));
                 if (sel.recID > -1) {
-                    menu = new Menu();
-                    menu.append(new MenuItem({label: 'Создать...', click: page4_addClick}));
                     menu.append(new MenuItem({label: 'Изменить...', click: page4_editClick}));
                     menu.append(new MenuItem({label: 'Удалить', click: page4_delClick}));
                     menu.append(new MenuItem({type: 'separator'}));
@@ -398,8 +406,8 @@ function startLoad() {
                 }
                 break;
             case 5:
+                menu = new Menu();
                 if (sel.recID > -1) {
-                    menu = new Menu();
                     menu.append(new MenuItem({label: 'Проиграть'}));
                     menu.append(new MenuItem({label: 'Пауза'}));
                     menu.append(new MenuItem({label: 'Остановить'}));
@@ -410,8 +418,8 @@ function startLoad() {
                     menu.append(new MenuItem({label: 'Добавить в плейлист...', submenu: []}));
                     menu.append(new MenuItem({label: 'Удалить из плейлиста'}));
                     menu.append(new MenuItem({type: 'separator'}));
-                    menu.append(new MenuItem({label: 'Обновить библиотеку медии'}));
                 }
+                menu.append(new MenuItem({label: 'Обновить библиотеку медии'}));
                 break;
         }
 
@@ -438,6 +446,31 @@ function minimizeWindow() {
 ipcRenderer.on('connect-params-changed', (event) => {
     reconnect();
 });
+
+ipcRenderer.on('run-scheduler-action', (event, data) => {
+    metaQuery('execute', data);
+});
+
+ipcRenderer.on('edit-scheduler-record', (event, data) => {
+    let str = data.id + String.fromCharCode(1) +
+              data.comm + String.fromCharCode(1) +
+              data.action + String.fromCharCode(1) +
+              data.type + String.fromCharCode(1) +
+              data.timeOfDay + String.fromCharCode(1) +
+              data.days + String.fromCharCode(1) +
+              '0';    
+    
+    metaQuery('edit scheduler', str);
+    metaQuery('get scheduler list', '');
+});
+
+ipcRenderer.on('delete-scheduler-record', (event, data) => {
+    if (confirm('Удалить запись расписания?')) {
+        metaQuery('del scheduler', data);
+        metaQuery('get scheduler list', '');
+    }
+});
+
 
 let loginWindow;
 
@@ -797,12 +830,26 @@ function page4_editClick(item) {
 function page4_delClick(item) {
     let sel = getSelectedRecord();
     if (sel.page == 4 && sel.recID > -1) {
-        
+        ipcRenderer.send('delete-scheduler-record', sel.recID);
     }
 }
 
 function page4_runClick(item) {
-
+    let sel = getSelectedRecord();
+    if (sel.page == 4 && sel.recID > -1) {
+        let comm = null;
+        for (let i = 0; i < schedulerData.length; i++) {
+            if (schedulerData[i][0] == sel.recID) {
+                comm = schedulerData[i][2];
+                break;
+            }
+        }
+        if (comm) {
+            if (confirm('Выпонить действие расписания?')) {
+                metaQuery('execute', comm)
+            }
+        }
+    }
 }
 
 

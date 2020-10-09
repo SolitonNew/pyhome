@@ -1,4 +1,4 @@
-let schedulerData = new Array();  // ["27", "Аквариум свет ВКЛ.", "on("AQUA_LED")", "2020-10-09 06:00:00", "6:00", "", "0", "0"]
+let schedulerData = new Array();  // ["27", "Аквариум свет ВКЛ.", "on("AQUA_LED")", "2020-10-09 06:00:00", "6:00", "", "3", "0"]
 
 function buildScheduler() {
     let ls = new Array();
@@ -8,7 +8,7 @@ function buildScheduler() {
         
         ls.push(
             '<div id="schedID_' + o[0] + '" class="list-item">' +
-                '<img class="scheduler-img" src="./images/10_0.png">' +
+                '<img class="scheduler-img" src="./images/10_' + o[6] + '.png">' +
                 '<div class="scheduler-text">' +
                     '<div class="scheduler-name">' + o[1] + '</div>' +
                     '<div class="scheduler-range">' + o[4] + '</div>' +
@@ -34,6 +34,14 @@ function showScheduler(recID) {
         schedulerWindow.focus();
         return ;
     }
+    
+    let rec = new Array();
+    for (let i = 0; i < schedulerData.length; i++) {
+        if (schedulerData[i][0] == recID) {
+            rec = schedulerData[i];
+            break;
+        }
+    }
 
     schedulerWindow = new BrowserWindow({
         width: 600,
@@ -47,7 +55,9 @@ function showScheduler(recID) {
         }
     });
   
-    schedulerWindow.loadURL(`file://${__dirname}/schedulerForm.html`);
+    schedulerWindow.loadURL(`file://${__dirname}/schedulerForm.html`).then(() => {
+        schedulerWindow.send('edit-scheduler-record', rec);
+    });
   
     schedulerWindow.on('closed', () => {
         schedulerWindow = null;

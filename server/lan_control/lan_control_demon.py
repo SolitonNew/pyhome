@@ -175,7 +175,7 @@ class MetaThread(threading.Thread):
                                             "order by COMM")
                         elif a[0] == "edit scheduler":
                             if a[1] == "-1":
-                                self.db.IUD("delete from core_scheduler where TEMP_VARIABLE_ID = %s" % (a[7]))
+                                self.db.IUD("delete from core_scheduler where TEMP_VARIABLE_ID > 0 and TEMP_VARIABLE_ID = %s" % (a[7]))
                                 if a[2] != '':
                                     self.db.IUD(("insert into core_scheduler "
                                                  " (COMM, ACTION, INTERVAL_TYPE, INTERVAL_TIME_OF_DAY, INTERVAL_DAY_OF_TYPE, TEMP_VARIABLE_ID)"

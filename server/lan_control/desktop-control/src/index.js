@@ -79,3 +79,18 @@ ipcMain.on('open-dir-dialog', (event) => {
 ipcMain.on('connect-params-changed', (event) => {
     mainWindow.send('connect-params-changed');
 });
+
+ipcMain.on('run-scheduler-action', (event, data) => {
+    mainWindow.send('run-scheduler-action', data);
+});
+
+ipcMain.on('edit-scheduler-record', (event, data) => {
+    mainWindow.send('edit-scheduler-record', data);
+});
+
+ipcMain.on('delete-scheduler-record', (event, data) => {
+    mainWindow.send('delete-scheduler-record', data);
+});
+
+
+

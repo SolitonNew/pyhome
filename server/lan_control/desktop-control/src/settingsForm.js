@@ -1,6 +1,7 @@
 import settings from 'electron-settings';
-
 const {ipcRenderer} = require('electron');
+const {dialog} = require('electron').remote;
+const remote = require('electron').remote;
 
 let login = document.getElementById('connect_login');
 let ip = document.getElementById('connect_ip');
@@ -23,6 +24,20 @@ function startLoad() {
 function closeWindow() {
     window.close();
 }
+
+function clearSettings() {
+    dialog.showMessageBox(remote.getCurrentWindow(), {
+        type: 'question',
+        title: 'Подтверждение',
+        message: 'Сбросить настройки приложения к значениям по умолчанию?',
+        buttons: ['Yes', 'No'],
+    }).then((res) => {
+        if (res.response == 0) {
+            ipcRenderer.send('clear-all-settings');
+        }
+    });
+}
+
 
 function saveAppInfo() {
     ipcRenderer.send('set-app-info-data', $('#app_info').val());

@@ -218,39 +218,51 @@ window.addEventListener('keydown', (event) => {
     }
 });
 
-function reconnect() {
-    reconectCount++;
+let reconnectOn = false;
 
-    hideMainControls();
-    
-    if ((reconectCount > 10) && (!firstConnecting)) {
-        showLogin();
-        reconectCount = 0;
+let reconnectInterval = setInterval(() => {
+    if (!reconnectOn) {
         return ;
     }
-    
+
+    console.log('TRY CONNECT');
+
     let ip = settings.getSync('connect_ip');
     appID = settings.getSync('appID');
     if (!appID) {
         appID = -1;
     }
     
-    if (socket != null) {
+    if (socket) {
         clearInterval(syncTimer);
         clearInterval(schedulerTimer);
         socket.destroy();
+        socket = null;
         socketQueue = new Array();
         socketData = '';
     }
     
+    reconectCount++;
+
+    hideMainControls();
+    
+    if ((reconectCount >= 3) && (!firstConnecting)) {
+        reconnectOn = false;
+        showLogin();
+        reconectCount = 0;
+        return ;
+    }
+    
+    setWaiterTitle('Выполняется подключение...');
+    
     socket = new net.Socket();
-    socket.connect(8090, ip);
     
     socket.on('connect', () => {
-        setWaiterTitle('Выполняется подключение...');
-    
+        console.log('CONNECTED');
+        
+        reconnectOn = false;
         socketQueue = new Array();
-        socketData = '';    
+        socketData = '';
         firstConnecting = true;
         reconectCount = 0;
         if (appID == -1) {
@@ -268,28 +280,29 @@ function reconnect() {
     
     socket.on('error', () => {
         console.log('ERROR');
+        reconnectOn = true;
     });
     
-    socket.on('close', (hadError) => {
-        console.log('CLOSE');
-        setTimeout(reconnect, 3000);
+    socket.on('close', () => {
+        console.log('CLOSE CONNECT');
+        reconnectOn = true;
     });
-    
-    function runSync() {
-        showMainControls();
-        syncTimer = setInterval(() => {
-            metaQuery('sync', '');
-            metaQuery('exe queue', '');
-            metaQuery('sessions', '');
-            metaQuery('media queue', '');
-        }, 500);
-        
-        schedulerTimer = setInterval(() => {
-            metaQuery('get scheduler list', '');
-        }, 1000);
-    }
     
     socket.on('data', (data) => {
+        function runSync() {
+            showMainControls();
+            syncTimer = setInterval(() => {
+                metaQuery('sync', '');
+                metaQuery('exe queue', '');
+                metaQuery('sessions', '');
+                metaQuery('media queue', '');
+            }, 500);
+            
+            schedulerTimer = setInterval(() => {
+                metaQuery('get scheduler list', '');
+            }, 1000);
+        }    
+    
         let q = parseMetaQuery(data);
         
         for (let i = 0; i < q.length; i++) {
@@ -358,7 +371,13 @@ function reconnect() {
                     break;
             }
         }
-    });        
+    });
+    socket.connect(8090, ip);
+    reconnectOn = false;
+}, 1000);
+
+function reconnect() {
+    reconnectOn = true;
 }
 
 function startLoad() {
@@ -587,7 +606,6 @@ function showPage(num) {
 
 function metaQuery(packName, packData) {
     if (socketQueue.length > SOCKET_QUEUE_LIMIT) {
-        console.log('SOCKET QUEUE');
         reconnect();
         return ;
     }

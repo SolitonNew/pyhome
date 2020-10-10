@@ -3,7 +3,11 @@ import settings from 'electron-settings';
 const {ipcRenderer} = require('electron');
 
 function startLoad() {
-    document.getElementById('connect_ip').value = settings.getSync('connect_ip');
+    let str = settings.getSync('connect_ip');
+    if (!str) {
+        str = '';
+    }
+    document.getElementById('connect_ip').value = str;
 }
 
 function saveWindow() {

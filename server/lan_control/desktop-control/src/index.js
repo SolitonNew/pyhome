@@ -92,5 +92,12 @@ ipcMain.on('delete-scheduler-record', (event, data) => {
     mainWindow.send('delete-scheduler-record', data);
 });
 
+ipcMain.on('clear-all-settings', (event, data) => {
+    settings.unsetSync();
+    app.quit();
+});
+
+
+
 
 

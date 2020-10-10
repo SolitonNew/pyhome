@@ -340,6 +340,8 @@ let reconnectInterval = setInterval(() => {
                         settingsWindow.send('get-app-info-data', q[i].data);
                     }
                     break;
+                case 'name':
+                    break;
                 case 'apps list':
                     showRegister(q[i].data);
                     break;
@@ -430,6 +432,7 @@ function startLoad() {
                 menu.append(new MenuItem({label: 'Создать...', click: page4_addClick}));
                 if (sel.recID > -1) {
                     menu.append(new MenuItem({label: 'Изменить...', click: page4_editClick}));
+                    menu.append(new MenuItem({type: 'separator'}));
                     menu.append(new MenuItem({label: 'Удалить', click: page4_delClick}));
                     menu.append(new MenuItem({type: 'separator'}));
                     menu.append(new MenuItem({label: 'Выполнить действие', click: page4_runClick}));
@@ -510,6 +513,10 @@ ipcRenderer.on('delete-scheduler-record', (event, data) => {
                 break;
         }
     });
+});
+
+ipcRenderer.on('set-app-name', (event, data) => {
+    metaQuery('name', data);
 });
 
 

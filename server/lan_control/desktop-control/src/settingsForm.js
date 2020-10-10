@@ -40,7 +40,7 @@ function clearSettings() {
 
 
 function saveAppInfo() {
-    ipcRenderer.send('set-app-info-data', $('#app_info').val());
+    ipcRenderer.send('set-app-name', $('#app_info').val());
 }
 
 function saveConfigIp() {

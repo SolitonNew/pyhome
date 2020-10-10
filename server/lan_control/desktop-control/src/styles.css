@@ -33,11 +33,6 @@ body:hover ::-webkit-scrollbar-thumb {
     background-color: #999;
 }
 
-::-webkit-resizer {
-    background-color: #333;
-}
-
-
 input[type=range]::-webkit-slider-thumb {
     -webkit-appearance: none;
     box-shadow: 0 0 0 1px #ffffff;

@@ -17,5 +17,6 @@ function saveWindow() {
 }
 
 function closeWindow() {
+    ipcRenderer.send('close-app');
     window.close();
 }

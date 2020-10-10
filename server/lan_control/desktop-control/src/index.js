@@ -80,6 +80,10 @@ ipcMain.on('connect-params-changed', (event) => {
     mainWindow.send('connect-params-changed');
 });
 
+ipcMain.on('close-app', (event) => {
+    app.quit();
+});
+
 ipcMain.on('run-scheduler-action', (event, data) => {
     mainWindow.send('run-scheduler-action', data);
 });
@@ -94,7 +98,12 @@ ipcMain.on('delete-scheduler-record', (event, data) => {
 
 ipcMain.on('clear-all-settings', (event, data) => {
     settings.unsetSync();
+    app.relaunch();
     app.quit();
+});
+
+ipcMain.on('set-app-name', (event, data) => {
+    mainWindow.send('set-app-name', data);
 });
 
 

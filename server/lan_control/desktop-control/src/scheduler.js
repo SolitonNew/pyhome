@@ -1,5 +1,7 @@
 let schedulerData = new Array();  // ["27", "Аквариум свет ВКЛ.", "on("AQUA_LED")", "2020-10-09 06:00:00", "6:00", "", "3", "0"]
 
+let prevSchedulerHTML = '';
+
 function buildScheduler() {
     let ls = new Array();
     
@@ -25,16 +27,21 @@ function buildScheduler() {
     }
 
     let page = document.getElementById('page4');
-    page.innerHTML = ls.join('');
+    let html = ls.join('');
     
-    if (selID) {
-        $('#page4 div.list-item#' + selID).addClass('selected');
+    if (prevSchedulerHTML !== html) {
+        prevSchedulerHTML = html;
+        page.innerHTML = html;
+        
+        if (selID) {
+            $('#page4 div.list-item#' + selID).addClass('selected');
+        }
+        
+        $('#page4 div.list-item').on('click', (event) => {
+            $('#page4 .selected').removeClass('selected');
+            $(event.currentTarget).addClass('selected');
+        });
     }
-    
-    $('#page4 div.list-item').on('click', (event) => {
-        $('#page4 .selected').removeClass('selected');
-        $(event.currentTarget).addClass('selected');
-    });
 }
 
 let schedulerWindow;

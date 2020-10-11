@@ -30,7 +30,8 @@ const createWindow = () => {
         y: position[1],
         width: size[0],
         height: size[1],
-        minwidth: 300,
+        minWidth: 250,
+        minHeight: 600,
         autoHideMenuBar: true,
         webPreferences: {
             nodeIntegration: true,

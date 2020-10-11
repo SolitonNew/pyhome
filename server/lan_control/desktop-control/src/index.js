@@ -37,7 +37,7 @@ const createWindow = () => {
             nodeIntegration: true,
         },
         frame: false,
-        icon: __dirname + '/images/icon.png',
+        icon: __dirname + '/images/logo.png',
     });
 
     mainWindow.loadURL(`file://${__dirname}/mainForm.html`);

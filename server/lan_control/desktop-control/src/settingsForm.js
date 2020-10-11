@@ -40,7 +40,17 @@ function clearSettings() {
 
 
 function saveAppInfo() {
-    ipcRenderer.send('set-app-name', $('#app_info').val());
+    let name = $('#app_info').val();
+    if (name) {
+        ipcRenderer.send('set-app-name', name);
+    } else {
+        dialog.showMessageBox(remote.getCurrentWindow(), {
+            type: 'warning',
+            title: 'Внимание',
+            message: 'Поле "Название:" не может быть пустым.',
+            buttons: ['OK'],
+        });
+    }
 }
 
 function saveConfigIp() {

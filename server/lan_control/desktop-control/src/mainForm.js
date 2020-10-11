@@ -371,6 +371,8 @@ let reconnectInterval = setInterval(() => {
                     break;
                 case 'execute':
                     break;
+                case 'audio data':
+                    break;
             }
         }
     });
@@ -408,20 +410,26 @@ function startLoad() {
         
         let menu = null;
         
-        
         switch (sel.page) {
             case 1:
                 if (sel.recID > -1) {
                     menu = new Menu();
-                    menu.append(new MenuItem({label: 'Включить', click: page1_varOnClick}));
-                    menu.append(new MenuItem({label: 'Включить позже...', click: page1_varOnAfterClick}));
-                    menu.append(new MenuItem({label: 'Временно включить...', click: page1_varTempOnClick}));
+                    let varOn = (getVariableAtId(sel.recID)[4] == '1.0');
+                    menu.append(new MenuItem({label: 'Включить', click: page1_varOnClick, enabled: !varOn, }));
+                    menu.append(new MenuItem({label: 'Включить позже...', click: page1_varOnAfterClick, enabled: !varOn, }));
+                    menu.append(new MenuItem({label: 'Временно включить...', click: page1_varTempOnClick, enabled: !varOn, }));
                     menu.append(new MenuItem({type: 'separator'}));
-                    menu.append(new MenuItem({label: 'Выключить', click: page1_varOffClick}));
-                    menu.append(new MenuItem({label: 'Выключить позже...', click: page1_varOffAfterClick}));
-                    menu.append(new MenuItem({label: 'Временно выключить...', page1_varTempOffClick}));
-                    menu.append(new MenuItem({type: 'separator'}));
-                    menu.append(new MenuItem({label: 'Отменить расписание', page1_varScheduleCancelClick}));
+                    menu.append(new MenuItem({label: 'Выключить', click: page1_varOffClick, enabled: varOn, }));
+                    menu.append(new MenuItem({label: 'Выключить позже...', click: page1_varOffAfterClick, enabled: varOn, }));
+                    menu.append(new MenuItem({label: 'Временно выключить...', click: page1_varTempOffClick, enabled: varOn, }));
+                    
+                    for (let i = 0; i < schedulerData.length; i++) {
+                        if (schedulerData[i][7] == sel.recID) {
+                            menu.append(new MenuItem({type: 'separator'}));
+                            menu.append(new MenuItem({label: 'Отменить расписание', click: page1_varScheduleCancelClick}));
+                            break;
+                        }
+                    }
                 }
                 break;
             case 2:
@@ -519,73 +527,69 @@ ipcRenderer.on('set-app-name', (event, data) => {
     metaQuery('name', data);
 });
 
-
-let loginWindow;
-
-function showLogin() {
-    loginWindow = new BrowserWindow({
-        width: 400,
-        height: 200,
-        autoHideMenuBar: true,
-        modal: true,
-        webPreferences: {
-            nodeIntegration: true,
-        },
-        frame: false,
-        icon: __dirname + '/images/icon.png',
-    });
+ipcRenderer.on('variable-scheduler', (event, data) => {
+    let v = getVariableAtId(data.id);
     
-    loginWindow.loadURL(`file://${__dirname}/loginForm.html`);
-}
+    let comm = '';
+    let action = '';
+    let type = 4;
+    let varID = v[0];
 
-let registerWindow;
-
-function showRegister(data) {
-    registerWindow = new BrowserWindow({
-        width: 400,
-        height: 200,
-        autoHideMenuBar: true,
-        modal: true,
-        webPreferences: {
-            nodeIntegration: true,
-        },
-        frame: false,
-        icon: __dirname + '/images/icon.png',
-    });
-    
-    registerWindow.loadURL(`file://${__dirname}/registerForm.html`).then(() => {
-        registerWindow.send('show-register-window', data);
-    });
-}
-
-let settingsWindow;
-
-function showSettings() {
-    if (settingsWindow) {
-        settingsWindow.focus();
-        return ;
+    switch (data.type) {
+        case 'on-after-time': // Включить через (минут):
+            comm = 'Включить "' + v[2] + '" через ' + data.value + ' минут';
+            action = 'on("' + v[1] + '")';
+            break;
+        case 'on-and-off-after-time': // Включить временно на (минут):
+            comm = 'Выключить "' + v[2] + '" через ' + data.value + ' минут';
+            action = 'off("' + v[1] + '")';
+            setVarValue(v[0], 1);
+            break;
+        case 'off-after-time': // Выключить через (минут):
+            comm = 'Выключить "' + v[2] + '" через ' + data.value + ' минут';
+            action = 'off("' + v[1] + '")';
+            break;
+        case 'off-and-on-after-time': // Выключить временно на (минут):
+            comm = 'Включить "' + v[2] + '" через ' + data.value + ' минут';
+            action = 'on("' + v[1] + '")';
+            setVarValue(v[0], 0);
+            break;
     }
+    
+    let date = new Date();
+    date.setMinutes(date.getMinutes() + parseInt(data.value));
+    
+    let hh = date.getHours();
+    if (hh < 10) {
+        hh = '0' + hh;
+    }
+    let ii = date.getMinutes();
+    if (ii < 10) {
+        ii = '0' + ii;
+    }
+    let timeOfDay = hh + ':' + ii;
+    
+    let mm = date.getMonth() + 1;
+    if (mm < 10) {
+        mm = '0' + mm;
+    }
+    let dd = date.getDate();
+    if (dd < 10) {
+        dd = '0' + dd;
+    }
+    let days = dd + '-' + mm;
 
-    settingsWindow = new BrowserWindow({
-        width: 600,
-        height: 500,
-        autoHideMenuBar: true,
-        show: true,
-        frame: false,
-        modal: true,
-        webPreferences: {
-            nodeIntegration: true,
-        }
-    });
-  
-    settingsWindow.loadURL(`file://${__dirname}/settingsForm.html`).then(() => {
-        metaQuery('get app info', appID);
-    });
-  
-    settingsWindow.on('closed', () => {
-        settingsWindow = null;
-    });
-}
+    let str = '-1' + String.fromCharCode(1) +
+              comm + String.fromCharCode(1) +
+              action + String.fromCharCode(1) +
+              type + String.fromCharCode(1) +
+              timeOfDay + String.fromCharCode(1) +
+              days + String.fromCharCode(1) +
+              varID;    
+    
+    metaQuery('edit scheduler', str);
+    metaQuery('get scheduler list', '');
+});
 
 function showPage(num) {
     let tabs = document.getElementById('pageTabs').children;
@@ -755,15 +759,6 @@ function getSelectedRecord() {
     }
 }
 
-function getVariableAtId(id) {
-    for (let i = 0; i < variables.length; i++) {
-        if (variables[i][0] == id) {
-            return variables[i];
-        }
-    }
-    return null;
-}
-
 function setSilentInfo(val) {
     if (val == '1.0') {
         $('#silentInfo').text('[Тихий час]');
@@ -796,19 +791,14 @@ function page1_varOnClick(item) {
 function page1_varOnAfterClick(item) {
     let sel = getSelectedRecord();
     if (sel.page == 1 && sel.recID > -1) {
-        dialog.showMessageBox(remote.getCurrentWindow(), {
-            type: "warning",
-            title: 'Включить через (минут)',
-            message: 'Включить через (минут), Включить через (минут), Включить через (минут), Включить через (минут) Включить через (минут)',
-            buttons: ["OK"],
-        });
+        showVariableScheduler(sel.recID, 'on-after-time');
     }
 }
 
 function page1_varTempOnClick(item) {
     let sel = getSelectedRecord();
     if (sel.page == 1 && sel.recID > -1) {
-        prompt('Включить временно на (минут)', '5');
+        showVariableScheduler(sel.recID, 'on-and-off-after-time');
     }
 }
 
@@ -826,21 +816,26 @@ function page1_varOffClick(item) {
 function page1_varOffAfterClick(item) {
     let sel = getSelectedRecord();
     if (sel.page == 1 && sel.recID > -1) {
-        prompt('Выключить через (минут)', '5');
+        showVariableScheduler(sel.recID, 'off-after-time');
     }
 }
 
 function page1_varTempOffClick(item) {
     let sel = getSelectedRecord();
     if (sel.page == 1 && sel.recID > -1) {
-        prompt('Выключить временно на (минут)', '5');
+        showVariableScheduler(sel.recID, 'off-and-on-after-time');
     }
 }
 
 function page1_varScheduleCancelClick(item) {
     let sel = getSelectedRecord();
     if (sel.page == 1 && sel.recID > -1) {
-        
+        for (let i = 0; i < schedulerData.length; i++) {
+            if (schedulerData[i][7] == sel.recID) {
+                ipcRenderer.send('delete-scheduler-record', schedulerData[i][0]);
+                return ;
+            }
+        }
     }
 }
 

@@ -8,16 +8,34 @@ function buildScheduler() {
     for (let i = 0; i < schedulerData.length; i++) {
         let o = schedulerData[i];
         
-        ls.push(
-            '<div id="schedID_' + o[0] + '" class="list-item">' +
-                '<img class="scheduler-img" src="./images/10_' + o[6] + '.png">' +
-                '<div class="scheduler-text">' +
-                    '<div class="scheduler-name">' + o[1] + '</div>' +
-                    '<div class="scheduler-range">' + o[4] + '</div>' +
-                '</div>' +
-                '<div class="sheduler-date">' + o[3] + '</div>' +
-            '</div>'
-        );    
+        switch (o[6]) {
+            case '0':
+            case '1':
+            case '2':
+            case '3':
+                ls.push(
+                    '<div id="schedID_' + o[0] + '" class="list-item">' +
+                        '<img class="scheduler-img" src="./images/10_' + o[6] + '.png">' +
+                        '<div class="scheduler-text">' +
+                            '<div class="scheduler-name">' + o[1] + '</div>' +
+                            '<div class="scheduler-range">' + o[4] + '</div>' +
+                        '</div>' +
+                        '<div class="sheduler-date">' + o[3] + '</div>' +
+                    '</div>'
+                );    
+                break;
+            case '4':
+                ls.push(
+                    '<div id="schedID_' + o[0] + '" class="list-item">' +
+                        '<img class="scheduler-img" src="./images/10_' + o[6] + '.png">' +
+                        '<div class="scheduler-text">' +
+                            '<div class="scheduler-name">' + o[1] + '</div>' +
+                            '<div class="scheduler-range">' + o[4] + '</div>' +
+                        '</div>' +
+                    '</div>'
+                );    
+                break;
+        }
     }
 
     let item = $('#page4 div.list-item.selected');
@@ -41,6 +59,17 @@ function buildScheduler() {
             $('#page4 .selected').removeClass('selected');
             $(event.currentTarget).addClass('selected');
         });
+        
+        // Обновляем списко переменных на первой странице
+        
+        $('#page1 .scheduler').removeClass('scheduler');
+        for (let i = 0; i < schedulerData.length; i++) {
+            if (schedulerData[i][7] > 0) {
+                $('#page1 #recID_' + schedulerData[i][7]).addClass('scheduler');
+            }
+        }
+        
+        // ----------------------------------------------
     }
 }
 
@@ -69,7 +98,8 @@ function showScheduler(recID) {
         modal: true,
         webPreferences: {
             nodeIntegration: true,
-        }
+        },
+        icon: __dirname + '/images/login.png',
     });
   
     schedulerWindow.loadURL(`file://${__dirname}/schedulerForm.html`).then(() => {
@@ -80,3 +110,39 @@ function showScheduler(recID) {
         schedulerWindow = null;
     });
 }
+
+let variableScheduler;
+
+function showVariableScheduler(id, type) {
+    if (variableScheduler) {
+        variableScheduler.focus();
+        return ;
+    }
+    
+    variableScheduler = new BrowserWindow({
+        width: 400,
+        height: 200,
+        autoHideMenuBar: true,
+        modal: true,
+        webPreferences: {
+            nodeIntegration: true,
+        },
+        frame: false,
+        icon: __dirname + '/images/login.png',
+    });
+    
+    variableScheduler.loadURL(`file://${__dirname}/variableSchedulerForm.html`).then(() => {
+        variableScheduler.send('window-init', {
+            type: type, 
+            id: id,
+        });
+    });
+    
+    variableScheduler.on('closed', () => {
+        variableScheduler = null;
+    });
+}
+
+
+
+

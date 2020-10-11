@@ -93,6 +93,7 @@ function buildVariables() {
         }
         page_a.push(
             '<div id="recID_' + id + '" class="list-item">' +
+                '<img class="item-before-icon" src="./images/10_4.png">' +
                 '<div class="item-label">' + name + '</div>' +
                 '<div class="custom-control custom-switch">' +
                     '<input type="checkbox" class="custom-control-input" id="variable_' + id + '" oninput="switchClick(' + id + ')" ' + v + '>' +
@@ -349,3 +350,16 @@ function updateVariables(data) {
         }
     }
 }
+
+function getVariableAtId(id) {
+    for (let i = 0; i < variables.length; i++) {
+        if (variables[i][0] == id) {
+            return variables[i];
+        }
+    }
+    return null;
+}
+
+
+
+

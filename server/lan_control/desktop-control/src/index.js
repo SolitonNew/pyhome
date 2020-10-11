@@ -107,6 +107,9 @@ ipcMain.on('set-app-name', (event, data) => {
     mainWindow.send('set-app-name', data);
 });
 
+ipcMain.on('variable-scheduler', (event, data) => {
+    mainWindow.send('variable-scheduler', data);
+});
 
 
 

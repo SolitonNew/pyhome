@@ -135,6 +135,16 @@ input[type=range]::-webkit-slider-thumb {
     background-color: #eeeeee;
 }
 
+.list-item .item-before-icon {
+    margin-left: -1px;
+    padding-right: 4px;
+    display: none;
+}
+
+.list-item.scheduler .item-before-icon {
+    display: block;
+}
+
 .list-item.selected {
     background-color: #007bff;
     color: #ffffff;

@@ -21,6 +21,17 @@ ipcRenderer.on('edit-scheduler-record', (event, data) => {
     $('#schedulerType').val(data[6]).trigger('change');
     $('#schedulerTimeOfDay').val(data[4]);
     $('#schedulerDays').val(data[5]);
+    
+    if (data[6] == '4') {
+        $('#schedulerComm').prop('disabled', true);
+        $('#schedulerAction').prop('disabled', true);
+        $('#schedulerType').prop('disabled', true);
+        $('#schedulerTimeOfDay').prop('disabled', true);
+        $('#schedulerDays').prop('disabled', true);
+        $('#schedulerButtonSave').hide();
+    } else {
+        $('#schedulerType option[value="4"]').remove();
+    }
 });
 
 function startLoad() {

@@ -96,6 +96,7 @@ function showScheduler(recID) {
         show: true,
         frame: false,
         modal: true,
+        resizable: false,
         webPreferences: {
             nodeIntegration: true,
         },
@@ -124,6 +125,7 @@ function showVariableScheduler(id, type) {
         height: 200,
         autoHideMenuBar: true,
         modal: true,
+        resizable: false,
         webPreferences: {
             nodeIntegration: true,
         },

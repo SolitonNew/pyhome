@@ -6,6 +6,7 @@ function showRegister(data) {
         height: 200,
         autoHideMenuBar: true,
         modal: true,
+        resizable: false,
         webPreferences: {
             nodeIntegration: true,
         },

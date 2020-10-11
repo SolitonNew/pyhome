@@ -13,6 +13,7 @@ function showSettings() {
         show: true,
         frame: false,
         modal: true,
+        resizable: false,
         webPreferences: {
             nodeIntegration: true,
         }

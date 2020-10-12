@@ -21,6 +21,7 @@ function showSettings() {
   
     settingsWindow.loadURL(`file://${__dirname}/settingsForm.html`).then(() => {
         metaQuery('get app info', appID);
+        metaQuery('get media folders', '');
     });
   
     settingsWindow.on('closed', () => {

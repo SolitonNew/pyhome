@@ -272,7 +272,6 @@ let reconnectInterval = setInterval(() => {
             metaQuery('load variables', appID);
             metaQuery('get scheduler list', '');
             metaQuery('get media exts', '');
-            metaQuery('get media folders', '');
             metaQuery('get media list', '');
             metaQuery('get groups list', '');
         }
@@ -324,8 +323,6 @@ let reconnectInterval = setInterval(() => {
                 case 'get media exts':
                     mediaExts = q[i].data;
                     break;
-                case 'get media folders':
-                    break;
                 case 'get media list':
                     mediaData = q[i].data;
                     buildMedia();
@@ -373,6 +370,13 @@ let reconnectInterval = setInterval(() => {
                     break;
                 case 'audio data':
                     break;
+                case 'get media folders':
+                    if (settingsWindow) {
+                        settingsWindow.send('get-media-folders', q[i].data[0][0]);
+                    }
+                    break;
+                case 'set media folders':
+                    break;
             }
         }
     });
@@ -385,6 +389,8 @@ function reconnect() {
 }
 
 function startLoad() {
+    setWaiterTitle('Запуск приложения...');
+
     let avol = settings.getSync('audioVolume');
     $('#audioVolume')
         .on('input', (event) => {
@@ -589,6 +595,11 @@ ipcRenderer.on('variable-scheduler', (event, data) => {
     
     metaQuery('edit scheduler', str);
     metaQuery('get scheduler list', '');
+});
+
+ipcRenderer.on('set-media-folders', (event, data) => {
+    let str = data;
+    metaQuery('set media folders', str);
 });
 
 function showPage(num) {

@@ -10,15 +10,6 @@ let mediaListData = new Array();
 
 function startLoad() {
     ip.value = settings.getSync('connect_ip');
-    
-    mediaListData = settings.getSync('medias');
-    if (mediaListData) {
-        for (let i = 0; i < mediaListData.length; i++) {
-            mediaList.options[i] = new Option(mediaListData[i], '')
-        }
-    } else {
-        mediaListData = new Array();
-    }
 }
 
 function closeWindow() {
@@ -37,7 +28,6 @@ function clearSettings() {
         }
     });
 }
-
 
 function saveAppInfo() {
     let name = $('#app_info').val();
@@ -62,12 +52,25 @@ function addMedia() {
     ipcRenderer.send('open-dir-dialog');
 }
 
+ipcRenderer.on('get-media-folders', (event, data) => {
+    console.log(data);
+    if (data) {
+        mediaListData = data.split('\n');
+    } else {
+        mediaListData = new Array();
+    }
+    
+    for (let i = 0; i < mediaListData.length; i++) {
+        mediaList.options[i] = new Option(mediaListData[i], '')
+    }
+});
+
 ipcRenderer.on('selected-directory', (event, files) => {
     for (let i = 0; i < files.length; i++) {
         mediaList.options[mediaListData.length] = new Option(files[i], '');
         mediaListData.push(files[i]);
-    }    
-    settings.setSync('medias', mediaListData);
+    }
+    event.sender.send('set-media-folders', mediaListData.join('\n'));
 });
 
 ipcRenderer.on('get-app-info-data', (event, data) => {
@@ -81,5 +84,9 @@ function delMedia() {
             mediaListData.splice(i, 1);
         }
     }
-    settings.setSync('medias', mediaListData);
+    ipcRenderer.send('set-media-folders', mediaListData.join('\n'));
 }
+
+
+
+

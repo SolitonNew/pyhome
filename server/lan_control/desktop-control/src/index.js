@@ -111,6 +111,10 @@ ipcMain.on('variable-scheduler', (event, data) => {
     mainWindow.send('variable-scheduler', data);
 });
 
+ipcMain.on('set-media-folders', (event, data) => {
+    mainWindow.send('set-media-folders', data);
+});
+
 
 
 

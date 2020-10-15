@@ -33,11 +33,12 @@ const createWindow = () => {
         minWidth: 250,
         minHeight: 600,
         autoHideMenuBar: true,
-        webPreferences: {
-            nodeIntegration: true,
-        },
         frame: false,
         icon: __dirname + '/images/logo.png',
+        webPreferences: {
+            nodeIntegration: true,
+            webSecirity: false,
+        },
     });
 
     mainWindow.loadURL(`file://${__dirname}/mainForm.html`);
@@ -56,6 +57,8 @@ const createWindow = () => {
         app.quit();
     });
 };
+
+app.commandLine.appendSwitch('disable-features', 'OutOfBlinkCors');
 
 app.on('ready', createWindow);
 

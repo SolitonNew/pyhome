@@ -1,6 +1,6 @@
 import settings from 'electron-settings';
 
-const {BrowserWindow, Menu, MenuItem, dialog} = require('electron').remote;
+const {app, BrowserWindow, Menu, MenuItem, dialog} = require('electron').remote;
 const remote = require('electron').remote;
 const {ipcRenderer} = require('electron');
 const net = require('net');
@@ -347,9 +347,9 @@ let reconnectInterval = setInterval(() => {
                 case 'sync':
                     updateVariables(q[i].data);
                     break;
-                case 'exe queue':
+                case 'exe queue':  // ["994", "speech", "216", "notify", "спальня №3. свет включен"]
                     if (q[i].data.length > 0) {
-                        showNotications(q[i].data);
+                        showNotifications(q[i].data);
                     }
                     break;
                 case 'sessions':
@@ -369,6 +369,7 @@ let reconnectInterval = setInterval(() => {
                 case 'execute':
                     break;
                 case 'audio data':
+                    storeAudioSpeech(q[i].packData, q[i].data[0][0]);
                     break;
                 case 'get media folders':
                     if (settingsWindow) {
@@ -392,21 +393,33 @@ function startLoad() {
     setWaiterTitle('Запуск приложения...');
 
     let avol = settings.getSync('audioVolume');
+    audioSpeechPlayerMuted = settings.getSync('audioMute');
+    $('#audioMute').attr('aria-pressed', !audioSpeechPlayerMuted);
     $('#audioVolume')
         .on('input', (event) => {
             let avol = $(event.target).prop('value');
             settings.setSync('audioVolume', avol);
-            //$('#audioSpeech').prop('volume', avol / 100);
+            audioSpeechSetVolume();
         })
         .prop('value', avol);
-    //$('#audioSpeech').prop('volume', avol / 100);
-    
+
+    $('#audioMute').on('click', (event) => {
+        event.currentTarget.blur();
+        audioSpeechPlayerMuted = $('#audioMute').attr('aria-pressed') == 'true';
+        settings.setSync('audioMute', audioSpeechPlayerMuted);
+        audioSpeechSetVolume();
+    });
+        
     $('#mediaVolume')
         .on('input', (event) => {
             settings.setSync('mediaVolume', $(event.target).prop('value'));
         })
         .prop('value', settings.getSync('mediaVolume'));
-        
+       
+    $('#mediaMute').on('click', (event) => {
+        event.currentTarget.blur();
+        settings.setSync('mediaMute', !$('#mediaMute').attr('aria-pressed'));
+    }); 
 
     // Контекстные меню для списков  --------------
 
@@ -477,8 +490,13 @@ function startLoad() {
     
     // --------------------------------------------
     
+    initHTTP();
+    
+    // --------------------------------------------
     
     reconnect();
+    
+    // --------------------------------------------
 }
 
 function closeWindow() {
@@ -631,7 +649,10 @@ function metaQuery(packName, packData) {
         reconnect();
         return ;
     }
-    socketQueue.push(packName);
+    socketQueue.push({
+        packName: packName,
+        packData: packData,
+    });
     socket.write(iconv.encode(packName + String.fromCharCode(1) + packData + String.fromCharCode(2), 'win1251'));
 }
 
@@ -664,8 +685,11 @@ function parseMetaQuery(data) {
             res.push(row);
         }
         
+        let p = socketQueue.shift(0, 1);
+        
         resArray.push({
-            packName: socketQueue.shift(0, 1), 
+            packName: p.packName,
+            packData: p.packData, 
             data: res
         });
     }
@@ -710,14 +734,39 @@ function setVarValue(id, value) {
     }
 }
 
-function showNotications(data) {
+function showNotifications(data) {   // ["994", "speech", "216", "notify", "спальня №3. свет включен"]
     for (let i = 0; i < data.length; i++) {
         let row = data[i];
-        let str = row[4].replace(/\*/g, '');
-        new window.Notification(row[1], {
-            title: row[1], 
-            body: str,
-        });
+        if (row[1] == 'speech') {
+            let title = row[3];
+            switch (row[3]) {
+                case 'notify':
+                    title = 'Информация';
+                    break;
+                case 'alarm':
+                    title = 'Тревога!!!';
+                    break;
+            }
+            let body = row[4].replace(/\*/g, '');
+            new window.Notification(title, {
+                title: title,
+                body: body,
+            });
+            
+            let file_1 = audioSpeechFileNameAtId(row[3]);
+            audioSpeechQueue.push(file_1);
+            if (!checkAudioSpeech(file_1)) {
+                metaQuery('audio data', row[3]);
+            }
+            
+            let file_2 = audioSpeechFileNameAtId(row[2]);
+            audioSpeechQueue.push(file_2);
+            if (!checkAudioSpeech(file_2)) {
+                metaQuery('audio data', row[2]);
+            }
+            
+            audioSpeechPlayFirst();
+        }
     }
 }
 
@@ -776,12 +825,6 @@ function setSilentInfo(val) {
     } else {
         $('#silentInfo').text('');
     }
-}
-
-function playSound() {
-    let src = 'file://' + path.resolve('./src/audio/1.mp3');
-    var bMusic = new Audio(src);
-	bMusic.play();
 }
 
 function setWaiterTitle(text) {
@@ -896,6 +939,7 @@ function page4_runClick(item) {
         }
     }
 }
+
 
 
 

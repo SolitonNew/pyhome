@@ -97,10 +97,10 @@ function showScheduler(recID) {
         frame: false,
         modal: true,
         resizable: false,
+        icon: __dirname + '/images/login.png',
         webPreferences: {
             nodeIntegration: true,
         },
-        icon: __dirname + '/images/login.png',
     });
   
     schedulerWindow.loadURL(`file://${__dirname}/schedulerForm.html`).then(() => {
@@ -126,11 +126,11 @@ function showVariableScheduler(id, type) {
         autoHideMenuBar: true,
         modal: true,
         resizable: false,
+        frame: false,
+        icon: __dirname + '/images/login.png',
         webPreferences: {
             nodeIntegration: true,
         },
-        frame: false,
-        icon: __dirname + '/images/login.png',
     });
     
     variableScheduler.loadURL(`file://${__dirname}/variableSchedulerForm.html`).then(() => {

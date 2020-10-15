@@ -7,11 +7,11 @@ function showRegister(data) {
         autoHideMenuBar: true,
         modal: true,
         resizable: false,
+        frame: false,
+        icon: __dirname + '/images/icon.png',
         webPreferences: {
             nodeIntegration: true,
         },
-        frame: false,
-        icon: __dirname + '/images/icon.png',
     });
     
     registerWindow.loadURL(`file://${__dirname}/registerForm.html`).then(() => {

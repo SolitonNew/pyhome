@@ -7,11 +7,11 @@ function showLogin() {
         autoHideMenuBar: true,
         modal: true,
         resizable: false,
+        frame: false,
+        icon: __dirname + '/images/login.png',
         webPreferences: {
             nodeIntegration: true,
         },
-        frame: false,
-        icon: __dirname + '/images/login.png',
     });
     
     loginWindow.loadURL(`file://${__dirname}/loginForm.html`);

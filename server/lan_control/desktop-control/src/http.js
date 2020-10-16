@@ -11,7 +11,7 @@ function initHTTP() {
         
         if (id > 0) { // Секция для отдачи моих медиаданных
             
-        } else {
+        } else { // Секйия для отдачи звуковых (и только) треков
             let ext = file.substring(file.length - 4).toUpperCase();
             let ext_ok = (['.MP3', '.WAV'].indexOf(ext) > -1);
             let appData = app.getPath('appData');

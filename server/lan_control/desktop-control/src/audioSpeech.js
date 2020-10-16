@@ -1,9 +1,11 @@
 let audioSpeechQueue = new Array();
 let audioSpeechPlayer;
 let audioSpeechPlayerMuted = false;
+let audioSpeechNotifyPlayed = false;
 
 function audioSpeechPlayFirst() {
     if (audioSpeechQueue.length == 0) {
+        audioSpeechNotifyPlayed = false;
         return ;
     }
     
@@ -23,7 +25,22 @@ function audioSpeechPlayFirst() {
     if (getVariableValueAtId(123) == '1.0') {
         audioSpeechQueue = new Array();
         return ;
-    } 
+    }
+    
+    if (file.indexOf('/alarm.wav') > -1) {
+        audioSpeechNotifyPlayed = false;
+    } else
+    if (file.indexOf('/notify.wav') > -1) {
+        if (audioSpeechNotifyPlayed) {
+            audioSpeechQueue.shift(0, 1);
+            if (audioSpeechQueue.length == 0) {
+                return ;
+            }
+            file = audioSpeechQueue[0];
+        } else {
+            audioSpeechNotifyPlayed = true;
+        }
+    }
     
     audioSpeechPlayer = new Audio('http://127.0.0.1:8092' + file);
     audioSpeechSetVolume();
@@ -69,11 +86,6 @@ function audioSpeechFileNameAtId(id) {
     return file;
 }
 
-function checkAudioSpeech(file) {
-    let fs = require('fs');
-    return fs.existsSync(file);
-}
-
 function storeAudioSpeech(id, data) {
     let file = audioSpeechFileNameAtId(id);
     let fs = require('fs');
@@ -99,8 +111,12 @@ function storeAudioSpeech(id, data) {
     fs.writeFileSync(file, Buffer.from(f_data));
 }
 
-
-
-
-
-
+function audioSpeechAppendToQueue(fileID) {
+    let file = audioSpeechFileNameAtId(fileID);
+    audioSpeechQueue.push(file);
+    
+    let fs = require('fs');
+    if (!fs.existsSync(file)) {
+        metaQuery('audio data', fileID);
+    }
+}

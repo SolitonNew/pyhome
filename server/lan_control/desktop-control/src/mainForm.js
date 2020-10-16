@@ -753,17 +753,8 @@ function showNotifications(data) {   // ["994", "speech", "216", "notify", "сп
                 body: body,
             });
             
-            let file_1 = audioSpeechFileNameAtId(row[3]);
-            audioSpeechQueue.push(file_1);
-            if (!checkAudioSpeech(file_1)) {
-                metaQuery('audio data', row[3]);
-            }
-            
-            let file_2 = audioSpeechFileNameAtId(row[2]);
-            audioSpeechQueue.push(file_2);
-            if (!checkAudioSpeech(file_2)) {
-                metaQuery('audio data', row[2]);
-            }
+            audioSpeechAppendToQueue(row[3]);
+            audioSpeechAppendToQueue(row[2]);
             
             audioSpeechPlayFirst();
         }

@@ -20,6 +20,11 @@ function audioSpeechPlayFirst() {
         return ;
     }
     
+    if (getVariableValueAtId(123) == '1.0') {
+        audioSpeechQueue = new Array();
+        return ;
+    } 
+    
     audioSpeechPlayer = new Audio('http://127.0.0.1:8092' + file);
     audioSpeechSetVolume();
     $(audioSpeechPlayer).on('ended', (event) => {

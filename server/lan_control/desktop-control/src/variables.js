@@ -360,6 +360,10 @@ function getVariableAtId(id) {
     return null;
 }
 
-
-
-
+function getVariableValueAtId(id) {
+    let val = getVariableAtId(id);
+    if (val) {
+        return val[4];
+    }
+    return null;
+}

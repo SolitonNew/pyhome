@@ -1,7 +1,5 @@
-import {app, BrowserWindow} from 'electron';
 import settings from 'electron-settings';
-
-const {dialog, ipcMain} = require('electron');
+const {app, BrowserWindow, dialog, ipcMain, Tray} = require('electron');
 const os = require('os');
 
 let platform = os.platform();
@@ -11,6 +9,7 @@ if (require('electron-squirrel-startup')) {
 }
 
 let mainWindow;
+let trayIcon = null;
 
 const createWindow = () => {
     // Проверяем есть ли куда подключаться
@@ -56,6 +55,23 @@ const createWindow = () => {
         mainWindow = null;
         app.quit();
     });
+    
+    mainWindow.on('minimize', (event) => {
+        mainWindow.setSkipTaskbar(true);
+    });
+    
+    mainWindow.on('restore', (event) => {
+        mainWindow.setSkipTaskbar(false);
+    });
+    
+    trayIcon = new Tray(__dirname + '/images/logo.png');
+    trayIcon.on('click', (event) => {
+        if (mainWindow.isMinimized()) {
+            mainWindow.restore();
+        } else {
+            mainWindow.minimize();
+        }
+    });
 };
 
 app.commandLine.appendSwitch('disable-features', 'OutOfBlinkCors');
@@ -65,6 +81,10 @@ app.on('ready', createWindow);
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
         app.quit();
+    }
+    
+    if (trayIcon) {
+        trayIcon.destroy();
     }
 });
 

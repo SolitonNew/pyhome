@@ -739,18 +739,22 @@ function showNotifications(data) {   // ["994", "speech", "216", "notify", "сп
         let row = data[i];
         if (row[1] == 'speech') {
             let title = row[3];
+            let icon = null;
             switch (row[3]) {
                 case 'notify':
                     title = 'Информация';
+                    icon = null;
                     break;
                 case 'alarm':
                     title = 'Тревога!!!';
+                    icon = __dirname + '/images/alarm.png';
                     break;
             }
             let body = row[4].replace(/\*/g, '');
             new window.Notification(title, {
                 title: title,
                 body: body,
+                icon: icon,
             });
             
             audioSpeechAppendToQueue(row[3]);

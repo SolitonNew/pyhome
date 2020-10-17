@@ -1,5 +1,5 @@
 import settings from 'electron-settings';
-const {app, BrowserWindow, dialog, ipcMain, Tray} = require('electron');
+const {app, BrowserWindow, dialog, ipcMain, Tray, Menu, nativeImage} = require('electron');
 const os = require('os');
 
 let platform = os.platform();
@@ -62,19 +62,62 @@ const createWindow = () => {
         mainWindow.setSkipTaskbar(false);
     });
     
-    trayIcon = new Tray(__dirname + '/images/logo.png');
-    trayIcon.on('click', (event) => {
+    function toggleMainWindow() {
         if (mainWindow.isMinimized()) {
             mainWindow.restore();
         } else {
             mainWindow.minimize();
         }
+    }
+    
+    let iconPath = __dirname + '/images/logo.png';
+    
+    trayIcon = new Tray(nativeImage.createFromPath(__dirname + '/images/logo.png'));
+    trayIcon.on('click', (event) => {
+        toggleMainWindow();
     });
-};
+    
+    trayIcon.setContextMenu(Menu.buildFromTemplate([
+        {
+            label: 'Показать/Скрыть',
+            click: (event) => {
+                toggleMainWindow();
+            },
+        },
+        {type: 'separator'},
+        {
+            label: 'Настройки...',
+            click: (event) => {
+                mainWindow.send('show-alert', iconPath);
+            },
+        },
+        {type: 'separator'},
+        {
+            label: 'Выход',
+            click: (event) => {
+                app.quit();
+            },
+        },
+    ]));
+}
 
-app.commandLine.appendSwitch('disable-features', 'OutOfBlinkCors');
+const instanceLock = app.requestSingleInstanceLock();
 
-app.on('ready', createWindow);
+if (!instanceLock) {
+    app.quit();
+} else {
+    app.on('second-instance', () => {
+        if (mainWindow) {
+            if (mainWindow.isMinimized()) {
+                mainWindow.restore();
+            }
+            mainWindow.focus();
+        }
+    });
+    app.on('ready', createWindow);    
+}
+
+//app.commandLine.appendSwitch('disable-features', 'OutOfBlinkCors');
 
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {

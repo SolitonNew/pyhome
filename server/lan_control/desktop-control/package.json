@@ -1,7 +1,7 @@
 {
   "name": "desktop-control",
   "productName": "desktop-control",
-  "version": "0.3.1",
+  "version": "0.6.1",
   "description": "pyHome lan control desktop version",
   "main": "src/index.js",
   "scripts": {
@@ -11,7 +11,7 @@
     "publish": "electron-forge publish",
     "lint": "eslint src --color"
   },
-  "keywords": [],
+  "keywords": ["Desktop", "Control", "pyHome"],
   "author": "soliton",
   "license": "MIT",
   "config": {
@@ -24,8 +24,7 @@
           "zip"
         ],
         "linux": [
-          "deb",
-          "rpm"
+          "deb"
         ]
       },
       "electronPackagerConfig": {

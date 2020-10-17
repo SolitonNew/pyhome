@@ -620,6 +620,10 @@ ipcRenderer.on('set-media-folders', (event, data) => {
     metaQuery('set media folders', str);
 });
 
+ipcRenderer.on('show-alert', (event, data) => {
+    alert(data);
+});
+
 function showPage(num) {
     let tabs = document.getElementById('pageTabs').children;
     

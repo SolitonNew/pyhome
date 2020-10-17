@@ -12,3 +12,4 @@ pass~
 server/executor/speech.wav
 *.dcu
 *.exe
+/server/lan_control/desktop-control/nbproject/private/

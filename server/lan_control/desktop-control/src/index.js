@@ -12,8 +12,6 @@ let mainWindow;
 let trayIcon = null;
 
 const createWindow = () => {
-    // Проверяем есть ли куда подключаться
-
     var size = settings.getSync('size');
     if (!size) {
         size = new Array(300, 600);

@@ -3,13 +3,10 @@ from widgets import TextField
 import sys
 import hashlib
 
-if sys.platform == 'win32':
-    sys.path += ['D:\\work\\wisehouse\\pyhome\\server\\rs485']
-else:
-    try:
-        sys.path.index('/home/pyhome/server/rs485')
-    except:
-        sys.path += ['/home/pyhome/server/rs485']        
+try:
+    sys.path.index('/var/www/pyhome/server/rs485')
+except:
+    sys.path += ['/var/www/pyhome/server/rs485']
 from config_utils import generate_config_file
 
 class SystemDialog(BaseForm):

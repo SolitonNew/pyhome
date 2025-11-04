@@ -7,14 +7,14 @@ from subprocess import Popen, PIPE, STDOUT, call
 import math
 
 SCREENS = [["Справка", "", "", None, None, [], None],
-           ["RS485", "rs485_demon.py", "/home/pyhome/server/rs485", None, None, [], None],
-           ["Веб", "http_admin_demon.py", "/home/pyhome/server/http_admin", None, None, [], None],
-           ["Расписание", "scheduler_demon.py", "/home/pyhome/server/scheduler", None, None, [], None],
-           ["Выполнение", "executor_demon.py", "/home/pyhome/server/executor", None, None, [], None],
-           ["Монитор", "watcher_demon.py", "/home/pyhome/server/watcher", None, None, [], None],
-           ["Пульты", "lan_control_demon.py", "/home/pyhome/server/lan_control", None, None, [], None],
-           ["Голос", "local_control_demon.py", "/home/pyhome/server/lan_control/local_control", None, None, [], None],
-           ["Видео", "video_alerts_demon.py", "/home/pyhome/server/video_alerts", None, None, [], None]]
+           ["RS485", "rs485_demon.py", "/var/www/pyhome/server/rs485", None, None, [], None],
+           ["Веб", "http_admin_demon.py", "/var/www/pyhome/server/http_admin", None, None, [], None],
+           ["Расписание", "scheduler_demon.py", "/var/www/pyhome/server/scheduler", None, None, [], None],
+           ["Выполнение", "executor_demon.py", "/var/www/pyhome/server/executor", None, None, [], None],
+           ["Монитор", "watcher_demon.py", "/var/www/pyhome/server/watcher", None, None, [], None],
+           ["Пульты", "lan_control_demon.py", "/var/www/pyhome/server/lan_control", None, None, [], None],
+           ["Голос", "local_control_demon.py", "/var/www/pyhome/server/lan_control/local_control", None, None, [], None],
+           ["Видео", "video_alerts_demon.py", "/var/www/pyhome/server/video_alerts", None, None, [], None]]
 
 CURRENT_SCREEN = 0
 

@@ -15,12 +15,12 @@ class Main():
         self.db.IUD("update core_scheduler set ACTION_DATETIME = NULL")
         self.db.commit()
         
-        print("-- Предстоящие задачи --")
+        print("-- Futured Tasks --")
         for row in self.db.select("select ID, COMM, ACTION, ACTION_DATETIME, INTERVAL_TIME_OF_DAY, INTERVAL_DAY_OF_TYPE, INTERVAL_TYPE, ENABLE from core_scheduler"):
             next_time = self.parse_time(None, str(row[4], "utf-8"), str(row[5], "utf-8"), row[6])
             enable = ""
             if row[7] == 0:
-                enable = "      [НЕ ВЫПОЛНЯТЬ!!!]"
+                enable = "      [DO NOT EXECUTE!!!]"
             print("[%s] %s %s" % (datetime.datetime.fromtimestamp(next_time), str(row[1], "utf-8"), enable))
         print("------------------------")
         self.check_time()

@@ -25,7 +25,7 @@ class Main():
         try:
             self.serialPort = serial.Serial(self.SERIAL_PORT, self.SERIAL_SPEED, parity='O', timeout=self.fast_timeput)
         except:
-            print("Ошибка подключения к '%s'" % self.SERIAL_PORT)
+            print("Connection Error for '%s'" % self.SERIAL_PORT)
 
         self.db = DBConnector()
         self.db.load_controllers()
@@ -80,20 +80,20 @@ class Main():
             return False
 
     def _sync_variables(self):
-        # Зачитываем изменения в БД
+        # Loading DB changes
         var_data = self.db.variable_changes()
         recv_valid = False
 
-        # Шлем посылку никому, чтобы контроллеры приготовились принимать
+        # We send a packet to no one, so that the controllers get ready to receive.
         self.send_pack(0, self.PACK_SYNC, [])
         time.sleep(0.02)
-        # Рассылаем изменения в БД и паралельно читаем обновления
+        # We distribute changes in the database while simultaneously reading updates.
         for dev in self.db.controllers:
-            for rep in range(3): # 3 попытки отослать пакет
+            for rep in range(3): # 3 attempts to send the packet.
                 pack_data = []
                 lt = time.localtime()
                 t = time.mktime((2000, 1, 1, 0, 0, 0, 0, 0, lt.tm_isdst))
-                pack_data += [[-100, round(time.time() - t)]] #Передаем системное время в контроллеры
+                pack_data += [[-100, round(time.time() - t)]] # We transmit the system time to the controllers.
                 for var in var_data:
                     if var[2] != dev[0]:
                         pack_data += [[var[0], var[1]]]
@@ -125,7 +125,7 @@ class Main():
 
                 time.sleep(0.02)
                 
-                if recv_valid: # Обмен прошел успешно повторы не требуются
+                if recv_valid: # The exchange was successful; no retries are needed.
                     break
 
     def _reset_pack(self):
@@ -152,14 +152,14 @@ class Main():
         self.db.set_property('RS485_COMMAND_INFO', '')
         
         for dev in self.db.controllers:            
-            error_text = "Контроллер '%s' не ответил." % dev[1]
+            error_text = "Controller '%s' did not respond." % dev[1]
 
             if command == "SCAN_OW":
-                self._command_info("Запрос поиска OneWire устройств для контроллера '%s'..." % dev[1])
+                self._command_info("1-Wire device search request for the controller '%s'..." % dev[1])
                 if self.send_pack(dev[0], self.PACK_COMMAND, ["SCAN_ONE_WIRE", ""]):
-                    self._command_info("Пауза 3с...")
+                    self._command_info("Pause 3s...")
                     time.sleep(3)
-                    self._command_info("Запрос списка найденых на шине OneWire устройств для контроллера '%s'" % dev[1])
+                    self._command_info("Request for the list of OneWire devices found on the bus for the controller '%s'" % dev[1])
                     is_ok = False
                     for res_pack in self.send_pack(dev[0], self.PACK_COMMAND, ["LOAD_ONE_WIRE_ROMS", ""]):
                         count = 0
@@ -178,7 +178,7 @@ class Main():
                             self._command_info("".join(rom_s[:-1]))
                             if self.db.append_scan_rom(dev[0], rom):
                                 count += 1
-                        self._command_info("Всего найдено устройств: %s. Новых: %s" % (allCount, count))
+                        self._command_info("Total devices found: %s. New: %s" % (allCount, count))
                         
                     if is_ok == False:
                         self._command_info(error_text)
@@ -200,7 +200,7 @@ class Main():
                     is_ok = False
                     c_pack = self.send_pack(dev[0], self.PACK_COMMAND, ["SET_CONFIG_FILE", cou, False], False)
                     if c_pack and self.check_lan_error == False:
-                        prev_command = "Начало загрузки..."
+                        prev_command = "Start of upload..."
                         self._command_info(prev_command)
                         for i in range(cou):
                             t = i * bts
@@ -209,8 +209,8 @@ class Main():
                             if c_pack != False and self.check_lan_error or (i == cou - 1):
                                 is_ok = True
                                 if i != cou - 1:
-                                    #Значит не долили файл
-                                    self._command_info("ВНИМАНИЕ: Загрузка прервана");
+                                    # It means the file wasn’t fully uploaded.
+                                    self._command_info("WARNING: Upload interrupted.");
                                 break
                             else:
                                 new_command = self._gen_text_progress(i, cou)
@@ -228,7 +228,7 @@ class Main():
                 self.check_lan_error = False
             elif command == "REBOOT_CONTROLLERS":
                 self.serialPort.timeout = 1
-                self._command_info("Запрос перезагрузки контроллера '%s'..." % dev[1])
+                self._command_info("Controller reboot request. '%s'..." % dev[1])
                 if self.send_pack(dev[0], self.PACK_COMMAND, ["REBOOT_CONTROLLER", ""]):
                     self._command_info("OK")
                 else:
@@ -238,7 +238,7 @@ class Main():
                 pass
                 
         self.db.set_property('RS485_COMMAND', '')
-        self._command_info("Готово.")
+        self._command_info("Done.")
         time.sleep(2)
         self._command_info("TERMINAL EXIT")
 
@@ -266,33 +266,33 @@ class Main():
     def run(self):
         serialPort = self.serialPort        
         while True:
-            # Синхронизируем переменные между сервером и контроллерами
+            # We synchronize variables between the server and the controllers.
             SYNC_STATE = self.db.get_property('SYNC_STATE')
 
             stateChange = SYNC_STATE != self.SYNC_STATE
             if SYNC_STATE == "RUN":
                 if stateChange:
-                    print("Синхронизация запущена")
+                    print("Synchronization started")
                 try:
                     self._sync_variables()
                 except:
                     pass
             else:
                 if stateChange:
-                    print("Синхронизация остановлена")
+                    print("Synchronization stopped")
                 time.sleep(0.1)
 
             self.SYNC_STATE = SYNC_STATE
 
-            # Рассылаем системные комманды, если требуется
+            # We send system commands if required.
             self._send_commands()
 
 print(
 "=============================================================================\n"
-"                  МОДУЛЬ ВЗАИМОДЕЙСТВИЯ ПО ШИНЕ RS485 v0.1\n"
+"                    RS485 Bus Interaction Module. v0.1\n"
 "\n"
-" Порт: %s \n"
-" Скорость: %s \n"
+" Port: %s \n"
+" Baud Rate: %s \n"
 "=============================================================================\n"
 % (Main.SERIAL_PORT, Main.SERIAL_SPEED)
 )

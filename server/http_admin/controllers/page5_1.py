@@ -63,7 +63,7 @@ class Page5_1(BaseForm):
 
     def query(self, query_type):
         if query_type == "append_panel":
-            self.db.IUD("insert into web_stat_panels (NAME) values ('%s')" % ("New Panel"))
+            self.db.IUD("insert into web_stat_panels (NAME, ORDER_NUM, TYP) values ('%s', 0, 1)" % ("New Panel"))
             self.db.commit()
             return self._create_panel(str(self.db.lastID()), "New Panel", "200")
         elif query_type == "del_panel":

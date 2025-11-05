@@ -35,7 +35,7 @@ class VarEditDialog(BaseForm):
         self.add_widget(ListField("VAR_CONTROLLER", 0, 1, CONTROLLER_ID, self.db.select("select ID, NAME from core_controllers order by NAME")))
         self.add_widget(ListField("TYPE_LIST", 0, 0, ROM, [["ow"], ["pyb"], ["variable"]]))
         self.add_widget(ListField("OW_LIST", 0, 1, OW_ID, self._load_ow_devs(CONTROLLER_ID)))
-        self.add_widget(ListField("READ_ONLY_LIST", 0, 1, DIRECTION, [(0, "ДА"), (1, "НЕТ")]))
+        self.add_widget(ListField("READ_ONLY_LIST", 0, 1, DIRECTION, [(0, "YES"), (1, "NO")]))
         self.add_widget(TextField("NAME", NAME))
         self.add_widget(TextField("COMM", COMM))
         self.add_widget(TextField("VALUE", VALUE))

@@ -29,12 +29,12 @@ class Page6(BaseForm):
         fields = self.SCHEDULER_LIST.func_fields
         t_list = ["Every Day", "Every Week", "Every Moonth", "Every Year"]
         typ = row[fields.index("INTERVAL_TYPE")]
-        res = "%s в: <b>%s</b>" % (t_list[typ], str(row[fields.index("INTERVAL_TIME_OF_DAY")], "utf-8"))
+        res = "%s at: <b>%s</b>" % (t_list[typ], str(row[fields.index("INTERVAL_TIME_OF_DAY")], "utf-8"))
 
         if typ == 0:
             pass
         elif typ in [1, 2, 3]:
-            res += " день: <b>%s</b>" % str(row[fields.index("INTERVAL_DAY_OF_TYPE")], "utf-8")
+            res += " day: <b>%s</b>" % str(row[fields.index("INTERVAL_DAY_OF_TYPE")], "utf-8")
         
         return res
 

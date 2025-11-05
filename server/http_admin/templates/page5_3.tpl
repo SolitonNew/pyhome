@@ -16,7 +16,7 @@
 <tr style="position:relative;">
     <td style="position:relative;">
         <div class="toolbar">
-            <button onClick="refresh_stat();">Обновить</button>
+            <button onClick="refresh_stat();">Refresh</button>
         </div>
     </td>
 </tr>

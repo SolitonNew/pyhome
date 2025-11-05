@@ -18,7 +18,7 @@
     <td>
         <div class="toolbar">
             <button onClick="scheduler_settings(-1);">Create a New Record...</button>
-            <button onClick="if (_SCHEDULER_LIST_selected_key) scheduler_settings(_SCHEDULER_LIST_selected_key);">Proprties of the Selected Record...</button>
+            <button onClick="if (_SCHEDULER_LIST_selected_key) scheduler_settings(_SCHEDULER_LIST_selected_key);">Properties of the Selected Record...</button>
         </div>
     </td>
 </tr>

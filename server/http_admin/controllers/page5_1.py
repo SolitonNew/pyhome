@@ -96,14 +96,12 @@ class Page5_1(BaseForm):
         def min_x_val(key):
             for v in min_max_vals:
                 if v[0] == key:
-                    #print(v[1])
                     return v[1]
             return min_x
 
         def max_x_val(key):
             for v in min_max_vals:
                 if v[0] == key:
-                    #print(v[2])
                     return v[2]
             return max_x
         
@@ -137,7 +135,6 @@ class Page5_1(BaseForm):
                 i = series.index(row[2])
                 res[i] += [row]
             except Exception as e:
-                #print("{}".format(e.args))
                 pass
         return res
     """
@@ -239,8 +236,7 @@ class Page5_1(BaseForm):
         max_y = -9999
         min_y = 9999
 
-        # Делаем полную выборку данных. Выкидываем подозрительные точки и
-        # собираем статистику.
+        # We perform a full data selection, discard suspicious points, and collect statistics.
         prev_vals = [-9999] * 4
         chart_data = [[], [], [], []]
         
@@ -253,16 +249,17 @@ class Page5_1(BaseForm):
         ma_x = min_x_q
         tt = -100
         
-        for row in self.db.select("select UNIX_TIMESTAMP(CHANGE_DATE) D, MIN(VALUE) + (MAX(VALUE) - MIN(VALUE)) VALUE, VARIABLE_ID "
+        for row in self.db.select("select ROUND(UNIX_TIMESTAMP(CHANGE_DATE) / %s) D, MIN(VALUE) + (MAX(VALUE) - MIN(VALUE)) VALUE, VARIABLE_ID "
                                   "  from core_variable_changes "
                                   " where VARIABLE_ID in (%s) "
                                   "   and CHANGE_DATE >= FROM_UNIXTIME(%s) "
                                   "   and CHANGE_DATE <= FROM_UNIXTIME(%s) "
-                                  " group by 3, ROUND(UNIX_TIMESTAMP(CHANGE_DATE) / %s)"
-                                  " order by 3, 1 " % (var_ids, min_x_q, max_x_q, zoom_step)):
+                                  " group by 3, 1 "
+                                  " order by 3, 1 " % (zoom_step, var_ids, min_x_q, max_x_q)):
+            row_x = float(row[0]) * zoom_step       
             ind = series.index(row[2])
-            chart_data[ind] += [row]
-            if row[0] > min_x and row[0] < max_x:
+            chart_data[ind] += [[row_x, row[1], row[2]]]
+            if row_x > min_x and row_x < max_x:
                 max_y = max(max_y, row[1])
                 min_y = min(min_y, row[1])
 
@@ -276,66 +273,14 @@ class Page5_1(BaseForm):
                 ma_x = min_x_q
                 tt = row[2]
 
-            if row[0] < mi_x:
-                mi_x = row[0]
-            if row[0] > ma_x:
-                ma_x = row[0]            
+            if row_x < mi_x:
+                mi_x = row_x
+            if row_x > ma_x:
+                ma_x = row_x
 
         if tt != -1:
             v = [tt, mi_x, ma_x]
             x_min_max_values += [v]
-
-        #print(x_min_max_values)
-        #print(series)
-        
-        """
-        for row in self.db.select("select UNIX_TIMESTAMP(CHANGE_DATE) D, VALUE, VARIABLE_ID, ID "
-                                  "  from core_variable_changes "
-                                  " where VARIABLE_ID in (" + var_ids + ") "
-                                  "   and CHANGE_DATE >= FROM_UNIXTIME(%s) "
-                                  "   and CHANGE_DATE <= FROM_UNIXTIME(%s) "
-                                  "order by CHANGE_DATE " % (min_x_q, max_x_q)):
-        """
-        """
-        try:
-            self.db.IUD("set @rn := 0")
-
-            sql = ("select UNIX_TIMESTAMP(CHANGE_DATE) D, VALUE, VARIABLE_ID, ID "
-                   "  from core_variable_changes "
-                   " where VARIABLE_ID in (" + var_ids + ") "
-                   "   and CHANGE_DATE >= FROM_UNIXTIME(%s) "
-                   "   and CHANGE_DATE <= FROM_UNIXTIME(%s) "
-                   "order by CHANGE_DATE " % (min_x_q, max_x_q))
-
-            for c in self.db.select("select count(*) c "
-                                    "  from core_variable_changes "
-                                    " where VARIABLE_ID in (" + var_ids + ") "
-                                    "   and CHANGE_DATE >= FROM_UNIXTIME(%s) "
-                                    "   and CHANGE_DATE <= FROM_UNIXTIME(%s) " % (min_x_q, max_x_q)):
-                cou = c[0]
-                ccc = 1000 * 4
-                if cou > ccc:
-                    sql = ("select UNIX_TIMESTAMP(CHANGE_DATE) D, VALUE, VARIABLE_ID, ID, @rn := @rn + 1 rownum "
-                           "  from core_variable_changes "
-                           " where VARIABLE_ID in (" + var_ids + ") "
-                           "   and CHANGE_DATE >= FROM_UNIXTIME(%s) "
-                           "   and CHANGE_DATE <= FROM_UNIXTIME(%s) "
-                           "having mod(rownum, %s) = 0 "
-                           "order by VARIABLE_ID, CHANGE_DATE " % (min_x_q, max_x_q, math.ceil(cou / ccc)))
-            
-            for row in self.db.select(sql):
-                ind = series.index(row[2])
-                prev_vals[ind] = row[1]
-
-                if abs(prev_vals[ind] - row[1]) < 10:
-                    chart_data[ind] += [row]
-                    if row[0] > min_x and row[0] < max_x:
-                        max_y = max(max_y, row[1])
-                        min_y = min(min_y, row[1])
-                prev_vals[ind] = row[1]
-        except:
-            pass
-        """
         
         if min_y is None or max_y is None or min_y == 9999 or max_y == -9999 or min_y == max_y:
             max_y = 1
@@ -350,7 +295,7 @@ class Page5_1(BaseForm):
             elif min_y > 0 and max_y > 0:
                 min_y = 0
 
-        # Определяем цвета
+        # We determine the colors.
         colors = [[1, 0, 0], [0, 0.65, 0.31], [0, 0, 1], [1, 0, 1]]
         
         off_y = (max_y - min_y) / 10        
@@ -371,13 +316,12 @@ class Page5_1(BaseForm):
         width -= right
         ctx.set_line_width(1)
 
-        # Рисуем сетку        
-
+        # We draw the grid.
         ctx.set_font_size(12)
         try:
             b_w, b_h = ctx.text_extents("00-00-0000")[2:4]
             
-            # Метки на оси Y
+            # Labels on the Y-axis.
             count = math.ceil(max_y) - math.ceil(min_y)
             space_count = math.ceil(count / ((height - bottom) / (b_h * 1.5)))
             sc = 0
@@ -396,13 +340,12 @@ class Page5_1(BaseForm):
                     sc = space_count
                 sc -= 1                    
 
-            # Метки на оси Х
-
+            # Labels on the X-axis.
             x_step = 3600
             if (interval == "-6 hour" or
                 interval == "-12 hour" or
                 interval == "-1 day"):
-                # Дополнительно метки часов
+                # Additional hour labels
                 x_step = 3600
                 for i in range(math.ceil(min_x / x_step), math.ceil(max_x / x_step)):
                     x = (i * x_step - min_x) / kx + left
@@ -456,7 +399,7 @@ class Page5_1(BaseForm):
         except Exception as e:
             pass
 
-        # Рисуем верхний и правый бордер
+        # We draw the top and right border
 
         ctx.set_source_rgb(*color_border)
         ctx.move_to(left, 0)
@@ -464,7 +407,7 @@ class Page5_1(BaseForm):
         ctx.line_to(width, height - bottom)        
         ctx.stroke()
 
-        #Рисуем сами графики
+        # We draw the graphs themselves.
 
         ctx.rectangle(left, 0, width - left, height)
         ctx.clip()        
@@ -473,21 +416,12 @@ class Page5_1(BaseForm):
         currVarID = -1
         prevX = -1;
 
-        if typ == 0: # Линейная
+        if typ == 0: # Lines
             for ind in range(4):
-                """
-                if len(chart_data[ind]) > 0:
-                    for i in range(len(chart_data[ind]) - 1):
-                        chart_data[ind][i] = list(chart_data[ind][i])
-                        r1 = chart_data[ind][i]
-                        r2 = chart_data[ind][i + 1]
-                        chart_data[ind][i][0] += (r2[0] - r1[0]) / 2
-                        chart_data[ind][i][1] += (r2[1] - r1[1]) / 2
-                """
                 ctx.set_source_rgb(*colors[ind])
                 is_first = True
                 for row in chart_data[ind]:
-                    x = (row[0] - min_x) / kx + left
+                    x = (float(row[0]) - min_x) / kx + left
                     y = height - bottom - (row[1] - min_y) / ky
                     
                     if is_first:
@@ -502,7 +436,7 @@ class Page5_1(BaseForm):
                     is_first = False
                 ctx.stroke()
             
-        elif typ == 1: # Точечная
+        elif typ == 1: # Points
             for ind in range(4):
                 if chart_data[ind]:
                     ctx.set_source_rgb(*colors[ind])
@@ -511,7 +445,7 @@ class Page5_1(BaseForm):
                         y = height - bottom - (row[1] - min_y) / ky                
                         ctx.rectangle(x - 3, y - 3, 6, 6)
                     ctx.fill()
-        elif typ == 2: # Столбчатая
+        elif typ == 2: # Bars
             cy = height - bottom - (-min_y) / ky
             for ind in range(4):
                 for row in chart_data[ind]:
@@ -526,8 +460,7 @@ class Page5_1(BaseForm):
 
                     currVarID = row[2]
                 ctx.fill()
-        else: # Линейчастая
-            #one_vals = self._get_one_val(series, min_x_q, max_x_q)
+        else: # Steps
             one_vals = self._get_one_val(series, x_min_max_values, min_x_q, max_x_q)
             for ind in range(4):
                 if series[ind]:
@@ -569,7 +502,7 @@ class Page5_1(BaseForm):
 
                     prevX, prevY = x, y
                         
-        # Рисуем оси
+        # Paint axis
 
         ctx.set_source_rgb(0, 0, 0)
         ctx.move_to(left, 0)

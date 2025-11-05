@@ -28,7 +28,7 @@ class StatPanelDialog(BaseForm):
 
         self.add_widget(TextField("NAME", NAME))
         self.add_widget(TextField("KEY", KEY))
-        self.add_widget(ListField("TYPS", 0, 1, TYP, [(0, "Linear"), (1, "Points"), (2, "Bars"), (3, "Step")]))
+        self.add_widget(ListField("TYPS", 0, 1, TYP, [(0, "Lines"), (1, "Points"), (2, "Bars"), (3, "Steps")]))
         self.add_widget(ListField("SERIES_1", 0, 1, SERIES_1, var_list))
         self.add_widget(ListField("SERIES_2", 0, 1, SERIES_2, var_list))
         self.add_widget(ListField("SERIES_3", 0, 1, SERIES_3, var_list))

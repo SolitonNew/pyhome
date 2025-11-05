@@ -33,7 +33,7 @@
         var label = $('#stat_refresh_label');
 
         if (r == '-6 hour') {
-            label.html('Автообновление каждые 30 сек.');
+            label.html('Autorefresh every 30 seconds.');
         } else {
             label.html('');
         }
@@ -170,8 +170,8 @@
            @LABEL@ 
         </td>
         <td align="right">
-            <button onClick="stat_panel_@ID@_dialog();">Свойства панели...</button>
-            <button onClick="del_stat_panel(@ID@);">Удалить</button>
+            <button onClick="stat_panel_@ID@_dialog();">Properties of the Panel...</button>
+            <button onClick="del_stat_panel(@ID@);">Delete</button>
         </td>
     </tr>
     <tr>

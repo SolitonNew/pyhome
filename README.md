@@ -51,3 +51,6 @@ nano /etc/rc.local
 ```
 /usr/bin/screen -dmS pyhome /var/www/pyhome/server/start.sh
 ```
+```
+echo 'vm.swappiness=1' | sudo tee -a /etc/sysctl.conf
+```

@@ -1,7 +1,7 @@
 <script type="text/javascript">
 
     $('#popup_window_border').width(450);
-    $('#popup_window_title').html("Свойства переменной");
+    $('#popup_window_title').html("Properties of the Varible");
 
     function variable_settings_change() {
         if ($('#VAR_TYPE').val() == 'variable' || $('#VAR_READ_ONLY').val() == '1')
@@ -18,7 +18,7 @@
     }
 
     function del_var() {
-        alert('CONFIRM: Удалить переменную и всю историю по ней?', 'yes,no', function (res) {
+        alert('CONFIRM: Are You Sure?', 'yes,no', function (res) {
             if (res == 'yes') {
                 $('#FORM_QUERY').val('delete');
                 $('#VARIABLE_SETTINGS').submit();
@@ -82,7 +82,7 @@
         </TD>
     </TR>
     <TR>
-        <TD width="100">Контроллер:</TD>
+        <TD width="100">Controller:</TD>
         <TD>
             <select id="VAR_CONTROLLER" name="VAR_CONTROLLER" onChange="reload_ow_devs(); variable_settings_change()">
                 {{ widget('VAR_CONTROLLER') }}
@@ -90,7 +90,7 @@
         </TD>
     </TR>
     <TR>
-        <TD>Тип:</TD>
+        <TD>Type:</TD>
         <TD>
             <select id="VAR_TYPE" name="VAR_TYPE" onChange="variable_settings_change()">
                 {{ widget('TYPE_LIST') }}
@@ -98,7 +98,7 @@
         </TD>
     </TR>
     <TR id="ow_row">
-        <TD valign="top">OW устройство:</TD>
+        <TD valign="top">1-Wire Device:</TD>
         <TD>
             <input id="VAR_OW_KEY" name="VAR_OW_KEY" type="hidden" value="{{ widget('VAR_OW_KEY') }}">
             <select id="VAR_OW" name="VAR_OW" style="width:100%;" onChange="reload_channels();save_ow_key();">
@@ -107,7 +107,7 @@
         </TD>
     </TR>
     <TR>
-        <TD>Только чтение:</TD>
+        <TD>Readonly:</TD>
         <TD>
             <select id="VAR_READ_ONLY" name="VAR_READ_ONLY" onChange="variable_settings_change()">
                 {{ widget('READ_ONLY_LIST') }}
@@ -115,21 +115,21 @@
         </TD>
     </TR>
     <TR>
-        <TD>Название:</TD>
+        <TD>Name:</TD>
         <TD><input id="VAR_NAME" name="VAR_NAME" type="text" value="{{ widget('NAME') }}" onChange="variable_settings_change()" style="width:90%;"/></TD>
     </TR>
     <TR>
-        <TD valign="top">Описание:</TD>
+        <TD valign="top">Title:</TD>
         <TD>
             <textarea id="VAR_COMM" name="VAR_COMM" style="width:100%;height:60px;">{{ widget('COMM') }}</textarea>
         </TD>
     </TR>
     <TR id="value_row">
-        <TD>Значение:</TD>
+        <TD>Value:</TD>
         <TD><input id="VAR_VALUE" name="VAR_VALUE" type="text" value="{{ widget('VALUE') }}"/></TD>
     </TR>
     <TR id="channel_row">
-        <TD>Канал:</TD>
+        <TD>Channel:</TD>
         <TD>
             <input id="CHANNEL_KEY" type="hidden" value="{{ widget('CHANNEL_KEY') }}"/>
             <select id="VAR_CHANNEL" name="VAR_CHANNEL" style="width:80px">
@@ -138,7 +138,7 @@
         </TD>
     </TR>
     <TR>
-        <TD>Группа:</TD>
+        <TD>Group:</TD>
         <TD>
             <select id="VAR_GROUP" name="VAR_GROUP" style="width:100%">
                 {{ widget('VAR_GROUP_TREE') }}
@@ -146,7 +146,7 @@
         </TD>
     </TR>
     <TR>
-        <TD>Устройство:</TD>
+        <TD>Device:</TD>
         <TD>
             <select id="VAR_CONTROL" name="VAR_CONTROL">
                 {{ widget('VAR_CONTROL') }}
@@ -155,11 +155,11 @@
     </TR>    
     <TR>
         <TD align="left" valign="bottom" height="60">
-            <button id="del_button" type="button" onClick="del_var();">Удалить</button>
+            <button id="del_button" type="button" onClick="del_var();">Delete</button>
         </TD>    
         <TD align="right" valign="bottom" height="60">
-            <button type="submit">Готово</button>
-            <button type="button" onClick="hide_window()">Закрыть</button>
+            <button type="submit">Save</button>
+            <button type="button" onClick="hide_window()">Cancel</button>
         </TD>
     </TR>
     </table>

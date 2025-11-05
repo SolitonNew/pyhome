@@ -1,0 +1,34 @@
+services:
+  app:
+    build:
+      context: .
+    container_name: pyhome_app
+    volumes:
+      - ./:/var/www/pyhome
+    ports:
+      - 8083:8083
+    networks:
+      - pyhome
+  db:
+    image: mysql:5.7.42
+    container_name: pyhome_db
+    environment:
+      MYSQL_DATABASE: wisehouse
+      MYSQL_USER: wisehouse
+      MYSQL_PASSWORD: wisehousepass
+      MYSQL_ROOT_PASSWORD: masterkey
+    volumes:
+      - db_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - pyhome
+
+networks:
+  pyhome:
+
+
+volumes:
+  db_data:
+
+

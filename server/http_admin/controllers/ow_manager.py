@@ -15,10 +15,10 @@ class OWManager(BaseForm):
 
         grid = Grid("OW_MANAGER_GRID", "ID", variableSql)
         grid.add_column("ID", "ID", 50, visible=False)
-        grid.add_column("Контроллер", "NAME", 150, sort="asc")
+        grid.add_column("Controller", "NAME", 150, sort="asc")
         grid.add_column("ROM", "ROM", 290, sort="asc", func=self._rom_to_hex)
-        grid.add_column("Каналы", "CHANNELS", 100, sort="on")
-        grid.add_column("Связанные переменные", "F1", 190, func=self._vars)        
+        grid.add_column("Channels", "CHANNELS", 100, sort="on")
+        grid.add_column("Joined Variables", "F1", 190, func=self._vars)        
         self.add_widget(grid)        
 
     def _rom_to_hex(self, index, row):

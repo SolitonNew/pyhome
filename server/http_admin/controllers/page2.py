@@ -17,7 +17,7 @@ class Page2(BaseForm):
 
     def query(self, query_type):
         if query_type == "create_script":
-            label = "Новый скрипт"
+            label = "New Script"
             self.db.IUD("insert into core_scripts (COMM) values ('%s')" % (label))
             self.db.commit()
             return "%s;%s;" % (label, self.db.lastID())

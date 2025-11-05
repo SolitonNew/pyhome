@@ -48,7 +48,7 @@ class Page5_1(BaseForm):
             elif row[0] == sers[3]:
                 lb4 = lab
 
-        f = open("templates/stat_panel.tpl", "r")
+        f = open("/var/www/pyhome/server/http_admin/templates/stat_panel.tpl", "r")
         tmpl = f.read()
         f.close()
         
@@ -63,9 +63,9 @@ class Page5_1(BaseForm):
 
     def query(self, query_type):
         if query_type == "append_panel":
-            self.db.IUD("insert into web_stat_panels (NAME) values ('%s')" % ("Новая панель"))
+            self.db.IUD("insert into web_stat_panels (NAME) values ('%s')" % ("New Panel"))
             self.db.commit()
-            return self._create_panel(str(self.db.lastID()), "Новая панель", "200")
+            return self._create_panel(str(self.db.lastID()), "New Panel", "200")
         elif query_type == "del_panel":
             self.db.IUD("delete from web_stat_panels where ID = %s" % (self.param("key")))
             self.db.commit()

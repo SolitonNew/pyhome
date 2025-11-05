@@ -49,7 +49,7 @@ class VarEditDialog(BaseForm):
                               "  from core_ow_devs "
                               " where CONTROLLER_ID = %s "
                               "order by 2, 3, 4, 5, 6, 7, 8" % controller_id)
-        ow_list = [[-1, "-- нет --"]]
+        ow_list = [[-1, "-- none --"]]
         for row in data:
             u = self.db.select("select count(*) c from core_variables where OW_ID = %s" % row[0])
             rom = []

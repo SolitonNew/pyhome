@@ -64,18 +64,18 @@
     <td style="position:relative;">
         <div class="toolbar">&nbsp;&nbsp;
             <select id="stat_panel_range" onChange="refresh_stat_panels()">
-                <option value="-6 hour">6 часов</option>
-                <option value="-12 hour">12 часов</option>
-                <option selected value="-1 day">1 день</option>
-                <option value="-3 day">3 дня</option>
-                <option value="-7 day">1 неделя</option>
-                <option value="-14 day">2 недели</option>
-                <option value="-30 day">1 месяц</option>
-                <option value="-90 day">3 месяца</option>
-                <option value="-180 day">6 месяцев</option>
-                <option value="-360 day">12 месяцев</option>
+                <option value="-6 hour">6 hours</option>
+                <option value="-12 hour">12 hours</option>
+                <option selected value="-1 day">1 day</option>
+                <option value="-3 day">3 days</option>
+                <option value="-7 day">1 week</option>
+                <option value="-14 day">2 weeks</option>
+                <option value="-30 day">1 month</option>
+                <option value="-90 day">3 months</option>
+                <option value="-180 day">6 months</option>
+                <option value="-360 day">12 months</option>
             </select>
-            <button onClick="refresh_stat_panels();">Обновить</button>
+            <button onClick="refresh_stat_panels();">Refresh</button>
             <span id="stat_refresh_label"></span>
         </div>
     </td>
@@ -87,7 +87,7 @@
             {{ widget('STATISTIC_PANELS') }}
             </div>
             <p align="center" style="height:50px;">
-                <button onClick="append_stat_panel();">Добавить новую панель</button>
+                <button onClick="append_stat_panel();">Add Panel</button>
             </p>
         </div>
     </td>

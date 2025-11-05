@@ -21,11 +21,11 @@ function show_window(url, back) {
     if (!back)
         prev_window_url = url;
     can_back = back;
-    
+
     $('#popup_window_content').html('');
-    $.ajax({url:url}).done(function (data) {
+    $.ajax({ url: url }).done(function (data) {
         $('#popup_window_content').html(data);
-   	$('#popup_window').fadeIn(400);
+        $('#popup_window').fadeIn(400);
     });
 }
 
@@ -43,19 +43,19 @@ var alert_handler = false;
 function alert(data, btns, handler) {
     alert_handler = handler;
 
-    var alert_title = 'Информация';
+    var alert_title = 'Information';
     if (data.indexOf('INFO: ') > -1) {
-        alert_title = 'Информация';
-	data = data.replace('INFO: ', '');
+        alert_title = 'Information';
+        data = data.replace('INFO: ', '');
     } else if (data.indexOf('CONFIRM: ') > -1) {
-        alert_title = 'Подтверждение';
-   	data = data.replace('CONFIRM: ', '');
+        alert_title = 'Confirmation';
+        data = data.replace('CONFIRM: ', '');
     } else if (data.indexOf('WARNING: ') > -1) {
-        alert_title = 'Внимание';
-	data = data.replace('WARNING: ', '');
+        alert_title = 'Warning';
+        data = data.replace('WARNING: ', '');
     } else if (data.indexOf('ERROR: ') > -1) {
-	alert_title = 'Ошибка';
-	data = data.replace('ERROR: ', '');
+        alert_title = 'Error';
+        data = data.replace('ERROR: ', '');
     }
 
     $('#popup_alert_title').html(alert_title);
@@ -66,25 +66,25 @@ function alert(data, btns, handler) {
     if (btns.indexOf('ok') > -1)
         $('#alert_ok').css('display', 'inline');
     else
-	$('#alert_ok').css('display', 'none');
+        $('#alert_ok').css('display', 'none');
 
     if (btns.indexOf('yes') > -1)
-	$('#alert_yes').css('display', 'inline');
+        $('#alert_yes').css('display', 'inline');
     else
-	$('#alert_yes').css('display', 'none');
+        $('#alert_yes').css('display', 'none');
 
     if (btns.indexOf('no') > -1)
         $('#alert_no').css('display', 'inline');
     else
-	$('#alert_no').css('display', 'none');
+        $('#alert_no').css('display', 'none');
 
     if (btns.indexOf('cancel') > -1)
-	$('#alert_cancel').css('display', 'inline');
+        $('#alert_cancel').css('display', 'inline');
     else
-	$('#alert_cancel').css('display', 'none');
-    
+        $('#alert_cancel').css('display', 'none');
+
     $('#popup_alert').fadeIn(400);
-} 
+}
 
 function alert_click(key) {
     $('#popup_alert').fadeOut(400);
@@ -106,44 +106,44 @@ function stop_mouse_events(e) {
 
 function start_splitter_drag(e) {
     var border = 8;
-    splitterObj = e.target;        
-    off = $(splitterObj).offset();    
+    splitterObj = e.target;
+    off = $(splitterObj).offset();
 
     if ($(splitterObj).hasClass('splitter_left')) {
         splitterP = e.pageX;
         splitterSize = $(splitterObj).width();
         if (splitterP < off.left + splitterSize - border) {
-            return ;
+            return;
         }
     } else
-    if ($(splitterObj).hasClass('splitter_right')) {
-        splitterP = e.pageX;
-        splitterSize = $(splitterObj).width();
-        if (splitterP > off.left + border) {            
-            return ;
-        }
-    } else
-    if ($(splitterObj).hasClass('splitter_top')) {
-        splitterP = e.pageY;
-        splitterSize = $(splitterObj).height();
-        if (splitterP < off.top + splitterSize - border) {
-            return ;
-        }
-    } else
-    if ($(splitterObj).hasClass('splitter_bottom')) {
-        splitterP = e.pageY;
-        splitterSize = $(splitterObj).height();
-        if (splitterP > off.top + border) {
-            return ;
-        }
-    } else return ;
+        if ($(splitterObj).hasClass('splitter_right')) {
+            splitterP = e.pageX;
+            splitterSize = $(splitterObj).width();
+            if (splitterP > off.left + border) {
+                return;
+            }
+        } else
+            if ($(splitterObj).hasClass('splitter_top')) {
+                splitterP = e.pageY;
+                splitterSize = $(splitterObj).height();
+                if (splitterP < off.top + splitterSize - border) {
+                    return;
+                }
+            } else
+                if ($(splitterObj).hasClass('splitter_bottom')) {
+                    splitterP = e.pageY;
+                    splitterSize = $(splitterObj).height();
+                    if (splitterP > off.top + border) {
+                        return;
+                    }
+                } else return;
 
-    stop_mouse_events(e);    
+    stop_mouse_events(e);
 
     $('#splitter_bg').css('cursor', $(splitterObj).css('cursor'));
     $('#splitter_bg').mousemove(move_splitter_drag);
-    $('#splitter_bg').mouseup(stop_splitter_drag);    
-    $('#splitter_bg').css('display', 'block');    
+    $('#splitter_bg').mouseup(stop_splitter_drag);
+    $('#splitter_bg').css('display', 'block');
 }
 
 function move_splitter_drag(e) {
@@ -153,21 +153,21 @@ function move_splitter_drag(e) {
         if (w < minSize) w = minSize;
         $(splitterObj).width(w);
     } else
-    if ($(splitterObj).hasClass('splitter_right')) {
-        var w = splitterSize + (splitterP - e.pageX);
-        if (w < minSize) w = minSize;
-        $(splitterObj).width(w);
-    } else
-    if ($(splitterObj).hasClass('splitter_top')) {
-        var w = splitterSize - (splitterP - e.pageY);
-        if (w < minSize) w = minSize;
-        $(splitterObj).height(w);
-    } else
-    if ($(splitterObj).hasClass('splitter_bottom')) {
-        var w = splitterSize + (splitterP - e.pageY);
-        if (w < minSize) w = minSize;
-        $(splitterObj).height(w);
-    }
+        if ($(splitterObj).hasClass('splitter_right')) {
+            var w = splitterSize + (splitterP - e.pageX);
+            if (w < minSize) w = minSize;
+            $(splitterObj).width(w);
+        } else
+            if ($(splitterObj).hasClass('splitter_top')) {
+                var w = splitterSize - (splitterP - e.pageY);
+                if (w < minSize) w = minSize;
+                $(splitterObj).height(w);
+            } else
+                if ($(splitterObj).hasClass('splitter_bottom')) {
+                    var w = splitterSize + (splitterP - e.pageY);
+                    if (w < minSize) w = minSize;
+                    $(splitterObj).height(w);
+                }
 
     //stop_mouse_events(e);
     return false;
@@ -177,10 +177,10 @@ function stop_splitter_drag(sender) {
     var onAfterDrag = $(splitterObj).attr('onAfterDrag');
     $('#splitter_bg').css('display', 'none');
     if (onAfterDrag) {
-        eval(onAfterDrag);        
+        eval(onAfterDrag);
     }
     window.dispatchEvent(new Event('layoutResize'));
-        
+
     //stop_mouse_events(e);
     return false;
 }
@@ -188,7 +188,7 @@ function stop_splitter_drag(sender) {
 // -------------------------------------------------
 
 function showToolTip(event, text) {
-    var o = $('#tool_tip_container');    
+    var o = $('#tool_tip_container');
     o.html(text);
     o.css('left', event.clientX + 'px');
     o.css('top', (event.clientY + 20) + 'px');

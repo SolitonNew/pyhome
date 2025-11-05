@@ -23,10 +23,10 @@ class SchedulerEditDialog(BaseForm):
         self.add_widget(TextField("KEY", KEY))
         self.add_widget(TextField("COMM", COMM))
         self.add_widget(TextField("ACTION", ACTION))
-        self.add_widget(ListField("INTERVAL_TYPE_LIST", 0, 1, INTERVAL_TYPE, [[0, "Каждый день"], [1, "Каждую неделю"], [2, "Каждый месяц"], [3, "Каждый год"]]))
+        self.add_widget(ListField("INTERVAL_TYPE_LIST", 0, 1, INTERVAL_TYPE, [[0, "Every Day"], [1, "Every Week"], [2, "Every Month"], [3, "Every Year"]]))
         self.add_widget(TextField("INTERVAL_TIME_OF_DAY", INTERVAL_TIME_OF_DAY))
         self.add_widget(TextField("INTERVAL_DAY_OF_TYPE", INTERVAL_DAY_OF_TYPE))
-        self.add_widget(ListField("SCHEDULER_ENABLE_LIST", 0, 1, SCHEDULER_ENABLE, [[1, "Выполнять"], [0, "Не выполнять"]]))
+        self.add_widget(ListField("SCHEDULER_ENABLE_LIST", 0, 1, SCHEDULER_ENABLE, [[1, "Execute"], [0, "Do not Execute"]]))
                                                                                                                                 
     def query(self, query_type):
         if query_type == "update":

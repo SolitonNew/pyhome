@@ -312,11 +312,11 @@
                 </td>
                 <td style="position:relative;background-color:#cccccc;" align="right" valign="middle">
                     <div id="sync_check" style="display:none;padding:5px;width:170px;background-color:#00ff00;text-align:center;">
-                        ЕСТЬ ИЗМЕНЕНИЯ В БД
+                        DATABASE CHANGED
                     </div>
-                    <button onClick="show_window('ow_manager')">Менеджер OneWire...</button>
-                    <button onClick="show_window('system_dialog')">Системные утилиты...</button>
-                    <button onClick="log_out();" style="margin-right:5px;">Выход</button>
+                    <button onClick="show_window('ow_manager')">1-Wire Manager...</button>
+                    <button onClick="show_window('system_dialog')">System Utilities...</button>
+                    <button onClick="log_out();" style="margin-right:5px;">Exit</button>
                 </td>                
             </tr>
             <tr style="position:relative;height:100%;">
@@ -379,10 +379,10 @@
                             </tr>
                             <tr>
                                 <td height="40" align="center" valign="bottom">
-                                    <button id="alert_ok" type="button" onClick="alert_click('ok');">Ок</button>
-                                    <button id="alert_yes" type="button" onClick="alert_click('yes');">Да</button>
-                                    <button id="alert_no" type="button" onClick="alert_click('no');">Нет</button>
-                                    <button id="alert_cancel" type="button" onClick="alert_click('cancel');">Отмена</button>
+                                    <button id="alert_ok" type="button" onClick="alert_click('ok');">Ok</button>
+                                    <button id="alert_yes" type="button" onClick="alert_click('yes');">Yes</button>
+                                    <button id="alert_no" type="button" onClick="alert_click('no');">No</button>
+                                    <button id="alert_cancel" type="button" onClick="alert_click('cancel');">Cancel</button>
                                 </td>
                             </tr>
                             </table>

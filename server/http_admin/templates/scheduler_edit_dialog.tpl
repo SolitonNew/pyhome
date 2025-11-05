@@ -1,7 +1,7 @@
 <script type="text/javascript">
 
     $('#popup_window_border').width(450);
-    $('#popup_window_title').html("Свойства записи расписания");
+    $('#popup_window_title').html("Properties of the Schedule Record ");
 
     function scheduler_settings_change() {        
         switch ($('#SCHEDULER_INTERVAL_TYPE').val()) {
@@ -10,21 +10,21 @@
                 break;
             case '1':
                 $('#d_of_t').css('display', 'table-row');
-                $('#d_of_t_type').html('недели');
+                $('#d_of_t_type').html('weeks');
                 break;
             case '2':
                 $('#d_of_t').css('display', 'table-row');
-                $('#d_of_t_type').html('месяца');
+                $('#d_of_t_type').html('moonth');
                 break;
             case '3':
                 $('#d_of_t').css('display', 'table-row');
-                $('#d_of_t_type').html('года');
+                $('#d_of_t_type').html('years');
                 break;
         }
     }
 
     function del_scheduler() {
-        alert('CONFIRM: Удалить запись в расписании?', 'yes,no', function (res) {
+        alert('CONFIRM: Are You Sure?', 'yes,no', function (res) {
             if (res == 'yes') {
                 $('#FORM_QUERY').val('delete');
                 $('#SCHEDULER_SETTINGS').submit();
@@ -65,14 +65,14 @@
         <TD colspan="2"></TD>
     </TR>
     <TR>
-        <TD valign="top" width="75">Описание:</TD>
+        <TD valign="top" width="75">Description:</TD>
         <TD>
             <textarea id="SCHEDULER_COMM" name="SCHEDULER_COMM" style="width:100%;height:60px;">{{ widget('COMM') }}</textarea>
         </TD>
     </TR>
     <TR>
         <form id="scheduler_command_form" action="scheduler_edit_dialog" method="GET">
-        <TD valign="top">Действие:</TD>
+        <TD valign="top">Action:</TD>
         <TD>
             <table cellpadding="0" cellspacing="0" width="100%">
             <tr>
@@ -87,7 +87,7 @@
                     </select>
                 </td>
                 <td align="right">
-                    <button onClick="test_scheduler();return false;">Тест действия</button>
+                    <button onClick="test_scheduler();return false;">Action Test</button>
                 </td>
             </tr>
             </table>
@@ -103,7 +103,7 @@
         </TD>
     </TR>
     <TR>
-        <TD valign="top">Время дня</TD>
+        <TD valign="top">Time of Day</TD>
         <TD>
             <textarea id="SCHEDULER_INTERVAL_TIME_OF_DAY" name="SCHEDULER_INTERVAL_TIME_OF_DAY" style="width:100%;height:60px;">{{ widget('INTERVAL_TIME_OF_DAY') }}</textarea>
         </TD>
@@ -116,11 +116,11 @@
     </TR>
     <TR>
         <TD align="left" valign="bottom" height="60">
-            <button id="del_button" type="button" onClick="del_scheduler();">Удалить</button>
+            <button id="del_button" type="button" onClick="del_scheduler();">Delete</button>
         </TD>    
         <TD align="right" valign="bottom" height="60">
-            <button type="submit">Готово</button>
-            <button type="button" onClick="hide_window()">Закрыть</button>
+            <button type="submit">Save</button>
+            <button type="button" onClick="hide_window()">Close</button>
         </TD>
     </TR>
     </table>

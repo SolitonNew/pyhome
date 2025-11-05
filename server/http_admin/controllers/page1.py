@@ -21,20 +21,20 @@ class Page1(BaseForm):
         grid = Grid("VARIABLE_LIST", "ID", variableSql)
 
         grid.add_column("ID", "ID", 50, visible=False)
-        grid.add_column("Контроллер", "C_NAME", 150, sort="asc")
-        grid.add_column("Тип", "ROM", 70, sort="on")
-        grid.add_column("Только чтение", "DIRECTION", 60, sort="on", func=self.column_ro_func)
-        grid.add_column("Идентификатор", "NAME", 200, sort="asc")
-        grid.add_column("Описание", "COMM", 200, sort="on")
-        grid.add_column("Устройство", "APP_CONTROL", 100, sort="on", func=self.column_control_func)
-        grid.add_column("Значение", "VALUE", 100, sort="on", func=self.column_val_func)
-        grid.add_column("Канал", "CHANNEL", 100, sort="on")
+        grid.add_column("Controller", "C_NAME", 150, sort="asc")
+        grid.add_column("Type", "ROM", 70, sort="on")
+        grid.add_column("Readonly", "DIRECTION", 60, sort="on", func=self.column_ro_func)
+        grid.add_column("Name", "NAME", 200, sort="asc")
+        grid.add_column("Comment", "COMM", 200, sort="on")
+        grid.add_column("Device", "APP_CONTROL", 100, sort="on", func=self.column_control_func)
+        grid.add_column("Value", "VALUE", 100, sort="on", func=self.column_val_func)
+        grid.add_column("Channel", "CHANNEL", 100, sort="on")
         self.add_widget(grid)
 
         self.controls = [(0, b"--//--")] + self.db.select("select ID, NAME from core_variable_controls order by ID")
 
     def column_ro_func(self, index, row):
-        return ["ДА", "НЕТ"][row[3]]
+        return ["YES", "NO"][row[3]]
 
     def column_control_func(self, index, row):
         try:
@@ -50,10 +50,10 @@ class Page1(BaseForm):
         
         if r_2 == "pyb" and row[3] == 1:
             if row[index]:
-                lab = "ВКЛ."
+                lab = "ON"
                 v = 0
             else:
-                lab = "ВЫКЛ."
+                lab = "OFF"
                 v = 1
 
             click = "$.ajax({url:'page1?FORM_QUERY=set_value&key=%s&value=%s'})" % (row[0], v)

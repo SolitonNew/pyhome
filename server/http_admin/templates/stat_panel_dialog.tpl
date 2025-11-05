@@ -1,6 +1,6 @@
 <script type="text/javascript">
     $('#popup_window_border').width(450);
-    $('#popup_window_title').html("Свойства панели");
+    $('#popup_window_title').html("Properties of the Panel");
 
     $(document).ready(function() {
         $("#STAT_PANEL_DIALOG").ajaxForm(function(data) {
@@ -27,11 +27,11 @@
         <TD colspan="2"></TD>
     </TR>    
     <TR>
-        <TD>Название:</TD>
+        <TD>Title:</TD>
         <TD width="100%"><input id="stat_panel_name" name="NAME" value="{{ widget('NAME') }}"></TD>
     </TR>
     <TR>
-        <TD>Вид:</TD>
+        <TD>Type:</TD>
         <TD>
             <select name="TYP">
                 {{ widget('TYPS') }}
@@ -81,8 +81,8 @@
             
         </TD>    
         <TD align="right" valign="bottom" height="60">
-            <button type="submit">Готово</button>
-            <button type="button" onClick="hide_window()">Закрыть</button>
+            <button type="submit">Save</button>
+            <button type="button" onClick="hide_window()">Cancel</button>
         </TD>
     </TR>
     </table>

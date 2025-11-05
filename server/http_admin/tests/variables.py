@@ -22,7 +22,7 @@ class Variable(object):
 
 def printInput():
     print("-------------------------------------------------------------------")
-    print("* Задействованные переменные и их начальные значения")
+    print("* Involved variables and their initial values")
     print("")
     b = True
     for var in variableList:
@@ -30,11 +30,11 @@ def printInput():
             print("    %s: %s" % (var.name, float(var.startVal)))
             b = False
     if b:
-        print("    переменные не задействованы")
+        print("    No variables are involved")
     print("")
 
 def printChanges():
-    print("* Измененные переменные в результате работы скрипта")
+    print("* Variables modified as a result of the script execution")
     print("")
     b = True
     for var in variableList:
@@ -42,4 +42,4 @@ def printChanges():
             print("    %s: %s" % (var.name, float(var.val)))
             b = False
     if b:
-        print("    переменные не изменялись")
+        print("    No variables are involved")

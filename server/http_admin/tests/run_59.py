@@ -157,7 +157,9 @@ TEMP_TP_OUT = Variable('TEMP_TP_OUT', 19.3)
 TEMP_TP_IN = Variable('TEMP_TP_IN', 19.6)
 MAIN_HEATING = Variable('MAIN_HEATING', 0.0)
 
-if BEDROOM_3_WC_S.value() == 1:
-    BEDROOM_3_WC_R.value(not BEDROOM_3_WC_R.value())
+if WC_2_DOOR.value():
+    pass
+else:
+    pass
 printInput()
 printChanges()

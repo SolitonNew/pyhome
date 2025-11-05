@@ -22,9 +22,9 @@ class AttachEventDialog(BaseForm):
                 self.db.IUD("delete from core_variable_events where SCRIPT_ID = %s" % key)
                 for v in self.param_list('VAR_LIST'):
                     self.db.IUD(("insert into core_variable_events "
-                                 " (VARIABLE_ID, SCRIPT_ID) "
+                                 " (VARIABLE_ID, SCRIPT_ID, EVENT_TYPE) "
                                  "values"
-                                 " (%s, %s)") % (v, key))
+                                 " (%s, %s, 0)") % (v, key))
                 self.db.commit()
                 return "OK"
             except Exception as e:

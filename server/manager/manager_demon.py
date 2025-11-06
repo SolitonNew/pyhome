@@ -150,7 +150,7 @@ while True:
                 except:
                     pass
                 temp = temp.replace("\n", "")
-                SCREENS[i][5] = screen_0_tmp + tim + ["   Themperature of processor: %sºC" % (temp / 1000)]
+                SCREENS[i][5] = screen_0_tmp + tim + ["   Themperature of processor: %sºC" % (int(temp) / 1000)]
     
             lines = SCREENS[i][5]
             try:

@@ -98,7 +98,7 @@
         <TD>
             <div class="group">
                 <div>
-                    <button onClick="send_query('SYNC_TOGGLE', 'SYNC_STATUS')">Stop/Start sichronization</button>
+                    <button onClick="send_query('SYNC_TOGGLE', 'SYNC_STATUS')">Stop/Start synchronization</button>
                     &nbsp;&nbsp;&nbsp;&nbsp;Current Status: <B><span id="SYNC_STATUS">{{ widget('SYNC_STATUS') }}</span></B>
                 </div>
                 <p>

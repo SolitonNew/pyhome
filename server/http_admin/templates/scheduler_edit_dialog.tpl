@@ -10,15 +10,15 @@
                 break;
             case '1':
                 $('#d_of_t').css('display', 'table-row');
-                $('#d_of_t_type').html('weeks');
+                $('#d_of_t_type').html('Week');
                 break;
             case '2':
                 $('#d_of_t').css('display', 'table-row');
-                $('#d_of_t_type').html('moonth');
+                $('#d_of_t_type').html('Month');
                 break;
             case '3':
                 $('#d_of_t').css('display', 'table-row');
-                $('#d_of_t_type').html('years');
+                $('#d_of_t_type').html('Year');
                 break;
         }
     }
@@ -65,7 +65,7 @@
         <TD colspan="2"></TD>
     </TR>
     <TR>
-        <TD valign="top" width="75">Description:</TD>
+        <TD valign="top" width="85">Description:</TD>
         <TD>
             <textarea id="SCHEDULER_COMM" name="SCHEDULER_COMM" style="width:100%;height:60px;">{{ widget('COMM') }}</textarea>
         </TD>
@@ -95,7 +95,7 @@
         </form>
     </TR>
     <TR>
-        <TD>Повторять:</TD>
+        <TD>Repeat:</TD>
         <TD>
             <select id="SCHEDULER_INTERVAL_TYPE" name="SCHEDULER_INTERVAL_TYPE" onChange="scheduler_settings_change()">
                 {{ widget('INTERVAL_TYPE_LIST') }}
@@ -109,7 +109,7 @@
         </TD>
     </TR>
     <TR id="d_of_t">
-        <TD valign="top">Дни <span id="d_of_t_type"></span></TD>
+        <TD valign="top">Days of <span id="d_of_t_type"></span></TD>
         <TD>
             <textarea id="SCHEDULER_INTERVAL_DAY_OF_TYPE" name="SCHEDULER_INTERVAL_DAY_OF_TYPE" style="width:100%;height:60px;">{{ widget('INTERVAL_DAY_OF_TYPE') }}</textarea>
         </TD>
@@ -120,7 +120,7 @@
         </TD>    
         <TD align="right" valign="bottom" height="60">
             <button type="submit">Save</button>
-            <button type="button" onClick="hide_window()">Close</button>
+            <button type="button" onClick="hide_window()">Cancel</button>
         </TD>
     </TR>
     </table>

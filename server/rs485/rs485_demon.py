@@ -18,7 +18,7 @@ class Main():
     PACK_ERROR = 3
 
     def __init__(self):
-        self.fast_timeput = 0.1 #0.05
+        self.fast_timeput = 0.2 #0.05
         self.check_lan_error = False
         
         # Connect to serial port
@@ -242,28 +242,17 @@ class Main():
                 pass
                 
         self.db.set_property('RS485_COMMAND', '')
-        self._command_info("Done.")
+        self._command_info("Done")
         time.sleep(2)
         self._command_info("TERMINAL EXIT")
 
     def _gen_text_progress(self, pos, max_pos):
-        i = round(pos * 100 / max_pos)
-        s = "<center>["
-        s += ("<span style=\"color:#ffffff;\">|</span>") * (i + 1)
-        s += ("<span style=\"color:#000000;\">|</span>") * (100 - i - 1)
-        s += "] " + str(i) + "% </center>"
+        i = round(pos * 50 / max_pos)
+        s = "["
+        s += ("█") * (i + 1)
+        s += ("░") * (50 - i - 1)
+        s += "] " + str(i) + "%"
         return s
-
-    """
-    def _str_to_hex(self, text):
-        res = []
-        for c in text:
-            s = hex(ord(c)).replace('0x', '')
-            if len(s) == 1:
-                s = '0' + s
-            res += [s]
-        return "".join(res)
-    """
 
     SYNC_STATE = ""
             

@@ -6,24 +6,22 @@ import curses
 from subprocess import Popen, PIPE, STDOUT, call
 import math
 
-SCREENS = [["Справка", "", "", None, None, [], None],
-           ["RS485", "rs485_demon.py", "/home/pyhome/server/rs485", None, None, [], None],
-           ["Веб", "http_admin_demon.py", "/home/pyhome/server/http_admin", None, None, [], None],
-           ["Расписание", "scheduler_demon.py", "/home/pyhome/server/scheduler", None, None, [], None],
-           ["Выполнение", "executor_demon.py", "/home/pyhome/server/executor", None, None, [], None],
-           ["Монитор", "watcher_demon.py", "/home/pyhome/server/watcher", None, None, [], None],
-           ["Пульты", "lan_control_demon.py", "/home/pyhome/server/lan_control", None, None, [], None],
-           ["Голос", "local_control_demon.py", "/home/pyhome/server/lan_control/local_control", None, None, [], None],
-           ["Видео", "video_alerts_demon.py", "/home/pyhome/server/video_alerts", None, None, [], None]]
+SCREENS = [["Help", "", "", None, None, [], None],
+           ["RS485", "rs485_demon.py", "/var/www/pyhome/server/rs485", None, None, [], None],
+           ["Web Admin", "http_admin_demon.py", "/var/www/pyhome/server/http_admin", None, None, [], None],
+           ["Schedule", "scheduler_demon.py", "/var/www/pyhome/server/scheduler", None, None, [], None],
+           ["Execute", "executor_demon.py", "/var/www/pyhome/server/executor", None, None, [], None],
+           ["Watcher", "watcher_demon.py", "/var/www/pyhome/server/watcher", None, None, [], None],
+           ["Control", "lan_control_demon.py", "/var/www/pyhome/server/lan_control", None, None, [], None]]
 
 CURRENT_SCREEN = 0
 
 screen_0_tmp = ["",
-                 "   + Кнопки 1-%s это переключение между экранами." % (len(SCREENS) - 1),
-                 "   + Кнопки Right|Left переклюают экраны по порядку.",
-                 "   + Кнопка B перезапускает модули всех экранов.",
-                 "   + Кнопка R перезапускает только модуль текущего экрана.",
-                 "   + Кнопка Q прерывает работу экранов и закрывает приложение.",
+                 "   + Buttons 1-%s switch between screens." % (len(SCREENS) - 1),
+                 "   + Right|Left buttons switch screens sequentially.",
+                 "   + Button B restarts all modules on all screens.",
+                 "   + Button R restarts only the current screen's module.",
+                 "   + Button Q interrupts the screens' operation and closes the application.",
                  ""]
 
 SCREENS[0][5] = screen_0_tmp
@@ -60,7 +58,7 @@ def stopProceses():
     for ind in range(len(SCREENS)):
         stopProces(ind)
 
-call("pulseaudio", shell=True)
+#call("pulseaudio", shell=True)
 
 startProceses()
 
@@ -142,7 +140,7 @@ while True:
 
         if CURRENT_SCREEN == i:
             if CURRENT_SCREEN == 0:
-                tim = ["   Системное время:        %s" % (time.strftime("%d-%m-%Y %H:%M:%S"))]
+                tim = ["   System Time:        %s" % (time.strftime("%d-%m-%Y %H:%M:%S"))]
 
                 temp = "--"
                 try:
@@ -152,7 +150,7 @@ while True:
                 except:
                     pass
                 temp = temp.replace("\n", "")
-                SCREENS[i][5] = screen_0_tmp + tim + ["   Температура процессора: %sºC" % (temp)]
+                SCREENS[i][5] = screen_0_tmp + tim + ["   Themperature of processor: %sºC" % (int(temp) / 1000)]
     
             lines = SCREENS[i][5]
             try:

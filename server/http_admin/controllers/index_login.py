@@ -21,13 +21,13 @@ class IndexLogin(BaseForm):
             ip = request.remote_addr
             ind = self._find_ip_index(ip)
             if ind > -1 and FAILED_CONNECTS[ind][1] > 5:
-                print(ip, " заблокирован")
+                print(ip, " blocked")
             else:
                 if self.param("wh_login") == adm_log and self.param("wh_pass") == adm_pass:
                     if ind > -1:
                         del FAILED_CONNECTS[ind]
                     session['is_logon'] = True;
-                    print("Законнектились")
+                    print("Connected")
                 else:
                     ind = self._find_ip_index(ip)
                     if ind > -1:

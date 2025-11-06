@@ -144,7 +144,7 @@
 
     function script_delete_{{ widget('ID') }}() {
         var s = $('#script_NAME_{{ widget('ID') }}').val();
-        alert('Удалить скрипт "' + s + '"?', ',yes,no,', function (res) {
+        alert('Delete script "' + s + '"?', ',yes,no,', function (res) {
             if (res == 'yes') {
                 $('#script_FORM_QUERY_{{ widget('ID') }}').val('delete');
                 $('#script_form_{{ widget('ID') }}').submit();
@@ -193,12 +193,12 @@
                     <td>
                         <input id="script_NAME_{{ widget('ID') }}" type="text" name="NAME" style="width:120px;"
                                value="{{ widget('NAME') }}" onInput="calc_nums_{{ widget('ID') }}();">
-                        <button id="script_save_{{ widget('ID') }}" type="button" onClick="script_save_to_db_{{ widget('ID') }}();">Сохранить</button>
-                        <button id="script_test_{{ widget('ID') }}" type="button" onClick="script_execute_{{ widget('ID') }}();">Тест</button>
-                        <button id="script_events_{{ widget('ID') }}" type="button" onClick="show_window('attach_event_dialog?key={{ widget('ID') }}');">Назначить как событие...</button>
+                        <button id="script_save_{{ widget('ID') }}" type="button" onClick="script_save_to_db_{{ widget('ID') }}();">Save</button>
+                        <button id="script_test_{{ widget('ID') }}" type="button" onClick="script_execute_{{ widget('ID') }}();">Test</button>
+                        <button id="script_events_{{ widget('ID') }}" type="button" onClick="show_window('attach_event_dialog?key={{ widget('ID') }}');">Attach as Event...</button>
                     </td>
                     <td align="right">
-                        <button type="button" onClick="script_delete_{{ widget('ID') }}();">Удалить</button>
+                        <button type="button" onClick="script_delete_{{ widget('ID') }}();">Delete</button>
                     </td>
                     <td width="10"></td>
                 </tr>

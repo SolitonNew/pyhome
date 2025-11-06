@@ -35,7 +35,7 @@ class VarEditDialog(BaseForm):
         self.add_widget(ListField("VAR_CONTROLLER", 0, 1, CONTROLLER_ID, self.db.select("select ID, NAME from core_controllers order by NAME")))
         self.add_widget(ListField("TYPE_LIST", 0, 0, ROM, [["ow"], ["pyb"], ["variable"]]))
         self.add_widget(ListField("OW_LIST", 0, 1, OW_ID, self._load_ow_devs(CONTROLLER_ID)))
-        self.add_widget(ListField("READ_ONLY_LIST", 0, 1, DIRECTION, [(0, "ДА"), (1, "НЕТ")]))
+        self.add_widget(ListField("READ_ONLY_LIST", 0, 1, DIRECTION, [(0, "YES"), (1, "NO")]))
         self.add_widget(TextField("NAME", NAME))
         self.add_widget(TextField("COMM", COMM))
         self.add_widget(TextField("VALUE", VALUE))
@@ -49,7 +49,7 @@ class VarEditDialog(BaseForm):
                               "  from core_ow_devs "
                               " where CONTROLLER_ID = %s "
                               "order by 2, 3, 4, 5, 6, 7, 8" % controller_id)
-        ow_list = [[-1, "-- нет --"]]
+        ow_list = [[-1, "-- none --"]]
         for row in data:
             u = self.db.select("select count(*) c from core_variables where OW_ID = %s" % row[0])
             rom = []

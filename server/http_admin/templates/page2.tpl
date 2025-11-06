@@ -66,7 +66,7 @@
 <tr style="position:relative;">
     <td colspan="3" style="position:relative;">
         <div class="toolbar">
-            <button onClick="create_script();">Создать новый скрипт...</button>
+            <button onClick="create_script();">Create a New Script...</button>
         </div>
     </td>
 </tr>

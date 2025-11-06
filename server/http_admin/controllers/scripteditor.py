@@ -44,7 +44,7 @@ class ScriptEditor(BaseForm):
 
     def _execute(self):
         try:
-            f_name = "tests/run_%s.py" % self.param('key')
+            f_name = "/var/www/pyhome/server/http_admin/tests/run_%s.py" % self.param('key')
             f = open(f_name, "w")
             data = self.param('text')
             cf = generate_config_file(self.db)

@@ -17,30 +17,30 @@ class Page6(BaseForm):
         grid = Grid("SCHEDULER_LIST", "ID", variableSql)
 
         grid.add_column("ID", "ID", 50, visible=False)
-        grid.add_column("Описание", "COMM", 250, sort="asc")
-        grid.add_column("Следующее действие", "ACTION_DATETIME", 90, sort="on")
-        grid.add_column("Действие", "ACTION", 300, sort="on")
-        grid.add_column("Переодичность", "INTERVAL_TYPE", 500, sort="on", func=self.column_interval_func)
-        grid.add_column("Включено", "ENABLE", 100, sort="on", func=self.column_enable_func)
+        grid.add_column("Description", "COMM", 250, sort="asc")
+        grid.add_column("Next Action Date/Time", "ACTION_DATETIME", 90, sort="on")
+        grid.add_column("Action", "ACTION", 300, sort="on")
+        grid.add_column("Frequency", "INTERVAL_TYPE", 500, sort="on", func=self.column_interval_func)
+        grid.add_column("Disabled", "ENABLE", 100, sort="on", func=self.column_enable_func)
         self.add_widget(grid)
         self.SCHEDULER_LIST = grid;
 
     def column_interval_func(self, index, row):
         fields = self.SCHEDULER_LIST.func_fields
-        t_list = ["Каждый день", "Каждую неделю", "Каждый месяц", "Каждый год"]
+        t_list = ["Every Day", "Every Week", "Every Moonth", "Every Year"]
         typ = row[fields.index("INTERVAL_TYPE")]
-        res = "%s в: <b>%s</b>" % (t_list[typ], str(row[fields.index("INTERVAL_TIME_OF_DAY")], "utf-8"))
+        res = "%s at: <b>%s</b>" % (t_list[typ], str(row[fields.index("INTERVAL_TIME_OF_DAY")], "utf-8"))
 
         if typ == 0:
             pass
         elif typ in [1, 2, 3]:
-            res += " день: <b>%s</b>" % str(row[fields.index("INTERVAL_DAY_OF_TYPE")], "utf-8")
+            res += " day: <b>%s</b>" % str(row[fields.index("INTERVAL_DAY_OF_TYPE")], "utf-8")
         
         return res
 
     def column_enable_func(self, index, row):
         fields = self.SCHEDULER_LIST.func_fields
-        v_list = ["Не выполнять", "Выполнять"]
+        v_list = ["Do not execute", "Execute"]
         res = v_list[row[fields.index("ENABLE")]]
         return res
 

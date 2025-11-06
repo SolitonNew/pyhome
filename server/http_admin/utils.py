@@ -3,8 +3,8 @@ def decode_variable_value(typ, val):
         return str(val)
     elif typ == 'pyb':
         if val:
-            return "ВКЛ."
+            return "ON"
         else:
-            return "ВЫКЛ."
+            return "OFF"
     elif typ == 'variable':
         return str(val)

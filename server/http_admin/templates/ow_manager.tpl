@@ -16,7 +16,7 @@
 
 <script type="text/javascript">
     $('#popup_window_border').width(820);
-    $('#popup_window_title').html("Менеджер OneWire");
+    $('#popup_window_title').html("1-Wire Manager");
 
     function create_vars_for_free() {
         $.ajax({url:'ow_manager?FORM_QUERY=create_vars_for_free'}).done(function (data) {
@@ -30,7 +30,7 @@
 
     function del_ow(key) {
         if (key > 0) {
-            alert('CONFIRM: Удалить OneWire устройство?', 'yes,no', function (res) {
+            alert('CONFIRM: Are You Sure?', 'yes,no', function (res) {
                 if (res == 'yes') {
                     $.ajax({url:'ow_manager?FORM_QUERY=delete&key=' + key}).done(function (data) {
                         if (data == 'OK') {
@@ -62,7 +62,7 @@
         $.ajax({url:'system_dialog?FORM_QUERY=load_terminal'}).done(function (data) {
             if (data.indexOf("TERMINAL EXIT") > 0) {
                 OW_MANAGER_GRID_refresh();
-                var btn = '<button style="margin:20px;" onClick="$(\'#terminal_bg\').fadeOut(300);">Закрыть терминал</button>';
+                var btn = '<button style="margin:20px;" onClick="$(\'#terminal_bg\').fadeOut(300);">Close Terminal</button>';
                 $('#terminal_log').append(btn);
             } else {
                 $('#terminal_log').html(data);
@@ -82,9 +82,9 @@
             <div class="toolbar">
                 <table width="100%" cellpadding="0" cellspacing="0" style="padding-right:10px;">
                 <tr>
-                    <td><button onClick="send_query('SCAN_OW', 'OW_STATUS')">Просканировать&nbsp;OW&nbsp;сети...</button></td>
-                    <td width="100%"><button onClick="create_vars_for_free();">Создать переменные для свободных OW устройств</button></td>
-                    <td><button onClick="del_ow(_OW_MANAGER_GRID_selected_key);">Удалить</button></td>
+                    <td><button onClick="send_query('SCAN_OW', 'OW_STATUS')" style="white-space: nowrap;">Scan 1-Wire Network...</button></td>
+                    <td width="100%"><button onClick="create_vars_for_free();">Create variables for free OW devices</button></td>
+                    <td><button onClick="del_ow(_OW_MANAGER_GRID_selected_key);">Delete</button></td>
                 </tr>
                 </table>
             </div>
@@ -99,7 +99,7 @@
     </TR>
     <TR>
         <TD colspan="2" align="right" valign="bottom" height="60">
-            <button onClick="hide_window()">Закрыть</button>
+            <button onClick="hide_window()">Close</button>
         </TD>
     </TR>
     </table>

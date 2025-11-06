@@ -1,6 +1,7 @@
-#!/usr/bin/python3.4
+#!/usr/bin/python3.6
 #-*- coding: utf-8 -*-
 
+import traceback
 from flask import Flask, session
 app = Flask(__name__)
 
@@ -32,23 +33,24 @@ def index(name=None):
                 break
     except Exception as e:
         try:
-            s = "Форма '%s' ругнулась:<br><b>%s</b>" % (path, e.args)
-            self.wfile.write(s.encode("utf-8"))
+            s = "Form '%s' error:<br><b>%s</b>" % (name, e.args)
+            traceback.print_exc()
+            #self.wfile.write(s.encode("utf-8"))
         except Exception as e:
-            print("Вероятно закрылось соединение и %s" % e.args)
+            print("Connection closed %s" % e.args)
     return res
 
 try:
-    # Логин/Пароль/Ключ в отдельном файле, который не синхронится в гите
-    f = open('pass', 'r')
+    # Login/Password/Key in a separate file, which is not synchronized in Git
+    f = open('/var/www/pyhome/server/http_admin/pass', 'r')
     app.config['ADMIN_LOGIN'] = f.readline().replace("\n", "")
     app.config['ADMIN_PASS'] = f.readline().replace("\n", "")
     app.config['SECRET_KEY'] = f.readline().replace("\n", "")
     f.close()
 except:
-    pass
+    traceback.print_exc()
 
-app.config['VERSION'] = "0.6"
+app.config['VERSION'] = "0.7"
 
 if __name__ == '__main__':
-    app.run("0.0.0.0", 8083)
+    app.run("0.0.0.0", 8083, debug=True)

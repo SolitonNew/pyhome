@@ -42,11 +42,11 @@
 <tr style="position:relative;">
     <td style="position:relative;" colspan="2">
         <div class="toolbar">&nbsp;&nbsp;            
-            История изменения переменных за день
+            Daily variable change history
             <input id="stat_var_date" type="date" onChange="stat_var_date_change();">
-            со значением которое
+            when value
             <input id="stat_var_value" type="text" onChange="stat_var_date_change();" style="width:60px;">
-            <button style="margin-left:50px;" onClick="stat_var_date_delete()">Удалить выбраную запись</button>
+            <button style="margin-left:50px;" onClick="stat_var_date_delete()">Delete selected record</button>
         </div>
     </td>
 </tr>

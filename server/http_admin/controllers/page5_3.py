@@ -13,15 +13,15 @@ class Page5_3(BaseForm):
                "       CIRC_PUMP_TIME, CIRC_PUMP_POWER, BOILER_TIME, BOILER_POWER "
                "  from web_stat_power ")
         gr = Grid("POWER_TABLE", "ID", sql)
-        gr.add_column("Дата расчета", "CHANGE_DATE", 130, sort="asc")
-        gr.add_column("Месяц", "YEAR", 90, func=self._monthFunc)
-        gr.add_column("Длительность освещения (ч)", "LIGHT_TIME", 90)
-        gr.add_column("Потребление освещением (кВт/ч)", "LIGHT_POWER", 90)
-        gr.add_column("Длительность работы насосов (ч)", "CIRC_PUMP_TIME", 90)
-        gr.add_column("Потребление насосами (кВт/ч)", "CIRC_PUMP_POWER", 90)
-        gr.add_column("Длительность работы бойлера (ч)", "BOILER_TIME", 90)
-        gr.add_column("Потребление бойлером (кВт/ч)", "BOILER_POWER", 90)
-        gr.add_column("Общее потребление (кВт/ч)", "BOILER_POWER", 90, func=self._totalPower)
+        gr.add_column("Date", "CHANGE_DATE", 130, sort="asc")
+        gr.add_column("Month", "YEAR", 90, func=self._monthFunc)
+        gr.add_column("Lighting duration (h)", "LIGHT_TIME", 90)
+        gr.add_column("Lighting consumption (kWh)", "LIGHT_POWER", 90)
+        gr.add_column("Pump operation duration (h)", "CIRC_PUMP_TIME", 90)
+        gr.add_column("Pump consumption (kWh)", "CIRC_PUMP_POWER", 90)
+        gr.add_column("Boiler operation duration (h)", "BOILER_TIME", 90)
+        gr.add_column("Boiler consumption (kWh)", "BOILER_POWER", 90)
+        gr.add_column("Total consumption (kWh)", "BOILER_POWER", 90, func=self._totalPower)
         
         self.add_widget(gr)
 
@@ -144,12 +144,12 @@ class Page5_3(BaseForm):
                 prev_var_value = rec[2]
 
             if prev_var_value != rec[2]:
-                if rec[2] > 0: # Включили лампочку
+                if rec[2] > 0: # Light On
                     prev_var_time = rec[1]
-                else: # Лампочку выключили и щитаем сколько горела
+                else: # Light off and calculate duration
                     dt = rec[1] - prev_var_time
                     all_time += dt
-                    # Определяем мощьность лампочки по ID
+                    # Get power by ID
                     pw = 13
                     try:
                         power_high.index(rec[0])
@@ -207,9 +207,9 @@ class Page5_3(BaseForm):
                     prev_var_ons[i] = is_on
 
                 if prev_var_ons[i] != is_on:
-                    if rec[1] > var[1]: # Включили мотор
+                    if rec[1] > var[1]: # On pump
                         prev_var_times[i] = rec[0]
-                    else: # Мотор выключили и щитаем сколько работал
+                    else: # Off pump and calculate duration
                         dt = rec[0] - prev_var_times[i]
                         all_time += dt
                         all_power += var[2] * (dt / 3600)
@@ -262,9 +262,9 @@ class Page5_3(BaseForm):
                     prev_var_on = is_on
 
                 if prev_var_on != is_on:
-                    if is_on: # Включили бойлер
+                    if is_on: # On boiler
                         prev_var_time = rec[0]
-                    else: # Бойлер выключили и щитаем сколько работал
+                    else: # Boiler off and calculate duration
                         dt = rec[0] - prev_var_time
                         all_time += dt
                         all_power += 1250 * (dt / 3600)

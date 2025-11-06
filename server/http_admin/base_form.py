@@ -63,7 +63,7 @@ class BaseForm(object):
                     print("ERROR in widget %s %s " % (w.id, e.args,))
             return render_template(self.VIEW, widget=self._widget_data)
         except Exception as e:
-            return "Шаблон формы не найден: %s" % e.args
+            return "Forms Template Not Found: %s" % e.args
 
     def run(self):
         q = self.param('FORM_QUERY')

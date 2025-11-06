@@ -7,7 +7,7 @@ class Page5(BaseForm):
 
     def create_widgets(self):
         tc = TabControl("STAT_TABS", position="bottom")
-        tc.add_tab("График", "page5_1")
-        tc.add_tab("Таблица", "page5_2")
-        tc.add_tab("Сводка", "page5_3")
+        tc.add_tab("Chart", "page5_1")
+        tc.add_tab("Table", "page5_2")
+        tc.add_tab("Summary", "page5_3")
         self.add_widget(tc)

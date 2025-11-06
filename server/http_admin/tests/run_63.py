@@ -157,10 +157,6 @@ TEMP_TP_OUT = Variable('TEMP_TP_OUT', 19.3)
 TEMP_TP_IN = Variable('TEMP_TP_IN', 19.6)
 MAIN_HEATING = Variable('MAIN_HEATING', 0.0)
 
-if WC_1_PRESENCE_DELAY.value() == 0:
-    if WC_1_PRESENCE.value():
-        WC_1_R.value(1 and not LIGHTS_OFF.value())
-    else:
-        WC_1_R.value(0, 180)
+aaa
 printInput()
 printChanges()

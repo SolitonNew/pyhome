@@ -22,7 +22,7 @@
 
 <script type="text/javascript">
     $('#popup_window_border').width(500);
-    $('#popup_window_title').html("Системные утилиты");
+    $('#popup_window_title').html("System Utilities");
 
     var status_view_id = '';
 
@@ -42,7 +42,7 @@
     function load_terminal_log() {
         $.ajax({url:'system_dialog?FORM_QUERY=load_terminal'}).done(function (data) {
             if (data.indexOf("TERMINAL EXIT") > 0) {
-                var btn = '<button style="margin:20px;" onClick="$(\'#terminal_bg\').fadeOut(300);">Закрыть терминал</button>';
+                var btn = '<button style="margin:20px;" onClick="$(\'#terminal_bg\').fadeOut(300);">Close Terminal</button>';
                 $('#terminal_log').append(btn);
             } else {
                 $('#terminal_log').html(data);
@@ -79,7 +79,7 @@
     <TR>
         <TD>
             <div class="group">
-                Выполнить команду:
+                Command Execute:
                 <form id="command_form" action="system_dialog" method="GET">
                 <table width="100%" cellpadding="5" cellspacing="0">
                 <tr>
@@ -87,7 +87,7 @@
                         <input type="text" id="COMM_TEXT" name="COMM_TEXT" style="width:100%;"/>
                         <input type="hidden" name="FORM_QUERY" value="SEND_COMMAND">                        
                     </td>
-                    <td><button type="submit">Выполнить</button></td>
+                    <td><button type="submit">Execute</button></td>
                 </tr>
                 </table>
                 </form>
@@ -98,14 +98,11 @@
         <TD>
             <div class="group">
                 <div>
-                    <button onClick="send_query('SYNC_TOGGLE', 'SYNC_STATUS')">Остановить/Запустить синхронизацию</button>
-                    &nbsp;&nbsp;&nbsp;&nbsp;Текущий статус: <B><span id="SYNC_STATUS">{{ widget('SYNC_STATUS') }}</span></B>
+                    <button onClick="send_query('SYNC_TOGGLE', 'SYNC_STATUS')">Stop/Start synchronization</button>
+                    &nbsp;&nbsp;&nbsp;&nbsp;Current Status: <B><span id="SYNC_STATUS">{{ widget('SYNC_STATUS') }}</span></B>
                 </div>
                 <p>
-                Если выполнена полная остановка синхронизации данных между
-                контроллерами и сервером, то контроллеры, не имея доступа к
-                данным других устройств будут работать в автономном режиме
-                обслуживая только подключенные к ним устройства.
+                    If a complete stop of data synchronization between the controllers and the server is performed, then the controllers, not having access to data from other devices, will operate in autonomous mode, servicing only the devices connected to them.
                 </p>
             </div>
         </TD>
@@ -114,15 +111,11 @@
         <TD>
             <div class="group">
                 <div>
-                    <button onClick="send_query('CONFIG_UPDATE', 'CONFIG_STATUS')">Загрузить файл конфигурации</button>
+                    <button onClick="send_query('CONFIG_UPDATE', 'CONFIG_STATUS')">Upload Config File</button>
                 </div>
                 <p>
-                После предварительной настройки системы необходимо выполнить
-                загрузку конфигурационного файла. Иначе никакие изменения не
-                будут применены.<BR>
-                <b>Примечание:</b> Запущеная синхронизация переменных без
-                предварительной передачи конфигурационных файлов может
-                негативно сказаться на поведении системы.
+                    After the initial system setup, you need to load the configuration file. Otherwise, no changes will be applied.<br>
+                    <b>Note:</b> Running variable synchronization without first transferring the configuration files may negatively affect the system’s behavior.
                 </p>
             </div>
         </TD>
@@ -131,23 +124,22 @@
         <TD>
             <div class="group">
                 <div>
-                    <button onClick="send_query('REBOOT_CONTROLLERS', 'REBOOT_STATUS')">Принудительная перезагрузка контроллеров</button>
+                    <button onClick="send_query('REBOOT_CONTROLLERS', 'REBOOT_STATUS')">Forced controller reboot</button>
                 </div>
                 <p>
-                После выполнения всех необходимых настроечных действий
-                необходимо выполнить полную перезагрузку компонентов системы.
+                    After completing all the necessary configuration steps, a full system component reboot must be performed.
                 </p>
             </div>
         </TD>
     </TR>
     <TR>
         <TD>
-            Расчетное потребление системы: <B>{{ widget('CURRENTLY') }}</B>
+            Estimated system consumption: <B>{{ widget('CURRENTLY') }}</B>
         </TD>
     </TR>
     <TR>
         <TD align="right" valign="bottom" height="60">
-            <button onClick="hide_window()">Закрыть</button>
+            <button onClick="hide_window()">Close</button>
         </TD>
     </TR>
     </table>

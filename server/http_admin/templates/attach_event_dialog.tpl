@@ -1,7 +1,7 @@
 <script type="text/javascript">
 
     $('#popup_window_border').width(400);
-    $('#popup_window_title').html("Назначить как событие");
+    $('#popup_window_title').html("Attach as Event");
 
 
     $(document).ready(function() {
@@ -23,7 +23,7 @@
     </TR>    
     <TR>
         <TD>
-            Переменные:<br>
+            Variables:<br>
             <select id="VAR_LIST" name="VAR_LIST" style="width:100%;height:400px;" multiple>
                 {{ widget('VAR_LIST') }}
             </select>
@@ -31,8 +31,8 @@
     </TR>
     <TR>
         <TD align="right" valign="bottom" height="60">
-            <button type="submit">Готово</button>
-            <button type="button" onClick="hide_window()">Закрыть</button>
+            <button type="submit">Save</button>
+            <button type="button" onClick="hide_window()">Cancel</button>
         </TD>
     </TR>
     </table>

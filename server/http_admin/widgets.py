@@ -33,7 +33,7 @@ class ListField(WidgetBase):
         res = []
         for row in self.data:
             s = row[self.labelIndex]
-            if type(s) == bytes:
+            if type(s) == bytes or type(s) == bytearray:
                 s = str(s, "utf-8")
             sel = ""
             if type(self.selectedKey) == list:
@@ -57,7 +57,7 @@ class TreeField(ListField):
         for i in range(len(self.data)):
             row = list(self.data[i])
             s = row[self.labelIndex]
-            if type(s) == bytes:
+            if type(s) == bytes or type(s) == bytearray:
                 s = str(s, "utf-8")
 
             s = "&nbsp;" * self.child_tabs[i] * 4 + "%s" % s            
@@ -450,7 +450,7 @@ class Grid(WidgetBase):
                         except:
                             v = ''
                     else:
-                        if type(row[field]) == bytes:
+                        if type(row[field]) == bytes or type(row[field]) == bytearray:
                             v = str(row[field], "utf-8")
                         else:
                             v = str(row[field])
@@ -579,14 +579,14 @@ class List(WidgetBase):
         for row in data:
             v = ""
             if toolTipField:
-                if type(row[toolTipField]) == bytes:
+                if type(row[toolTipField]) == bytes or type(row[toolTipField]) == bytearray:
                     v = str(row[toolTipField], "utf-8")
                 else:
                     v = str(row[toolTipField])
                 v = toolTip % (v)
             
             res += "<tr id=\"%s_row_%s\" %s>" % (self.id, row[keyField], v)
-            if type(row[labelField]) == bytes:
+            if type(row[labelField]) == bytes or type(row[labelField]) == bytearray:
                 v = str(row[labelField], "utf-8")
             else:
                 v = str(row[labelField])
@@ -669,7 +669,7 @@ class Tree(List):
         i = 0
         for row in data:
             res += "<tr id=\"%s_row_%s\">" % (self.id, row[keyField])
-            if type(row[labelField]) == bytes:
+            if type(row[labelField]) == bytes or type(row[labelField]) == bytearray:
                 v = str(row[labelField], "utf-8")
             else:
                 v = str(row[labelField])

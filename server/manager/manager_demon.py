@@ -58,7 +58,7 @@ def stopProceses():
     for ind in range(len(SCREENS)):
         stopProces(ind)
 
-call("pulseaudio", shell=True)
+#call("pulseaudio", shell=True)
 
 startProceses()
 

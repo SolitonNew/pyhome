@@ -161,11 +161,12 @@ class Main():
                     time.sleep(3)
                     self._command_info("Request for the list of OneWire devices found on the bus for the controller '%s'" % dev[1])
                     is_ok = False
-                    for res_pack in self.send_pack(dev[0], self.PACK_COMMAND, ["LOAD_ONE_WIRE_ROMS", ""]):
-                        count = 0
-                        allCount = len(res_pack[2][1])
-                        is_ok = True
-                        try:
+                    try:
+                        for res_pack in self.send_pack(dev[0], self.PACK_COMMAND, ["LOAD_ONE_WIRE_ROMS", ""]):
+                            count = 0
+                            allCount = len(res_pack[2][1])
+                            is_ok = True
+                        
                             for rom in res_pack[2][1]:
                                 rom_s = []
                                 for r in rom:
@@ -180,8 +181,8 @@ class Main():
                                 if self.db.append_scan_rom(dev[0], rom):
                                     count += 1
                             self._command_info("Total devices found: %s. New: %s" % (allCount, count))
-                        except:
-                            self._command_info("Controller responded with Error")
+                    except:
+                        self._command_info("Controller responded with Error")
                         
                     if is_ok == False:
                         self._command_info(error_text)

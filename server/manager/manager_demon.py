@@ -22,6 +22,7 @@ screen_0_tmp = ["",
                  "   + Button B restarts all modules on all screens.",
                  "   + Button R restarts only the current screen's module.",
                  "   + Button Q interrupts the screens' operation and closes the application.",
+                 "   + Press Ctrl + A, then D to detach from the screen session without closing it.",
                  ""]
 
 SCREENS[0][5] = screen_0_tmp

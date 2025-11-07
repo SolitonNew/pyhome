@@ -247,11 +247,11 @@ class Main():
         self._command_info("TERMINAL EXIT")
 
     def _gen_text_progress(self, pos, max_pos):
-        i = round(pos * 50 / max_pos)
-        s = "["
+        i = round(pos * 25 / max_pos)
+        s = ""
         s += ("█") * (i + 1)
-        s += ("░") * (50 - i - 1)
-        s += "] " + str(i) + "%"
+        s += ("░") * (25 - i - 1)
+        s += " " + str(i * 4) + "%"
         return s
 
     SYNC_STATE = ""

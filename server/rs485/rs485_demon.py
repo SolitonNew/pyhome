@@ -249,8 +249,8 @@ class Main():
     def _gen_text_progress(self, pos, max_pos):
         i = round(pos * 25 / max_pos)
         s = ""
-        s += ("█") * (i + 1)
-        s += ("░") * (25 - i - 1)
+        s += ("█") * i
+        s += ("░") * (25 - i)
         s += " " + str(i * 4) + "%"
         return s
 

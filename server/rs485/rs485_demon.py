@@ -18,7 +18,7 @@ class Main():
     PACK_ERROR = 3
 
     def __init__(self):
-        self.fast_timeput = 0.2 #0.05
+        self.fast_timeput = 0.15 #0.05
         self.check_lan_error = False
         
         # Connect to serial port
@@ -43,7 +43,6 @@ class Main():
             self.serialPort.write(buf)
             if flush:
                 self.serialPort.flush()
-            #print(buf)
             res = self.check_lan()
             if self.check_lan_error == False:
                 break
@@ -60,7 +59,6 @@ class Main():
         try:
             buf = self.serialPort.readline()
             if len(buf) > 0:
-                #print(buf)
                 resp = buf.decode("utf-8")
                 data = []
                 for pack in resp.split(chr(0x0)):
@@ -193,12 +191,9 @@ class Main():
                 time.sleep(0.1)
                 try:
                     self._command_info("CONFIG FILE UPLOAD '%s'..." % dev[1])
-                    #pack_data = self._str_to_hex(generate_config_file(self.db))
                     pack_data = generate_config_file(self.db)
                     self._command_info(str(len(pack_data)) + ' bytes.')
 
-                    #bts = 512
-                    #bts = 128
                     bts = 1024
                     cou = math.ceil(len(pack_data) / bts)
                     is_ok = False

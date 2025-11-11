@@ -1,7 +1,12 @@
-The system of "wise house" created in Python.
+**PyHome** is a flexible and scalable open-source home automation system designed to control household devices, monitor system status, and collect operational statistics.
 
-The project was continued in the new system. Repository by link: https://github.com/SolitonNew/wh
+It supports a wide range of controllers, including **PyBoard** and **1-Wire**, allowing easy integration of sensors, relays, and control modules. The **web interface** provides convenient remote management and monitoring in real time, along with event history and performance statistics.
 
+In addition to web access, **desktop control panels for Windows and Linux** and a **mobile application** are available, enabling full control of the home from anywhere. The system’s architecture is built for reliability and easy expansion — adding new devices or modules requires minimal code changes.
+
+**PyHome** has been in active operation for over **10 years**, proving its stability, reliability, and practical value in real-world use.
+
+**License:** MIT
 
 INSTALL
 

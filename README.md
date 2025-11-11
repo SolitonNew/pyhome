@@ -4,11 +4,13 @@ It supports a wide range of controllers, including **PyBoard** and **1-Wire**, a
 
 In addition to web access, **desktop control panels for Windows and Linux** and a **mobile application** are available, enabling full control of the home from anywhere. The system’s architecture is built for reliability and easy expansion — adding new devices or modules requires minimal code changes.
 
+The repository also includes **PCB schematics and firmware for peripheral devices**, enabling hobbyists to build and program peripheral hardware at home.
+
 **PyHome** has been in active operation for over **10 years**, proving its stability, reliability, and practical value in real-world use.
 
 **License:** MIT
 
-INSTALL
+INSTALL ON ORANGE PI LIGHT
 
 python 3.6
 

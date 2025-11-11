@@ -42,7 +42,7 @@ for row in db.select("select c.ID, c.VALUE, c.VARIABLE_ID, UNIX_TIMESTAMP(c.CHAN
                      " order by c.VARIABLE_ID, c.CHANGE_DATE " % (date_from)):
     
     if row[2] == prev_var_id:
-        if row[3] - prev_var_time < 600 and check_values(values, row): # Если часто, то вкидываем на просмотр
+        if row[3] - prev_var_time < 600 and check_values(values, row):
             values += [row]
         else:
             if len(values) > 2:
@@ -87,4 +87,4 @@ for rec in db.select("select COUNT(*) "
                      "   and UNIX_TIMESTAMP(c.CHANGE_DATE) > %s" % (date_from)):
     new_count = rec[0]
 
-print("ГОТОВО. БЫЛО / СТАЛО: %s / %s" % (all_count, new_count))
+print("FINISHED. OLD / NOW: %s / %s" % (all_count, new_count))

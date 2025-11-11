@@ -11,8 +11,7 @@ SCREENS = [["Help", "", "", None, None, [], None],
            ["Web Admin", "http_admin_demon.py", "/var/www/pyhome/server/http_admin", None, None, [], None],
            ["Schedule", "scheduler_demon.py", "/var/www/pyhome/server/scheduler", None, None, [], None],
            ["Execute", "executor_demon.py", "/var/www/pyhome/server/executor", None, None, [], None],
-           ["Watcher", "watcher_demon.py", "/var/www/pyhome/server/watcher", None, None, [], None],
-           ["Control", "lan_control_demon.py", "/var/www/pyhome/server/lan_control", None, None, [], None]]
+           ["Watcher", "watcher_demon.py", "/var/www/pyhome/server/watcher", None, None, [], None]]
 
 CURRENT_SCREEN = 0
 

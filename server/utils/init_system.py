@@ -6,7 +6,7 @@ db.IUD("delete from core_variable_changes_mem");
 
 for rec in db.select("select ID, VARIABLE_ID, CHANGE_DATE, VALUE, FROM_ID "
                      "  from core_variable_changes "
-                     " where CHANGE_DATE >= current_timestamp() - interval 3 hour"):
+                     " where CHANGE_DATE >= current_timestamp() - interval 4 hour"):
     db.IUD("insert into core_variable_changes_mem "
            " (ID, VARIABLE_ID, CHANGE_DATE, VALUE, FROM_ID) "
            " values "

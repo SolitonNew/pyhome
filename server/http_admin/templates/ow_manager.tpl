@@ -107,7 +107,7 @@
     <div id="terminal_bg" style="position:absolute;left:0px;top:0px;width:100%;height:100%;background-color:#fff;display:none;">
         <div style="position:absolute;width:100%;height:100%;background-color:#fff;opacity:0.4;">
         </div>
-        <div id="terminal_log" style="position:absolute;width:100%;height:100%;background-color:#000;color:#fff;overflow:none;overflow-y:auto;text-align:left;">
+        <div id="terminal_log" style="position:absolute;width:100%;height:100%;background-color:#000;color:#fff;overflow:none;overflow-y:auto;text-align:left;font-family:monospace;">
         </div>
     </div>
 </div>

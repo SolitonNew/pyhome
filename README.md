@@ -27,6 +27,7 @@ mkdir /var/www/pyhome
 chown wisehouse:wisehouse /var/www/pyhome
 cd /var/www/pyhome
 git clone https://github.com/SolitonNew/pyhome.git .
+cp .env.example .env
 ```
 ```
 cd /var/www/html
@@ -47,7 +48,7 @@ apt install python3-setuptools
 apt install python3-pip
 pip3 install pyserial
 apt install libcairo2-dev pkg-config python3-dev
-pip3 install pycairo
+pip3 install pycairo num2words dotenv requests
 apt install python-cairocffi python3-cairocffi
 apt install python3-flask
 apt install python3-mysql.connector

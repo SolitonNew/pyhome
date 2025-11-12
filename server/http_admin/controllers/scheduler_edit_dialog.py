@@ -33,9 +33,9 @@ class SchedulerEditDialog(BaseForm):
             sql = ""
             if self.param_str('SCHEDULER_KEY') == '-1':
                 sql = ("insert into core_scheduler "
-                       "   (COMM, ACTION, INTERVAL_TYPE, INTERVAL_TIME_OF_DAY, INTERVAL_DAY_OF_TYPE, ENABLE) "
+                       "   (COMM, ACTION, INTERVAL_TYPE, INTERVAL_TIME_OF_DAY, INTERVAL_DAY_OF_TYPE, ENABLE, TEMP_VARIABLE_ID) "
                        "values "
-                       "   ('%s', '%s', %s, '%s', '%s', %s)")
+                       "   ('%s', '%s', %s, '%s', '%s', %s, 0)")
 
                 sql = sql % (self.param_str('SCHEDULER_COMM'),
                              self.param_str('SCHEDULER_ACTION'),

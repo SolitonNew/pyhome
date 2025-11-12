@@ -307,7 +307,7 @@
             <tr>
                 <td style="position:relative;background-color:#cccccc;">
                     <div style="margin:10px;font-size:25px;">
-                        <b>WISE HOUSE v{{ widget('VERSION') }}</b>
+                        <b>PYHOME v{{ widget('VERSION') }}</b>
                     </div>                    
                 </td>
                 <td style="position:relative;background-color:#cccccc;" align="right" valign="middle">

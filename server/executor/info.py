@@ -36,14 +36,14 @@ class Info():
         
     def _get_themperature(self, db):
         load_dotenv()
-        tempId = int(os.getenv('WATCHER_OUTSIDE_TEMP_ID'))
+        tempId = int(os.getenv("WATCHER_OUTSIDE_TEMP_ID"))
         tempValue = 0
         for row in db.select("select v.VALUE "
                              "  from core_variables v "
-                             " where ID = '%s' ", (tempId)):
-            tempValue = row[0]
+                             " where v.ID = %s " % (tempId)):
+            tempValue = int(row[0])
 
-        t = abs(int(tempValue))
+        t = abs(tempValue)
         words = num2words(t)
         if tempValue > 0:
             return f"The temperature outside is {words} degrees above zero."

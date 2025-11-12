@@ -6,6 +6,11 @@ import curses
 from subprocess import Popen, PIPE, STDOUT, call
 import math
 
+try:
+    call('python3 /var/www/pyhome/server/utils/init_system.py', shell=True)
+except:
+    pass 
+
 SCREENS = [["Help", "", "", None, None, [], None],
            ["RS485", "rs485_demon.py", "/var/www/pyhome/server/rs485", None, None, [], None],
            ["Web Admin", "http_admin_demon.py", "/var/www/pyhome/server/http_admin", None, None, [], None],

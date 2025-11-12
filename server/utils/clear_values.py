@@ -6,7 +6,7 @@ all_count = 0
 for rec in db.select("select COUNT(*) from core_variable_changes"):
     all_count = rec[0]
 
-print("ВСЕГО ЗАПИСЕЙ: %s" % (all_count))
+print("RECORDS COUNT: %s" % (all_count))
 
 db.query("update core_variable_changes"
          "   set value = ROUND(value * 10) / 10"
@@ -43,4 +43,4 @@ new_count = 0
 for rec in db.select("select COUNT(*) from core_variable_changes"):
     new_count = rec[0]
 
-print("ГОТОВО. БЫЛО / СТАЛО: %s / %s" % (all_count, new_count))
+print("FINISHED. OLD / NEW: %s / %s" % (all_count, new_count))

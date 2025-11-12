@@ -48,7 +48,7 @@ class Main():
 
     def clear_values(self):
         try:
-            subprocess.call('python3 /home/pyhome/server/watcher/clear_values_15.py', shell=True)
+            subprocess.call('python3 /var/www/pyhome/server/watcher/clear_values_15.py', shell=True)
         except:
             pass        
 

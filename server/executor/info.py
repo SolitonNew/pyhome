@@ -1,3 +1,5 @@
+from dotenv import load_dotenv
+import os
 from datetime import datetime
 from num2words import num2words
 
@@ -33,18 +35,19 @@ class Info():
             return f"{num2words(60 - m)} to {num2words((h + 1) % 12 or 12)}".capitalize()
         
     def _get_themperature(self, db):
-        id = 124
-        temp = 0
+        load_dotenv()
+        tempId = int(os.getenv('WATCHER_OUTSIDE_TEMP_ID'))
+        tempValue = 0
         for row in db.select("select v.VALUE "
                              "  from core_variables v "
-                             " where ID = '%s' ", (id)):
-            temp = row[0]
+                             " where ID = '%s' ", (tempId)):
+            tempValue = row[0]
 
-        t = abs(int(temp))
+        t = abs(int(tempValue))
         words = num2words(t)
-        if temp > 0:
+        if tempValue > 0:
             return f"The temperature outside is {words} degrees above zero."
-        elif temp < 0:
+        elif tempValue < 0:
             return f"The temperature outside is {words} degrees below zero."
         else:
             return "The temperature outside is zero degrees."

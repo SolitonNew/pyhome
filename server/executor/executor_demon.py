@@ -8,13 +8,12 @@ from play import Play
 from variable import Variable
 from speech import Speech
 from info import Info
-from sinoptik import Sinoptik
 
 class Main():
     def __init__(self):
-        self.commans = (Play(), Variable(), Speech(), Info())#, Sinoptik())
+        self.commans = (Play(), Variable(), Speech(), Info())
         self.db = DBConnector()
-        # Очищаем список команд. Список не актуален.        
+        # Clear command list      
         self.db.IUD("delete from core_execute")
         self.last_processed_ID = -1
         self.db.commit()
@@ -33,11 +32,11 @@ class Main():
                     self.last_processed_ID = row[0]
                 time.sleep(0.1)
 
-                # Дергаем секундный таймер, может кому пригодится
+                # Run second timer
                 for cmd in self.commans:
                     cmd.time_handler()  
             except mysql.connector.Error as e:
-                self.execute('speech("пропала связь с базой", "alarm")')
+                self.execute('speech("connection with the base was lost", "alarm")')
                 time.sleep(10)
             
     def execute(self, command):
@@ -48,7 +47,7 @@ class Main():
 
 print(
 "=============================================================================\n"
-"                      МОДУЛЬ КОМАНДНОГО ПРОЦЕССОРА v0.1\n"
+"                          Command Processor Module v0.1\n"
 "\n"
 "=============================================================================\n"
 )

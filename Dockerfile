@@ -19,7 +19,10 @@ RUN apt-get update && apt-get install -y \
 RUN pip3 install --no-cache-dir \
     pyserial==3.5 \
     pycairo==1.20.1 \
-    mysql-connector-python==2.1.6
+    mysql-connector-python==2.1.6 \
+    num2words \
+    dotenv \
+    requests
 
 COPY . /var/www/pyhome
 

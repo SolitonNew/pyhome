@@ -1,6 +1,8 @@
 #!/usr/bin/python3.6
 #-*- coding: utf-8 -*-
 
+from dotenv import load_dotenv
+import os
 import traceback
 from flask import Flask, session
 app = Flask(__name__)
@@ -35,18 +37,15 @@ def index(name=None):
         try:
             s = "Form '%s' error:<br><b>%s</b>" % (name, e.args)
             traceback.print_exc()
-            #self.wfile.write(s.encode("utf-8"))
         except Exception as e:
             print("Connection closed %s" % e.args)
     return res
 
 try:
-    # Login/Password/Key in a separate file, which is not synchronized in Git
-    f = open('/var/www/pyhome/server/http_admin/pass', 'r')
-    app.config['ADMIN_LOGIN'] = f.readline().replace("\n", "")
-    app.config['ADMIN_PASS'] = f.readline().replace("\n", "")
-    app.config['SECRET_KEY'] = f.readline().replace("\n", "")
-    f.close()
+    load_dotenv()
+    app.config['ADMIN_LOGIN'] = os.getenv("HTTP_ADMIN_USER")
+    app.config['ADMIN_PASS'] = os.getenv("HTTP_ADMIN_PASSWORD")
+    app.config['SECRET_KEY'] = os.getenv("HTTP_ADMIN_SECURE_KEY")
 except:
     traceback.print_exc()
 

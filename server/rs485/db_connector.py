@@ -1,18 +1,16 @@
-
+from dotenv import load_dotenv
+import os
 import mysql.connector
 import time
 from datetime import datetime
 
 class DBConnector(object):
-    MYSQL_DB_NAME = "wisehouse"
-    MYSQL_USER = "wisehouse"
-    MYSQL_PASS = "wisehousepass"
-    
     def __init__(self):
-        self.mysqlConn = mysql.connector.connect(host="localhost",
-                                                 database=self.MYSQL_DB_NAME,
-                                                 user=self.MYSQL_USER,
-                                                 password=self.MYSQL_PASS)
+        load_dotenv()
+        self.mysqlConn = mysql.connector.connect(host=os.getenv("MYSQL_HOST"),
+                                                 database=os.getenv("MYSQL_DATABASE"),
+                                                 user=os.getenv("MYSQL_USER"),
+                                                 password=os.getenv("MYSQL_PASSWORD"))
         
         self.query("SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED")
         

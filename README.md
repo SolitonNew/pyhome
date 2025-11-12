@@ -27,7 +27,9 @@ mkdir /var/www/pyhome
 chown wisehouse:wisehouse /var/www/pyhome
 cd /var/www/pyhome
 git clone https://github.com/SolitonNew/pyhome.git .
+cd server
 cp .env.example .env
+nano .env
 ```
 ```
 cd /var/www/html

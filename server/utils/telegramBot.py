@@ -16,7 +16,4 @@ class TelegramBot():
             "chat_id": self.chatId,
             "text": message
         }
-
-        response = requests.post(url, data=payload)
-
-        print(response.json())
+        requests.post(url, data=payload)

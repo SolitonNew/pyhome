@@ -13,7 +13,7 @@ class Info():
 
             text = (self._get_current_time(db), self._get_themperature(db))
 
-            db.IUD("insert into core_execute (COMMAND) values ('speech(\"%s\", \"notify\")')" % ";".join(text))
+            db.IUD("insert into core_execute (COMMAND) values ('speech(\"%s\", \"notify\")')" % ";".join(text).replace("'", "\'"))
             db.commit()            
 
             return True
